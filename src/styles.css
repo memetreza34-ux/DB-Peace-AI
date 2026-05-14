@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .field {
+    @apply min-h-12 w-full rounded border border-db-dark/15 bg-white px-4 text-base font-semibold text-db-dark outline-none transition placeholder:text-db-rail/70 focus:border-db-red focus:ring-2 focus:ring-db-red/15;
+  }
+
+  .dashboard-link {
+    @apply flex items-center justify-between rounded-lg border border-db-dark/10 bg-white p-5 font-black text-db-dark shadow-sm transition hover:border-db-red hover:text-db-red;
+  }
+
+  .enterprise-card {
+    @apply rounded-lg border border-db-dark/10 bg-white shadow-sm;
+  }
+
+  .trust-badge {
+    @apply rounded bg-white px-3 py-2 text-xs font-black text-db-rail shadow-sm ring-1 ring-db-dark/10;
+  }
+
+  .risk-badge {
+    @apply inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-black;
+  }
+}
+
+:root {
+  color: #1f2328;
+  background: #f5f5f3;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f7f7f7 0%, #ffffff 48%, #f5f5f3 100%);
+  text-rendering: optimizeLegibility;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    opacity 160ms ease,
+    filter 160ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button,
+a,
+input,
+textarea,
+select,
+summary {
+  outline-offset: 3px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 3px solid rgba(226, 0, 26, 0.28);
+}
+
+section[id] {
+  scroll-margin-top: 96px;
+}
+
+section {
+  animation: none;
+}
+
+article,
+.shadow-panel {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+.motion-view-shell {
+  animation: none;
+}
+
+.motion-view-shell .grid > * {
+  animation: none;
+}
+
+.motion-card,
+.motion-card > * {
+  animation: none;
+}
+
+.motion-pulse {
+  animation: none;
+}
+
+.animated-number {
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.animated-number.is-updated {
+  color: #e2001a;
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .startup-overlay,
+  .motion-view-shell,
+  .motion-card,
+  .motion-card > *,
+  .motion-pulse,
+  .animated-number {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+::selection {
+  color: #ffffff;
+  background: #e2001a;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
