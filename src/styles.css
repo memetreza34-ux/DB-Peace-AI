@@ -40,7 +40,9 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(180deg, #f7f7f7 0%, #ffffff 48%, #f5f5f3 100%);
+  background:
+    radial-gradient(1100px 380px at 50% -120px, rgba(226, 0, 26, 0.05), transparent 70%),
+    linear-gradient(180deg, #f7f7f7 0%, #ffffff 48%, #f5f5f3 100%);
   text-rendering: optimizeLegibility;
 }
 
@@ -65,7 +67,11 @@ button:hover {
 }
 
 button:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.97);
+}
+
+a:active {
+  transform: scale(0.97);
 }
 
 button,
@@ -105,21 +111,87 @@ article,
     opacity 180ms ease;
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(226, 0, 26, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(226, 0, 26, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(226, 0, 26, 0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes toastPop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
 .motion-view-shell {
-  animation: none;
+  animation: fadeIn 240ms ease both;
 }
 
-.motion-view-shell .grid > * {
-  animation: none;
+.motion-view-shell section > * {
+  animation: fadeInUp 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.motion-card,
-.motion-card > * {
-  animation: none;
+.motion-view-shell section > *:nth-child(2) {
+  animation-delay: 55ms;
+}
+
+.motion-view-shell section > *:nth-child(3) {
+  animation-delay: 110ms;
+}
+
+.motion-view-shell section > *:nth-child(4) {
+  animation-delay: 165ms;
+}
+
+.motion-view-shell section > *:nth-child(5) {
+  animation-delay: 220ms;
+}
+
+.motion-view-shell section > *:nth-child(n + 6) {
+  animation-delay: 260ms;
+}
+
+.motion-card {
+  animation: fadeInUp 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.toast-pop {
+  animation: toastPop 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .motion-pulse {
-  animation: none;
+  animation: pulseRing 2.2s ease-out infinite;
 }
 
 .animated-number {
@@ -164,4 +236,24 @@ article,
 
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-color: rgba(31, 35, 40, 0.22);
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(226, 0, 26, 0.45);
 }

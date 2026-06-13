@@ -4,3 +4,6 @@ node_modules/
 dist/
 .DS_Store
 .npm-cache/
+
+# Lokale, persönliche Claude-Einstellungen
+.claude/settings.local.json

@@ -1,11 +1,37 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  Home,
+  LifeBuoy,
+  NotebookPen,
+  Megaphone,
+  GraduationCap,
+  Lightbulb,
+  Newspaper,
+  Phone,
+  ShieldAlert,
+  ArrowRight,
+  ArrowLeft,
+  Sparkles,
+  Building2,
+  Clock,
+  Users,
+  Landmark,
+  ExternalLink,
+  HeartHandshake,
+  Send,
+  ChevronDown,
+  Scale,
+  FileText,
+} from "lucide-react";
 
 const views = [
-  { id: "overview", label: "Start" },
-  { id: "kiHilfe", label: "Hilfe" },
-  { id: "protokoll", label: "Festhalten" },
-  { id: "meldung", label: "Melden" },
-  { id: "training", label: "Lernen" },
+  { id: "overview", label: "Start", icon: Home },
+  { id: "kiHilfe", label: "Hilfe", icon: LifeBuoy },
+  { id: "protokoll", label: "Festhalten", icon: NotebookPen },
+  { id: "meldung", label: "Melden", icon: Megaphone },
+  { id: "training", label: "Lernen", icon: GraduationCap },
+  { id: "ideen", label: "Ideen", icon: Lightbulb },
+  { id: "news", label: "Azubi-News", icon: Newspaper },
 ];
 
 const issues = [
@@ -550,6 +576,8 @@ function App() {
     const stored = parseStoredJson(communityDraftStorageKey, []);
     return Array.isArray(stored) ? stored.filter((item) => item && typeof item === "object") : [];
   });
+  const [ideas, setIdeas] = useState([]);
+  const [newsSuggestions, setNewsSuggestions] = useState([]);
   const [latestProtocolId, setLatestProtocolId] = useState(null);
   const [reportDraft, setReportDraft] = useState(null);
   const [demoOpen, setDemoOpen] = useState(false);
@@ -1012,6 +1040,8 @@ function App() {
                   />
                 )}
                 {safeActiveView === "training" && <SimpleTrainingLearningView onNotify={showToast} />}
+                {safeActiveView === "ideen" && <IdeenView ideas={ideas} setIdeas={setIdeas} onNotify={showToast} />}
+                {safeActiveView === "news" && <AzubiNewsView suggestions={newsSuggestions} setSuggestions={setNewsSuggestions} onNavigate={navigateMain} onNotify={showToast} />}
               </>
             )}
           </div>
@@ -1049,9 +1079,6 @@ function Sidebar({ activeView, onNavigate }) {
     <div className="flex h-full flex-col">
       <div className="border-b border-db-dark/10 p-5">
         <BrandMark />
-        <p className="mt-4 rounded-lg border border-db-dark/10 bg-db-soft p-3 text-xs font-bold leading-5 text-db-rail">
-          Lokaler Innovationsprototyp · keine echten Daten · keine Überwachung · KI unterstützt, Menschen entscheiden.
-        </p>
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto p-4">
@@ -1060,20 +1087,11 @@ function Sidebar({ activeView, onNavigate }) {
             key={view.id}
             active={activeView === view.id}
             label={view.label}
+            icon={view.icon}
             onClick={() => onNavigate(view.id)}
           />
         ))}
       </nav>
-
-      <div className="border-t border-db-dark/10 p-4">
-        <button
-          type="button"
-          onClick={() => onNavigate("meldung")}
-          className="w-full rounded bg-db-red px-4 py-3 text-sm font-black text-white transition hover:bg-red-700"
-        >
-          Melden
-        </button>
-      </div>
     </div>
   );
 }
@@ -1102,6 +1120,7 @@ function MobileHeader({ activeView, activeLabel, menuOpen, onNavigate, setMenuOp
               key={view.id}
               active={activeView === view.id}
               label={view.label}
+              icon={view.icon}
               onClick={() => {
                 onNavigate(view.id);
                 setMenuOpen(false);
@@ -1122,11 +1141,8 @@ function TopBar({ activeLabel }) {
           <BrandMark compact subtitle="Lokaler Demo-Prototyp" />
           <div>
             <p className="text-sm font-black text-db-dark">{activeLabel}</p>
-            <p className="text-xs font-bold text-db-rail">Lokaler Demo-Prototyp · keine offizielle Einführung</p>
+            <p className="text-xs font-bold text-db-rail">Keine echte Übermittlung</p>
           </div>
-        </div>
-        <div className="rounded bg-db-soft px-3 py-2 text-xs font-black text-db-rail ring-1 ring-db-dark/10">
-          KI unterstützt, Menschen entscheiden
         </div>
       </div>
     </div>
@@ -1137,19 +1153,12 @@ function BrandMark({ compact = false, subtitle = "Innovationsprototyp" }) {
   return (
     <div className={`flex items-center ${compact ? "gap-3" : "gap-4"}`}>
       <div
-        className={`flex shrink-0 items-center justify-center rounded-md bg-db-red text-white shadow-sm ring-1 ring-db-red/10 ${
-          compact ? "h-11 w-11" : "h-14 w-14"
+        className={`flex shrink-0 items-center justify-center rounded-md bg-db-red font-black italic tracking-tight text-white shadow-sm ${
+          compact ? "h-11 w-11 text-lg" : "h-14 w-14 text-2xl"
         }`}
-        aria-hidden="true"
+        aria-label="Deutsche Bahn"
       >
-        <svg viewBox="0 0 48 48" className={compact ? "h-7 w-7" : "h-9 w-9"} fill="none">
-          <path
-            d="M24 7 36 12v10c0 8.1-4 14.4-12 19-8-4.6-12-10.9-12-19V12l12-5Z"
-            fill="white"
-          />
-          <path d="M24 17v14M17 24h14" stroke="#e2001a" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="24" cy="24" r="3" fill="#e2001a" />
-        </svg>
+        DB
       </div>
       <div className="min-w-0">
         <p className="truncate text-base font-black text-db-dark">DB Peace AI</p>
@@ -1160,23 +1169,30 @@ function BrandMark({ compact = false, subtitle = "Innovationsprototyp" }) {
 }
 
 function MobileBottomNav({ activeView, onNavigate }) {
-  const mobileIds = ["overview", "kiHilfe", "protokoll", "meldung", "training"];
+  const mobileIds = ["overview", "kiHilfe", "protokoll", "meldung", "training", "ideen", "news"];
   const items = views.filter((view) => mobileIds.includes(view.id));
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 gap-1 border-t border-db-dark/10 bg-white/95 px-1 py-2 shadow-panel lg:hidden">
-      {items.map((view) => (
-        <button
-          key={view.id}
-          type="button"
-          onClick={() => onNavigate(view.id)}
-          className={`rounded text-[11px] font-black ${
-            activeView === view.id ? "bg-red-50 text-db-red" : "text-db-rail"
-          }`}
-        >
-          {view.label}
-        </button>
-      ))}
+    <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-7 gap-0.5 border-t border-db-dark/10 bg-white/95 px-1 py-2 shadow-panel backdrop-blur-xl lg:hidden">
+      {items.map((view) => {
+        const Icon = view.icon;
+        const active = activeView === view.id;
+        return (
+          <button
+            key={view.id}
+            type="button"
+            onClick={() => onNavigate(view.id)}
+            aria-label={view.label}
+            aria-current={active ? "page" : undefined}
+            className={`flex flex-col items-center gap-1 rounded-lg px-0.5 py-1.5 text-center text-[9px] font-black leading-[1.1] transition ${
+              active ? "bg-red-50 text-db-red" : "text-db-rail hover:text-db-dark"
+            }`}
+          >
+            {Icon && <Icon size={19} aria-hidden="true" />}
+            <span>{view.label}</span>
+          </button>
+        );
+      })}
     </nav>
   );
 }
@@ -1230,18 +1246,30 @@ function LegalView({ page, onBack, onHome }) {
         <section className="space-y-6 p-5 lg:p-6">
           <LegalHeader title={legalViews.impressum.title} subtitle={legalViews.impressum.subtitle} onBack={onBack} onHome={onHome} />
           <p className="rounded-xl border border-db-dark/10 bg-db-soft p-4 text-sm font-semibold leading-7 text-db-rail">
-            Dies ist ein lokaler Demonstrationsprototyp. Für eine öffentliche Veröffentlichung müssten die tatsächlichen
-            Anbieterangaben nach § 5 DDG ergänzt und rechtlich geprüft werden.
+            Lokaler Innovationsprototyp – entwickelt als Beitrag zum Wettbewerb „Bahn-Azubis gegen Hass und Gewalt" von Deutsche Bahn und EVG.
+            Kein offizielles Angebot der Deutschen Bahn AG.
           </p>
           <div className="grid gap-4 md:grid-cols-2">
-            <LegalField title="Anbieter / Verantwortliche Stelle" value="Platzhalter" />
-            <LegalField title="Anschrift" value="Platzhalter" />
-            <LegalField title="Kontakt" value="Platzhalter" />
-            <LegalField title="Vertretungsberechtigte Person" value="Platzhalter" />
-            <LegalField title="Projektstatus" value="Nicht offiziell eingeführtes System" />
-            <LegalField title="Hinweis" value="Keine offizielle Website der Deutschen Bahn AG" />
+            <LegalField title="Verantwortlich für diesen Prototyp" value="Mohammad Reza Rahimi" />
+            <LegalField title="Rolle" value="Auszubildender, Deutsche Bahn" />
+            <LegalField title="Kontakt" value="[E-Mail / Telefon vor Einreichung ergänzen]" />
+            <LegalField title="Projektstatus" value="Demo – nicht offiziell eingeführtes System" />
           </div>
-          <SectionCard title="Rechtlicher Prüfhinweis" text="Vor Veröffentlichung prüfen lassen." />
+          <div className="rounded-xl border border-db-dark/10 bg-white p-4 shadow-sm">
+            <p className="text-xs font-black uppercase tracking-wide text-db-red">Unternehmensbezug (Referenzangaben Konzern)</p>
+            <div className="mt-3 grid gap-4 md:grid-cols-2">
+              <LegalField title="Unternehmen" value="Deutsche Bahn AG" />
+              <LegalField title="Anschrift" value="Potsdamer Platz 2, 10785 Berlin" />
+              <LegalField title="Telefon" value="+49 30 297-0" />
+              <LegalField title="Registergericht" value="Amtsgericht Berlin-Charlottenburg, HRB 50000" />
+              <LegalField title="USt-IdNr." value="DE 811569869" />
+              <LegalField title="Offizielles Impressum" value="deutschebahn.com/de/impressum" />
+            </div>
+            <p className="mt-3 text-[11px] font-semibold leading-5 text-db-rail">
+              Diese Konzernangaben dienen nur als Referenz zum Projektkontext. Betreiberin dieses Prototyps ist nicht die Deutsche Bahn AG.
+            </p>
+          </div>
+          <SectionCard title="Rechtlicher Prüfhinweis" text="Vor einer echten Veröffentlichung Anbieterangaben nach § 5 DDG ergänzen und rechtlich prüfen lassen." />
         </section>
       </ViewFrame>
     );
@@ -1365,16 +1393,18 @@ function LegalField({ title, value }) {
   );
 }
 
-function NavButton({ active, label, onClick }) {
+function NavButton({ active, label, icon: Icon, onClick }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`flex w-full items-center rounded-lg px-3 py-3 text-left text-sm font-black transition ${
+      aria-current={active ? "page" : undefined}
+      className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-black transition ${
         active ? "bg-red-50 text-db-red ring-1 ring-db-red/15" : "text-db-rail hover:bg-db-soft hover:text-db-dark"
       }`}
     >
-      {label}
+      {Icon && <Icon size={18} className="shrink-0" aria-hidden="true" />}
+      <span>{label}</span>
     </button>
   );
 }
@@ -1385,44 +1415,334 @@ function ViewFrame({ children }) {
 
 function ViewChrome({ title, canGoBack, onBack, onHome, isDirty }) {
   return (
-    <div className="mb-4 rounded-xl border border-db-dark/10 bg-white px-4 py-3 shadow-sm sm:px-5">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="space-y-1">
-          <div className="flex flex-wrap items-center gap-2">
-            {isDirty && (
-              <span className="rounded bg-amber-50 px-2 py-1 text-[11px] font-black text-amber-700 ring-1 ring-amber-200">
-                Nicht gespeicherte Eingaben
-              </span>
-            )}
-          </div>
-          <h2 className="text-2xl font-black text-db-dark">{title}</h2>
-        </div>
+    <div className="mb-4 flex flex-wrap items-center gap-2">
+      {canGoBack && (
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-sm font-black text-db-rail ring-1 ring-db-dark/10 transition hover:bg-red-50 hover:text-db-red"
+        >
+          <ArrowLeft size={16} aria-hidden="true" /> Zurück
+        </button>
+      )}
+      <button
+        type="button"
+        onClick={onHome}
+        className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-sm font-black text-db-rail ring-1 ring-db-dark/10 transition hover:bg-red-50 hover:text-db-red"
+      >
+        <Home size={16} aria-hidden="true" /> Übersicht
+      </button>
+      {isDirty && (
+        <span className="ml-auto inline-flex items-center rounded-lg bg-amber-50 px-3 py-2 text-xs font-black text-amber-800 ring-1 ring-amber-200">
+          Nicht gespeichert
+        </span>
+      )}
+    </div>
+  );
+}
+
+function IdeenView({ ideas, setIdeas, onNotify }) {
+  const categories = ["Ausbildung", "Sicherheit", "Nachhaltigkeit", "Digitalisierung", "Werkstatt", "Kundenkontakt", "Zusammenarbeit", "Kosten sparen", "Respekt & Miteinander"];
+  const examples = [
+    { title: "Digitaler Azubi-Hilfe-QR", category: "Ausbildung", text: "Ein QR-Code führt Azubis direkt zu Hilfe, Lernmaterial, Kontakten und Meldefunktionen.", status: "Suche Mitstreiter:innen" },
+    { title: "Werkstatt-Checkliste digital", category: "Sicherheit", text: "Wiederkehrende Aufgaben werden mit einfachen digitalen Checklisten klarer und sicherer.", status: "Idee" },
+    { title: "Deeskalations-Mini-Training", category: "Respekt & Miteinander", text: "Kurze Übungen helfen Azubis im Umgang mit Konflikten, Kund:innen oder schwierigen Situationen.", status: "Prototyp" },
+    { title: "Azubi-Lernbörse", category: "Lernen", text: "Azubis können Lernpartner:innen für Prüfungen, Berufsschule oder Praxis finden.", status: "Suche Team" },
+    { title: "Material besser nutzen", category: "Nachhaltigkeit", text: "Übrig gebliebenes Material wird sichtbar gemacht, damit weniger neu bestellt werden muss.", status: "Idee" },
+  ];
+  const emptyIdea = { title: "", category: "Ausbildung", problem: "", solution: "", team: "", status: "Idee" };
+  const [tab, setTab] = useState("list");
+  const [draft, setDraft] = useState(emptyIdea);
+  const allIdeas = [...ideas, ...examples];
+
+  function update(field, value) {
+    setDraft((current) => ({ ...current, [field]: value }));
+  }
+
+  function saveIdea() {
+    if (!draft.title.trim()) {
+      onNotify?.("Bitte gib einen Titel ein.");
+      return;
+    }
+    setIdeas((items) => [{ ...draft, id: `IDEE-${Date.now()}`, text: draft.solution || draft.problem || "Lokale Demo-Idee" }, ...items]);
+    setDraft(emptyIdea);
+    setTab("list");
+    onNotify?.("Idee lokal vorgemerkt.");
+  }
+
+  return (
+    <ViewFrame>
+      <section className="space-y-6 p-5 lg:p-6">
+        <ViewHero icon={Lightbulb} title="Ideen" subtitle="Projektideen sammeln, Mitstreiter:innen finden und Verbesserungen als Demo vormerken." note="Demo: Ideen werden nicht echt veröffentlicht oder übermittelt." />
 
         <div className="flex flex-wrap gap-2">
-          {canGoBack && (
-            <button
-              type="button"
-              onClick={onBack}
-              className="rounded-lg bg-db-soft px-3 py-2 text-sm font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red"
-            >
-              Zurück
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={onHome}
-            className="rounded-lg bg-db-soft px-3 py-2 text-sm font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red"
-          >
-            Zur Übersicht
-          </button>
+          <button type="button" onClick={() => setTab("list")} className={`rounded-lg px-4 py-3 text-sm font-black ring-1 ${tab === "list" ? "bg-db-red text-white ring-db-red" : "bg-white text-db-dark ring-db-dark/10 hover:bg-red-50 hover:text-db-red"}`}>Ideen ansehen</button>
+          <button type="button" onClick={() => setTab("new")} className={`rounded-lg px-4 py-3 text-sm font-black ring-1 ${tab === "new" ? "bg-db-red text-white ring-db-red" : "bg-white text-db-dark ring-db-dark/10 hover:bg-red-50 hover:text-db-red"}`}>Idee erstellen</button>
         </div>
-      </div>
 
-      {isDirty && (
-        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold leading-7 text-amber-800">
-          Du hast nicht gespeicherte Demo-Eingaben.
+        {tab === "list" && (
+          <div className="grid gap-4 md:grid-cols-2">
+            {allIdeas.map((idea) => (
+              <article key={idea.id || idea.title} className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
+                <div className="flex flex-wrap gap-2">
+                  <SmallTag>{idea.category}</SmallTag>
+                  <InfoTag>{idea.status}</InfoTag>
+                  <InfoTag>Gesucht: Mitstreiter:innen</InfoTag>
+                </div>
+                <h2 className="mt-4 text-xl font-black text-db-dark">{idea.title}</h2>
+                <p className="mt-2 text-sm font-semibold leading-7 text-db-rail">{idea.text || idea.solution}</p>
+                <button type="button" onClick={() => onNotify?.("Interesse lokal vorgemerkt.")} className="mt-4 rounded bg-db-red px-4 py-3 text-sm font-black text-white hover:bg-red-700">Interesse vormerken</button>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {tab === "new" && (
+          <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
+            <div className="grid gap-4 md:grid-cols-2">
+              <ReportInput label="Titel der Idee" value={draft.title} onChange={(value) => update("title", value)} />
+              <label><FieldLabel>Kategorie</FieldLabel><select className="field" value={draft.category} onChange={(event) => update("category", event.target.value)}>{categories.map((item) => <option key={item}>{item}</option>)}</select></label>
+              <label className="md:col-span-2"><FieldLabel>Welches Problem löst die Idee?</FieldLabel><textarea className="field min-h-24 resize-y py-3" value={draft.problem} onChange={(event) => update("problem", event.target.value)} /></label>
+              <label className="md:col-span-2"><FieldLabel>Kurze Lösung</FieldLabel><textarea className="field min-h-24 resize-y py-3" value={draft.solution} onChange={(event) => update("solution", event.target.value)} /></label>
+              <ReportInput label="Wer könnte mitmachen?" value={draft.team} onChange={(value) => update("team", value)} />
+              <label><FieldLabel>Status</FieldLabel><select className="field" value={draft.status} onChange={(event) => update("status", event.target.value)}>{["Idee", "Suche Team", "In Planung", "Prototyp"].map((item) => <option key={item}>{item}</option>)}</select></label>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <button type="button" onClick={saveIdea} className="rounded bg-db-red px-4 py-3 text-sm font-black text-white hover:bg-red-700">Idee lokal vormerken</button>
+              <button type="button" onClick={() => setDraft(emptyIdea)} className="rounded-lg bg-db-soft px-4 py-3 text-sm font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red">Formular leeren</button>
+            </div>
+          </div>
+        )}
+
+        <p className="rounded-xl bg-white p-4 text-sm font-semibold leading-7 text-db-rail shadow-sm">Für echte interne Nutzung wären Zuständigkeit, Moderation und Freigabe nötig.</p>
+      </section>
+    </ViewFrame>
+  );
+}
+
+function AzubiNewsView({ suggestions, setSuggestions, onNavigate, onNotify }) {
+  const categories = ["Alle", "Ausbildung", "Respekt", "Mobbing", "Diskriminierung", "Gewaltprävention", "Lernen"];
+  const articles = [
+    { title: "Warum frühes Ansprechen Konflikte kleiner halten kann", category: "Respekt", date: "14.05.2026", preview: "Viele Konflikte werden größer, weil niemand früh reagiert. Ein sachliches Gespräch oder eine Notiz kann helfen, den nächsten Schritt klarer zu machen." },
+    { title: "Mobbing erkennen: Wann aus Spaß ein Problem wird", category: "Mobbing", date: "14.05.2026", preview: "Wenn Sprüche wiederholt verletzen, vor anderen bloßstellen oder ausgrenzen, sollte man das ernst nehmen und dokumentieren." },
+    { title: "Deeskalation im Kundenkontakt: ruhig bleiben, Abstand halten", category: "Gewaltprävention", date: "14.05.2026", preview: "Bei aggressivem Verhalten ist Sicherheit wichtiger als Diskussion. Abstand halten, Unterstützung holen und später sachlich festhalten." },
+    { title: "Diskriminierung nicht normalisieren", category: "Diskriminierung", date: "14.05.2026", preview: "Abwertende Aussagen über Herkunft, Religion, Geschlecht oder Aussehen sollten nicht klein geredet werden. Kontext und Wortlaut können wichtig sein." },
+    { title: "Ausbildung: Hilfe früh suchen ist kein Zeichen von Schwäche", category: "Ausbildung", date: "14.05.2026", preview: "Wer früh sagt, dass etwas zu viel wird, kann oft verhindern, dass Stress oder Konflikte größer werden." },
+    { title: "Lernen unter Druck: kleine Pläne statt Panik", category: "Lernen", date: "14.05.2026", preview: "Prüfungsstress wird leichter, wenn Aufgaben kleiner werden: Thema wählen, 25 Minuten lernen, kurze Pause, nächste Einheit." },
+  ];
+  const [filter, setFilter] = useState("Alle");
+  const [selected, setSelected] = useState(null);
+  const [draft, setDraft] = useState({ topic: "", category: "Ausbildung", why: "", proposal: "" });
+  const filtered = filter === "Alle" ? articles : articles.filter((item) => item.category === filter);
+
+  function saveSuggestion() {
+    if (!draft.topic.trim()) {
+      onNotify?.("Bitte gib ein Thema ein.");
+      return;
+    }
+    setSuggestions((items) => [{ ...draft, id: `NEWS-${Date.now()}` }, ...items]);
+    setDraft({ topic: "", category: "Ausbildung", why: "", proposal: "" });
+    onNotify?.("Beitrag lokal vorgemerkt.");
+  }
+
+  return (
+    <ViewFrame>
+      <section className="space-y-6 p-5 lg:p-6">
+        <ViewHero icon={Newspaper} title="Azubi-News" subtitle="Kurze Demo-Beiträge rund um Ausbildung, Respekt, Prävention und ein sicheres Miteinander." note="Demo-Zeitung: keine echten DB-News, keine offizielle Veröffentlichung." />
+
+        <div className="flex flex-wrap gap-2">
+          {categories.map((category) => (
+            <button key={category} type="button" onClick={() => setFilter(category)} className={`rounded-lg px-3 py-2 text-xs font-black ring-1 ${filter === category ? "bg-db-red text-white ring-db-red" : "bg-white text-db-dark ring-db-dark/10 hover:bg-red-50 hover:text-db-red"}`}>{category}</button>
+          ))}
         </div>
+
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((article) => (
+            <article key={article.title} className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
+              <div className="flex flex-wrap gap-2"><SmallTag>{article.category}</SmallTag><InfoTag>{article.date}</InfoTag></div>
+              <h2 className="mt-4 text-xl font-black text-db-dark">{article.title}</h2>
+              <p className="mt-2 text-sm font-semibold leading-7 text-db-rail">{article.preview}</p>
+              <button type="button" onClick={() => setSelected(article)} className="mt-4 rounded bg-db-red px-4 py-3 text-sm font-black text-white hover:bg-red-700">Lesen</button>
+            </article>
+          ))}
+        </div>
+
+        {selected && (
+          <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-panel">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <SmallTag>{selected.category}</SmallTag>
+                <h2 className="mt-4 text-2xl font-black text-db-dark">{selected.title}</h2>
+                <p className="mt-2 text-sm font-semibold text-db-rail">{selected.date}</p>
+              </div>
+              <button type="button" onClick={() => setSelected(null)} className="rounded-lg bg-db-soft px-3 py-2 text-sm font-black text-db-dark ring-1 ring-db-dark/10">Schließen</button>
+            </div>
+            <div className="mt-4 grid gap-3 text-sm font-semibold leading-7 text-db-rail">
+              <p>{selected.preview}</p>
+              <p>Wichtig ist, Situationen früh ernst zu nehmen und nicht alles allein auszuhalten.</p>
+              <p>Eine kurze Notiz kann helfen, später sachlich über den nächsten Schritt zu sprechen.</p>
+              <p>Bei Gefahr oder starker Belastung bitte echte Hilfe holen.</p>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <button type="button" onClick={() => onNavigate("kiHilfe")} className="rounded-lg bg-db-soft px-4 py-3 text-sm font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red">Hilfe öffnen</button>
+              <button type="button" onClick={() => onNavigate("protokoll")} className="rounded-lg bg-db-soft px-4 py-3 text-sm font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red">Vorfall festhalten</button>
+              <button type="button" onClick={() => onNavigate("training")} className="rounded-lg bg-db-soft px-4 py-3 text-sm font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red">Training & Lernen</button>
+            </div>
+          </div>
+        )}
+
+        <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
+          <h2 className="text-xl font-black text-db-dark">Beitrag vorschlagen</h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <ReportInput label="Thema" value={draft.topic} onChange={(value) => setDraft((current) => ({ ...current, topic: value }))} />
+            <label><FieldLabel>Kategorie</FieldLabel><select className="field" value={draft.category} onChange={(event) => setDraft((current) => ({ ...current, category: event.target.value }))}>{categories.filter((item) => item !== "Alle").map((item) => <option key={item}>{item}</option>)}</select></label>
+            <label className="md:col-span-2"><FieldLabel>Warum ist das wichtig?</FieldLabel><textarea className="field min-h-20 resize-y py-3" value={draft.why} onChange={(event) => setDraft((current) => ({ ...current, why: event.target.value }))} /></label>
+            <label className="md:col-span-2"><FieldLabel>Kurzer Vorschlag</FieldLabel><textarea className="field min-h-20 resize-y py-3" value={draft.proposal} onChange={(event) => setDraft((current) => ({ ...current, proposal: event.target.value }))} /></label>
+          </div>
+          <button type="button" onClick={saveSuggestion} className="mt-5 rounded bg-db-red px-4 py-3 text-sm font-black text-white hover:bg-red-700">Beitrag lokal vormerken</button>
+          {suggestions.length > 0 && <p className="mt-3 text-sm font-semibold text-db-rail">{suggestions.length} Beitrag/Beiträge lokal vorgemerkt.</p>}
+        </div>
+      </section>
+    </ViewFrame>
+  );
+}
+
+function FloatingIdeenBubble({ onNotify }) {
+  const categories = ["Ausbildung", "Sicherheit", "Nachhaltigkeit", "Digitalisierung", "Werkstatt", "Kundenkontakt", "Zusammenarbeit", "Kosten sparen", "Respekt & Miteinander"];
+  const examples = [
+    ["Digitaler Azubi-Hilfe-QR", "Ausbildung", "Ein QR-Code führt Azubis direkt zu Hilfe, Lernmaterial, Kontakten und Meldefunktionen."],
+    ["Werkstatt-Checkliste digital", "Werkstatt", "Wiederkehrende Aufgaben werden mit einfachen digitalen Checklisten sicherer und klarer."],
+    ["Deeskalations-Mini-Training", "Kundenkontakt", "Kurze Übungen helfen Azubis im Umgang mit Konflikten, Kund:innen oder schwierigen Situationen."],
+    ["Azubi-Lernbörse", "Ausbildung", "Azubis können Lernpartner:innen für Prüfungen, Berufsschule oder Praxis finden."],
+    ["Material besser nutzen", "Kosten sparen", "Übrig gebliebenes Material wird sichtbar gemacht, damit weniger neu bestellt werden muss."],
+  ];
+  const emptyIdea = {
+    title: "",
+    category: "Ausbildung",
+    problem: "",
+    solution: "",
+    team: "",
+    status: "Idee",
+  };
+  const [open, setOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("Ausbildung");
+  const [idea, setIdea] = useState(emptyIdea);
+  const [savedIdeas, setSavedIdeas] = useState([]);
+
+  function update(field, value) {
+    setIdea((current) => ({ ...current, [field]: value }));
+  }
+
+  function saveIdea() {
+    if (!idea.title.trim()) {
+      onNotify?.("Bitte gib einen kurzen Titel ein.");
+      return;
+    }
+    setSavedIdeas((items) => [{ ...idea, id: `IDEE-${Date.now()}` }, ...items]);
+    setIdea(emptyIdea);
+    onNotify?.("Idee lokal vorgemerkt.");
+  }
+
+  return (
+    <div className="fixed left-4 bottom-24 z-[54] sm:left-6 lg:bottom-6">
+      {open && (
+        <section className="mb-4 max-h-[min(620px,calc(100vh-8rem))] w-[calc(100vw-2rem)] max-w-[430px] overflow-y-auto rounded-2xl border border-db-dark/10 bg-white shadow-panel">
+          <div className="flex items-start justify-between gap-3 border-b border-db-dark/10 bg-db-dark p-4 text-white">
+            <div>
+              <h2 className="text-lg font-black">Ideen-Bubble</h2>
+              <p className="mt-1 text-xs font-semibold leading-5 text-white/75">Teile Projektideen und finde Mitstreiter:innen – als lokale Demo.</p>
+              <p className="mt-2 text-[11px] font-black text-white/65">Demo: Ideen werden nicht echt veröffentlicht oder übermittelt.</p>
+            </div>
+            <button type="button" onClick={() => setOpen(false)} aria-label="Ideen-Bubble schließen" className="rounded bg-white/10 px-3 py-2 text-sm font-black text-white hover:bg-white/20">
+              x
+            </button>
+          </div>
+
+          <div className="space-y-5 p-4">
+            <div className="flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => {
+                    setActiveCategory(category);
+                    update("category", category);
+                  }}
+                  className={`rounded-full px-3 py-2 text-xs font-black ring-1 ${activeCategory === category ? "bg-red-50 text-db-red ring-red-100" : "bg-db-soft text-db-dark ring-db-dark/10 hover:bg-red-50 hover:text-db-red"}`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid gap-3">
+              {examples.map(([title, category, text]) => (
+                <article key={title} className="rounded-xl bg-db-soft p-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded bg-white px-2 py-1 text-[11px] font-black text-db-rail">{category}</span>
+                    <span className="rounded bg-white px-2 py-1 text-[11px] font-black text-db-rail">Demo-Idee</span>
+                    <span className="rounded bg-white px-2 py-1 text-[11px] font-black text-db-rail">Mitstreiter:innen gesucht</span>
+                  </div>
+                  <p className="mt-3 font-black text-db-dark">{title}</p>
+                  <p className="mt-2 text-sm font-semibold leading-6 text-db-rail">{text}</p>
+                  <button type="button" onClick={() => onNotify?.("Interesse lokal vorgemerkt.")} className="mt-3 rounded bg-white px-3 py-2 text-xs font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red">
+                    Interesse vormerken
+                  </button>
+                </article>
+              ))}
+            </div>
+
+            <div className="rounded-xl border border-db-dark/10 p-4">
+              <p className="text-lg font-black text-db-dark">Neue Idee vormerken</p>
+              <div className="mt-3 grid gap-3">
+                <input className="field" value={idea.title} onChange={(event) => update("title", event.target.value)} placeholder="Titel der Idee" />
+                <select className="field" value={idea.category} onChange={(event) => update("category", event.target.value)}>
+                  {categories.map((category) => <option key={category}>{category}</option>)}
+                </select>
+                <textarea className="field min-h-20 resize-y py-3" value={idea.problem} onChange={(event) => update("problem", event.target.value)} placeholder="Welches Problem löst die Idee?" />
+                <textarea className="field min-h-20 resize-y py-3" value={idea.solution} onChange={(event) => update("solution", event.target.value)} placeholder="Kurze Lösung" />
+                <input className="field" value={idea.team} onChange={(event) => update("team", event.target.value)} placeholder="Wer könnte mitmachen?" />
+                <select className="field" value={idea.status} onChange={(event) => update("status", event.target.value)}>
+                  {["Idee", "Suche Team", "In Planung", "Prototyp"].map((status) => <option key={status}>{status}</option>)}
+                </select>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button type="button" onClick={saveIdea} className="rounded bg-db-red px-4 py-3 text-sm font-black text-white hover:bg-red-700">
+                  Idee lokal vormerken
+                </button>
+                <button type="button" onClick={() => setIdea(emptyIdea)} className="rounded-lg bg-db-soft px-4 py-3 text-sm font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red">
+                  Formular leeren
+                </button>
+              </div>
+            </div>
+
+            {savedIdeas.length > 0 && (
+              <div className="rounded-xl bg-db-soft p-4">
+                <p className="font-black text-db-dark">Lokal vorgemerkt</p>
+                <div className="mt-3 grid gap-2">
+                  {savedIdeas.slice(0, 3).map((item) => (
+                    <p key={item.id} className="rounded bg-white p-3 text-sm font-semibold text-db-rail">{item.title} · {item.category} · {item.status}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <p className="rounded-xl bg-db-soft p-3 text-xs font-semibold leading-5 text-db-rail">
+              Diese Ideen-Bubble ist nur ein Demo-Bereich. Für echte interne Nutzung wären Zuständigkeiten, Moderation und Freigabe nötig.
+            </p>
+          </div>
+        </section>
       )}
+
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-label="Ideen-Bubble öffnen"
+        className="flex h-12 items-center gap-2 rounded-full bg-white px-4 text-db-dark shadow-panel ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red focus-visible:outline focus-visible:outline-4 focus-visible:outline-db-red/25"
+      >
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-db-red text-xs font-black text-white">ID</span>
+        <span className="hidden pr-1 text-sm font-black sm:inline">Ideen</span>
+      </button>
     </div>
   );
 }
@@ -1679,14 +1999,19 @@ function FloatingAzubiBegleiter({ onNavigate, onNotify }) {
     <div className="fixed right-4 bottom-24 z-[55] sm:right-6 lg:bottom-6">
       {open && (
         <section className="mb-4 flex h-[min(520px,calc(100vh-8rem))] w-[calc(100vw-2rem)] max-w-[380px] flex-col overflow-hidden rounded-2xl border border-db-dark/10 bg-white shadow-panel">
-          <div className="border-b border-db-dark/10 bg-db-dark p-4 text-white">
+          <div className="bg-db-red p-4 text-white">
             <div className="flex items-start justify-between gap-3">
-              <div>
-                <h2 className="text-lg font-black">Azubi-Begleiter</h2>
-                <p className="mt-1 text-xs font-semibold leading-5 text-white/75">Schreib einfach, was los ist.</p>
-                <p className="mt-2 text-[11px] font-black text-white/65">
-                  {aiMode === "active" ? "KI-Modus aktiv" : aiMode === "demo" ? "Demo-Modus" : "KI-Modus wird geprüft"}
-                </p>
+              <div className="flex items-start gap-2.5">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/15">
+                  <Sparkles size={18} aria-hidden="true" />
+                </span>
+                <div>
+                  <h2 className="text-lg font-black">Azubi-Begleiter</h2>
+                  <p className="mt-0.5 text-xs font-semibold leading-5 text-white/85">Schreib einfach, was los ist.</p>
+                  <p className="mt-1.5 text-[11px] font-black text-white/75">
+                    {aiMode === "active" ? "KI-Modus aktiv" : aiMode === "demo" ? "Demo-Modus" : "KI-Modus wird geprüft"}
+                  </p>
+                </div>
               </div>
               <div className="flex gap-1">
                 <button
@@ -1808,9 +2133,11 @@ function FloatingAzubiBegleiter({ onNavigate, onNotify }) {
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-label="Azubi-Begleiter öffnen"
-        className="flex h-14 items-center gap-3 rounded-full bg-db-red px-4 text-white shadow-panel ring-1 ring-db-red/20 hover:bg-red-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-db-red/25"
+        className="flex h-14 items-center gap-3 rounded-full bg-gradient-to-br from-[#f01428] to-[#c00015] px-4 text-white shadow-[0_14px_34px_rgba(226,0,26,0.35)] ring-1 ring-db-red/20 transition hover:brightness-110 focus-visible:outline focus-visible:outline-4 focus-visible:outline-db-red/25"
       >
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-sm font-black text-db-red">KI</span>
+        <span className="motion-pulse flex h-9 w-9 items-center justify-center rounded-full bg-white text-db-red">
+          <Sparkles size={18} aria-hidden="true" />
+        </span>
         <span className="hidden pr-1 text-sm font-black sm:inline">Azubi-Begleiter</span>
       </button>
     </div>
@@ -1973,8 +2300,8 @@ function localFloatingBegleiterResponse(message, context = detectFloatingChatInt
     return {
       sections: [
         ["Ich ordne das so ein:", "Das klingt sehr belastend. Damit solltest du jetzt nicht allein bleiben."],
-        ["Was du jetzt tun kannst:", "Sprich sofort mit einer realen Vertrauensperson oder einer Notfallstelle."],
-        ["Nächster Schritt:", "Wenn akute Gefahr besteht, ruf bitte sofort Notfallhilfe."],
+        ["Ruf jetzt an – kostenlos & anonym:", "Telefonseelsorge: 0800 111 0 111 oder 0800 111 0 222 (24/7). Bis 25 Jahre: Nummer gegen Kummer 116 111."],
+        ["Bei akuter Gefahr:", "Notruf 112. Bei der DB hilft das MUT-Team anonym: 0800 100 99 66."],
         ["Wichtig:", "Diese App kann keine Krisenhilfe leisten und ersetzt keine psychologische Hilfe."],
       ],
       actions: ["help", "protocol"],
@@ -1985,9 +2312,9 @@ function localFloatingBegleiterResponse(message, context = detectFloatingChatInt
     return {
       sections: [
         ["Ich ordne das so ein:", "Sicherheit geht vor. Klärung kommt erst danach."],
-        ["Was du jetzt tun kannst:", "Geh, wenn möglich, an einen sicheren Ort und hol eine reale Person dazu."],
-        ["Nächster Schritt:", "Konfrontiere niemanden allein. Dokumentiere später, wenn du sicher bist."],
-        ["Wichtig:", "Bei akuter Gefahr bitte sofort reale Hilfe kontaktieren."],
+        ["Was du jetzt tun kannst:", "Geh, wenn möglich, an einen sicheren Ort und hol eine reale Person dazu. Konfrontiere niemanden allein."],
+        ["Bei akuter Bedrohung sofort anrufen:", "Polizei 110 oder Notruf 112. Bei der DB anonym: MUT-Team 0800 100 99 66."],
+        ["Danach:", "Dokumentiere die Situation sachlich, wenn du wieder sicher bist."],
       ],
       actions: ["help", "protocol", "report"],
     };
@@ -2067,7 +2394,10 @@ function localFloatingBegleiterResponse(message, context = detectFloatingChatInt
 
 function Toast({ message }) {
   return (
-    <div className="fixed left-1/2 bottom-20 z-[60] w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-xl border border-db-dark/10 bg-white px-4 py-3 text-sm font-black text-db-dark shadow-panel md:bottom-6">
+    <div className="toast-pop fixed left-1/2 bottom-20 z-[60] flex w-[calc(100%-2rem)] max-w-sm items-center gap-2.5 rounded-xl border border-db-dark/10 bg-white px-4 py-3 text-sm font-black text-db-dark shadow-panel md:bottom-6">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-50 text-db-red">
+        <Sparkles size={13} aria-hidden="true" />
+      </span>
       {message}
     </div>
   );
@@ -2114,52 +2444,110 @@ function getQuickActions(viewId, navigateMain) {
   return [];
 }
 
+function ViewHero({ icon: Icon, title, subtitle, note }) {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-db-dark/10 bg-white shadow-sm">
+      <div className="h-1.5 bg-gradient-to-r from-db-red via-[#ff2d3f] to-db-red" />
+      <div className="pointer-events-none absolute -right-14 -top-14 h-36 w-36 rounded-full bg-db-red/[0.07] blur-2xl" aria-hidden="true" />
+      <div className="relative p-5">
+        <div className="flex items-center gap-3">
+          {Icon && (
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-red-50 text-db-red">
+              <Icon size={22} aria-hidden="true" />
+            </span>
+          )}
+          <h1 className="text-2xl font-black text-db-dark sm:text-3xl">{title}</h1>
+        </div>
+        {subtitle && <p className="mt-3 text-sm font-semibold leading-7 text-db-rail">{subtitle}</p>}
+        {note && <p className="mt-2 text-xs font-black text-db-rail/70">{note}</p>}
+      </div>
+    </div>
+  );
+}
+
 function SimpleStartView({ onNavigate, demoOpen, setDemoOpen, onCreateExampleData }) {
   const actions = [
-    ["Ich brauche Hilfe", "kiHilfe", "Wenn du reden, sortieren oder schnelle Orientierung brauchst."],
-    ["Ich will etwas festhalten", "protokoll", "Wenn du Datum, Uhrzeit, Ort und Verlauf dokumentieren willst."],
-    ["Ich will eine Meldung vorbereiten", "meldung", "Wenn du einen sachlichen Entwurf erstellen willst."],
+    ["Ich brauche Hilfe", "kiHilfe", "Reden, sortieren, schnelle Orientierung.", LifeBuoy],
+    ["Ich will etwas festhalten", "protokoll", "Datum, Uhrzeit, Ort und Verlauf notieren.", NotebookPen],
+    ["Ich will eine Meldung vorbereiten", "meldung", "Einen sachlichen Entwurf erstellen.", Megaphone],
   ];
 
   return (
     <ViewFrame>
-      <section className="space-y-6 p-5 lg:p-6">
-        <div className="rounded-xl bg-db-dark p-6 text-white shadow-panel">
-          <h1 className="text-4xl font-black">DB Peace AI</h1>
-          <p className="mt-4 max-w-3xl text-xl font-semibold leading-8 text-white/85">
-            Wenn du Mobbing, Hass, Gewalt oder Diskriminierung erlebst, hilft dir die App beim nächsten Schritt.
-          </p>
+      <section className="space-y-8 p-5 lg:p-8">
+        <div className="relative overflow-hidden rounded-xl border border-db-dark/10 bg-white shadow-panel">
+          <div className="h-2 bg-gradient-to-r from-db-red via-[#ff2d3f] to-db-red" />
+          <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-db-red/10 blur-3xl" aria-hidden="true" />
+          <div className="pointer-events-none absolute -bottom-24 -left-16 h-48 w-48 rounded-full bg-db-red/5 blur-3xl" aria-hidden="true" />
+          <div className="relative p-7">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-db-red">Deutsche Bahn · Gegen Hass und Gewalt</p>
+            <h1 className="mt-3 text-4xl font-black text-db-dark">DB Peace AI</h1>
+            <p className="mt-3 max-w-2xl text-lg font-semibold leading-8 text-db-rail">
+              Wenn du Mobbing, Hass, Gewalt oder Diskriminierung erlebst, hilft dir die App beim nächsten Schritt.
+            </p>
+          </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
-          {actions.map(([label, viewId, text]) => (
-            <button
-              key={label}
-              type="button"
-              onClick={() => onNavigate(viewId)}
-              className="rounded-xl border border-db-dark/10 bg-white p-6 text-left text-xl font-black text-db-dark shadow-sm hover:border-db-red hover:bg-red-50 hover:text-db-red"
-            >
-              <span>{label}</span>
-              {text && <span className="mt-2 block text-sm font-semibold leading-6 text-db-rail">{text}</span>}
-            </button>
-          ))}
-        </div>
-
-        <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-3 rounded-xl border border-red-200 bg-red-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <ShieldAlert className="mt-0.5 shrink-0 text-db-red" size={22} aria-hidden="true" />
             <div>
-              <p className="text-lg font-black text-db-dark">Lernen & Üben</p>
-              <p className="mt-2 text-sm font-semibold leading-7 text-db-rail">
-                Trainiere schwierige Situationen und finde passende Hilfeangebote.
-              </p>
+              <p className="text-sm font-black uppercase tracking-wide text-db-red">Im Notfall</p>
+              <p className="mt-1 text-sm font-semibold leading-6 text-db-rail">Bei akuter Gefahr zählt jede Sekunde – hol dir sofort echte Hilfe.</p>
             </div>
-            <button type="button" onClick={() => onNavigate("training")} className="rounded bg-db-red px-4 py-3 text-sm font-black text-white hover:bg-red-700">
-              Lernen öffnen
+          </div>
+          <div className="flex shrink-0 gap-2">
+            <a href="tel:112" className="motion-pulse inline-flex items-center gap-2 rounded-lg bg-db-red px-4 py-3 text-sm font-black text-white hover:bg-red-700" aria-label="Notruf 112 anrufen">
+              <Phone size={16} aria-hidden="true" /> Notruf 112
+            </a>
+            <button type="button" onClick={() => onNavigate("kiHilfe")} className="rounded-lg bg-white px-4 py-3 text-sm font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red">
+              Hilfe öffnen
             </button>
           </div>
         </div>
 
-        <p className="rounded-xl border border-db-dark/10 bg-white p-4 text-sm font-black leading-6 text-db-rail shadow-sm">
+        <div className="grid gap-4 md:grid-cols-3">
+          {actions.map(([label, viewId, text, Icon]) => (
+            <button
+              key={label}
+              type="button"
+              onClick={() => onNavigate(viewId)}
+              className="group flex flex-col rounded-xl border border-db-dark/10 bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:border-db-red hover:shadow-panel"
+            >
+              <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-red-50 text-db-red transition group-hover:bg-db-red group-hover:text-white">
+                {Icon && <Icon size={24} aria-hidden="true" />}
+              </span>
+              <span className="text-xl font-black text-db-dark transition group-hover:text-db-red">{label}</span>
+              {text && <span className="mt-2 block text-sm font-semibold leading-6 text-db-rail">{text}</span>}
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-black text-db-red opacity-0 transition group-hover:opacity-100">
+                Öffnen <ArrowRight size={16} aria-hidden="true" />
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div className="rounded-xl border border-db-dark/10 bg-white p-4 shadow-sm">
+          <p className="px-1 text-xs font-black uppercase tracking-wide text-db-rail">Mehr in der App</p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+            {[
+              ["Lernen & Üben", "training", GraduationCap],
+              ["Ideen einreichen", "ideen", Lightbulb],
+              ["Azubi-News", "news", Newspaper],
+            ].map(([label, viewId, Icon]) => (
+              <button
+                key={viewId}
+                type="button"
+                onClick={() => onNavigate(viewId)}
+                className="flex items-center gap-2 rounded-lg bg-db-soft px-3 py-3 text-left text-sm font-black text-db-dark transition hover:bg-red-50 hover:text-db-red"
+              >
+                <Icon size={18} className="shrink-0 text-db-red" aria-hidden="true" />
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <p className="px-1 text-sm font-black leading-6 text-db-rail">
           Die App sendet nichts automatisch. Menschen entscheiden, nicht die KI.
         </p>
 
@@ -2286,6 +2674,120 @@ function GuidedDemoPanel({ onClose, onNavigate, onCreateExampleData }) {
           Mit leerer App starten
         </button>
       </div>
+    </div>
+  );
+}
+
+const notrufKontakte = [
+  { label: "Notruf 112", tel: "112", note: "Feuerwehr & Rettung – bei akuter Gefahr" },
+  { label: "Polizei 110", tel: "110", note: "Bei Bedrohung oder Gewalt" },
+];
+
+const hilfeKontaktGruppen = [
+  {
+    titel: "Bei der Deutschen Bahn",
+    icon: Building2,
+    hinweis: "Kostenlos und auf Wunsch anonym.",
+    kontakte: [
+      { label: "MUT-Team", tel: "0800 100 99 66", note: "Mitarbeiterunterstützung – anonym oder persönlich, bei Sorgen, Konflikten und Belastung" },
+      { label: "Compliance-Meldestelle", note: "Anonyme Meldung von Fehlverhalten – Kontakt über das DB-Intranet" },
+      { label: "JAV / Vertrauensperson vor Ort", note: "Deine Jugend- und Auszubildendenvertretung kennt dich und deinen Betrieb" },
+    ],
+  },
+  {
+    titel: "Anonym & rund um die Uhr",
+    icon: Clock,
+    hinweis: "Unabhängig, kostenlos, vertraulich.",
+    kontakte: [
+      { label: "Telefonseelsorge", tel: "0800 111 0 111", note: "24/7, kostenlos, anonym" },
+      { label: "Telefonseelsorge", tel: "0800 111 0 222", note: "Zweite Leitung, 24/7" },
+      { label: "Nummer gegen Kummer", tel: "116 111", note: "Für junge Menschen bis 25" },
+    ],
+  },
+];
+
+function telHref(tel) {
+  return `tel:${tel.replace(/\s+/g, "")}`;
+}
+
+function KontaktZeile({ label, tel, note }) {
+  return (
+    <div className="rounded-lg border border-db-dark/10 bg-db-soft p-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="min-w-0 flex-1 text-sm font-black text-db-dark break-words">{label}</p>
+        {tel ? (
+          <a
+            href={telHref(tel)}
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-db-red px-3 py-2 text-sm font-black text-white hover:bg-red-700"
+            aria-label={`${label} anrufen: ${tel}`}
+          >
+            <Phone size={14} aria-hidden="true" /> {tel}
+          </a>
+        ) : (
+          <span className="shrink-0 rounded-lg bg-white px-3 py-2 text-xs font-black text-db-rail ring-1 ring-db-dark/10">
+            vor Ort
+          </span>
+        )}
+      </div>
+      {note && <p className="mt-2 text-xs font-semibold leading-5 text-db-rail">{note}</p>}
+    </div>
+  );
+}
+
+function EchteHilfeKontakte() {
+  const [showAll, setShowAll] = useState(false);
+  return (
+    <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
+      <h2 className="text-2xl font-black text-db-dark">Echte Hilfe – sofort erreichbar</h2>
+      <p className="mt-2 text-sm font-semibold leading-6 text-db-rail">
+        Diese App ersetzt keine Menschen. Bei akuter Gefahr sofort anrufen – tippe auf die Nummer.
+      </p>
+
+      <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
+        <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-db-red">
+          <ShieldAlert size={16} aria-hidden="true" /> Akute Gefahr
+        </p>
+        <div className="mt-3 space-y-2">
+          {notrufKontakte.map((kontakt) => (
+            <KontaktZeile key={kontakt.label} {...kontakt} />
+          ))}
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => setShowAll((value) => !value)}
+        aria-expanded={showAll}
+        className="mt-3 flex w-full items-center justify-between gap-2 rounded-lg bg-db-soft px-4 py-3 text-sm font-black text-db-dark transition hover:bg-red-50 hover:text-db-red"
+      >
+        <span>Weitere Anlaufstellen (DB-Hilfe & anonyme Beratung)</span>
+        <ChevronDown size={18} className={`shrink-0 transition-transform ${showAll ? "rotate-180" : ""}`} aria-hidden="true" />
+      </button>
+
+      {showAll && (
+        <div className="motion-card">
+          {hilfeKontaktGruppen.map((gruppe) => {
+            const GIcon = gruppe.icon;
+            return (
+              <div key={gruppe.titel} className="mt-4">
+                <p className="flex items-center gap-2 text-sm font-black text-db-dark">
+                  {GIcon && <GIcon size={16} className="text-db-red" aria-hidden="true" />}
+                  {gruppe.titel}
+                </p>
+                <p className="text-xs font-semibold text-db-rail">{gruppe.hinweis}</p>
+                <div className="mt-2 space-y-2">
+                  {gruppe.kontakte.map((kontakt) => (
+                    <KontaktZeile key={`${kontakt.label}-${kontakt.tel ?? "vorort"}`} {...kontakt} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+          <p className="mt-4 text-[11px] font-semibold leading-5 text-db-rail">
+            Hinweis: DB-interne Nummern vor dem echten Einsatz im Intranet verifizieren. Notruf 112/110 und die unabhängigen Hotlines sind bundesweit gültig.
+          </p>
+        </div>
+      )}
     </div>
   );
 }
@@ -2446,10 +2948,9 @@ function SimpleSoforthilfeView({ onNavigate, onNotify }) {
   return (
     <ViewFrame>
       <section className="space-y-5 p-5 lg:p-6">
-        <div className="rounded-xl bg-db-dark p-5 text-white shadow-panel">
-          <h1 className="text-3xl font-black">Hilfe</h1>
-          <p className="mt-3 text-sm font-semibold leading-7 text-white/75">Was brauchst du gerade?</p>
-        </div>
+        <ViewHero icon={LifeBuoy} title="Hilfe" subtitle="Was brauchst du gerade?" />
+
+        <EchteHilfeKontakte />
 
         <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
           <h2 className="text-2xl font-black text-db-dark">Was ist los?</h2>
@@ -2491,7 +2992,7 @@ function SimpleSoforthilfeView({ onNavigate, onNotify }) {
 
         <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
           <p className="text-lg font-black text-db-dark">Azubi-Begleiter</p>
-          <p className="mt-2 text-sm font-semibold leading-7 text-db-rail">Der Chat unten rechts hilft dir beim Sortieren. Schreib einfach, was los ist.</p>
+          <p className="mt-2 text-sm font-semibold leading-6 text-db-rail">Unten rechts kannst du einfach schreiben, was los ist.</p>
         </div>
       </section>
     </ViewFrame>
@@ -2941,6 +3442,64 @@ function localAzubiBegleiterResponse(message) {
   ];
 }
 
+async function exportRecordPdf({ subtitle, title, fields, footerNote, fileName }) {
+  const { jsPDF } = await import("jspdf");
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const margin = 16;
+  const contentW = pageW - margin * 2;
+
+  // Kopfbalken in DB-Verkehrsrot
+  doc.setFillColor(226, 0, 26);
+  doc.rect(0, 0, pageW, 24, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(17);
+  doc.text("DB Peace AI", margin, 12);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.text(subtitle, margin, 19);
+
+  let y = 38;
+  doc.setTextColor(31, 35, 40);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text(title, margin, y);
+  y += 9;
+
+  const ensureSpace = () => {
+    if (y > pageH - 28) {
+      doc.addPage();
+      y = margin + 6;
+    }
+  };
+
+  doc.setFontSize(11);
+  fields.forEach(([label, value]) => {
+    ensureSpace();
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(58, 63, 69);
+    doc.text(label, margin, y);
+    y += 5.5;
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(31, 35, 40);
+    const text = value != null && String(value).trim() ? String(value) : "—";
+    doc.splitTextToSize(text, contentW).forEach((line) => {
+      ensureSpace();
+      doc.text(line, margin, y);
+      y += 5.5;
+    });
+    y += 3;
+  });
+
+  doc.setFontSize(8.5);
+  doc.setTextColor(130, 130, 130);
+  doc.text(doc.splitTextToSize(footerNote, contentW), margin, pageH - 14);
+
+  doc.save(fileName);
+}
+
 function SimpleVorfallView({ onNavigate, onSaveProtocol, onDeleteProtocol, onUseAsReport, protocols, onNotify, onDirtyChange, onResetDirty, onRequestConfirm }) {
   const [note, setNote] = useState(() => emptyProtocol());
   const [tab, setTab] = useState("new");
@@ -3209,6 +3768,27 @@ function SimpleVorfallView({ onNavigate, onSaveProtocol, onDeleteProtocol, onUse
     onUseAsReport(item);
   }
 
+  function exportEntryPdf(item) {
+    exportRecordPdf({
+      subtitle: "Vorfall-Dokumentation",
+      title: `Eintrag ${item.id || "(nicht gespeichert)"}`,
+      fields: [
+        ["Datum", item.date],
+        ["Uhrzeit", item.time],
+        ["Ort / Kontext", item.location],
+        ["Kategorie", item.type],
+        ["Belastung", item.burden ? `${item.burden} / 5` : "—"],
+        ["Akute Gefahr", item.danger],
+        ["Beschreibung", item.description],
+      ],
+      footerNote:
+        "Lokal im DB Peace AI Demo-Prototyp erstellt und nicht automatisch übermittelt. Diese Dokumentation ist eine sachliche Hilfe für Gespräche oder Meldungen und ersetzt keine rechtliche Beratung.",
+      fileName: `DB-Peace-AI_${item.id || "Eintrag"}.pdf`,
+    })
+      .then(() => onNotify?.("PDF erstellt"))
+      .catch(() => onNotify?.("PDF konnte nicht erstellt werden"));
+  }
+
   function copyEntry(item) {
     const text = shareText(item);
     if (navigator.clipboard?.writeText) {
@@ -3277,10 +3857,7 @@ function SimpleVorfallView({ onNavigate, onSaveProtocol, onDeleteProtocol, onUse
   return (
     <ViewFrame>
       <section className="space-y-6 p-5 lg:p-6">
-        <div className="rounded-xl bg-db-dark p-5 text-white shadow-panel">
-          <h1 className="text-3xl font-black">Vorfall festhalten</h1>
-          <p className="mt-3 text-sm font-semibold leading-7 text-white/75">Sachliche Dokumentation für Gespräche, Meldungen oder spätere Klärung. Du musst keine echten Namen nennen.</p>
-        </div>
+        <ViewHero icon={NotebookPen} title="Vorfall festhalten" subtitle="Sachliche Dokumentation für Gespräche, Meldungen oder spätere Klärung. Du musst keine echten Namen nennen." />
 
         <div className="flex flex-wrap gap-2">
           {["Neuer Eintrag", "Verlauf"].map((label) => {
@@ -3463,6 +4040,7 @@ function SimpleVorfallView({ onNavigate, onSaveProtocol, onDeleteProtocol, onUse
                 <div className="flex flex-wrap gap-2">
                   <ActionButton label="Kopieren" onClick={() => copyEntry(selected)} />
                   <ActionButton label="Teilen" onClick={() => shareEntry(selected)} />
+                  <ActionButton label="Als PDF" onClick={() => exportEntryPdf(selected)} />
                   <ActionButton label="Bearbeiten" onClick={() => edit(selected)} />
                   <ActionButton label="Löschen" onClick={() => remove(selected)} />
                   <ActionButton label="Zur Meldung übernehmen" onClick={() => prepareReport(selected)} />
@@ -3476,6 +4054,29 @@ function SimpleVorfallView({ onNavigate, onSaveProtocol, onDeleteProtocol, onUse
         )}
       </section>
     </ViewFrame>
+  );
+}
+
+function MeldewegeHinweis() {
+  const dbGruppe = hilfeKontaktGruppen.find((gruppe) => gruppe.titel === "Bei der Deutschen Bahn");
+  return (
+    <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
+      <div className="flex items-center gap-2">
+        <Send size={18} className="text-db-red" aria-hidden="true" />
+        <h2 className="text-xl font-black text-db-dark">Wohin mit deiner Meldung?</h2>
+      </div>
+      <p className="mt-2 text-sm font-semibold leading-6 text-db-rail">
+        Diese App sendet nichts. Deine fertige Meldung gibst du selbst an eine echte Stelle weiter – du entscheidest, an welche:
+      </p>
+      <div className="mt-4 space-y-2">
+        {dbGruppe?.kontakte.map((kontakt) => (
+          <KontaktZeile key={`${kontakt.label}-${kontakt.tel ?? "vorort"}`} {...kontakt} />
+        ))}
+      </div>
+      <p className="mt-3 text-[11px] font-semibold leading-5 text-db-rail">
+        Bei akuter Gefahr zählt jede Sekunde: Notruf 112. DB-interne Kontakte vor dem Einsatz im Intranet verifizieren.
+      </p>
+    </div>
   );
 }
 
@@ -3560,21 +4161,34 @@ function SimpleMeldenView({ reportDraft, reportDrafts, setReportDrafts, onNotify
     }
   }
 
+  function exportMeldungPdf() {
+    exportRecordPdf({
+      subtitle: "Meldung (Vorbereitung)",
+      title: `Meldung ${preview?.caseNumber || draft.caseNumber || "(Entwurf)"}`,
+      fields: [
+        ["Modus", mode],
+        ["Art des Vorfalls", draft.category],
+        ["Dringlichkeit / Risiko", risk],
+        ["Datum", draft.date],
+        ["Uhrzeit", draft.time],
+        ["Ort", draft.location],
+        ["Wie oft", draft.repetition],
+        ["Beschreibung", draft.description],
+        ["Wer betroffen", draft.affected],
+        ["Nächster Schritt", nextStep],
+      ],
+      footerNote:
+        "Lokal im DB Peace AI Demo-Prototyp vorbereitet. Diese App übermittelt nichts automatisch – du gibst die Meldung selbst an eine zuständige Stelle weiter. Ersetzt keine rechtliche Beratung.",
+      fileName: `DB-Peace-AI_Meldung_${preview?.caseNumber || "Entwurf"}.pdf`,
+    })
+      .then(() => onNotify?.("PDF erstellt"))
+      .catch(() => onNotify?.("PDF konnte nicht erstellt werden"));
+  }
+
   return (
     <ViewFrame>
       <section className="space-y-6 p-5 lg:p-6">
-        <div className="rounded-xl bg-db-dark p-5 text-white shadow-panel">
-          <h1 className="text-3xl font-black">Meldung vorbereiten</h1>
-          <p className="mt-3 text-sm font-semibold leading-7 text-white/75">Diese Demo übermittelt nichts. Du bereitest nur eine klare Vorschau vor.</p>
-        </div>
-
-        <div className="grid gap-2 rounded-xl border border-db-dark/10 bg-white p-3 shadow-sm sm:grid-cols-5">
-          {["1. Modus", "2. Situation", "3. Zeit & Ort", "4. Beschreibung", "5. Vorschau"].map((step) => (
-            <div key={step} className="rounded-lg bg-db-soft px-3 py-2 text-center text-xs font-black text-db-rail">
-              {step}
-            </div>
-          ))}
-        </div>
+        <ViewHero icon={Megaphone} title="Meldung vorbereiten" subtitle="Diese Demo übermittelt nichts. Du bereitest nur eine klare Vorschau vor." />
 
         <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
           <h2 className="text-xl font-black text-db-dark">Wie möchtest du die Meldung vorbereiten?</h2>
@@ -3602,6 +4216,7 @@ function SimpleMeldenView({ reportDraft, reportDrafts, setReportDrafts, onNotify
             <div className="mt-5 flex flex-wrap gap-2">
               <button type="button" onClick={makePreview} className="rounded bg-db-red px-4 py-3 text-sm font-black text-white hover:bg-red-700">Meldungsvorschau erstellen</button>
               <button type="button" onClick={copy} className="rounded-lg bg-db-soft px-4 py-3 text-sm font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red">Text kopieren</button>
+              <button type="button" onClick={exportMeldungPdf} className="rounded bg-db-red px-4 py-3 text-sm font-black text-white hover:bg-red-700">Als PDF speichern</button>
               <button type="button" onClick={save} className="rounded-lg bg-db-soft px-4 py-3 text-sm font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red">Entwurf speichern</button>
               <button type="button" onClick={reset} className="rounded-lg bg-db-soft px-4 py-3 text-sm font-black text-db-dark ring-1 ring-db-dark/10 hover:bg-red-50 hover:text-db-red">Neue Meldung</button>
             </div>
@@ -3628,6 +4243,7 @@ function SimpleMeldenView({ reportDraft, reportDrafts, setReportDrafts, onNotify
                 </div>
               ) : <p className="mt-4 rounded-xl bg-db-soft p-4 text-sm font-semibold text-db-rail">Erstelle zuerst eine Vorschau.</p>}
             </div>
+            <MeldewegeHinweis />
             {copyText && <textarea className="field min-h-32 resize-y py-3" value={copyText} readOnly />}
           </div>
         </div>
@@ -3636,16 +4252,308 @@ function SimpleMeldenView({ reportDraft, reportDrafts, setReportDrafts, onNotify
   );
 }
 
+const praeventionsAngebote = [
+  {
+    gruppe: "Bei der Deutschen Bahn",
+    icon: Building2,
+    angebote: [
+      {
+        name: "DB Lernwelt",
+        titel: "Trainings zu Vielfalt & Unconscious Bias",
+        info: "Interne Lernangebote für Azubis und Mitarbeitende rund um Respekt, Vielfalt und Umgang mit Diskriminierung.",
+        linkLabel: "Im DB-Intranet",
+        link: null,
+      },
+      {
+        name: "Bahn-Azubis gegen Hass und Gewalt",
+        titel: "Mitmach-Wettbewerb von DB & EVG",
+        info: "Seit 2000 – eigene Projekte gegen Rassismus, Gewalt und Diskriminierung einreichen. Über 13.000 Azubis haben schon mitgemacht.",
+        linkLabel: "Zum Wettbewerb",
+        link: "https://www.deutschebahn.com/de/nachhaltigkeit/verantwortung_gesellschaft/BAgHG",
+      },
+    ],
+  },
+  {
+    gruppe: "EVG & Gewerkschaftsjugend",
+    icon: Users,
+    angebote: [
+      {
+        name: "EVG Jugend",
+        titel: "JiB-Seminare (Jugend im Betrieb)",
+        info: "Bildung und Beratung der EVA Akademie für junge Mitglieder – auch zu Respekt, Vielfalt und gegen Diskriminierung.",
+        linkLabel: "Zu den Jugend-Seminaren",
+        link: "https://www.eva-akademie.de/seminare-politische-bildung/seminare-fuer-jugendliche",
+      },
+      {
+        name: "DGB Bildungswerk",
+        titel: "Jugendseminare gegen Rechts & für Vielfalt",
+        info: "Politische Jugendbildung, Zivilcourage und Anti-Rassismus-Workshops für junge Beschäftigte.",
+        linkLabel: "Seminarfinder",
+        link: "https://www.dgb-bildungswerk-nrw.de/seminare/evg/seminarfinder",
+      },
+    ],
+  },
+  {
+    gruppe: "Staatlich & unabhängig",
+    icon: Landmark,
+    angebote: [
+      {
+        name: "Bundeszentrale für politische Bildung (bpb)",
+        titel: "Workshops & Material gegen Hass",
+        info: "Zivilcourage, gegen Hass im Netz und Demokratiebildung – kostenlose Angebote für junge Menschen.",
+        linkLabel: "Zu Material & Methoden",
+        link: "https://www.bpb.de/themen/rechtsextremismus/infopool-rechtsextremismus/550489/materialien-und-methoden-fuer-die-paedagogische-praxis/",
+      },
+      {
+        name: "Antidiskriminierungsstelle des Bundes",
+        titel: "Kostenlose Beratung & Bildungsmaterial",
+        info: "Vertraulich und unabhängig. Beratung auch telefonisch: 0800 546 546 5.",
+        linkLabel: "Zu Bildung & Material",
+        link: "https://www.antidiskriminierungsstelle.de/DE/wir-beraten-sie/materialien-fuer-ratsuchende/schulen-hochschulen/bildung_materialien.html",
+      },
+    ],
+  },
+  {
+    gruppe: "Initiativen & Opferhilfe",
+    icon: HeartHandshake,
+    angebote: [
+      {
+        name: "Amadeu Antonio Stiftung",
+        titel: "Gegen Rechtsextremismus, Rassismus & Antisemitismus",
+        info: "Fördert über 1.000 Projekte für eine demokratische Kultur – mit Bildungsmaterial und Beratung.",
+        linkLabel: "Zu den Materialien",
+        link: "https://www.amadeu-antonio-stiftung.de/fachstelle-fuer-politische-bildung-und-entschwoerung/unsere-materialien/",
+      },
+      {
+        name: "Gesicht Zeigen!",
+        titel: "Für ein weltoffenes Deutschland",
+        info: "Workshops und Aktionen für Zivilcourage und gegen Rassismus.",
+        linkLabel: "Zu den Workshops",
+        link: "https://www.gesichtzeigen.de/workshops/",
+      },
+      {
+        name: "HateAid",
+        titel: "Hilfe bei Hass im Netz",
+        info: "Kostenlose Beratung für Betroffene digitaler Gewalt – bei Beleidigung, Bedrohung oder Hetze online.",
+        linkLabel: "Zur Beratung",
+        link: "https://hateaid.org/betroffenenberatung/",
+      },
+      {
+        name: "Weisser Ring",
+        titel: "Opferhilfe bei Gewalt",
+        info: "Unterstützung für Gewaltopfer. Hilfetelefon täglich 7–22 Uhr: 116 006.",
+        linkLabel: "Hilfe bei Gewalt",
+        link: "https://weisser-ring.de/digitalegewalt",
+      },
+    ],
+  },
+];
+
+const regelwerkGruppen = [
+  {
+    titel: "Regeln bei der DB",
+    icon: FileText,
+    hinweis: "DB-interne Vereinbarungen – Volltexte im Intranet, bei JAV oder Betriebsrat.",
+    punkte: [
+      {
+        name: "Konzernbetriebsvereinbarung: Gleichbehandlung & Schutz vor Diskriminierung",
+        text: "Zwischen DB und Arbeitnehmervertretung vereinbart: Niemand darf wegen Herkunft, Religion, Geschlecht, Behinderung, Alter oder sexueller Identität benachteiligt werden. Mobbing und Belästigung verstoßen gegen diese Vereinbarung – Beschwerden müssen geprüft werden.",
+        link: "https://www.antidiskriminierungsstelle.de/SharedDocs/praxisbeispiele/DE/praxisbeispiel-deutsche-bahn-ag.html",
+        linkLabel: "Öffentliche Infos",
+      },
+      {
+        name: "Verhaltenskodex der DB (Code of Conduct)",
+        text: "Verbindliche Grundregeln für alle Mitarbeitenden: respektvoller Umgang, keine Diskriminierung, keine Gewalt. Verstöße kannst du über die Compliance-Meldewege melden.",
+        linkLabel: "Im DB-Intranet",
+      },
+    ],
+  },
+  {
+    titel: "Deine gesetzlichen Rechte",
+    icon: Scale,
+    hinweis: "Gilt in jedem Betrieb in Deutschland – tippe auf einen Paragraphen, um ihn zu lesen.",
+    punkte: [
+      {
+        name: "Beschwerderecht (§ 13 AGG)",
+        text: "Du darfst dich offiziell beschweren, wenn du dich gemobbt, belästigt oder diskriminiert fühlst. Deine Beschwerde muss geprüft werden.",
+        link: "https://www.gesetze-im-internet.de/agg/__13.html",
+        linkLabel: "§ 13 lesen",
+      },
+      {
+        name: "Schutzpflicht des Arbeitgebers (§ 12 AGG)",
+        text: "Die DB muss dich schützen und handeln, sobald sie von Belästigung oder Diskriminierung erfährt – bis hin zu Abmahnung oder Kündigung der Verantwortlichen.",
+        link: "https://www.gesetze-im-internet.de/agg/__12.html",
+        linkLabel: "§ 12 lesen",
+      },
+      {
+        name: "Kein Nachteil für dich (§ 16 AGG)",
+        text: "Wer sich beschwert oder Hilfe holt, darf dafür nicht bestraft oder benachteiligt werden. Das ist gesetzlich verboten.",
+        link: "https://www.gesetze-im-internet.de/agg/__16.html",
+        linkLabel: "§ 16 lesen",
+      },
+      {
+        name: "Gesundheitsschutz (§ 4 ArbSchG)",
+        text: "Auch psychische Belastung zählt: Der Arbeitgeber muss Gefährdungen ernst nehmen und vorbeugen – Mobbing macht nachweislich krank.",
+        link: "https://www.gesetze-im-internet.de/arbschg/__4.html",
+        linkLabel: "§ 4 lesen",
+      },
+      {
+        name: "Faires Miteinander im Betrieb (§ 75 BetrVG)",
+        text: "Arbeitgeber und Betriebsrat müssen gemeinsam über die faire Behandlung aller wachen. JAV und Betriebsrat sind dafür deine offiziellen Ansprechpartner.",
+        link: "https://www.gesetze-im-internet.de/betrvg/__75.html",
+        linkLabel: "§ 75 lesen",
+      },
+      {
+        name: "Besonderer Schutz unter 18 (JArbSchG)",
+        text: "Bist du noch minderjährig, stehst du unter besonderem gesetzlichen Schutz – auch bei Arbeitszeiten und Behandlung im Betrieb.",
+        link: "https://www.gesetze-im-internet.de/jarbschg/",
+        linkLabel: "Gesetz lesen",
+      },
+    ],
+  },
+  {
+    titel: "Was heißt das für dich?",
+    icon: Sparkles,
+    hinweis: "Kurz zusammengefasst – ohne Juristendeutsch.",
+    punkte: [
+      { name: "Du musst nichts hinnehmen", text: "Mobbing, Hass und Gewalt verstoßen gegen DB-Regeln UND Gesetze. Die Regeln stehen auf deiner Seite." },
+      { name: "Beschweren ist dein Recht", text: "Und es darf dir keinen Nachteil bringen – das garantiert § 16 AGG." },
+      { name: "Die DB muss handeln", text: "Sobald sie davon erfährt, ist sie gesetzlich zum Schutz verpflichtet." },
+      { name: "Du bist nicht allein", text: "JAV und Betriebsrat vertreten dich offiziell – kostenlos und vertraulich." },
+      { name: "Dokumentieren stärkt dich", text: "Sachliche Notizen machen deine Beschwerde belastbar – nutze dafür Festhalten in dieser App." },
+    ],
+  },
+];
+
+function RegelnUndRechte() {
+  const [openIndex, setOpenIndex] = useState(0);
+  return (
+    <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
+      <div className="flex items-center gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-50 text-db-red">
+          <Scale size={22} aria-hidden="true" />
+        </span>
+        <div>
+          <h2 className="text-xl font-black text-db-dark">Regeln & deine Rechte</h2>
+          <p className="text-sm font-semibold text-db-rail">Was bei der DB und per Gesetz gegen Mobbing, Hass und Gewalt gilt.</p>
+        </div>
+      </div>
+
+      <div className="mt-4 space-y-2">
+        {regelwerkGruppen.map((gruppe, index) => {
+          const GIcon = gruppe.icon;
+          const open = openIndex === index;
+          return (
+            <div key={gruppe.titel} className="overflow-hidden rounded-xl border border-db-dark/10">
+              <button
+                type="button"
+                onClick={() => setOpenIndex(open ? -1 : index)}
+                aria-expanded={open}
+                className={`flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-black transition ${open ? "bg-red-50 text-db-red" : "bg-db-soft text-db-dark hover:bg-red-50 hover:text-db-red"}`}
+              >
+                <span className="flex items-center gap-2">
+                  {GIcon && <GIcon size={16} aria-hidden="true" />}
+                  {gruppe.titel}
+                </span>
+                <ChevronDown size={18} className={`shrink-0 transition-transform ${open ? "rotate-180" : ""}`} aria-hidden="true" />
+              </button>
+              {open && (
+                <div className="motion-card space-y-3 bg-white p-4">
+                  <p className="text-xs font-semibold text-db-rail">{gruppe.hinweis}</p>
+                  {gruppe.punkte.map((punkt) => (
+                    <article key={punkt.name} className="rounded-lg bg-db-soft p-3">
+                      <p className="text-sm font-black text-db-dark">{punkt.name}</p>
+                      <p className="mt-1 text-xs font-semibold leading-5 text-db-rail">{punkt.text}</p>
+                      {punkt.link ? (
+                        <a
+                          href={punkt.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-db-red px-3 py-1.5 text-xs font-black text-white hover:bg-red-700"
+                        >
+                          {punkt.linkLabel} <ExternalLink size={12} aria-hidden="true" />
+                        </a>
+                      ) : punkt.linkLabel ? (
+                        <span className="mt-2 inline-flex rounded-lg bg-white px-3 py-1.5 text-xs font-black text-db-rail ring-1 ring-db-dark/10">
+                          {punkt.linkLabel}
+                        </span>
+                      ) : null}
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="mt-4 text-[11px] font-semibold leading-5 text-db-rail">
+        Demo-Hinweis: vereinfachte Zusammenfassungen, kein offizieller Wortlaut und keine Rechtsberatung. Volltexte: verlinkte Gesetze (öffentlich) sowie DB-Intranet, JAV oder Betriebsrat.
+      </p>
+    </div>
+  );
+}
+
+function PraeventionsAngebote() {
+  return (
+    <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
+      <div className="flex items-center gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-50 text-db-red">
+          <GraduationCap size={22} aria-hidden="true" />
+        </span>
+        <div>
+          <h2 className="text-xl font-black text-db-dark">Kurse & Angebote gegen Hass und Gewalt</h2>
+          <p className="text-sm font-semibold text-db-rail">Echte Bildungs- und Präventionsangebote, an denen du teilnehmen kannst.</p>
+        </div>
+      </div>
+
+      <div className="mt-5 space-y-5">
+        {praeventionsAngebote.map((gruppe) => {
+          const GIcon = gruppe.icon;
+          return (
+            <div key={gruppe.gruppe}>
+              <p className="flex items-center gap-2 text-sm font-black text-db-dark">
+                {GIcon && <GIcon size={16} className="text-db-red" aria-hidden="true" />}
+                {gruppe.gruppe}
+              </p>
+              <div className="mt-2 grid gap-3 md:grid-cols-2">
+                {gruppe.angebote.map((angebot) => (
+                  <article key={angebot.name} className="flex flex-col rounded-xl border border-db-dark/10 bg-db-soft p-4 transition hover:border-db-red/40 hover:shadow-sm">
+                    <p className="text-sm font-black text-db-dark">{angebot.name}</p>
+                    <p className="mt-0.5 text-sm font-black text-db-red">{angebot.titel}</p>
+                    <p className="mt-1 flex-1 text-xs font-semibold leading-5 text-db-rail">{angebot.info}</p>
+                    {angebot.link ? (
+                      <a
+                        href={angebot.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-3 inline-flex items-center gap-1.5 self-start rounded-lg bg-db-red px-3 py-2 text-xs font-black text-white hover:bg-red-700"
+                      >
+                        {angebot.linkLabel} <ExternalLink size={13} aria-hidden="true" />
+                      </a>
+                    ) : (
+                      <span className="mt-3 inline-flex self-start rounded-lg bg-white px-3 py-2 text-xs font-black text-db-rail ring-1 ring-db-dark/10">
+                        {angebot.linkLabel}
+                      </span>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="mt-4 text-[11px] font-semibold leading-5 text-db-rail">
+        Hinweis: Angebote und Termine ändern sich. Aktuelle Kurse findest du direkt bei den verlinkten Anbietern, DB-interne Angebote über das Intranet.
+      </p>
+    </div>
+  );
+}
+
 function SimpleTrainingLearningView({ onNotify }) {
   const [scenario, setScenario] = useState(null);
   const [feedback, setFeedback] = useState(null);
-  const learningCards = [
-    ["Deeskalation im Kundenkontakt", "Deeskalation", "Demo-Angebot - Verfügbarkeit prüfen"],
-    ["Mobbing erkennen", "Mobbing", "Demo-Angebot - Verfügbarkeit prüfen"],
-    ["Diskriminierung verstehen", "Diskriminierung", "Demo-Angebot - Verfügbarkeit prüfen"],
-    ["Zivilcourage", "Zivilcourage", "Demo-Angebot - Verfügbarkeit prüfen"],
-    ["Gesprächsführung", "Konfliktlösung", "Demo-Angebot - Verfügbarkeit prüfen"],
-  ];
 
   function answer(index) {
     setFeedback(index === 1 ? "Gute Wahl." : "Besser wäre eine ruhige, sichere Reaktion.");
@@ -3655,10 +4563,7 @@ function SimpleTrainingLearningView({ onNotify }) {
   return (
     <ViewFrame>
       <section className="space-y-6 p-5 lg:p-6">
-        <div className="rounded-xl bg-db-dark p-5 text-white shadow-panel">
-          <h1 className="text-3xl font-black">Lernen</h1>
-          <p className="mt-3 text-sm font-semibold leading-7 text-white/75">Kurz üben und einfache Lernangebote ansehen.</p>
-        </div>
+        <ViewHero icon={GraduationCap} title="Lernen" subtitle="Kurz üben und einfache Lernangebote ansehen." />
         <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
           <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
             <h2 className="text-xl font-black text-db-dark">Kurztraining</h2>
@@ -3685,18 +4590,8 @@ function SimpleTrainingLearningView({ onNotify }) {
             ) : <p className="rounded-xl bg-db-soft p-4 text-sm font-semibold text-db-rail">Wähle ein Szenario aus.</p>}
           </div>
         </div>
-        <div className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm">
-          <h2 className="text-xl font-black text-db-dark">Hilfeangebote</h2>
-          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-            {learningCards.map(([title, topic, note]) => (
-              <article key={title} className="rounded-xl bg-db-soft p-4">
-                <p className="font-black text-db-dark">{title}</p>
-                <p className="mt-2 text-sm font-semibold text-db-rail">Thema: {topic}</p>
-                <p className="mt-2 text-xs font-black uppercase tracking-wide text-db-rail">{note}</p>
-              </article>
-            ))}
-          </div>
-        </div>
+        <RegelnUndRechte />
+        <PraeventionsAngebote />
       </section>
     </ViewFrame>
   );
