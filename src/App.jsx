@@ -12,6 +12,8 @@ import { ContactsView } from "./components/ContactsView.jsx";
 import { GlobalSearch } from "./components/GlobalSearch.jsx";
 import { RightsAndLawsView } from "./components/RightsAndLawsView.jsx";
 import { HRDashboard } from "./components/HRDashboard.jsx";
+import { AppLock } from "./components/AppLock.jsx";
+import { PanicButton } from "./components/PanicButton.jsx";
 
 import DashboardAnalytics from "./components/DashboardAnalytics.jsx";
 import ProjectOverview from "./components/ProjectOverview.jsx";
@@ -30,6 +32,11 @@ export default function App() {
   const [isEmergencyOpen, setIsEmergencyOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isHRMode, setIsHRMode] = useState(false);
+  const [isLocked, setIsLocked] = useState(true);
+
+  if (isLocked) {
+    return <AppLock onUnlock={() => setIsLocked(false)} />;
+  }
 
   if (isHRMode) {
     return (
@@ -156,6 +163,9 @@ export default function App() {
 
       {/* Global Floating AI Chat Widget */}
       <FloatingChatWidget />
+
+      {/* Quick Exit / Panic Button */}
+      <PanicButton />
 
       {/* Emergency Modal */}
       <EmergencyModal
