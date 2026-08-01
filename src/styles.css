@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply bg-white text-db-dark dark:bg-db-dark dark:text-white transition-colors duration-300;
+  }
+}
+
 @layer components {
   .field {
     @apply min-h-12 w-full rounded border border-db-dark/15 bg-white px-4 text-base font-semibold text-db-dark outline-none transition placeholder:text-db-rail/70 focus:border-db-red focus:ring-2 focus:ring-db-red/15;
@@ -236,6 +242,85 @@ article,
 
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+.db-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.db-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.db-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(226, 0, 26, 0.2);
+  border-radius: 20px;
+}
+
+.db-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(226, 0, 26, 0.5);
+}
+
+/* --- NEW DB CUSTOM ANIMATIONS --- */
+
+/* The Red DB Stripe */
+.db-red-stripe {
+  background: linear-gradient(90deg, #e2001a 0%, #a40013 100%);
+  background-size: 200% 100%;
+  animation: pulse-stripe 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-stripe {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Animated Background / Speed Lines */
+.db-animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.db-light-streak {
+  position: absolute;
+  width: 150px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(226, 0, 26, 0.15), transparent);
+  animation: moving-streak linear infinite;
+  opacity: 0;
+}
+
+.dark .db-light-streak {
+  background: linear-gradient(90deg, transparent, rgba(226, 0, 26, 0.3), transparent);
+}
+
+@keyframes moving-streak {
+  0% {
+    transform: translateX(-100vw) translateY(0);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% {
+    transform: translateX(100vw) translateY(0);
+    opacity: 0;
+  }
+}
+
+.streak-1 { top: 20%; animation-duration: 8s; animation-delay: 0s; width: 300px; }
+.streak-2 { top: 60%; animation-duration: 12s; animation-delay: 4s; width: 500px; }
+.streak-3 { top: 85%; animation-duration: 15s; animation-delay: 2s; width: 200px; }
+
+/* Glassmorphism Panels */
+.db-glass-panel {
+  @apply bg-white/70 dark:bg-db-dark/70 backdrop-blur-xl border border-white/20 dark:border-white/5;
 }
 
 ::-webkit-scrollbar {

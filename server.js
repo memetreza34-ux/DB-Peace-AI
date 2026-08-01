@@ -1,10 +1,10 @@
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
-import OpenAI from "openai";
+import { GoogleGenAI } from "@google/genai";
 
 const PORT = Number(process.env.API_PORT || 8787);
-const MODEL = process.env.OPENAI_MODEL || "gpt-5.4-mini";
+const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
 loadDotEnv();
 
@@ -77,38 +77,15 @@ function sanitizeMessages(messages) {
   return messages
     .filter((message) => message && (message.role === "user" || message.role === "assistant"))
     .map((message) => ({
-      role: message.role,
-      content: String(message.content || "").slice(0, 900),
+      role: message.role === "assistant" ? "model" : "user", // Gemini expects 'model' instead of 'assistant'
+      parts: [{ text: String(message.content || "").slice(0, 900) }],
     }))
-    .filter((message) => message.content.trim())
+    .filter((message) => message.parts[0].text.trim())
     .slice(-10);
 }
 
-function toResponsesInput(messages) {
-  return messages.map((message) => ({
-    role: message.role,
-    content: message.content,
-  }));
-}
-
-function extractReply(data) {
-  if (typeof data.output_text === "string" && data.output_text.trim()) {
-    return data.output_text.trim();
-  }
-
-  const parts = [];
-  for (const item of data.output || []) {
-    for (const content of item.content || []) {
-      if (typeof content.text === "string") {
-        parts.push(content.text);
-      }
-    }
-  }
-  return parts.join("\n").trim();
-}
-
 async function handleChat(req, res) {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     sendJson(res, 503, { error: "missing_api_key", reply: "" });
     return;
@@ -116,35 +93,91 @@ async function handleChat(req, res) {
 
   const payload = await readJson(req);
   const messages = sanitizeMessages(payload.messages);
+  
   if (messages.length === 0) {
     sendJson(res, 400, { error: "missing_messages", reply: "" });
     return;
   }
 
-  const client = new OpenAI({ apiKey });
-  const data = await client.responses.create({
-    model: process.env.OPENAI_MODEL || MODEL,
-    instructions: systemInstructions,
-    input: toResponsesInput(messages),
-    store: false,
-    max_output_tokens: 280,
-  });
+  try {
+    const ai = new GoogleGenAI({ apiKey });
+    
+    // We send the history and the last message
+    const history = messages.slice(0, -1);
+    const lastMessage = messages[messages.length - 1].parts[0].text;
 
-  sendJson(res, 200, { reply: extractReply(data) || "Ich konnte gerade keine passende Antwort erzeugen." });
+    const chat = ai.chats.create({
+      model: MODEL,
+      config: {
+        systemInstruction: systemInstructions,
+        temperature: 0.7,
+      },
+      history: history
+    });
+
+    const response = await chat.sendMessage({ message: lastMessage });
+
+    sendJson(res, 200, { reply: response.text || "Ich konnte gerade keine passende Antwort erzeugen." });
+  } catch (error) {
+    console.error("Gemini API Error:", error);
+    sendJson(res, 500, { error: "api_error", reply: "Es gab einen Fehler bei der KI-Generierung." });
+  }
+}
+
+async function handleQuiz(req, res) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    sendJson(res, 503, { error: "missing_api_key", questions: [] });
+    return;
+  }
+
+  try {
+    const ai = new GoogleGenAI({ apiKey });
+    const chat = ai.chats.create({
+      model: MODEL,
+      config: {
+        systemInstruction: "Generiere 4 realistische Wissens-Quiz-Fragen für Azubis der Deutschen Bahn zum Thema Mobbing, Diskriminierung, Konflikte am Arbeitsplatz und Rechte in der Ausbildung. Das Output MUSS reines JSON sein (ein Array aus Objekten). Die Keys für jedes Objekt MÜSSEN exakt sein: 'id' (Nummer), 'question' (String), 'answer' (Boolean), 'explanation' (String). Erfinde abwechslungsreiche und nicht immer offensichtliche Szenarien. Keine Markdown-Formatierung, nur das reine JSON-Array.",
+        temperature: 0.9,
+      }
+    });
+
+    const response = await chat.sendMessage({ message: "Generiere 4 neue, zufällige Fragen." });
+    let text = response.text || "[]";
+    
+    // Clean up potential markdown formatting from the AI response
+    text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    
+    let questions = [];
+    try {
+      questions = JSON.parse(text);
+    } catch (e) {
+      console.error("Failed to parse JSON from AI:", text);
+    }
+
+    sendJson(res, 200, { questions });
+  } catch (error) {
+    console.error("Gemini API Error in Quiz:", error);
+    sendJson(res, 500, { error: "api_error", questions: [] });
+  }
 }
 
 const server = http.createServer(async (req, res) => {
   try {
     if (req.method === "GET" && req.url === "/api/chat/status") {
       sendJson(res, 200, {
-        connected: Boolean(process.env.OPENAI_API_KEY),
-        model: process.env.OPENAI_MODEL || MODEL,
+        connected: Boolean(process.env.GEMINI_API_KEY),
+        model: MODEL,
       });
       return;
     }
 
     if (req.method === "POST" && req.url === "/api/chat") {
       await handleChat(req, res);
+      return;
+    }
+
+    if (req.method === "GET" && req.url === "/api/quiz") {
+      await handleQuiz(req, res);
       return;
     }
 

@@ -1,0 +1,1808 @@
+{
+  "online": [
+    {
+      "id": "o-1",
+      "title": "Konfliktmanagement für Azubis (Selbstlernkurs) - 2027 Edition",
+      "provider": "Mauthausen Komitee Österreich Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Mauthausen Komitee Österreich.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-2",
+      "title": "Stammtischparolen im digitalen Raum kontern - 2027 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Dieses Training hilft dir, souverän auf ausgrenzende, rassistische oder sexistische Sprüche zu reagieren, ohne selbst aggressiv zu werden.",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-3",
+      "title": "E-Learning: Respekt am Arbeitsplatz - 2027 Edition",
+      "provider": "Amadeu Antonio Stiftung Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Amadeu Antonio Stiftung.",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-4",
+      "title": "Konfliktmanagement für Azubis (Selbstlernkurs) - 2027 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von bpb.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-5",
+      "title": "Online-Training: Hassrede erkennen & begegnen - 2026 Edition",
+      "provider": "Amadeu Antonio Stiftung Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Amadeu Antonio Stiftung.",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-6",
+      "title": "Deeskalation per Chat und E-Mail - 2026 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-7",
+      "title": "Zivilcourage Online: Richtig reagieren in Chatgruppen - 2026 Edition",
+      "provider": "Online Akademie für Zivilcourage Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Online Akademie für Zivilcourage.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-8",
+      "title": "Grundkurs: Diversität und Inklusion - 2027 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von bpb.",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-9",
+      "title": "Konfliktmanagement für Azubis (Selbstlernkurs) - 2026 Edition",
+      "provider": "Amadeu Antonio Stiftung Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Amadeu Antonio Stiftung.",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-10",
+      "title": "Grundkurs: Diversität und Inklusion - 2026 Edition",
+      "provider": "Amadeu Antonio Stiftung Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Amadeu Antonio Stiftung.",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-11",
+      "title": "Antidiskriminierungs-Workshop (Digital) - 2026 Edition",
+      "provider": "Mauthausen Komitee Österreich Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Mauthausen Komitee Österreich.",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-12",
+      "title": "Zivilcourage Online: Richtig reagieren in Chatgruppen - 2026 Edition",
+      "provider": "Online Akademie für Zivilcourage Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Online Akademie für Zivilcourage.",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-13",
+      "title": "Stammtischparolen im digitalen Raum kontern - 2027 Edition",
+      "provider": "VIA Bayern e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Dieses Training hilft dir, souverän auf ausgrenzende, rassistische oder sexistische Sprüche zu reagieren, ohne selbst aggressiv zu werden.",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-14",
+      "title": "Deeskalation per Chat und E-Mail - 2026 Edition",
+      "provider": "VIA Bayern e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-15",
+      "title": "Grundkurs: Diversität und Inklusion - 2027 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von bpb.",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-16",
+      "title": "Webinar: Zivilcourage im Alltag - 2026 Edition",
+      "provider": "Online Akademie für Zivilcourage Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Online Akademie für Zivilcourage.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-17",
+      "title": "Zivilcourage Online: Richtig reagieren in Chatgruppen - 2026 Edition",
+      "provider": "VIA Bayern e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von VIA Bayern e.V..",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-18",
+      "title": "Stammtischparolen im digitalen Raum kontern - 2026 Edition",
+      "provider": "Aktion Zivilcourage e. V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Dieses Training hilft dir, souverän auf ausgrenzende, rassistische oder sexistische Sprüche zu reagieren, ohne selbst aggressiv zu werden.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-19",
+      "title": "Antidiskriminierungs-Workshop (Digital) - 2027 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von bpb.",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-20",
+      "title": "Webinar: Zivilcourage im Alltag - 2027 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von bpb.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-21",
+      "title": "Stammtischparolen im digitalen Raum kontern - 2026 Edition",
+      "provider": "VIA Bayern e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Dieses Training hilft dir, souverän auf ausgrenzende, rassistische oder sexistische Sprüche zu reagieren, ohne selbst aggressiv zu werden.",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-22",
+      "title": "Online-Training: Hassrede erkennen & begegnen - 2026 Edition",
+      "provider": "VIA Bayern e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von VIA Bayern e.V..",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-23",
+      "title": "Stammtischparolen im digitalen Raum kontern - 2026 Edition",
+      "provider": "Online Akademie für Zivilcourage Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Dieses Training hilft dir, souverän auf ausgrenzende, rassistische oder sexistische Sprüche zu reagieren, ohne selbst aggressiv zu werden.",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-24",
+      "title": "Online-Training: Hassrede erkennen & begegnen - 2027 Edition",
+      "provider": "Courage im Netz e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Courage im Netz e.V..",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-25",
+      "title": "Online-Training: Hassrede erkennen & begegnen - 2027 Edition",
+      "provider": "Online Akademie für Zivilcourage Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Online Akademie für Zivilcourage.",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-26",
+      "title": "Konfliktmanagement für Azubis (Selbstlernkurs) - 2027 Edition",
+      "provider": "Online Akademie für Zivilcourage Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Online Akademie für Zivilcourage.",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-27",
+      "title": "Zivilcourage Online: Richtig reagieren in Chatgruppen - 2027 Edition",
+      "provider": "Aktion Zivilcourage e. V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Aktion Zivilcourage e. V..",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-28",
+      "title": "Online-Training: Hassrede erkennen & begegnen - 2026 Edition",
+      "provider": "Online Akademie für Zivilcourage Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Online Akademie für Zivilcourage.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-29",
+      "title": "Grundkurs: Diversität und Inklusion - 2027 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von bpb.",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-30",
+      "title": "Webinar: Zivilcourage im Alltag - 2026 Edition",
+      "provider": "VIA Bayern e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von VIA Bayern e.V..",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-31",
+      "title": "Webinar: Zivilcourage im Alltag - 2026 Edition",
+      "provider": "VIA Bayern e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von VIA Bayern e.V..",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-32",
+      "title": "Webinar: Zivilcourage im Alltag - 2027 Edition",
+      "provider": "Courage im Netz e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Courage im Netz e.V..",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-33",
+      "title": "Konfliktmanagement für Azubis (Selbstlernkurs) - 2027 Edition",
+      "provider": "Amadeu Antonio Stiftung Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Amadeu Antonio Stiftung.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-34",
+      "title": "Deeskalation per Chat und E-Mail - 2027 Edition",
+      "provider": "Courage im Netz e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-35",
+      "title": "Online-Training: Hassrede erkennen & begegnen - 2026 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von bpb.",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-36",
+      "title": "Konfliktmanagement für Azubis (Selbstlernkurs) - 2026 Edition",
+      "provider": "Mauthausen Komitee Österreich Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Mauthausen Komitee Österreich.",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-37",
+      "title": "E-Learning: Respekt am Arbeitsplatz - 2027 Edition",
+      "provider": "Courage im Netz e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Courage im Netz e.V..",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-38",
+      "title": "Deeskalation per Chat und E-Mail - 2026 Edition",
+      "provider": "Courage im Netz e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-39",
+      "title": "Online-Training: Hassrede erkennen & begegnen - 2027 Edition",
+      "provider": "Aktion Zivilcourage e. V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Aktion Zivilcourage e. V..",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-40",
+      "title": "Grundkurs: Diversität und Inklusion - 2026 Edition",
+      "provider": "Online Akademie für Zivilcourage Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Online Akademie für Zivilcourage.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-41",
+      "title": "Deeskalation per Chat und E-Mail - 2026 Edition",
+      "provider": "VIA Bayern e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-42",
+      "title": "Stammtischparolen im digitalen Raum kontern - 2027 Edition",
+      "provider": "Aktion Zivilcourage e. V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Dieses Training hilft dir, souverän auf ausgrenzende, rassistische oder sexistische Sprüche zu reagieren, ohne selbst aggressiv zu werden.",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-43",
+      "title": "Zivilcourage Online: Richtig reagieren in Chatgruppen - 2027 Edition",
+      "provider": "Aktion Zivilcourage e. V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Aktion Zivilcourage e. V..",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-44",
+      "title": "Webinar: Zivilcourage im Alltag - 2026 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von bpb.",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-45",
+      "title": "Webinar: Zivilcourage im Alltag - 2026 Edition",
+      "provider": "Courage im Netz e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Courage im Netz e.V..",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-46",
+      "title": "Zivilcourage Online: Richtig reagieren in Chatgruppen - 2027 Edition",
+      "provider": "Online Akademie für Zivilcourage Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Online Akademie für Zivilcourage.",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-47",
+      "title": "Online-Training: Hassrede erkennen & begegnen - 2026 Edition",
+      "provider": "Aktion Zivilcourage e. V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Aktion Zivilcourage e. V..",
+      "requirements": "Nur Registrierung erforderlich. Selbstlernkurs, jederzeit unterbrechbar.",
+      "link": "#"
+    },
+    {
+      "id": "o-48",
+      "title": "Zivilcourage Online: Richtig reagieren in Chatgruppen - 2027 Edition",
+      "provider": "Aktion Zivilcourage e. V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Aktion Zivilcourage e. V..",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-49",
+      "title": "Online-Training: Hassrede erkennen & begegnen - 2027 Edition",
+      "provider": "Online Akademie für Zivilcourage Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Online Akademie für Zivilcourage.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-50",
+      "title": "Konfliktmanagement für Azubis (Selbstlernkurs) - 2027 Edition",
+      "provider": "Mauthausen Komitee Österreich Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Mauthausen Komitee Österreich.",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-51",
+      "title": "Stammtischparolen im digitalen Raum kontern - 2027 Edition",
+      "provider": "Courage im Netz e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Dieses Training hilft dir, souverän auf ausgrenzende, rassistische oder sexistische Sprüche zu reagieren, ohne selbst aggressiv zu werden.",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-52",
+      "title": "Stammtischparolen im digitalen Raum kontern - 2027 Edition",
+      "provider": "Amadeu Antonio Stiftung Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Dieses Training hilft dir, souverän auf ausgrenzende, rassistische oder sexistische Sprüche zu reagieren, ohne selbst aggressiv zu werden.",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-53",
+      "title": "Konfliktmanagement für Azubis (Selbstlernkurs) - 2027 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von bpb.",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-54",
+      "title": "Online-Training: Hassrede erkennen & begegnen - 2026 Edition",
+      "provider": "Amadeu Antonio Stiftung Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Amadeu Antonio Stiftung.",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    },
+    {
+      "id": "o-55",
+      "title": "Zivilcourage Online: Richtig reagieren in Chatgruppen - 2026 Edition",
+      "provider": "bpb Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von bpb.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-56",
+      "title": "E-Learning: Respekt am Arbeitsplatz - 2027 Edition",
+      "provider": "Courage im Netz e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Courage im Netz e.V..",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-57",
+      "title": "Cybermobbing: Handlungssicher im Netz - 2026 Edition",
+      "provider": "Courage im Netz e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Courage im Netz e.V..",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-58",
+      "title": "Konfliktmanagement für Azubis (Selbstlernkurs) - 2026 Edition",
+      "provider": "VIA Bayern e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von VIA Bayern e.V..",
+      "requirements": "Voraussetzung: Interesse an Zivilcourage. Dauer: ca. 45 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-59",
+      "title": "Cybermobbing: Handlungssicher im Netz - 2027 Edition",
+      "provider": "Mauthausen Komitee Österreich Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Mauthausen Komitee Österreich.",
+      "requirements": "Webcam und Mikrofon für interaktive Gruppenarbeit. Dauer: 90 Minuten.",
+      "link": "#"
+    },
+    {
+      "id": "o-60",
+      "title": "Antidiskriminierungs-Workshop (Digital) - 2026 Edition",
+      "provider": "VIA Bayern e.V. Online / Virtuell",
+      "tags": [
+        "Online",
+        "Kostenlos"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von VIA Bayern e.V..",
+      "requirements": "Internetfähiges Gerät (PC/Smartphone), keine Vorkenntnisse. Dauer: ca. 1-2 Stunden.",
+      "link": "#"
+    }
+  ],
+  "partner": [
+    {
+      "id": "p-1",
+      "title": "Konfliktlösung: Mediation für Azubis - 2026 Edition",
+      "provider": "Netzwerk Courage Leipzig (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Netzwerk Courage.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-2",
+      "title": "Konfliktlösung: Mediation für Azubis - 2027 Edition",
+      "provider": "Netzwerk Courage Hamburg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Netzwerk Courage.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-3",
+      "title": "Argumentationstraining: Gegen rechte Parolen - 2026 Edition",
+      "provider": "Gewerkschaft der Polizei München (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Dieses Training hilft dir, souverän auf ausgrenzende, rassistische oder sexistische Sprüche zu reagieren, ohne selbst aggressiv zu werden.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-4",
+      "title": "DB Partner-Event: Gemeinsam gegen Rassismus - 2026 Edition",
+      "provider": "EVG Bremen (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von EVG.",
+      "requirements": "Bereitschaft zu Rollenspielen. Anmeldung über den JAV/Betriebsrat.",
+      "link": "#"
+    },
+    {
+      "id": "p-5",
+      "title": "Deeskalation im direkten Kontakt - 2026 Edition",
+      "provider": "DB Training Leipzig (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Bereitschaft zu Rollenspielen. Anmeldung über den JAV/Betriebsrat.",
+      "link": "#"
+    },
+    {
+      "id": "p-6",
+      "title": "DB Partner-Event: Gemeinsam gegen Rassismus - 2027 Edition",
+      "provider": "DB Training Essen (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Training.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-7",
+      "title": "Gewerkschafts-Workshop: Solidarität am Arbeitsplatz - 2027 Edition",
+      "provider": "DB Training München (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Training.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-8",
+      "title": "Umgang mit Ausgrenzung in der Ausbildung - 2027 Edition",
+      "provider": "DB Training Köln (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Training.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-9",
+      "title": "DB Partner-Event: Gemeinsam gegen Rassismus - 2026 Edition",
+      "provider": "Initiative Gelbe Hand Dresden (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Initiative Gelbe Hand.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-10",
+      "title": "DB Partner-Event: Gemeinsam gegen Rassismus - 2027 Edition",
+      "provider": "Verein für demokratische Kultur Frankfurt (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Verein für demokratische Kultur.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-11",
+      "title": "Deeskalation im direkten Kontakt - 2026 Edition",
+      "provider": "Verein für demokratische Kultur Dortmund (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-12",
+      "title": "Seminar: Mach meinen Kumpel nicht an! - 2027 Edition",
+      "provider": "EVG Düsseldorf (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von EVG.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-13",
+      "title": "Haltung zeigen: Ein Praxistraining - 2027 Edition",
+      "provider": "Initiative Gelbe Hand Düsseldorf (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Initiative Gelbe Hand.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-14",
+      "title": "Seminar: Mach meinen Kumpel nicht an! - 2027 Edition",
+      "provider": "Gewerkschaft der Polizei Bremen (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Gewerkschaft der Polizei.",
+      "requirements": "Bereitschaft zu Rollenspielen. Anmeldung über den JAV/Betriebsrat.",
+      "link": "#"
+    },
+    {
+      "id": "p-15",
+      "title": "DB Partner-Event: Gemeinsam gegen Rassismus - 2027 Edition",
+      "provider": "EVG Stuttgart (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von EVG.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-16",
+      "title": "Umgang mit Ausgrenzung in der Ausbildung - 2026 Edition",
+      "provider": "DB Training Köln (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Training.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-17",
+      "title": "Praxistraining: Zivilcourage im Team stärken - 2026 Edition",
+      "provider": "Gewerkschaft der Polizei Berlin (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Gewerkschaft der Polizei.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-18",
+      "title": "Tagesworkshop: Zivilcourage auf der Baustelle - 2027 Edition",
+      "provider": "Verein für demokratische Kultur Nürnberg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Verein für demokratische Kultur.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-19",
+      "title": "Gewerkschafts-Workshop: Solidarität am Arbeitsplatz - 2027 Edition",
+      "provider": "DB Training München (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Training.",
+      "requirements": "Bereitschaft zu Rollenspielen. Anmeldung über den JAV/Betriebsrat.",
+      "link": "#"
+    },
+    {
+      "id": "p-20",
+      "title": "Gewerkschafts-Workshop: Solidarität am Arbeitsplatz - 2027 Edition",
+      "provider": "Verein für demokratische Kultur Frankfurt (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Verein für demokratische Kultur.",
+      "requirements": "Bereitschaft zu Rollenspielen. Anmeldung über den JAV/Betriebsrat.",
+      "link": "#"
+    },
+    {
+      "id": "p-21",
+      "title": "Deeskalation im direkten Kontakt - 2026 Edition",
+      "provider": "Verein für demokratische Kultur Dresden (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Bereitschaft zu Rollenspielen. Anmeldung über den JAV/Betriebsrat.",
+      "link": "#"
+    },
+    {
+      "id": "p-22",
+      "title": "Seminar: Mach meinen Kumpel nicht an! - 2027 Edition",
+      "provider": "DB Training Hamburg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Training.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-23",
+      "title": "Tagesworkshop: Zivilcourage auf der Baustelle - 2027 Edition",
+      "provider": "DB Training Hannover (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Training.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-24",
+      "title": "Praxistraining: Zivilcourage im Team stärken - 2027 Edition",
+      "provider": "EVG Berlin (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von EVG.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-25",
+      "title": "Umgang mit Ausgrenzung in der Ausbildung - 2026 Edition",
+      "provider": "Verein für demokratische Kultur Dortmund (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Verein für demokratische Kultur.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-26",
+      "title": "Deeskalation im direkten Kontakt - 2026 Edition",
+      "provider": "Initiative Gelbe Hand Dortmund (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-27",
+      "title": "Gewerkschafts-Workshop: Solidarität am Arbeitsplatz - 2026 Edition",
+      "provider": "Gewerkschaft der Polizei Hamburg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Gewerkschaft der Polizei.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-28",
+      "title": "DB Partner-Event: Gemeinsam gegen Rassismus - 2026 Edition",
+      "provider": "Gewerkschaft der Polizei Dortmund (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Gewerkschaft der Polizei.",
+      "requirements": "Bereitschaft zu Rollenspielen. Anmeldung über den JAV/Betriebsrat.",
+      "link": "#"
+    },
+    {
+      "id": "p-29",
+      "title": "Konfliktlösung: Mediation für Azubis - 2027 Edition",
+      "provider": "EVG Hannover (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von EVG.",
+      "requirements": "Bereitschaft zu Rollenspielen. Anmeldung über den JAV/Betriebsrat.",
+      "link": "#"
+    },
+    {
+      "id": "p-30",
+      "title": "DB Partner-Event: Gemeinsam gegen Rassismus - 2026 Edition",
+      "provider": "DB Training Hannover (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Training.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-31",
+      "title": "Deeskalation im direkten Kontakt - 2026 Edition",
+      "provider": "EVG Dresden (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-32",
+      "title": "Argumentationstraining: Gegen rechte Parolen - 2027 Edition",
+      "provider": "Gewerkschaft der Polizei Hamburg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Dieses Training hilft dir, souverän auf ausgrenzende, rassistische oder sexistische Sprüche zu reagieren, ohne selbst aggressiv zu werden.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-33",
+      "title": "Konfliktlösung: Mediation für Azubis - 2027 Edition",
+      "provider": "Initiative Gelbe Hand Nürnberg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Initiative Gelbe Hand.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-34",
+      "title": "Praxistraining: Zivilcourage im Team stärken - 2027 Edition",
+      "provider": "Verein für demokratische Kultur Düsseldorf (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Verein für demokratische Kultur.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-35",
+      "title": "Praxistraining: Zivilcourage im Team stärken - 2026 Edition",
+      "provider": "Verein für demokratische Kultur Frankfurt (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Verein für demokratische Kultur.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-36",
+      "title": "DB Partner-Event: Gemeinsam gegen Rassismus - 2027 Edition",
+      "provider": "DB Training Hamburg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Training.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-37",
+      "title": "DB Partner-Event: Gemeinsam gegen Rassismus - 2027 Edition",
+      "provider": "Initiative Gelbe Hand Frankfurt (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Initiative Gelbe Hand.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-38",
+      "title": "Gewerkschafts-Workshop: Solidarität am Arbeitsplatz - 2027 Edition",
+      "provider": "Netzwerk Courage Köln (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Netzwerk Courage.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-39",
+      "title": "Seminar: Mach meinen Kumpel nicht an! - 2027 Edition",
+      "provider": "Initiative Gelbe Hand Köln (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Initiative Gelbe Hand.",
+      "requirements": "Zielgruppe: Bahn-Mitarbeitende und Azubis. Reisekosten werden übernommen.",
+      "link": "#"
+    },
+    {
+      "id": "p-40",
+      "title": "Umgang mit Ausgrenzung in der Ausbildung - 2027 Edition",
+      "provider": "Netzwerk Courage München (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Netzwerk Courage.",
+      "requirements": "Bereitschaft zu Rollenspielen. Anmeldung über den JAV/Betriebsrat.",
+      "link": "#"
+    },
+    {
+      "id": "p-41",
+      "title": "DB Partner-Event: Gemeinsam gegen Rassismus - 2026 Edition",
+      "provider": "DB Training Leipzig (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Training.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-42",
+      "title": "Gewerkschafts-Workshop: Solidarität am Arbeitsplatz - 2027 Edition",
+      "provider": "Verein für demokratische Kultur Frankfurt (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Verein für demokratische Kultur.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-43",
+      "title": "Seminar: Mach meinen Kumpel nicht an! - 2027 Edition",
+      "provider": "Initiative Gelbe Hand München (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Initiative Gelbe Hand.",
+      "requirements": "Teilnahmebescheinigung inklusive. Dauer: 1-2 Tage in Präsenz.",
+      "link": "#"
+    },
+    {
+      "id": "p-44",
+      "title": "Umgang mit Ausgrenzung in der Ausbildung - 2026 Edition",
+      "provider": "EVG Essen (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von EVG.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-45",
+      "title": "Konfliktlösung: Mediation für Azubis - 2026 Edition",
+      "provider": "Netzwerk Courage München (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Netzwerk Courage.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-46",
+      "title": "DB Partner-Event: Gemeinsam gegen Rassismus - 2026 Edition",
+      "provider": "Verein für demokratische Kultur Leipzig (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Verein für demokratische Kultur.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-47",
+      "title": "Haltung zeigen: Ein Praxistraining - 2026 Edition",
+      "provider": "Verein für demokratische Kultur Dresden (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Verein für demokratische Kultur.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-48",
+      "title": "Umgang mit Ausgrenzung in der Ausbildung - 2027 Edition",
+      "provider": "DB Training Leipzig (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Training.",
+      "requirements": "Bereitschaft zu Rollenspielen. Anmeldung über den JAV/Betriebsrat.",
+      "link": "#"
+    },
+    {
+      "id": "p-49",
+      "title": "Haltung zeigen: Ein Praxistraining - 2027 Edition",
+      "provider": "EVG Leipzig (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von EVG.",
+      "requirements": "Freistellung durch den Ausbildungsbetrieb (1 Tag). Für Azubis und Ausbilder:innen.",
+      "link": "#"
+    },
+    {
+      "id": "p-50",
+      "title": "Umgang mit Ausgrenzung in der Ausbildung - 2026 Edition",
+      "provider": "Netzwerk Courage Frankfurt (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Partner"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Netzwerk Courage.",
+      "requirements": "Bereitschaft zu Rollenspielen. Anmeldung über den JAV/Betriebsrat.",
+      "link": "#"
+    }
+  ],
+  "zertifikat": [
+    {
+      "id": "z-1",
+      "title": "Professionelle Deeskalation am Bahnhof (Zertifikat) - 2027 Edition",
+      "provider": "TÜV Süd Akademie Stuttgart (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-2",
+      "title": "IHK-Zertifikatslehrgang: Konfliktmanagement - 2027 Edition",
+      "provider": "DB Zertifizierung Stuttgart (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Zertifizierung.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-3",
+      "title": "Qualifizierung: Konfliktlotse im Betrieb - 2027 Edition",
+      "provider": "Akademie für Konfliktmanagement Hamburg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Akademie für Konfliktmanagement.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-4",
+      "title": "Zertifiziertes Deeskalationstraining (Kundenkontakt) - 2027 Edition",
+      "provider": "Staatliche Hochschule für Sicherheit Dortmund (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Kostenpflichtig. Fördermittel verfügbar. Zertifizierung durch anerkannte Träger.",
+      "link": "#"
+    },
+    {
+      "id": "z-5",
+      "title": "Zertifizierter Mediator (Grundlagen) - 2027 Edition",
+      "provider": "Staatliche Hochschule für Sicherheit Essen (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Staatliche Hochschule für Sicherheit.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-6",
+      "title": "Zertifiziertes Deeskalationstraining (Kundenkontakt) - 2027 Edition",
+      "provider": "DB Zertifizierung Stuttgart (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-7",
+      "title": "IHK-Zertifikatslehrgang: Konfliktmanagement - 2026 Edition",
+      "provider": "IHK Frankfurt (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von IHK.",
+      "requirements": "Kostenpflichtig. Fördermittel verfügbar. Zertifizierung durch anerkannte Träger.",
+      "link": "#"
+    },
+    {
+      "id": "z-8",
+      "title": "Sicherheit und Service: Zertifikats-Training - 2026 Edition",
+      "provider": "TÜV Süd Akademie Leipzig (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von TÜV Süd Akademie.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-9",
+      "title": "Gewaltprävention im Beruf (Offizieller Abschluss) - 2026 Edition",
+      "provider": "IHK Hannover (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von IHK.",
+      "requirements": "Kostenübernahme (ca. 450€) durch Arbeitgeber klären. Dauer: 3 Tage. Schriftlicher Abschlusstest.",
+      "link": "#"
+    },
+    {
+      "id": "z-10",
+      "title": "Qualifizierung: Konfliktlotse im Betrieb - 2026 Edition",
+      "provider": "DB Zertifizierung Köln (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Zertifizierung.",
+      "requirements": "Kostenübernahme (ca. 450€) durch Arbeitgeber klären. Dauer: 3 Tage. Schriftlicher Abschlusstest.",
+      "link": "#"
+    },
+    {
+      "id": "z-11",
+      "title": "Kundenkommunikation in Stresssituationen (IHK) - 2027 Edition",
+      "provider": "TÜV Süd Akademie Dresden (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von TÜV Süd Akademie.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-12",
+      "title": "Ausbildung zum Zivilcourage-Multiplikator - 2026 Edition",
+      "provider": "DB Zertifizierung Hamburg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Zertifizierung.",
+      "requirements": "Kostenübernahme (ca. 450€) durch Arbeitgeber klären. Dauer: 3 Tage. Schriftlicher Abschlusstest.",
+      "link": "#"
+    },
+    {
+      "id": "z-13",
+      "title": "Gewaltprävention im Beruf (Offizieller Abschluss) - 2027 Edition",
+      "provider": "IHK Leipzig (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von IHK.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-14",
+      "title": "Zertifiziertes Deeskalationstraining (Kundenkontakt) - 2027 Edition",
+      "provider": "Akademie für Konfliktmanagement Hamburg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Kostenpflichtig. Fördermittel verfügbar. Zertifizierung durch anerkannte Träger.",
+      "link": "#"
+    },
+    {
+      "id": "z-15",
+      "title": "Zertifiziertes Deeskalationstraining (Kundenkontakt) - 2027 Edition",
+      "provider": "ProDeeskalation Dresden (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Kostenpflichtig. Fördermittel verfügbar. Zertifizierung durch anerkannte Träger.",
+      "link": "#"
+    },
+    {
+      "id": "z-16",
+      "title": "Zertifiziertes Deeskalationstraining (Kundenkontakt) - 2026 Edition",
+      "provider": "IHK Nürnberg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-17",
+      "title": "Sicherheit und Service: Zertifikats-Training - 2026 Edition",
+      "provider": "TÜV Süd Akademie Hannover (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von TÜV Süd Akademie.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-18",
+      "title": "IHK-Zertifikatslehrgang: Konfliktmanagement - 2026 Edition",
+      "provider": "TÜV Süd Akademie Hamburg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von TÜV Süd Akademie.",
+      "requirements": "Kostenübernahme (ca. 450€) durch Arbeitgeber klären. Dauer: 3 Tage. Schriftlicher Abschlusstest.",
+      "link": "#"
+    },
+    {
+      "id": "z-19",
+      "title": "Gewaltprävention im Beruf (Offizieller Abschluss) - 2026 Edition",
+      "provider": "TÜV Süd Akademie Frankfurt (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von TÜV Süd Akademie.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-20",
+      "title": "Zertifizierter Mediator (Grundlagen) - 2026 Edition",
+      "provider": "IHK Dortmund (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von IHK.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-21",
+      "title": "Lehrgang: Interkulturelle Kompetenz (Zertifikat) - 2026 Edition",
+      "provider": "TÜV Süd Akademie Köln (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von TÜV Süd Akademie.",
+      "requirements": "Kostenpflichtig. Fördermittel verfügbar. Zertifizierung durch anerkannte Träger.",
+      "link": "#"
+    },
+    {
+      "id": "z-22",
+      "title": "Ausbildung zum Zivilcourage-Multiplikator - 2026 Edition",
+      "provider": "DB Zertifizierung Bremen (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Zertifizierung.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-23",
+      "title": "Professionelle Deeskalation am Bahnhof (Zertifikat) - 2026 Edition",
+      "provider": "DB Zertifizierung Dortmund (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-24",
+      "title": "IHK-Zertifikatslehrgang: Konfliktmanagement - 2026 Edition",
+      "provider": "IHK Dortmund (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von IHK.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-25",
+      "title": "Kundenkommunikation in Stresssituationen (IHK) - 2026 Edition",
+      "provider": "Staatliche Hochschule für Sicherheit Hamburg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Staatliche Hochschule für Sicherheit.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-26",
+      "title": "Ausbildung zum Zivilcourage-Multiplikator - 2026 Edition",
+      "provider": "ProDeeskalation Dresden (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von ProDeeskalation.",
+      "requirements": "Kostenübernahme (ca. 450€) durch Arbeitgeber klären. Dauer: 3 Tage. Schriftlicher Abschlusstest.",
+      "link": "#"
+    },
+    {
+      "id": "z-27",
+      "title": "Sicherheit und Service: Zertifikats-Training - 2026 Edition",
+      "provider": "ProDeeskalation Dortmund (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von ProDeeskalation.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-28",
+      "title": "Professionelle Deeskalation am Bahnhof (Zertifikat) - 2026 Edition",
+      "provider": "Staatliche Hochschule für Sicherheit Düsseldorf (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-29",
+      "title": "Professionelle Deeskalation am Bahnhof (Zertifikat) - 2026 Edition",
+      "provider": "ProDeeskalation Leipzig (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Lerne Techniken der verbalen und non-verbalen Deeskalation, um hitzige Situationen im Berufsalltag professionell zu beruhigen.",
+      "requirements": "Kostenpflichtig. Fördermittel verfügbar. Zertifizierung durch anerkannte Träger.",
+      "link": "#"
+    },
+    {
+      "id": "z-30",
+      "title": "Zertifizierter Mediator (Grundlagen) - 2026 Edition",
+      "provider": "IHK Stuttgart (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von IHK.",
+      "requirements": "Kostenpflichtig. Fördermittel verfügbar. Zertifizierung durch anerkannte Träger.",
+      "link": "#"
+    },
+    {
+      "id": "z-31",
+      "title": "Gewaltprävention im Beruf (Offizieller Abschluss) - 2026 Edition",
+      "provider": "Staatliche Hochschule für Sicherheit Dortmund (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Staatliche Hochschule für Sicherheit.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-32",
+      "title": "Ausbildung zum Zivilcourage-Multiplikator - 2026 Edition",
+      "provider": "Akademie für Konfliktmanagement Düsseldorf (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Akademie für Konfliktmanagement.",
+      "requirements": "Kostenpflichtig. Fördermittel verfügbar. Zertifizierung durch anerkannte Träger.",
+      "link": "#"
+    },
+    {
+      "id": "z-33",
+      "title": "Qualifizierung: Konfliktlotse im Betrieb - 2027 Edition",
+      "provider": "Staatliche Hochschule für Sicherheit Düsseldorf (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Staatliche Hochschule für Sicherheit.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-34",
+      "title": "Zertifizierter Mediator (Grundlagen) - 2027 Edition",
+      "provider": "Akademie für Konfliktmanagement Köln (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Akademie für Konfliktmanagement.",
+      "requirements": "Kostenpflichtig. Fördermittel verfügbar. Zertifizierung durch anerkannte Träger.",
+      "link": "#"
+    },
+    {
+      "id": "z-35",
+      "title": "Lehrgang: Interkulturelle Kompetenz (Zertifikat) - 2026 Edition",
+      "provider": "Akademie für Konfliktmanagement Leipzig (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Akademie für Konfliktmanagement.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-36",
+      "title": "Qualifizierung: Konfliktlotse im Betrieb - 2027 Edition",
+      "provider": "DB Zertifizierung München (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von DB Zertifizierung.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-37",
+      "title": "Qualifizierung: Konfliktlotse im Betrieb - 2026 Edition",
+      "provider": "IHK Leipzig (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von IHK.",
+      "requirements": "Berufserfahrung mit Kundenkontakt empfohlen. Dauer: 5 Tage in Präsenz. Praxisprüfung.",
+      "link": "#"
+    },
+    {
+      "id": "z-38",
+      "title": "Lehrgang: Interkulturelle Kompetenz (Zertifikat) - 2026 Edition",
+      "provider": "Staatliche Hochschule für Sicherheit Nürnberg (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von Staatliche Hochschule für Sicherheit.",
+      "requirements": "Gute körperliche Fitness für Rollenspiele. Vorab-Online-Modul muss absolviert sein. IHK-Zertifikat.",
+      "link": "#"
+    },
+    {
+      "id": "z-39",
+      "title": "Kundenkommunikation in Stresssituationen (IHK) - 2027 Edition",
+      "provider": "ProDeeskalation Berlin (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von ProDeeskalation.",
+      "requirements": "Kostenübernahme (ca. 450€) durch Arbeitgeber klären. Dauer: 3 Tage. Schriftlicher Abschlusstest.",
+      "link": "#"
+    },
+    {
+      "id": "z-40",
+      "title": "Gewaltprävention im Beruf (Offizieller Abschluss) - 2027 Edition",
+      "provider": "TÜV Süd Akademie Hannover (Präsenz)",
+      "tags": [
+        "Präsenz",
+        "Zertifikat"
+      ],
+      "desc": "Offizielles Angebot zum Thema Zivilcourage und Konfliktmanagement. Praxisnahe Übungen und theoretischer Hintergrund von TÜV Süd Akademie.",
+      "requirements": "Kostenpflichtig. Fördermittel verfügbar. Zertifizierung durch anerkannte Träger.",
+      "link": "#"
+    }
+  ]
+}

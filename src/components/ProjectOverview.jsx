@@ -1,177 +1,277 @@
-import { ArrowRight, BadgeEuro, CheckCircle2, FileText, GraduationCap, LayoutDashboard, Scale, ShieldCheck } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, Users, CheckCircle2, Sparkles, X, HeartHandshake, FileText, LayoutDashboard, Eye, Clock } from "lucide-react";
 
-const problemCards = [
-  ["Hass, Mobbing und Gewalt werden oft zu spät gemeldet.", ShieldCheck],
-  ["Betroffene wissen manchmal nicht, an wen sie sich wenden sollen.", LayoutDashboard],
-  ["Meldungen sind häufig unvollständig oder schwer einzuordnen.", FileText],
-  ["Rückfragen kosten Zeit in Ausbildung, HR und Führung.", GraduationCap],
+const INITIAL_PROJECTS = [
+  {
+    id: 1,
+    title: "Workshop: Zivilcourage im Arbeitsalltag",
+    description: "Wir möchten einen 2-stündigen Workshop für alle Azubis organisieren, um zu üben, wie man bei Mobbing oder dummen Sprüchen als Zeuge richtig eingreift.",
+    initiator: "Azubi-Team Süd (Lisa M. & Tom K.)",
+    category: "Workshop",
+    participants: 12,
+    views: 145,
+    enrollmentStatus: "none",
+  },
+  {
+    id: 2,
+    title: "Safe Space Café am Freitag",
+    description: "Ein wöchentlicher, lockerer Austausch in der Kantine. Ein sicherer Ort, um über Probleme in der Ausbildung zu sprechen, ohne Führungskräfte.",
+    initiator: "JAV München (Abteilung IT)",
+    category: "Event",
+    participants: 5,
+    views: 89,
+    enrollmentStatus: "none",
+  },
+  {
+    id: 3,
+    title: "Anti-Rassismus Kampagne am Werkstor",
+    description: "Plakataktion und Flyer-Verteilung, um ein Zeichen für Vielfalt und gegen Diskriminierung am Standort zu setzen.",
+    initiator: "Gewerkschaftsjugend (Standort Mitte)",
+    category: "Kampagne",
+    participants: 28,
+    views: 412,
+    enrollmentStatus: "accepted",
+  }
 ];
 
-const solutions = [
-  ["KI-Hilfe", "Erste Orientierung, Deeskalation und nächste Schritte."],
-  ["Meldung", "Strukturierte Vorfälle statt unklarer Freitext."],
-  ["Training", "Sichere Reaktionen in realistischen Situationen."],
-  ["Dashboard", "Anonymisierte Kennzahlen und Muster."],
-  ["Datenschutz", "Klare Grenzen, Rollen und menschliche Prüfung."],
-];
+export default function ProjectOverview() {
+  const [projects, setProjects] = useState(() => {
+    const saved = localStorage.getItem("db-peace-projects");
+    return saved ? JSON.parse(saved) : INITIAL_PROJECTS;
+  });
 
-const benefits = [
-  "frühere Hilfe",
-  "bessere Struktur",
-  "weniger Rückfragen",
-  "menschliche Prüfung",
-];
+  useEffect(() => {
+    localStorage.setItem("db-peace-projects", JSON.stringify(projects));
+  }, [projects]);
 
-function ProjectOverview() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newIdea, setNewIdea] = useState({ title: "", description: "", category: "Workshop" });
+
+  const handleJoin = (id) => {
+    setProjects(projects.map(p => {
+      if (p.id === id) {
+        if (p.enrollmentStatus === "none") {
+          return { ...p, enrollmentStatus: "pending" };
+        } else if (p.enrollmentStatus === "pending") {
+          // Allow cancelling the request
+          return { ...p, enrollmentStatus: "none" };
+        }
+      }
+      return p;
+    }));
+  };
+
+  const handleSubmitIdea = (e) => {
+    e.preventDefault();
+    if (!newIdea.title.trim() || !newIdea.description.trim()) return;
+
+    const newProject = {
+      id: Date.now(),
+      title: newIdea.title,
+      description: newIdea.description,
+      initiator: "Du (Dein DB-Profil)",
+      category: newIdea.category,
+      participants: 1,
+      views: 0,
+      enrollmentStatus: "accepted", // You created it, so you are in
+    };
+
+    setProjects([newProject, ...projects]);
+    setIsModalOpen(false);
+    setNewIdea({ title: "", description: "", category: "Workshop" });
+  };
+
   return (
-    <section id="projektuebersicht" className="bg-white py-16 lg:py-20">
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
-        <Entry />
-        <Problem />
-        <Solution />
-        <Benefits />
-        <Privacy />
-        <NextSteps />
-        <PresentationScript />
-      </div>
-    </section>
-  );
-}
+    <div className="w-full">
+      {/* Header Area */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 bg-white dark:bg-db-dark/50 p-6 sm:p-8 rounded-3xl border border-db-dark/5 dark:border-white/10 shadow-sm relative overflow-hidden">
+        
+        {/* Background Graphic */}
+        <div className="absolute -right-20 -top-20 opacity-5 pointer-events-none">
+          <HeartHandshake className="w-96 h-96 text-db-dark dark:text-white" />
+        </div>
 
-function Entry() {
-  return (
-    <div className="rounded-lg bg-db-dark p-6 text-white shadow-panel lg:p-8">
-      <p className="text-sm font-black uppercase tracking-wider text-red-200">Projekt</p>
-      <h2 className="mt-3 text-4xl font-black leading-tight tracking-normal sm:text-5xl">Projektübersicht</h2>
-      <p className="mt-4 max-w-3xl text-xl font-semibold leading-8 text-white/80">
-        DB Peace AI ist ein lokaler Demonstrationsprototyp für Prävention, Meldung, Training und Orientierung.
-      </p>
-      <div className="mt-5 rounded bg-white/10 p-4 ring-1 ring-white/15">
-        <p className="font-semibold leading-7 text-white/85">
-          Das Projekt zeigt, wie KI unterstützen kann, ohne selbst zu entscheiden.
-        </p>
-      </div>
-      <div className="mt-6 flex flex-wrap gap-3">
-        {[
-          ["Problem", "#projekt-problem"],
-          ["Lösung", "#projekt-loesung"],
-          ["Nutzen", "#projekt-nutzen"],
-          ["Datenschutz", "#projekt-datenschutz"],
-        ].map(([label, href]) => (
-          <a key={label} href={href} className="inline-flex items-center gap-2 rounded bg-white px-4 py-3 font-black text-db-dark transition hover:text-db-red">
-            {label}
-            <ArrowRight size={16} aria-hidden="true" />
-          </a>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Problem() {
-  return (
-    <Section id="projekt-problem" title="Das Problem">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {problemCards.map(([text, Icon]) => (
-          <article key={text} className="rounded-lg border border-db-dark/10 bg-db-soft p-5 shadow-sm">
-            <Icon className="text-db-red" size={24} aria-hidden="true" />
-            <p className="mt-4 font-black leading-7 text-db-dark">{text}</p>
-          </article>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-function Solution() {
-  return (
-    <Section id="projekt-loesung" title="Unsere Lösung" text="Die Plattform unterstützt, sortiert und trainiert - sie entscheidet nicht selbst.">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-        {solutions.map(([title, text]) => (
-          <article key={title} className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-sm">
-            <h3 className="text-xl font-black text-db-dark">{title}</h3>
-            <p className="mt-2 text-sm font-semibold leading-6 text-db-rail">{text}</p>
-          </article>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-function Benefits() {
-  return (
-    <Section id="projekt-nutzen" title="Nutzen für DB">
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        {benefits.map((benefit) => (
-          <div key={benefit} className="flex gap-3 rounded bg-db-soft p-4 font-black text-db-dark">
-            <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-600" size={18} />
-            {benefit}
-          </div>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-function Privacy() {
-  return (
-    <Section id="projekt-datenschutz" title="Datenschutzprinzip">
-      <div className="rounded-lg bg-db-dark p-5 text-white shadow-panel">
-        <div className="grid gap-3 md:grid-cols-2">
-          <p className="flex gap-3 font-semibold leading-7 text-white/80">
-            <Scale className="mt-1 shrink-0 text-red-200" size={18} aria-hidden="true" />
-            DSGVO-bewusstes Konzept, keine finale Rechtsprüfung.
-          </p>
-          <p className="flex gap-3 font-semibold leading-7 text-white/80">
-            <ShieldCheck className="mt-1 shrink-0 text-red-200" size={18} aria-hidden="true" />
-            Keine Überwachung, keine automatische Bestrafung, Menschen entscheiden.
+        <div className="relative z-10 max-w-2xl">
+          <h2 className="text-3xl font-black text-db-dark dark:text-white mb-2">
+            Initiativen & Projekte
+          </h2>
+          <p className="text-lg text-db-rail dark:text-white/70 font-medium">
+            Gemeinsam für ein besseres Arbeitsklima. Melde dich hier verbindlich für Projekte an. Ersteller müssen deine Teilnahme bestätigen.
           </p>
         </div>
+        
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="relative z-10 shrink-0 inline-flex items-center gap-2 bg-db-red hover:bg-red-700 text-white px-5 py-3 rounded-xl font-bold transition shadow-sm hover:shadow-md hover:-translate-y-0.5"
+        >
+          <Plus className="w-5 h-5" />
+          Neue Idee eintragen
+        </button>
       </div>
-    </Section>
-  );
-}
 
-function NextSteps() {
-  return (
-    <Section title="Nächste Schritte">
-      <div className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-sm">
-        <p className="font-semibold leading-7 text-db-rail">
-          Der nächste Schritt wäre eine fachliche Prüfung mit Datenschutz, Compliance, IT-Sicherheit und zuständigen Gremien.
-        </p>
+      {/* Projects Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <AnimatePresence>
+          {projects.map(project => (
+            <motion.div 
+              key={project.id}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              layout
+              className="bg-white dark:bg-db-dark/80 rounded-3xl p-6 border border-db-dark/10 dark:border-white/10 shadow-sm flex flex-col justify-between group hover:shadow-md hover:border-db-red/30 transition-all"
+            >
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <span className="text-xs font-black uppercase tracking-wider bg-db-dark/5 dark:bg-white/10 text-db-dark dark:text-white px-3 py-1 rounded-full">
+                    {project.category}
+                  </span>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5 text-db-rail dark:text-white/60 font-bold text-sm bg-db-dark/5 dark:bg-white/5 px-2 py-1 rounded-lg" title="Aufrufe">
+                      <Eye className="w-4 h-4" />
+                      <span>{project.views}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-db-rail dark:text-white/60 font-bold text-sm bg-db-dark/5 dark:bg-white/5 px-2 py-1 rounded-lg" title="Teilnehmer">
+                      <Users className="w-4 h-4" />
+                      <span>{project.participants}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <h3 className="text-xl font-black text-db-dark dark:text-white mb-3 leading-tight group-hover:text-db-red transition-colors">
+                  {project.title}
+                </h3>
+                <p className="text-db-dark/80 dark:text-white/70 text-sm font-medium mb-6">
+                  {project.description}
+                </p>
+              </div>
+
+              <div>
+                <div className="text-xs font-bold text-db-rail dark:text-white/50 mb-3 bg-db-dark/5 dark:bg-white/5 p-3 rounded-xl border border-db-dark/5 dark:border-white/5">
+                  <span className="block mb-1 opacity-70">Initiiert von:</span> 
+                  <span className="text-db-dark dark:text-white text-sm">{project.initiator}</span>
+                </div>
+                
+                <button
+                  onClick={() => handleJoin(project.id)}
+                  disabled={project.enrollmentStatus === "accepted"}
+                  className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-sm ${
+                    project.enrollmentStatus === "accepted" 
+                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 cursor-default" 
+                      : project.enrollmentStatus === "pending"
+                      ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20"
+                      : "bg-db-dark dark:bg-white text-white dark:text-db-dark hover:scale-[1.02]"
+                  }`}
+                >
+                  {project.enrollmentStatus === "accepted" && (
+                    <>
+                      <CheckCircle2 className="w-5 h-5" /> Teilnahme bestätigt!
+                    </>
+                  )}
+                  {project.enrollmentStatus === "pending" && (
+                    <>
+                      <Clock className="w-5 h-5" /> Anfrage gesendet (Ausstehend)
+                    </>
+                  )}
+                  {project.enrollmentStatus === "none" && (
+                    <>
+                      <Sparkles className="w-5 h-5" /> Teilnehmen & Anmelden
+                    </>
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
-    </Section>
-  );
-}
 
-function PresentationScript() {
-  return (
-    <Section title="Kurzpräsentation">
-      <div className="rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
-        <p className="whitespace-pre-line text-lg font-semibold leading-8 text-db-rail">
-          {`DB Peace AI ist ein lokaler Demonstrationsprototyp für Prävention gegen Hass, Gewalt, Mobbing und Konflikte.
+      {/* New Idea Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-db-dark/60 backdrop-blur-sm"
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-lg bg-white dark:bg-db-dark rounded-3xl p-6 md:p-8 shadow-2xl border border-db-dark/10 dark:border-white/10"
+            >
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-4 right-4 p-2 text-db-rail hover:text-db-dark dark:hover:text-white hover:bg-db-dark/5 dark:hover:bg-white/10 rounded-full transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
 
-Die Idee ist einfach: KI hilft beim Strukturieren, Formulieren und Trainieren. Menschen entscheiden.
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-db-red/10 text-db-red flex items-center justify-center">
+                  <LayoutDashboard className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black text-db-dark dark:text-white">Neue Projekt-Idee</h3>
+                  <p className="text-sm font-semibold text-db-rail dark:text-white/70">Finde Mitstreiter für dein Projekt.</p>
+                </div>
+              </div>
 
-Für die DB könnte das frühere Hilfe, klarere Meldungen, weniger Rückfragen und bessere Vorbereitung bedeuten.
+              <form onSubmit={handleSubmitIdea} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-black text-db-dark dark:text-white mb-1.5">Titel des Projekts</label>
+                  <input
+                    type="text"
+                    required
+                    value={newIdea.title}
+                    onChange={e => setNewIdea({...newIdea, title: e.target.value})}
+                    placeholder="z.B. Stammtisch für Vielfalt"
+                    className="w-full bg-db-dark/5 dark:bg-white/5 border border-db-dark/10 dark:border-white/10 rounded-xl px-4 py-3 text-db-dark dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-db-red focus:border-transparent transition"
+                  />
+                </div>
 
-Wichtig bleibt: Das ist ein Prototyp. Vor einer echten Einführung müssten Datenschutz, Compliance, IT-Sicherheit und die zuständigen Gremien geprüft werden.`}
-        </p>
-      </div>
-    </Section>
-  );
-}
+                <div>
+                  <label className="block text-sm font-black text-db-dark dark:text-white mb-1.5">Kategorie</label>
+                  <select
+                    value={newIdea.category}
+                    onChange={e => setNewIdea({...newIdea, category: e.target.value})}
+                    className="w-full bg-db-dark/5 dark:bg-white/5 border border-db-dark/10 dark:border-white/10 rounded-xl px-4 py-3 text-db-dark dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-db-red focus:border-transparent transition appearance-none"
+                  >
+                    <option value="Workshop">Workshop</option>
+                    <option value="Event">Event</option>
+                    <option value="Kampagne">Kampagne</option>
+                    <option value="Sonstiges">Sonstiges</option>
+                  </select>
+                </div>
 
-function Section({ children, id, text, title }) {
-  return (
-    <div id={id} className="mt-10 scroll-mt-28">
-      <div className="max-w-3xl">
-        <h2 className="text-3xl font-black text-db-dark">{title}</h2>
-        {text && <p className="mt-3 font-semibold leading-7 text-db-rail">{text}</p>}
-      </div>
-      <div className="mt-6">{children}</div>
+                <div>
+                  <label className="block text-sm font-black text-db-dark dark:text-white mb-1.5">Worum geht es?</label>
+                  <textarea
+                    required
+                    rows="4"
+                    value={newIdea.description}
+                    onChange={e => setNewIdea({...newIdea, description: e.target.value})}
+                    placeholder="Beschreibe kurz deine Idee und warum sie wichtig ist..."
+                    className="w-full bg-db-dark/5 dark:bg-white/5 border border-db-dark/10 dark:border-white/10 rounded-xl px-4 py-3 text-db-dark dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-db-red focus:border-transparent transition resize-none"
+                  />
+                </div>
+
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    className="w-full bg-db-red hover:bg-red-700 text-white py-3.5 rounded-xl font-black transition flex justify-center items-center gap-2 shadow-sm"
+                  >
+                    Projekt veröffentlichen
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
-
-export default ProjectOverview;

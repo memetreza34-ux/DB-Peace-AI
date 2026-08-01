@@ -1,0 +1,49 @@
+import React, { useEffect, useState } from 'react';
+import { Moon, Sun } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+export function ThemeToggle() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    // Check initial preference
+    if (document.documentElement.classList.contains('dark')) {
+      setIsDark(true);
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setIsDark(true);
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    if (isDark) {
+      document.documentElement.classList.remove('dark');
+      setIsDark(false);
+    } else {
+      document.documentElement.classList.add('dark');
+      setIsDark(true);
+    }
+  };
+
+  return (
+    <button
+      onClick={toggleTheme}
+      className="relative flex items-center justify-center rounded-full p-2 text-db-dark dark:text-white hover:bg-db-dark/5 dark:hover:bg-white/10 transition"
+      aria-label="Toggle Dark Mode"
+    >
+      <motion.div
+        initial={false}
+        animate={{ rotate: isDark ? 180 : 0, scale: isDark ? 0 : 1 }}
+        className="absolute"
+      >
+        <Sun className="h-5 w-5" />
+      </motion.div>
+      <motion.div
+        initial={false}
+        animate={{ rotate: isDark ? 0 : -180, scale: isDark ? 1 : 0 }}
+      >
+        <Moon className="h-5 w-5" />
+      </motion.div>
+    </button>
+  );
+}

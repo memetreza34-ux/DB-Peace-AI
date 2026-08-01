@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { jsPDF } from "jspdf";
 import {
   AlertTriangle,
   ArrowRight,
@@ -174,6 +175,7 @@ function AnonymousReport() {
             {analysis && (
               <AnalysisCard
                 analysis={analysis}
+                form={form}
                 onImprove={improveSummary}
                 onPreview={() => setPreviewVisible(true)}
                 onReset={reset}
@@ -425,38 +427,55 @@ function RiskStep({ form, update }) {
 }
 
 function ContactStep({ form, update }) {
+  const recipients = [
+    "AFK (Ausbildungsfachkraft)", 
+    "NGK (Nachwuchskräfte-Betreuer:in)", 
+    "JAV (Jugend- und Auszubildendenvertretung)", 
+    "Betriebsrat (BR)", 
+    "Gleichstellungsbeauftragte",
+    "HR-Partner"
+  ];
   return (
     <StepPanel
-      title="Kontakt optional"
-      text="Kontakt ist freiwillig. Wenn du anonym bleiben möchtest, bleibt das Feld deaktiviert."
+      title="Empfänger & Anonymität"
+      text="Wähle aus, an wen du diese Meldung senden möchtest. Deine persönlichen Daten werden automatisch aus deinem DB-Profil angehängt, außer du wählst explizit 'anonym'."
     >
-      <label className="flex items-start gap-3 rounded-lg bg-white p-4 font-bold text-db-dark">
+      <div className="space-y-3">
+        <span className="block font-black text-db-dark">An wen soll die Meldung gehen?</span>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {recipients.map((rep) => (
+            <ChoiceButton
+              key={rep}
+              active={form.contact === rep}
+              onClick={() => update("contact", rep)}
+            >
+              {rep}
+            </ChoiceButton>
+          ))}
+        </div>
+      </div>
+
+      <label className="flex items-start gap-3 rounded-lg bg-white p-4 font-bold text-db-dark border border-db-dark/10 mt-6">
         <input
           type="checkbox"
           checked={form.anonymous}
           onChange={(event) => update("anonymous", event.target.checked)}
-          className="mt-1 h-4 w-4 accent-db-red"
+          className="mt-1 h-5 w-5 accent-db-red cursor-pointer"
         />
         <span>
-          Ich möchte anonym bleiben
-          <span className="block text-sm font-semibold leading-6 text-db-rail">
-            Dann wird in dieser Demo kein Kontaktfeld genutzt.
+          Ich möchte komplett anonym bleiben
+          <span className="block text-sm font-semibold leading-6 text-db-rail mt-1">
+            Deine DB-Profildaten werden entfernt. Die Meldung kann nicht mehr zu dir zurückverfolgt werden.
           </span>
         </span>
       </label>
-      <Field label="E-Mail oder Telefonnummer optional">
-        <input
-          value={form.contact}
-          disabled={form.anonymous}
-          onChange={(event) => update("contact", event.target.value)}
-          className="field disabled:cursor-not-allowed disabled:bg-db-dark/5 disabled:text-db-rail"
-          placeholder="Nur freiwillig, z. B. demo-kontakt@example.invalid"
-        />
-      </Field>
-      <div className="rounded-lg border border-db-dark/10 bg-white p-4 text-sm font-semibold leading-6 text-db-rail">
-        KI unterstützt nur beim Sortieren und Zusammenfassen. Menschen entscheiden. Keine
-        automatische Bestrafung, keine Überwachung, keine echte Übermittlung.
-      </div>
+
+      {!form.anonymous && (
+        <div className="rounded-lg border border-emerald-500/20 bg-emerald-50 p-4 text-sm font-bold leading-6 text-emerald-900 flex items-start sm:items-center gap-3 mt-4">
+          <BadgeCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5 sm:mt-0" />
+          <span>Deine hinterlegten DB-Profildaten werden automatisch und sicher mitgesendet. Du musst nichts eintippen.</span>
+        </div>
+      )}
     </StepPanel>
   );
 }
@@ -529,8 +548,61 @@ function StepControls({ analysis, onAnalyze, onBack, onNext, step }) {
   );
 }
 
-function AnalysisCard({ analysis, onImprove, onPreview, onReset }) {
+
+
+function AnalysisCard({ analysis, onImprove, onPreview, onReset, form }) {
   const risk = riskStyles[analysis.risk];
+
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(22);
+    doc.setTextColor(226, 0, 26); // DB Red
+    doc.text("DB Peace - Vorfallprotokoll", 20, 20);
+    
+    // Meta
+    doc.setFontSize(12);
+    doc.setTextColor(50, 50, 50);
+    const date = new Intl.DateTimeFormat("de-DE", {
+      day: "2-digit", month: "2-digit", year: "numeric",
+      hour: "2-digit", minute: "2-digit"
+    }).format(new Date());
+    doc.text(`Erstellt am: ${date}`, 20, 30);
+    
+    // Content
+    let y = 45;
+    const addSection = (title, content) => {
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 0, 0);
+      doc.text(title, 20, y);
+      y += 7;
+      
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(50, 50, 50);
+      
+      const splitContent = doc.splitTextToSize(content || "Keine Angabe", 170);
+      doc.text(splitContent, 20, y);
+      y += (splitContent.length * 6) + 10;
+      
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+    };
+
+    addSection("Kategorie", analysis.category);
+    addSection("Risiko-Einschätzung", risk.label);
+    addSection("Zusammenfassung", analysis.summary);
+    addSection("Wichtige Details", analysis.details);
+    addSection("Kontext", form?.context || "nicht angegeben");
+    addSection("Beschreibung (Original)", form?.description || "nicht angegeben");
+    addSection("Empfohlene Stelle", analysis.route);
+
+    doc.save("DB_Peace_Vorfallprotokoll.pdf");
+  };
 
   return (
     <div className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-panel">
@@ -553,26 +625,26 @@ function AnalysisCard({ analysis, onImprove, onPreview, onReset }) {
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <button
           type="button"
-          onClick={onImprove}
-          className="inline-flex items-center justify-center gap-2 rounded border border-db-dark/15 bg-white px-5 py-3 font-black text-db-dark transition hover:border-db-red hover:text-db-red"
+          onClick={handleDownloadPDF}
+          className="inline-flex items-center justify-center gap-2 rounded bg-db-red px-5 py-3 font-black text-white transition hover:bg-red-700 shadow-sm"
         >
-          Zusammenfassung verbessern
-          <Sparkles size={18} aria-hidden="true" />
+          Als PDF herunterladen
+          <Download size={18} aria-hidden="true" />
         </button>
         <button
           type="button"
           onClick={onPreview}
           className="inline-flex items-center justify-center gap-2 rounded bg-db-dark px-5 py-3 font-black text-white transition hover:bg-db-red"
         >
-          Als Entwurf anzeigen
+          Vorschau ansehen
           <FileText size={18} aria-hidden="true" />
         </button>
         <button
           type="button"
           onClick={onReset}
-          className="inline-flex items-center justify-center gap-2 rounded bg-db-red px-5 py-3 font-black text-white transition hover:bg-red-700"
+          className="inline-flex items-center justify-center gap-2 rounded border border-db-dark/15 bg-white px-5 py-3 font-black text-db-dark transition hover:border-db-red hover:text-db-red"
         >
-          Neue Meldung starten
+          Neu starten
           <RefreshCw size={18} aria-hidden="true" />
         </button>
       </div>
