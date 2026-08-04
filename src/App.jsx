@@ -14,6 +14,7 @@ import { RightsAndLawsView } from "./components/RightsAndLawsView.jsx";
 import { HRDashboard } from "./components/HRDashboard.jsx";
 import { AppLock } from "./components/AppLock.jsx";
 import { PanicButton } from "./components/PanicButton.jsx";
+import { SSOLoginModal } from "./components/SSOLoginModal.jsx";
 
 import DashboardAnalytics from "./components/DashboardAnalytics.jsx";
 import ProjectOverview from "./components/ProjectOverview.jsx";
@@ -33,6 +34,7 @@ export default function App() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isHRMode, setIsHRMode] = useState(false);
   const [isLocked, setIsLocked] = useState(true);
+  const [isSSOOpen, setIsSSOOpen] = useState(false);
 
   if (isLocked) {
     return <AppLock onUnlock={() => setIsLocked(false)} />;
@@ -160,6 +162,15 @@ export default function App() {
           </AnimatePresence>
         </main>
       </div>
+
+      <SSOLoginModal 
+        isOpen={isSSOOpen}
+        onClose={() => setIsSSOOpen(false)}
+        onLoginSuccess={() => {
+          setIsSSOOpen(false);
+          setIsHRMode(true);
+        }}
+      />
 
       {/* Global Floating AI Chat Widget */}
       <FloatingChatWidget />

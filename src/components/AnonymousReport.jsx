@@ -21,6 +21,7 @@ import {
   Sparkles,
   UserX,
   UsersRound,
+  Upload,
 } from "lucide-react";
 
 const incidentOptions = [
@@ -367,7 +368,20 @@ function DescriptionStep({ form, togglePerspective, update }) {
         className="field min-h-44 resize-y py-3"
         placeholder="Beschreibe kurz, was passiert ist."
       />
-      <div>
+      
+      {/* Evidence Upload Simulation */}
+      <div className="mt-4">
+        <p className="mb-2 font-black text-db-dark text-sm">Beweise hochladen (Optional)</p>
+        <div className="border-2 border-dashed border-db-dark/20 rounded-xl bg-white p-6 flex flex-col items-center justify-center text-center hover:border-db-red hover:bg-db-warm/30 transition-all cursor-pointer group">
+          <div className="w-12 h-12 bg-db-dark/5 rounded-full flex items-center justify-center mb-3 group-hover:bg-db-red/10 transition-colors">
+            <Upload className="w-5 h-5 text-db-dark/60 group-hover:text-db-red" />
+          </div>
+          <p className="font-bold text-sm text-db-dark">Screenshots, Chat-Verläufe oder Bilder</p>
+          <p className="text-xs text-db-rail font-medium mt-1">Sicher & verschlüsselt anhängen (max. 50 MB)</p>
+        </div>
+      </div>
+
+      <div className="mt-6">
         <p className="mb-3 font-black text-db-dark">Optionale Einordnung</p>
         <div className="flex flex-wrap gap-2">
           {perspectiveChips.map((chip) => {

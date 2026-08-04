@@ -1,5 +1,5 @@
 import React from "react";
-import { Home, ShieldAlert, HeartHandshake, User, Search, Brain } from "lucide-react";
+import { Home, ShieldAlert, HeartHandshake, User, Search, Brain, Globe } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle.jsx";
 
 export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSearch }) {
@@ -34,6 +34,14 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
 
         {/* Primary Navigation Actions */}
         <nav className="flex items-center gap-2 sm:gap-4">
+          <button
+            type="button"
+            className="hidden sm:flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-bold text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10 transition-all border border-transparent hover:border-db-dark/10 dark:hover:border-white/10"
+            title="Sprache ändern (Simuliert)"
+          >
+            <Globe className="h-4 w-4" />
+            <span>DE</span>
+          </button>
           <ThemeToggle />
           
           <button
