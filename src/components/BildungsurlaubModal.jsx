@@ -41,7 +41,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-db-dark/60 backdrop-blur-sm p-4 animate-fadeIn">
-      <div className="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative shadow-2xl">
+      <div className="bg-white rounded-lg p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative shadow-lg">
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 rounded-full hover:bg-db-dark/5 transition"
@@ -61,7 +61,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
 
         {step === 1 ? (
           <form onSubmit={handleGenerate} className="space-y-6 animate-fadeIn">
-            <div className="bg-db-warm/30 rounded-xl p-4 border border-db-dark/5 text-xs font-semibold text-db-rail leading-relaxed">
+            <div className="bg-db-soft rounded-xl p-4 border border-db-dark/5 text-xs font-semibold text-db-rail leading-relaxed">
               <span className="font-bold text-db-dark">Datenschutz-Hinweis:</span> Alle Eingaben sind zu 100% freiwillig. Die Daten werden nicht gespeichert, sondern dienen nur dazu, den Antragstext für dich im Browser zu generieren. Du kannst die Felder auch leer lassen und später selbst im Text ergänzen.
             </div>
 

@@ -106,7 +106,7 @@ export function ProfileView() {
             
             <div className="flex flex-col lg:flex-row gap-4 h-[500px]">
               {/* Inbox List */}
-              <div className="w-full lg:w-1/3 bg-white dark:bg-db-dark/50 rounded-2xl border border-db-dark/10 dark:border-white/10 flex flex-col overflow-hidden shrink-0">
+              <div className="w-full lg:w-1/3 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 flex flex-col overflow-hidden shrink-0">
                  <div className="overflow-y-auto flex-1 p-2 space-y-2">
                    {tickets.map(ticket => (
                      <button
@@ -125,7 +125,7 @@ export function ProfileView() {
               </div>
 
               {/* Chat Area */}
-              <div className="w-full lg:w-2/3 bg-white dark:bg-db-dark/50 rounded-2xl border border-db-dark/10 dark:border-white/10 flex flex-col overflow-hidden">
+              <div className="w-full lg:w-2/3 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 flex flex-col overflow-hidden">
                 {selectedTicket ? (
                   <>
                     <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
@@ -136,7 +136,7 @@ export function ProfileView() {
                                  <span className="text-[10px] font-bold uppercase text-db-rail dark:text-white/40 bg-db-dark/5 dark:bg-white/5 px-3 py-1 rounded-full">{msg.text}</span>
                               </div>
                             ) : (
-                              <div className={`max-w-[85%] rounded-2xl p-4 ${msg.sender === 'azubi' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-db-warm/30 dark:bg-white/5 text-db-dark dark:text-white rounded-tl-sm border border-db-dark/10 dark:border-white/10'}`}>
+                              <div className={`max-w-[85%] rounded-md p-4 ${msg.sender === 'azubi' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-db-soft dark:bg-white/5 text-db-dark dark:text-white rounded-tl-sm border border-db-dark/10 dark:border-white/10'}`}>
                                  <div className="flex items-center gap-2 mb-1 opacity-70 text-[10px] font-bold uppercase tracking-wider">
                                     {msg.sender === 'azubi' ? 'Du' : 'HR / Vorgesetzter'} • {msg.timestamp}
                                  </div>
@@ -183,7 +183,7 @@ export function ProfileView() {
               Diese Einträge sind lokal verschlüsselt und nur für dich sichtbar.
             </p>
             {savedRecords.map(record => (
-              <div key={record.id} className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+              <div key={record.id} className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm hover:shadow-md transition">
                 <div className="flex items-center gap-2 text-xs font-bold text-db-rail dark:text-white/60 mb-2">
                   <Clock className="w-3 h-3" />
                   {record.date} • {record.time}
@@ -206,7 +206,7 @@ export function ProfileView() {
         return (
           <div className="space-y-4">
             <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Stimmungs-Verlauf</h3>
-            <div className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-2xl p-6 shadow-sm">
+            <div className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-6 shadow-sm">
               <div className="space-y-6">
                 {moodHistory.map((item, idx) => (
                   <div key={idx} className="flex items-center justify-between border-b border-db-dark/5 dark:border-white/5 pb-4 last:border-0 last:pb-0">
@@ -227,7 +227,7 @@ export function ProfileView() {
             <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Gemerkte Kurse</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {savedCourses.map((course, idx) => (
-                <div key={idx} className="group bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-2xl p-5 shadow-sm hover:border-db-red dark:hover:border-db-red transition cursor-pointer flex flex-col justify-between">
+                <div key={idx} className="group bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm hover:border-db-red dark:hover:border-db-red transition cursor-pointer flex flex-col justify-between">
                   <div>
                     <div className="flex items-center gap-2 text-xs font-bold text-db-rail dark:text-white/60 mb-2 uppercase tracking-wider">
                       <Video className="w-3 h-3" />
@@ -252,7 +252,7 @@ export function ProfileView() {
               {badges.map((badge, idx) => {
                 const Icon = badge.icon;
                 return (
-                  <div key={idx} className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-2xl p-5 shadow-sm flex items-start gap-4">
+                  <div key={idx} className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm flex items-start gap-4">
                     <div className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${badge.bg}`}>
                       <Icon className={`w-8 h-8 ${badge.color}`} />
                     </div>
@@ -279,7 +279,7 @@ export function ProfileView() {
       className="max-w-4xl mx-auto py-8 px-4 sm:px-6"
     >
       {/* Profile Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-10 bg-db-dark p-8 rounded-3xl shadow-xl shadow-db-dark/10 relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-10 bg-db-dark p-8 rounded-lg shadow-md shadow-db-dark/10 relative overflow-hidden">
         <div className="absolute -top-20 -right-20 opacity-5 pointer-events-none">
           <User className="w-80 h-80 text-white" />
         </div>

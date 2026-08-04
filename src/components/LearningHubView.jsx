@@ -45,7 +45,7 @@ export function LearningHubView() {
 
   // Header UI
   const renderHeader = () => (
-    <div className="rounded-2xl bg-gradient-to-r from-db-dark via-db-dark/90 to-db-rail p-6 text-white shadow-xl relative overflow-hidden">
+    <div className="rounded-md bg-gradient-to-r from-db-dark via-db-dark/90 to-db-rail p-6 text-white shadow-md relative overflow-hidden">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2 max-w-2xl">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm backdrop-blur-md">
@@ -88,7 +88,7 @@ export function LearningHubView() {
     : [];
 
   const renderCourse = (course) => (
-    <div key={course.id} className="rounded-2xl border border-db-dark/10 bg-white p-5 sm:p-6 shadow-sm hover:shadow-md transition group">
+    <div key={course.id} className="rounded-md border border-db-dark/10 bg-white p-5 sm:p-6 shadow-sm hover:shadow-md transition group">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="space-y-3">
           <div>
@@ -106,7 +106,7 @@ export function LearningHubView() {
             {course.desc}
           </p>
           {course.requirements && (
-            <div className="mt-3 rounded-lg bg-db-warm/30 p-3 border border-db-dark/5">
+            <div className="mt-3 rounded-lg bg-db-soft p-3 border border-db-dark/5">
               <p className="text-xs font-bold text-db-dark mb-1">Was du dafür brauchst:</p>
               <p className="text-xs font-semibold text-db-rail">{course.requirements}</p>
             </div>
@@ -202,7 +202,7 @@ export function LearningHubView() {
         >
           <ArrowLeft className="h-4 w-4" /> Zurück zum Katalog
         </button>
-        <div className="rounded-2xl bg-white border border-db-dark/10 p-4 sm:p-6 shadow-sm">
+        <div className="rounded-md bg-white border border-db-dark/10 p-4 sm:p-6 shadow-sm">
           <TrainingMode />
         </div>
       </div>

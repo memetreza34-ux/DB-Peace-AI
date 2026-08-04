@@ -46,9 +46,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background:
-    radial-gradient(1100px 380px at 50% -120px, rgba(226, 0, 26, 0.05), transparent 70%),
-    linear-gradient(180deg, #f7f7f7 0%, #ffffff 48%, #f5f5f3 100%);
+  background-color: #f0f3f5; /* DB Cool Gray Light */
   text-rendering: optimizeLegibility;
 }
 
@@ -276,47 +274,7 @@ article,
   100% { background-position: 100% 50%; }
 }
 
-/* Animated Background / Speed Lines */
-.db-animated-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: -1;
-  overflow: hidden;
-}
 
-.db-light-streak {
-  position: absolute;
-  width: 150px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(226, 0, 26, 0.15), transparent);
-  animation: moving-streak linear infinite;
-  opacity: 0;
-}
-
-.dark .db-light-streak {
-  background: linear-gradient(90deg, transparent, rgba(226, 0, 26, 0.3), transparent);
-}
-
-@keyframes moving-streak {
-  0% {
-    transform: translateX(-100vw) translateY(0);
-    opacity: 0;
-  }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% {
-    transform: translateX(100vw) translateY(0);
-    opacity: 0;
-  }
-}
-
-.streak-1 { top: 20%; animation-duration: 8s; animation-delay: 0s; width: 300px; }
-.streak-2 { top: 60%; animation-duration: 12s; animation-delay: 4s; width: 500px; }
-.streak-3 { top: 85%; animation-duration: 15s; animation-delay: 2s; width: 200px; }
 
 /* Glassmorphism Panels */
 .db-glass-panel {

@@ -115,7 +115,7 @@ export default function SupportPage({ onNavigate }) {
       {/* STEP 1: SITUATION SELECTION */}
       {step === 1 && (
         <div className="text-center space-y-6 py-4">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-green-500/10 text-green-600 mb-2">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-md bg-green-500/10 text-green-600 mb-2">
             <PhoneCall className="h-6 w-6" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-db-dark">Finde die richtige Unterstützung</h2>
@@ -154,7 +154,7 @@ export default function SupportPage({ onNavigate }) {
             <ArrowLeft className="h-4 w-4" /> Zurück zur Übersicht
           </button>
 
-          <div className="rounded-2xl bg-green-50 border border-green-200 p-6 sm:p-8 space-y-6">
+          <div className="rounded-md bg-green-50 border border-green-200 p-6 sm:p-8 space-y-6">
              <div className="flex items-center gap-4 border-b border-green-200/50 pb-4">
                <selected.icon className="h-8 w-8 text-green-700" />
                <h3 className="text-xl sm:text-2xl font-black text-green-900">{selected.title}</h3>
@@ -193,7 +193,7 @@ export default function SupportPage({ onNavigate }) {
              </div>
           </div>
           
-          <div className="rounded-xl border border-db-dark/10 bg-db-warm/30 p-5 text-center">
+          <div className="rounded-xl border border-db-dark/10 bg-db-soft p-5 text-center">
              <p className="text-xs font-semibold text-db-rail">
                Nicht sicher, was du tun sollst? Nutze unser anonymes <strong className="text-db-dark cursor-pointer underline" onClick={() => onNavigate && onNavigate("record-report")}>Gedächtnisprotokoll</strong> (Säule 2), um den Vorfall zunächst privat für dich festzuhalten.
              </p>

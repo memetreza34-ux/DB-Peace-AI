@@ -85,7 +85,7 @@ export default function ProjectOverview() {
   return (
     <div className="w-full">
       {/* Header Area */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 bg-white dark:bg-db-dark/50 p-6 sm:p-8 rounded-3xl border border-db-dark/5 dark:border-white/10 shadow-sm relative overflow-hidden">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 bg-white dark:bg-db-dark/50 p-6 sm:p-8 rounded-lg border border-db-dark/5 dark:border-white/10 shadow-sm relative overflow-hidden">
         
         {/* Background Graphic */}
         <div className="absolute -right-20 -top-20 opacity-5 pointer-events-none">
@@ -119,7 +119,7 @@ export default function ProjectOverview() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               layout
-              className="bg-white dark:bg-db-dark/80 rounded-3xl p-6 border border-db-dark/10 dark:border-white/10 shadow-sm flex flex-col justify-between group hover:shadow-md hover:border-db-red/30 transition-all"
+              className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border border-db-dark/10 dark:border-white/10 shadow-sm flex flex-col justify-between group hover:shadow-md hover:border-db-red/30 transition-all"
             >
               <div>
                 <div className="flex justify-between items-start mb-4">
@@ -201,7 +201,7 @@ export default function ProjectOverview() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg bg-white dark:bg-db-dark rounded-3xl p-6 md:p-8 shadow-2xl border border-db-dark/10 dark:border-white/10"
+              className="relative w-full max-w-lg bg-white dark:bg-db-dark rounded-lg p-6 md:p-8 shadow-lg border border-db-dark/10 dark:border-white/10"
             >
               <button 
                 onClick={() => setIsModalOpen(false)}

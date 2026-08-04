@@ -43,7 +43,7 @@ export function HRDashboard({ onExit }) {
   return (
     <div className="space-y-6 animate-fadeIn pb-24 h-full flex flex-col">
       {/* Header Banner - HR Style */}
-      <div className="rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-db-red p-6 text-white shadow-xl relative overflow-hidden shrink-0">
+      <div className="rounded-md bg-gradient-to-r from-slate-900 via-slate-800 to-db-red p-6 text-white shadow-md relative overflow-hidden shrink-0">
         <div className="flex flex-col md:flex-row justify-between gap-4 relative z-10">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-white backdrop-blur-md">
@@ -98,7 +98,7 @@ export function HRDashboard({ onExit }) {
         {activeHRTab === "tickets" ? (
           <>
             {/* Ticket List Sidebar */}
-            <div className="w-full lg:w-1/3 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden shrink-0">
+            <div className="w-full lg:w-1/3 bg-white rounded-md border border-slate-200 shadow-sm flex flex-col overflow-hidden shrink-0">
            <div className="p-4 border-b border-slate-100 bg-slate-50">
              <h2 className="font-black text-slate-800">Eingänge (Anonym)</h2>
            </div>
@@ -124,7 +124,7 @@ export function HRDashboard({ onExit }) {
         </div>
 
         {/* Ticket Details & Chat */}
-        <div className="w-full lg:w-2/3 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+        <div className="w-full lg:w-2/3 bg-white rounded-md border border-slate-200 shadow-sm flex flex-col overflow-hidden">
           {selectedTicket ? (
             <>
               {/* Ticket Header */}
@@ -159,7 +159,7 @@ export function HRDashboard({ onExit }) {
                              <span className="text-[10px] font-bold uppercase text-slate-400 bg-slate-100 px-3 py-1 rounded-full">{msg.text}</span>
                           </div>
                         ) : (
-                          <div className={`max-w-[80%] rounded-2xl p-4 ${msg.sender === 'hr' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm'}`}>
+                          <div className={`max-w-[80%] rounded-md p-4 ${msg.sender === 'hr' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm'}`}>
                              <div className="flex items-center gap-2 mb-1 opacity-70 text-[10px] font-bold uppercase tracking-wider">
                                 {msg.sender === 'hr' ? 'Du (HR)' : 'Anonymer Hinweisgeber'} • {msg.timestamp}
                              </div>
@@ -201,31 +201,31 @@ export function HRDashboard({ onExit }) {
           </div>
           </>
         ) : (
-          <div className="w-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-y-auto p-6">
+          <div className="w-full bg-white rounded-md border border-slate-200 shadow-sm overflow-y-auto p-6">
             <h2 className="text-xl font-black text-slate-800 mb-6">Culture Analytics & Prävention (Vision 2040)</h2>
             <p className="text-slate-600 mb-8 max-w-3xl leading-relaxed">
               Dieses Dashboard nutzt Predictive Analytics, um Hotspots für Konflikte zu identifizieren, bevor sie eskalieren. Die Daten basieren vollständig auf anonymisierten Metadaten des MoodTrackers und der KI-Triage.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-red-50 p-5 rounded-2xl border border-red-100">
+              <div className="bg-red-50 p-5 rounded-md border border-red-100">
                 <h3 className="text-sm font-bold text-red-800 uppercase mb-2">Risiko-Hotspot</h3>
                 <p className="text-3xl font-black text-red-900 mb-1">Standort Süd</p>
                 <p className="text-xs font-semibold text-red-700">+14% Stress-Meldungen (MoodTracker) in den letzten 7 Tagen</p>
               </div>
-              <div className="bg-emerald-50 p-5 rounded-2xl border border-emerald-100">
+              <div className="bg-emerald-50 p-5 rounded-md border border-emerald-100">
                 <h3 className="text-sm font-bold text-emerald-800 uppercase mb-2">Speak-Up Culture</h3>
                 <p className="text-3xl font-black text-emerald-900 mb-1">92%</p>
                 <p className="text-xs font-semibold text-emerald-700">Mitarbeiter vertrauen dem anonymen System (Benchmark: 74%)</p>
               </div>
-              <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+              <div className="bg-blue-50 p-5 rounded-md border border-blue-100">
                 <h3 className="text-sm font-bold text-blue-800 uppercase mb-2">KI-Trend (Konflikte)</h3>
                 <p className="text-3xl font-black text-blue-900 mb-1">Überstunden</p>
                 <p className="text-xs font-semibold text-blue-700">Häufigstes Keyword in den Gedächtnisprotokollen</p>
               </div>
             </div>
 
-            <div className="bg-slate-900 p-6 rounded-2xl text-white">
+            <div className="bg-slate-900 p-6 rounded-md text-white">
               <h3 className="font-bold text-lg mb-2">💡 Handlungsempfehlung der KI</h3>
               <p className="text-slate-300 text-sm leading-relaxed">
                 Basierend auf dem Anstieg der negativen Stimmung im Bereich "Standort Süd" wird eine proaktive Informationskampagne zum Thema "Gesetzliche Pausenzeiten" und "Mental Health" empfohlen, um einem Anstieg von offiziellen Beschwerden vorzubeugen.

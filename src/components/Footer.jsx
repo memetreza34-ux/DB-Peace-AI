@@ -18,7 +18,7 @@ export function Footer({ onNavigate, onToggleHR }) {
           </div>
 
           {/* Core Safety Statement */}
-          <div className="rounded-xl bg-db-warm/60 px-4 py-2 text-center text-xs font-bold text-db-dark border border-db-dark/5">
+          <div className="rounded-xl bg-db-warm px-4 py-2 text-center text-xs font-bold text-db-dark border border-db-dark/5">
             🛡️ <span className="text-db-red font-black">„Menschen entscheiden, nicht die KI.“</span> — Keine Rechts- oder Medizinberatung.
           </div>
 

@@ -103,7 +103,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
       {/* Welcome Banner */}
       <motion.div 
         variants={itemVariants}
-        className="rounded-3xl bg-db-dark px-6 py-10 sm:px-10 sm:py-14 text-center shadow-2xl shadow-db-dark/20 relative overflow-hidden group"
+        className="rounded-lg bg-db-dark px-6 py-10 sm:px-10 sm:py-14 text-center shadow-lg shadow-db-dark/20 relative overflow-hidden group"
       >
         {/* Background Glow */}
         <motion.div 
@@ -180,7 +180,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
               whileTap={{ scale: 0.98 }}
               key={item.id}
               onClick={item.action}
-              className={`group flex flex-col items-start rounded-2xl border border-db-dark/5 dark:border-white/10 bg-white/70 dark:bg-db-dark/50 backdrop-blur-md p-6 text-left transition-colors shadow-sm hover:shadow-xl dark:hover:bg-db-dark/80 ${item.borderColor}`}
+              className={`group flex flex-col items-start rounded-md border border-db-dark/5 dark:border-white/10 bg-white/70 dark:bg-db-dark/50 backdrop-blur-md p-6 text-left transition-colors shadow-sm hover:shadow-md dark:hover:bg-db-dark/80 ${item.borderColor}`}
             >
               <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl mb-4 transition-transform group-hover:scale-110 ${item.bgColor} ${item.color}`}>
                 <Icon className="h-6 w-6" />
@@ -207,7 +207,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={onOpenEmergency}
-          className="flex items-center gap-4 rounded-2xl border border-red-200/50 dark:border-red-500/20 bg-white/70 dark:bg-red-500/5 backdrop-blur-md p-5 text-left transition hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 dark:hover:border-red-500/30 hover:shadow-lg hover:shadow-red-500/10 group"
+          className="flex items-center gap-4 rounded-md border border-red-200/50 dark:border-red-500/20 bg-white/70 dark:bg-red-500/5 backdrop-blur-md p-5 text-left transition hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 dark:hover:border-red-500/30 hover:shadow-lg hover:shadow-red-500/10 group"
         >
           <div className="rounded-xl bg-red-100 dark:bg-red-500/20 p-3 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
             <Siren className="h-6 w-6" />
@@ -222,7 +222,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => onNavigate("privacy")}
-          className="flex items-center gap-4 rounded-2xl border border-emerald-200/50 dark:border-emerald-500/20 bg-white/70 dark:bg-emerald-500/5 backdrop-blur-md p-5 text-left transition hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:border-emerald-200 dark:hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/10 group"
+          className="flex items-center gap-4 rounded-md border border-emerald-200/50 dark:border-emerald-500/20 bg-white/70 dark:bg-emerald-500/5 backdrop-blur-md p-5 text-left transition hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:border-emerald-200 dark:hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/10 group"
         >
           <div className="rounded-xl bg-emerald-100 dark:bg-emerald-500/20 p-3 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
             <ShieldCheck className="h-6 w-6" />

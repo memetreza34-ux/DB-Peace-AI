@@ -54,7 +54,7 @@ export function RightsAndLawsView({ onBack }) {
     return (
       <div 
         key={law.id} 
-        className={`rounded-2xl border transition-all duration-300 overflow-hidden ${isOpen ? 'border-db-dark/20 bg-white shadow-lg' : 'border-db-dark/10 bg-white hover:border-db-dark/20 hover:shadow-md'}`}
+        className={`rounded-md border transition-all duration-300 overflow-hidden ${isOpen ? 'border-db-dark/20 bg-white shadow-lg' : 'border-db-dark/10 bg-white hover:border-db-dark/20 hover:shadow-md'}`}
       >
         {/* Card Header (Clickable) */}
         <button 
@@ -95,7 +95,7 @@ export function RightsAndLawsView({ onBack }) {
               </div>
 
               {/* Action Tip */}
-              <div className="flex items-start gap-3 p-3 bg-db-warm/30 rounded-lg">
+              <div className="flex items-start gap-3 p-3 bg-db-soft rounded-lg">
                 <Info className="h-5 w-5 text-db-red shrink-0 mt-0.5" />
                 <div>
                   <p className="text-xs font-bold text-db-dark">Tipp für die Praxis:</p>
@@ -113,7 +113,7 @@ export function RightsAndLawsView({ onBack }) {
   return (
     <div className="space-y-6 animate-fadeIn pb-24">
       {/* Header */}
-      <div className="rounded-2xl bg-gradient-to-r from-db-dark via-db-dark/90 to-db-rail p-6 text-white shadow-xl relative overflow-hidden">
+      <div className="rounded-md bg-gradient-to-r from-db-dark via-db-dark/90 to-db-rail p-6 text-white shadow-md relative overflow-hidden">
         <div className="space-y-2 max-w-2xl relative z-10">
           <button
             onClick={onBack}
@@ -193,7 +193,7 @@ export function RightsAndLawsView({ onBack }) {
             </div>
           ))
         ) : (
-          <div className="text-center py-12 bg-white rounded-2xl border border-db-dark/10">
+          <div className="text-center py-12 bg-white rounded-md border border-db-dark/10">
             <Scale className="h-12 w-12 text-db-dark/10 mx-auto mb-3" />
             <h3 className="text-lg font-black text-db-dark">Keine Gesetze gefunden</h3>
             <p className="text-sm font-medium text-db-rail mt-1">

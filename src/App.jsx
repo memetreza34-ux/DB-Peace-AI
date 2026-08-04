@@ -49,15 +49,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-db-warm/30 flex flex-col justify-between selection:bg-db-red selection:text-white relative">
+    <div className="min-h-screen bg-db-soft flex flex-col justify-between selection:bg-db-red selection:text-white relative">
       <div>
-        {/* Global Animated Background */}
-        <div className="db-animated-bg">
-          <div className="db-light-streak streak-1"></div>
-          <div className="db-light-streak streak-2"></div>
-          <div className="db-light-streak streak-3"></div>
-        </div>
-
         {/* Global Search Overlay */}
         <GlobalSearch 
           isOpen={isSearchOpen} 

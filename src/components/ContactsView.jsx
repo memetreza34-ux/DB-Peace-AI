@@ -19,7 +19,7 @@ export function ContactsView() {
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-db-dark/80 rounded-3xl p-6 border-2 border-red-500/20 shadow-sm flex flex-col h-full"
+          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border-2 border-red-500/20 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-red-500 text-white p-3 rounded-xl">
@@ -49,7 +49,7 @@ export function ContactsView() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white dark:bg-db-dark/80 rounded-3xl p-6 border border-db-dark/10 dark:border-white/10 shadow-sm flex flex-col h-full"
+          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border border-db-dark/10 dark:border-white/10 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-db-dark text-white dark:bg-white dark:text-db-dark p-3 rounded-xl">
@@ -85,7 +85,7 @@ export function ContactsView() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white dark:bg-db-dark/80 rounded-3xl p-6 border border-db-dark/10 dark:border-white/10 shadow-sm flex flex-col h-full"
+          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border border-db-dark/10 dark:border-white/10 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 p-3 rounded-xl">

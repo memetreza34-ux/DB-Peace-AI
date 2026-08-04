@@ -6,14 +6,15 @@ export default {
     extend: {
       colors: {
         db: {
-          red: "#E2001A",
-          dark: "#1F2328",
-          rail: "#3A3F45",
-          soft: "#F5F5F3",
+          red: "#E2001A", // Official DB Red
+          dark: "#282D37", // DB Cool Gray Dark (Text)
+          rail: "#646973", // DB Cool Gray Mid
+          soft: "#F0F3F5", // DB Cool Gray Light (Background)
+          warm: "#ECEEF1", // DB Secondary Background
         },
       },
       boxShadow: {
-        panel: "0 18px 50px rgba(31, 35, 40, 0.12)",
+        panel: "0 2px 8px rgba(40, 45, 55, 0.08)", // Sharper, standard corporate shadow
       },
     },
   },

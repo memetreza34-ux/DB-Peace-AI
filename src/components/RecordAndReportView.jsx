@@ -70,7 +70,7 @@ export function RecordAndReportView() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="rounded-2xl bg-gradient-to-r from-db-dark via-db-dark/90 to-db-rail p-6 text-white shadow-xl relative overflow-hidden">
+      <div className="rounded-md bg-gradient-to-r from-db-dark via-db-dark/90 to-db-rail p-6 text-white shadow-md relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm backdrop-blur-md">
@@ -131,7 +131,7 @@ export function RecordAndReportView() {
       {/* Sub-Tab 1: Vorfall Festhalten (Gedächtnisprotokoll) */}
       {subTab === "protokoll" && (
         <div className="space-y-6">
-          <div className="rounded-2xl bg-white border border-db-dark/10 p-6 shadow-sm">
+          <div className="rounded-md bg-white border border-db-dark/10 p-6 shadow-sm">
             <div className="flex items-center justify-between pb-4 border-b border-db-dark/10">
               <div>
                 <h2 className="text-lg font-black text-db-dark">Dein Anonymes Gedächtnisprotokoll</h2>
@@ -314,14 +314,14 @@ export function RecordAndReportView() {
 
       {/* Sub-Tab 2: Melden (5-Schritte-Assistent) */}
       {subTab === "meldung" && (
-        <div className="rounded-2xl bg-white border border-db-dark/10 p-4 sm:p-6 shadow-sm">
+        <div className="rounded-md bg-white border border-db-dark/10 p-4 sm:p-6 shadow-sm">
           <AnonymousReport />
         </div>
       )}
       {/* Selected Record Modal */}
       {selectedRecord && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-db-dark/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative">
+          <div className="bg-white rounded-lg p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg relative">
             <button 
               onClick={() => setSelectedRecord(null)}
               className="absolute top-4 right-4 p-2 rounded-full bg-db-warm/50 hover:bg-db-dark/10 transition text-db-dark"
@@ -341,7 +341,7 @@ export function RecordAndReportView() {
               </span>
             </div>
             
-            <div className="bg-db-warm/30 rounded-xl p-4 border border-db-dark/5 mb-6">
+            <div className="bg-db-soft rounded-xl p-4 border border-db-dark/5 mb-6">
               <h3 className="text-xs font-bold text-db-rail uppercase tracking-wider mb-2">Beschreibung</h3>
               <p className="text-sm font-semibold text-db-dark whitespace-pre-wrap leading-relaxed">
                 {selectedRecord.description}

@@ -64,8 +64,8 @@ export function AzubiRightsCheck() {
             <motion.div
               layout
               key={right.id}
-              className={`rounded-2xl border transition-colors ${
-                isExpanded ? "bg-white border-db-dark/20 shadow-xl" : "bg-white/60 border-db-dark/5 hover:border-db-dark/10 hover:bg-white"
+              className={`rounded-md border transition-colors ${
+                isExpanded ? "bg-white border-db-dark/20 shadow-md" : "bg-white/60 border-db-dark/5 hover:border-db-dark/10 hover:bg-white"
               }`}
             >
               <button

@@ -18,12 +18,12 @@ export function EmergencyModal({ isOpen, onClose }) {
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl border border-db-dark/10"
+          className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg border border-db-dark/10"
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-db-dark/10">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-red-600">
+              <div className="flex h-12 w-12 items-center justify-center rounded-md bg-red-100 text-red-600">
                 <ShieldAlert className="h-7 w-7 animate-pulse" />
               </div>
               <div>

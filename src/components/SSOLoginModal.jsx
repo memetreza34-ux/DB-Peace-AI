@@ -22,7 +22,7 @@ export function SSOLoginModal({ isOpen, onClose, onLoginSuccess }) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative"
+          className="bg-white rounded-md shadow-lg w-full max-w-md overflow-hidden relative"
         >
           {/* Close button (only if not loading) */}
           {!loading && (

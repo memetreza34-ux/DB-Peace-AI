@@ -134,7 +134,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -20 }}
           transition={{ duration: 0.15, ease: "easeOut" }}
-          className="relative w-full max-w-2xl bg-white dark:bg-db-dark rounded-3xl shadow-2xl border border-db-dark/10 dark:border-white/10 overflow-hidden flex flex-col max-h-[80vh]"
+          className="relative w-full max-w-2xl bg-white dark:bg-db-dark rounded-lg shadow-lg border border-db-dark/10 dark:border-white/10 overflow-hidden flex flex-col max-h-[80vh]"
         >
           {/* Search Input Area */}
           <div className="flex items-center px-4 py-4 border-b border-db-dark/10 dark:border-white/10 bg-db-dark/5 dark:bg-white/5">
@@ -176,7 +176,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
                 <button
                   key={item.id}
                   onClick={() => handleSelect(item)}
-                  className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-db-dark/5 dark:hover:bg-white/5 transition-colors group text-left"
+                  className="w-full flex items-center justify-between p-4 rounded-md hover:bg-db-dark/5 dark:hover:bg-white/5 transition-colors group text-left"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-white dark:bg-db-dark border border-db-dark/10 dark:border-white/10 flex items-center justify-center shadow-sm shrink-0">

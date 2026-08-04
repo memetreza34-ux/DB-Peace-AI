@@ -58,7 +58,7 @@ export function QuizWidget() {
 
   if (isLoading) {
     return (
-      <div className="w-full h-64 rounded-3xl bg-white dark:bg-db-dark/80 backdrop-blur-md border border-db-dark/10 dark:border-white/10 shadow-xl flex flex-col items-center justify-center gap-4 transition-colors">
+      <div className="w-full h-64 rounded-lg bg-white dark:bg-db-dark/80 backdrop-blur-md border border-db-dark/10 dark:border-white/10 shadow-md flex flex-col items-center justify-center gap-4 transition-colors">
         <Loader2 className="h-8 w-8 text-db-red animate-spin" />
         <p className="text-sm font-semibold text-db-rail dark:text-white/70">
           KI generiert neue Quiz-Fragen...
@@ -73,7 +73,7 @@ export function QuizWidget() {
 
   if (isFinished) {
     return (
-      <div className="w-full rounded-3xl bg-db-dark text-white p-8 text-center shadow-xl shadow-db-dark/20 relative overflow-hidden">
+      <div className="w-full rounded-lg bg-db-dark text-white p-8 text-center shadow-md shadow-db-dark/20 relative overflow-hidden">
         <div className="absolute -top-10 -right-10 opacity-10">
           <ShieldCheck className="w-40 h-40" />
         </div>
@@ -112,7 +112,7 @@ export function QuizWidget() {
   const currentQ = questions[currentQIndex];
 
   return (
-    <div className="w-full rounded-3xl bg-white dark:bg-db-dark/80 backdrop-blur-md border border-db-dark/10 dark:border-white/10 shadow-xl p-6 relative overflow-hidden transition-colors">
+    <div className="w-full rounded-lg bg-white dark:bg-db-dark/80 backdrop-blur-md border border-db-dark/10 dark:border-white/10 shadow-md p-6 relative overflow-hidden transition-colors">
       
       {/* Progress */}
       <div className="flex items-center gap-1 mb-6">
@@ -159,7 +159,7 @@ export function QuizWidget() {
             key="result"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className={`mt-6 rounded-2xl p-5 border ${
+            className={`mt-6 rounded-md p-5 border ${
               isCorrect 
                 ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30' 
                 : 'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30'

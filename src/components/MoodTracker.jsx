@@ -32,7 +32,7 @@ export function MoodTracker() {
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full rounded-3xl bg-white/70 dark:bg-db-dark/80 backdrop-blur-md border border-db-dark/10 dark:border-white/10 p-6 shadow-xl shadow-db-dark/5 dark:shadow-black/50"
+      className="w-full rounded-lg bg-white/70 dark:bg-db-dark/80 backdrop-blur-md border border-db-dark/10 dark:border-white/10 p-6 shadow-md shadow-db-dark/5 dark:shadow-black/50"
     >
       <AnimatePresence mode="wait">
         {!submitted ? (
@@ -57,7 +57,7 @@ export function MoodTracker() {
                     key={mood.id}
                     type="button"
                     onClick={() => setSelectedMood(mood.id)}
-                    className={`flex-1 flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 transition-all duration-300 ${
+                    className={`flex-1 flex flex-col items-center justify-center gap-2 rounded-md border p-4 transition-all duration-300 ${
                       isActive 
                         ? `${mood.activeBg} ${mood.border} shadow-lg scale-105` 
                         : `bg-white dark:bg-white/5 ${mood.border} hover:bg-db-warm/50 dark:hover:bg-white/10`
