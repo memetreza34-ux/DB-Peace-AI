@@ -4,6 +4,7 @@ import { Frown, Meh, Smile, Send, CheckCircle2 } from "lucide-react";
 
 export function MoodTracker() {
   const [selectedMood, setSelectedMood] = useState(null); // 'bad' | 'neutral' | 'good'
+  const [reason, setReason] = useState(null); // Added for ESG tracking
   const [note, setNote] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
@@ -22,6 +23,7 @@ export function MoodTracker() {
       // Reset after a while or leave as submitted for the day
       setSubmitted(false);
       setSelectedMood(null);
+      setReason(null);
       setNote("");
     }, 5000);
   };
@@ -79,6 +81,34 @@ export function MoodTracker() {
                   onSubmit={handleSubmit}
                   className="flex flex-col gap-3 overflow-hidden"
                 >
+                  {selectedMood === "bad" && (
+                    <motion.div 
+                      initial={{ opacity: 0 }} 
+                      animate={{ opacity: 1 }} 
+                      className="mt-2"
+                    >
+                      <p className="text-xs font-bold text-db-rail dark:text-white/70 mb-2 uppercase tracking-wide">
+                        Woran liegt es? (Optional)
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {["Stress", "Kollegen", "Führung", "Kunden", "Sonstiges"].map(r => (
+                          <button
+                            key={r}
+                            type="button"
+                            onClick={() => setReason(r)}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                              reason === r 
+                                ? "bg-red-500 text-white" 
+                                : "bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                            }`}
+                          >
+                            {r}
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                  
                   <input
                     type="text"
                     value={note}

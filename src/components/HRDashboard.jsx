@@ -7,6 +7,7 @@ export function HRDashboard({ onExit }) {
   const [tickets, setTickets] = useState([...mockTicketsData]);
   const [selectedTicketId, setSelectedTicketId] = useState(null);
   const [replyText, setReplyText] = useState("");
+  const [activeHRTab, setActiveHRTab] = useState("tickets");
 
   useEffect(() => {
     const unsubscribe = subscribeToTickets((newTickets) => {
@@ -68,9 +69,36 @@ export function HRDashboard({ onExit }) {
         <TrainFront className="absolute right-10 top-1/2 -translate-y-1/2 h-40 w-40 text-white/5 pointer-events-none" />
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 h-[70vh]">
-        {/* Ticket List Sidebar */}
-        <div className="w-full lg:w-1/3 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden shrink-0">
+      {/* Tabs */}
+      <div className="flex gap-2 shrink-0">
+        <button
+          onClick={() => setActiveHRTab("tickets")}
+          className={`px-4 py-2 rounded-xl font-bold text-sm transition-all ${
+            activeHRTab === "tickets" 
+              ? "bg-slate-900 text-white" 
+              : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+          }`}
+        >
+          Eingänge & Tickets
+        </button>
+        <button
+          onClick={() => setActiveHRTab("esg")}
+          className={`px-4 py-2 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+            activeHRTab === "esg" 
+              ? "bg-slate-900 text-white" 
+              : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+          }`}
+        >
+          <ShieldAlert className="w-4 h-4" />
+          ESG & Culture Analytics (Predictive)
+        </button>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-6 h-[60vh]">
+        {activeHRTab === "tickets" ? (
+          <>
+            {/* Ticket List Sidebar */}
+            <div className="w-full lg:w-1/3 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden shrink-0">
            <div className="p-4 border-b border-slate-100 bg-slate-50">
              <h2 className="font-black text-slate-800">Eingänge (Anonym)</h2>
            </div>
@@ -161,16 +189,53 @@ export function HRDashboard({ onExit }) {
                        <Send className="w-5 h-5" />
                     </button>
                  </form>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 text-center bg-slate-50/50">
+                 <MessageSquare className="w-16 h-16 mb-4 text-slate-200" />
+                 <p className="font-bold text-lg text-slate-600">Kein Ticket ausgewählt</p>
+                 <p className="text-sm mt-1 max-w-sm">Wähle eine Meldung aus der Liste, um die KI-Zusammenfassung zu lesen und sicher zu antworten.</p>
               </div>
-            </>
-          ) : (
-            <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 text-center">
-               <FileText className="w-16 h-16 mb-4 opacity-20" />
-               <h3 className="text-lg font-black text-slate-600">Kein Ticket ausgewählt</h3>
-               <p className="text-sm font-medium mt-1">Wähle links ein Ticket aus der Inbox, um die Meldung zu lesen und dem anonymen Hinweisgeber zu antworten.</p>
+            )}
+          </div>
+          </>
+        ) : (
+          <div className="w-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-y-auto p-6">
+            <h2 className="text-xl font-black text-slate-800 mb-6">Culture Analytics & Prävention (Vision 2040)</h2>
+            <p className="text-slate-600 mb-8 max-w-3xl leading-relaxed">
+              Dieses Dashboard nutzt Predictive Analytics, um Hotspots für Konflikte zu identifizieren, bevor sie eskalieren. Die Daten basieren vollständig auf anonymisierten Metadaten des MoodTrackers und der KI-Triage.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-red-50 p-5 rounded-2xl border border-red-100">
+                <h3 className="text-sm font-bold text-red-800 uppercase mb-2">Risiko-Hotspot</h3>
+                <p className="text-3xl font-black text-red-900 mb-1">Standort Süd</p>
+                <p className="text-xs font-semibold text-red-700">+14% Stress-Meldungen (MoodTracker) in den letzten 7 Tagen</p>
+              </div>
+              <div className="bg-emerald-50 p-5 rounded-2xl border border-emerald-100">
+                <h3 className="text-sm font-bold text-emerald-800 uppercase mb-2">Speak-Up Culture</h3>
+                <p className="text-3xl font-black text-emerald-900 mb-1">92%</p>
+                <p className="text-xs font-semibold text-emerald-700">Mitarbeiter vertrauen dem anonymen System (Benchmark: 74%)</p>
+              </div>
+              <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+                <h3 className="text-sm font-bold text-blue-800 uppercase mb-2">KI-Trend (Konflikte)</h3>
+                <p className="text-3xl font-black text-blue-900 mb-1">Überstunden</p>
+                <p className="text-xs font-semibold text-blue-700">Häufigstes Keyword in den Gedächtnisprotokollen</p>
+              </div>
             </div>
-          )}
-        </div>
+
+            <div className="bg-slate-900 p-6 rounded-2xl text-white">
+              <h3 className="font-bold text-lg mb-2">💡 Handlungsempfehlung der KI</h3>
+              <p className="text-slate-300 text-sm leading-relaxed">
+                Basierend auf dem Anstieg der negativen Stimmung im Bereich "Standort Süd" wird eine proaktive Informationskampagne zum Thema "Gesetzliche Pausenzeiten" und "Mental Health" empfohlen, um einem Anstieg von offiziellen Beschwerden vorzubeugen.
+              </p>
+              <button className="mt-4 bg-white text-slate-900 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-200 transition">
+                Maßnahme initiieren
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

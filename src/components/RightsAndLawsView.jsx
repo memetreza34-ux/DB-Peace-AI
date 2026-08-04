@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Scale, ArrowLeft, BookOpen, AlertCircle, ChevronDown, CheckCircle2, Info, Building2, BookText, Search } from "lucide-react";
+import { Scale, ArrowLeft, BookOpen, AlertCircle, ChevronDown, CheckCircle2, Info, Building2, BookText, Search, Activity } from "lucide-react";
 import lawsData from "../data/lawsData.json";
 import { QuizWidget } from "./QuizWidget";
 
@@ -129,6 +129,12 @@ export function RightsAndLawsView({ onBack }) {
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
             Deine Rechte & Gesetze
           </h1>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
+              <Activity className="w-3 h-3 animate-pulse" />
+              Live Sync API (Stand: Heute)
+            </span>
+          </div>
           <p className="text-sm font-medium text-white/80 leading-relaxed">
             Lass dir nichts gefallen. Hier findest du übersetzt auf "gut Deutsch", welche Gesetze und internen DB-Richtlinien dich vor Ausbeutung und Diskriminierung schützen.
           </p>
