@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
   Search, ShieldCheck, Clock, UserX, Send, 
-  ShieldAlert, LayoutDashboard, Inbox, BarChart3, 
+  LayoutDashboard, Inbox, BarChart3, 
   LogOut, AlertTriangle, CheckCircle2, TrendingUp
 } from "lucide-react";
 import { mockTicketsData, subscribeToTickets, updateTickets } from "../data/mockTickets";
@@ -12,6 +12,7 @@ export function HRDashboard({ onExit }) {
   const [selectedTicketId, setSelectedTicketId] = useState(mockTicketsData[0]?.id || null);
   const [replyText, setReplyText] = useState("");
   const [activeHRTab, setActiveHRTab] = useState("tickets"); // 'tickets' | 'esg'
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const unsubscribe = subscribeToTickets((newTickets) => {
@@ -43,6 +44,12 @@ export function HRDashboard({ onExit }) {
     updateTickets(updatedTickets);
     setReplyText("");
   };
+
+  const filteredTickets = tickets.filter(t => 
+    t.id.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    t.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (t.messages[0]?.text || "").toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="flex h-screen bg-slate-100 text-slate-900 overflow-hidden font-sans">
@@ -162,13 +169,15 @@ export function HRDashboard({ onExit }) {
                     <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input 
                       type="text" 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Suchen..." 
                       className="pl-8 pr-3 py-1 bg-white border border-slate-200 rounded-md text-xs focus:outline-none focus:border-db-red"
                     />
                   </div>
                 </div>
                 <div className="overflow-y-auto flex-1 divide-y divide-slate-100">
-                  {tickets.map(ticket => (
+                  {filteredTickets.map(ticket => (
                     <button
                       key={ticket.id}
                       onClick={() => setSelectedTicketId(ticket.id)}

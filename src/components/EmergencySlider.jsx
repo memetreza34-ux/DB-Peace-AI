@@ -1,15 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, useAnimation, useMotionValue, useTransform } from "framer-motion";
 import { Phone, CheckCircle2, MapPin, Loader2 } from "lucide-react";
 
 export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500", iconColor = "text-red-500" }) {
   const [isTriggered, setIsTriggered] = useState(false);
   const [gpsStatus, setGpsStatus] = useState(false); // false = not sending, true = sent
+  const [containerWidth, setContainerWidth] = useState(280);
+  const containerRef = useRef(null);
+  const timeout1Ref = useRef(null);
+  const timeout2Ref = useRef(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const observer = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          setContainerWidth(entry.contentRect.width);
+        }
+      });
+      observer.observe(containerRef.current);
+      return () => observer.disconnect();
+    }
+  }, []);
+
   const controls = useAnimation();
   const x = useMotionValue(0);
-  const containerWidth = 280; // approximate width of the slider container
   const thumbWidth = 56;
-  const maxDrag = containerWidth - thumbWidth - 8; // 8 for padding/margin
+  const maxDrag = Math.max(0, containerWidth - thumbWidth - 8);
 
   // Opacity of the text fades out as we drag
   const textOpacity = useTransform(x, [0, maxDrag / 2], [1, 0]);
@@ -21,11 +37,11 @@ export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500",
       controls.start({ x: maxDrag });
       
       // Simulate GPS dispatch
-      setTimeout(() => {
+      timeout1Ref.current = setTimeout(() => {
         setGpsStatus(true);
-        setTimeout(() => {
+        timeout2Ref.current = setTimeout(() => {
           // Execute call after GPS simulation
-          window.location.href = `tel:${phoneNumber.replace(/\s+/g, '')}`;
+          window.location.href = `tel:${phoneNumber.replace(/\\s+/g, '')}`;
         }, 1500);
       }, 1500);
     } else {
@@ -34,31 +50,49 @@ export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500",
     }
   };
 
+  const handleCancel = () => {
+    clearTimeout(timeout1Ref.current);
+    clearTimeout(timeout2Ref.current);
+    setIsTriggered(false);
+    setGpsStatus(false);
+    controls.start({ x: 0 });
+  };
+
   if (isTriggered) {
     return (
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className={`w-full h-16 rounded-full flex items-center justify-center text-white font-bold shadow-lg transition-colors duration-500 ${gpsStatus ? 'bg-emerald-500' : 'bg-db-dark'}`}
-      >
-        {!gpsStatus ? (
-          <>
-            <Loader2 className="h-5 w-5 mr-2 animate-spin text-amber-400" />
-            <MapPin className="h-4 w-4 mr-1 text-amber-400" />
-            <span className="text-sm">GPS wird gesendet...</span>
-          </>
-        ) : (
-          <>
-            <CheckCircle2 className="h-6 w-6 mr-2" />
-            <span className="text-sm">Standort übermittelt. Anruf startet...</span>
-          </>
+      <div className="space-y-2">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className={`w-full h-16 rounded-full flex items-center justify-center text-white font-bold shadow-lg transition-colors duration-500 ${gpsStatus ? 'bg-emerald-500' : 'bg-db-dark'}`}
+        >
+          {!gpsStatus ? (
+            <>
+              <Loader2 className="h-5 w-5 mr-2 animate-spin text-amber-400" />
+              <MapPin className="h-4 w-4 mr-1 text-amber-400" />
+              <span className="text-sm">GPS wird gesendet...</span>
+            </>
+          ) : (
+            <>
+              <CheckCircle2 className="h-6 w-6 mr-2" />
+              <span className="text-sm">Standort übermittelt. Anruf startet...</span>
+            </>
+          )}
+        </motion.div>
+        {!gpsStatus && (
+          <button 
+            onClick={handleCancel}
+            className="w-full py-2 text-sm font-bold text-db-rail hover:text-db-dark transition"
+          >
+            Abbrechen
+          </button>
         )}
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <div className={`relative w-full h-16 rounded-full overflow-hidden flex items-center p-1 shadow-inner ${colorClass} bg-opacity-20 backdrop-blur-md`}>
+    <div ref={containerRef} className={`relative w-full h-16 rounded-full overflow-hidden flex items-center p-1 shadow-inner ${colorClass} bg-opacity-20 backdrop-blur-md`}>
       <motion.div 
         style={{ opacity: textOpacity }}
         className="absolute w-full text-center pointer-events-none text-sm font-black tracking-wide text-db-dark mix-blend-overlay opacity-70 uppercase"

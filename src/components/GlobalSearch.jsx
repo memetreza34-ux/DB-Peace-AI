@@ -96,7 +96,6 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
 
   // Filter logic
   const filteredResults = query.trim() === "" 
@@ -118,7 +117,8 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 sm:px-6">
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 sm:px-6">
         {/* Backdrop */}
         <motion.div 
           initial={{ opacity: 0 }}
@@ -199,7 +199,8 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
             <span className="flex items-center gap-1"><kbd className="bg-white dark:bg-db-dark px-1.5 py-0.5 rounded border border-db-dark/20 dark:border-white/20 shadow-sm font-sans font-bold">ESC</kbd> zum Schließen</span>
           </div>
         </motion.div>
-      </div>
+        </div>
+      )}
     </AnimatePresence>
   );
 }

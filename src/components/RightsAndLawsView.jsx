@@ -7,6 +7,23 @@ const iconMap = {
   Scale, BookOpen, Building2, AlertCircle, CheckCircle2, BookText
 };
 
+const colorMap = {
+  red: { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-200' },
+  blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200' },
+  amber: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200' },
+  emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200' },
+  purple: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200' },
+  rose: { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200' },
+  teal: { bg: 'bg-teal-50', text: 'text-teal-600', border: 'border-teal-200' },
+  indigo: { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200' },
+  orange: { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-200' },
+  cyan: { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-200' },
+  lime: { bg: 'bg-lime-50', text: 'text-lime-600', border: 'border-lime-200' },
+  sky: { bg: 'bg-sky-50', text: 'text-sky-600', border: 'border-sky-200' },
+  pink: { bg: 'bg-pink-50', text: 'text-pink-600', border: 'border-pink-200' },
+  violet: { bg: 'bg-violet-50', text: 'text-violet-600', border: 'border-violet-200' },
+};
+
 export function RightsAndLawsView({ onBack }) {
   const [activeTab, setActiveTab] = useState("bundesgesetze"); // bundesgesetze | dbRichtlinien
   const [openCard, setOpenCard] = useState(null);
@@ -54,7 +71,7 @@ export function RightsAndLawsView({ onBack }) {
     return (
       <div 
         key={law.id} 
-        className={`rounded-md border transition-all duration-300 overflow-hidden ${isOpen ? 'border-db-dark/20 bg-white shadow-lg' : 'border-db-dark/10 bg-white hover:border-db-dark/20 hover:shadow-md'}`}
+        className={`rounded-md border transition-all duration-300 overflow-hidden ${isOpen ? 'border-db-dark/20 dark:border-white/20 bg-white dark:bg-db-dark shadow-lg' : 'border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 hover:border-db-dark/20 dark:hover:border-white/20 hover:shadow-md'}`}
       >
         {/* Card Header (Clickable) */}
         <button 
@@ -62,44 +79,44 @@ export function RightsAndLawsView({ onBack }) {
           className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left"
         >
           <div className="flex items-center gap-4">
-            <div className={`p-3 rounded-xl bg-${law.color}-50 shrink-0`}>
-              <Icon className={`h-6 w-6 text-${law.color}-600`} />
+            <div className={`p-3 rounded-xl ${colorMap[law.color]?.bg || 'bg-gray-50 dark:bg-db-dark/50'} shrink-0`}>
+              <Icon className={`h-6 w-6 ${colorMap[law.color]?.text || 'text-gray-600 dark:text-white/60'}`} />
             </div>
             <div>
-              <p className="text-sm font-bold text-db-rail">{law.subtitle}</p>
-              <h3 className="text-lg font-black text-db-dark">{law.paragraph}</h3>
+              <p className="text-sm font-bold text-db-rail dark:text-white/60">{law.subtitle}</p>
+              <h3 className="text-lg font-black text-db-dark dark:text-white">{law.paragraph}</h3>
             </div>
           </div>
-          <ChevronDown className={`h-5 w-5 text-db-dark/50 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`h-5 w-5 text-db-dark/50 dark:text-white/50 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
         </button>
 
         {/* Card Content (Expandable) */}
         {isOpen && (
-          <div className="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 animate-fadeIn border-t border-db-dark/5 mt-2">
+          <div className="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 animate-fadeIn border-t border-db-dark/5 dark:border-white/5 mt-2">
             
             <div className="space-y-5 mt-4">
               {/* Official Text */}
-              <div className="bg-db-dark/5 rounded-xl p-4 border-l-4 border-db-rail">
-                <p className="text-xs font-bold text-db-dark uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <div className="bg-db-dark/5 dark:bg-white/5 rounded-xl p-4 border-l-4 border-db-rail">
+                <p className="text-xs font-bold text-db-dark dark:text-white uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <BookOpen className="h-3.5 w-3.5" /> Offizieller Text
                 </p>
-                <p className="text-sm font-medium text-db-dark italic">"{law.officialText}"</p>
+                <p className="text-sm font-medium text-db-dark dark:text-white italic">"{law.officialText}"</p>
               </div>
 
               {/* Translation */}
-              <div className="bg-teal-50 rounded-xl p-4 border border-teal-100">
-                <p className="text-xs font-bold text-teal-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <div className="bg-teal-50 dark:bg-teal-900/30 rounded-xl p-4 border border-teal-100 dark:border-teal-800">
+                <p className="text-xs font-bold text-teal-800 dark:text-teal-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <AlertCircle className="h-3.5 w-3.5" /> Auf gut Deutsch
                 </p>
-                <p className="text-sm font-semibold text-teal-900">{law.translation}</p>
+                <p className="text-sm font-semibold text-teal-900 dark:text-teal-300">{law.translation}</p>
               </div>
 
               {/* Action Tip */}
-              <div className="flex items-start gap-3 p-3 bg-db-soft rounded-lg">
+              <div className="flex items-start gap-3 p-3 bg-db-soft dark:bg-db-dark/30 rounded-lg">
                 <Info className="h-5 w-5 text-db-red shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-xs font-bold text-db-dark">Tipp für die Praxis:</p>
-                  <p className="text-xs font-semibold text-db-rail">{law.actionTip}</p>
+                  <p className="text-xs font-bold text-db-dark dark:text-white">Tipp für die Praxis:</p>
+                  <p className="text-xs font-semibold text-db-rail dark:text-white/60">{law.actionTip}</p>
                 </div>
               </div>
             </div>
@@ -147,16 +164,16 @@ export function RightsAndLawsView({ onBack }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex bg-db-dark/5 p-1 rounded-xl w-full max-w-md mx-auto">
+      <div className="flex bg-db-dark/5 dark:bg-white/5 p-1 rounded-xl w-full max-w-md mx-auto">
         <button
           onClick={() => { setActiveTab("bundesgesetze"); setOpenCard(null); setSearchQuery(""); }}
-          className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition ${activeTab === 'bundesgesetze' ? 'bg-white text-db-dark shadow-sm' : 'text-db-rail hover:text-db-dark'}`}
+          className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition ${activeTab === 'bundesgesetze' ? 'bg-white dark:bg-db-dark text-db-dark dark:text-white shadow-sm' : 'text-db-rail dark:text-white/60 hover:text-db-dark dark:hover:text-white'}`}
         >
           Bundesgesetze
         </button>
         <button
           onClick={() => { setActiveTab("dbRichtlinien"); setOpenCard(null); setSearchQuery(""); }}
-          className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition ${activeTab === 'dbRichtlinien' ? 'bg-white text-db-dark shadow-sm' : 'text-db-rail hover:text-db-dark'}`}
+          className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition ${activeTab === 'dbRichtlinien' ? 'bg-white dark:bg-db-dark text-db-dark dark:text-white shadow-sm' : 'text-db-rail dark:text-white/60 hover:text-db-dark dark:hover:text-white'}`}
         >
           DB Richtlinien
         </button>
@@ -165,17 +182,17 @@ export function RightsAndLawsView({ onBack }) {
       {/* Search Bar */}
       <div className="max-w-3xl mx-auto relative group">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-db-dark/40 group-focus-within:text-db-red transition-colors" />
+          <Search className="h-5 w-5 text-db-dark/40 dark:text-white/40 group-focus-within:text-db-red transition-colors" />
         </div>
         <input
           type="text"
           placeholder="Suche nach Rechten (z.B. Urlaub, Überstunden, Mobbing)..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-white border border-db-dark/10 rounded-xl py-3.5 pl-11 pr-4 text-sm font-medium text-db-dark placeholder:text-db-dark/40 focus:outline-none focus:ring-2 focus:ring-db-red/20 focus:border-db-red shadow-sm transition-all"
+          className="w-full bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm font-medium text-db-dark dark:text-white placeholder:text-db-dark/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-db-red/20 focus:border-db-red shadow-sm transition-all"
         />
         {searchQuery && (
-          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-xs font-bold text-db-dark/40">
+          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-xs font-bold text-db-dark/40 dark:text-white/40">
             {filteredLaws.length} Treffer
           </div>
         )}
@@ -186,17 +203,17 @@ export function RightsAndLawsView({ onBack }) {
         {filteredLaws.length > 0 ? (
           Object.entries(groupedLaws).map(([title, laws]) => (
             <div key={title} className="space-y-4">
-              <h2 className="text-xl font-black text-db-dark pl-3 border-l-4 border-db-red/80">{title}</h2>
-              <div className="space-y-4 pl-4 border-l-2 border-db-dark/10 ml-3">
+              <h2 className="text-xl font-black text-db-dark dark:text-white pl-3 border-l-4 border-db-red/80">{title}</h2>
+              <div className="space-y-4 pl-4 border-l-2 border-db-dark/10 dark:border-white/10 ml-3">
                 {laws.map(renderCard)}
               </div>
             </div>
           ))
         ) : (
-          <div className="text-center py-12 bg-white rounded-md border border-db-dark/10">
-            <Scale className="h-12 w-12 text-db-dark/10 mx-auto mb-3" />
-            <h3 className="text-lg font-black text-db-dark">Keine Gesetze gefunden</h3>
-            <p className="text-sm font-medium text-db-rail mt-1">
+          <div className="text-center py-12 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10">
+            <Scale className="h-12 w-12 text-db-dark/10 dark:text-white/10 mx-auto mb-3" />
+            <h3 className="text-lg font-black text-db-dark dark:text-white">Keine Gesetze gefunden</h3>
+            <p className="text-sm font-medium text-db-rail dark:text-white/60 mt-1">
               Wir konnten kein passendes Gesetz zu deiner Suche finden.
             </p>
           </div>

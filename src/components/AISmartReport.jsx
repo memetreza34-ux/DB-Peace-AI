@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Bot, Send, User, CheckCircle2, Loader2, FileText, Download } from "lucide-react";
+import { Bot, Send, CheckCircle2, Loader2, FileText } from "lucide-react";
 
 export function AISmartReport({ onReportGenerated }) {
   const [messages, setMessages] = useState([
@@ -44,7 +44,7 @@ export function AISmartReport({ onReportGenerated }) {
   };
 
   return (
-    <div className="bg-white rounded-md border border-db-dark/10 overflow-hidden flex flex-col h-[500px]">
+    <div className="bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 overflow-hidden flex flex-col h-[500px]">
       {/* Header */}
       <div className="bg-gradient-to-r from-db-dark to-db-rail p-4 flex items-center gap-3 text-white">
         <div className="bg-white/10 p-2 rounded-full backdrop-blur-md">
@@ -57,13 +57,13 @@ export function AISmartReport({ onReportGenerated }) {
       </div>
 
       {/* Chat Area */}
-      <div ref={scrollRef} className="flex-1 p-4 overflow-y-auto bg-gray-50 space-y-4">
+      <div ref={scrollRef} className="flex-1 p-4 overflow-y-auto bg-gray-50 dark:bg-db-dark/80 space-y-4">
         {messages.map((msg, idx) => (
           <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
               msg.role === 'user' 
                 ? 'bg-db-red text-white rounded-tr-none' 
-                : 'bg-white border border-gray-200 text-db-dark rounded-tl-none'
+                : 'bg-white dark:bg-db-dark/50 border border-gray-200 dark:border-white/10 text-db-dark dark:text-white rounded-tl-none'
             }`}>
               {msg.text}
             </div>
@@ -71,21 +71,21 @@ export function AISmartReport({ onReportGenerated }) {
         ))}
         {isTyping && (
           <div className="flex justify-start">
-            <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-2 shadow-sm">
+            <div className="bg-white dark:bg-db-dark/50 border border-gray-200 dark:border-white/10 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-2 shadow-sm">
               <Loader2 className="w-4 h-4 animate-spin text-db-red" />
-              <span className="text-sm text-gray-500">Analysiert Text...</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Analysiert Text...</span>
             </div>
           </div>
         )}
 
         {generatedReport && !isTyping && (
           <div className="flex justify-start mt-4 animate-fadeIn">
-            <div className="bg-green-50 border border-green-200 rounded-2xl px-4 py-4 text-sm shadow-sm w-full">
-              <div className="flex items-center gap-2 text-green-700 font-bold mb-3">
+            <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-2xl px-4 py-4 text-sm shadow-sm w-full">
+              <div className="flex items-center gap-2 text-green-700 dark:text-green-400 font-bold mb-3">
                 <CheckCircle2 className="w-5 h-5" />
                 Protokoll erfolgreich generiert
               </div>
-              <div className="space-y-2 text-green-900 mb-4 text-xs bg-white/50 p-3 rounded-lg">
+              <div className="space-y-2 text-green-900 dark:text-green-300 mb-4 text-xs bg-white/50 dark:bg-black/20 p-3 rounded-lg">
                 <p><strong>Datum:</strong> {generatedReport.date}</p>
                 <p><strong>Uhrzeit:</strong> {generatedReport.time}</p>
                 <p><strong>Ort:</strong> {generatedReport.location}</p>
@@ -108,7 +108,7 @@ export function AISmartReport({ onReportGenerated }) {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 bg-white border-t border-gray-100">
+      <div className="p-4 bg-white dark:bg-db-dark border-t border-gray-100 dark:border-white/10">
         <div className="flex gap-2 relative">
           <input 
             type="text"
@@ -116,7 +116,7 @@ export function AISmartReport({ onReportGenerated }) {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Beschreibe den Vorfall..."
-            className="flex-1 border-2 border-db-dark/10 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:border-db-red transition pr-12"
+            className="flex-1 border-2 border-db-dark/10 dark:border-white/10 dark:bg-db-dark/30 dark:text-white rounded-full px-4 py-2.5 text-sm focus:outline-none focus:border-db-red transition pr-12"
           />
           <button 
             onClick={handleSend}

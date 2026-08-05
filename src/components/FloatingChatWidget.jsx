@@ -14,7 +14,14 @@ export function FloatingChatWidget() {
 
   const [messages, setMessages] = useState(() => {
     const saved = localStorage.getItem("db-peace-chat");
-    return saved ? JSON.parse(saved) : INITIAL_MESSAGES;
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return INITIAL_MESSAGES;
+      }
+    }
+    return INITIAL_MESSAGES;
   });
 
   useEffect(() => {

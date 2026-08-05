@@ -17,6 +17,14 @@ export function MoodTracker() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedMood) return;
+    
+    const submissionData = {
+      mood: selectedMood,
+      note,
+      reason: selectedMood === "bad" ? reason : null
+    };
+    console.log("Mood submitted:", submissionData);
+    
     // In a real app, send to backend here
     setSubmitted(true);
     setTimeout(() => {

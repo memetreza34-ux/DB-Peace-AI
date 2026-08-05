@@ -56,14 +56,14 @@ export default function App() {
 
   if (isHRMode) {
     return (
-      <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-db-red selection:text-white">
+      <div className="min-h-screen bg-slate-50 dark:bg-db-dark font-sans text-slate-900 dark:text-white selection:bg-db-red selection:text-white">
         <HRDashboard onExit={() => setIsHRMode(false)} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-db-soft flex flex-col justify-between selection:bg-db-red selection:text-white relative">
+    <div className="min-h-screen bg-db-soft dark:bg-db-dark flex flex-col justify-between selection:bg-db-red selection:text-white relative">
       <div>
         {/* Global Search Overlay */}
         <GlobalSearch 
@@ -95,7 +95,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setActiveTab("home")}
-                className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-xs font-black text-db-dark border border-db-dark/10 shadow-xs hover:border-db-red hover:text-db-red transition"
+                className="inline-flex items-center gap-2 rounded-xl bg-white dark:bg-db-dark/50 px-4 py-2 text-xs font-black text-db-dark dark:text-white border border-db-dark/10 dark:border-white/10 shadow-xs hover:border-db-red dark:hover:border-db-red hover:text-db-red dark:hover:text-db-red transition"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span>Zurück zur Übersicht (Home)</span>
@@ -200,7 +200,7 @@ export default function App() {
       )}
 
       {/* Footer */}
-      <Footer onNavigate={setActiveTab} onToggleHR={() => setIsHRMode(true)} />
+      <Footer onNavigate={setActiveTab} onToggleHR={() => setIsSSOOpen(true)} />
     </div>
   );
 }

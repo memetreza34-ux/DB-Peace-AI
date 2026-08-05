@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Play, CheckCircle2, Award, Download, ExternalLink, BookOpen, Clock, ShieldCheck, Sparkles } from "lucide-react";
+import { X, Play, CheckCircle2, Award, Download, ExternalLink, BookOpen, Clock } from "lucide-react";
 import { jsPDF } from "jspdf";
 
 export function CourseDetailModal({ course, onClose }) {

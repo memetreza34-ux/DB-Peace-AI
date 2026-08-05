@@ -94,27 +94,27 @@ export function LearningHubView() {
     : [];
 
   const renderCourse = (course) => (
-    <div key={course.id} className="rounded-md border border-db-dark/10 bg-white p-5 sm:p-6 shadow-sm hover:shadow-md transition group">
+    <div key={course.id} className="rounded-md border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 sm:p-6 shadow-sm hover:shadow-md transition group">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="space-y-3">
           <div>
-            <h3 className="text-lg font-black text-db-dark">{course.title}</h3>
-            <p className="text-xs font-bold text-db-rail uppercase tracking-wider">{course.provider}</p>
+            <h3 className="text-lg font-black text-db-dark dark:text-white">{course.title}</h3>
+            <p className="text-xs font-bold text-db-rail dark:text-white/60 uppercase tracking-wider">{course.provider}</p>
           </div>
           <div className="flex flex-wrap gap-2">
             {course.tags.map(tag => (
-              <span key={tag} className="px-2.5 py-1 rounded bg-db-warm/50 border border-db-dark/5 text-[10px] font-bold text-db-dark">
+              <span key={tag} className="px-2.5 py-1 rounded bg-db-warm/50 dark:bg-db-dark/30 border border-db-dark/5 dark:border-white/5 text-[10px] font-bold text-db-dark dark:text-white">
                 {tag}
               </span>
             ))}
           </div>
-          <p className="text-sm font-semibold text-db-dark/80 max-w-2xl leading-relaxed">
+          <p className="text-sm font-semibold text-db-dark/80 dark:text-white/80 max-w-2xl leading-relaxed">
             {course.desc}
           </p>
           {course.requirements && (
-            <div className="mt-3 rounded-lg bg-db-soft p-3 border border-db-dark/5">
-              <p className="text-xs font-bold text-db-dark mb-1">Was du dafür brauchst:</p>
-              <p className="text-xs font-semibold text-db-rail">{course.requirements}</p>
+            <div className="mt-3 rounded-lg bg-db-soft dark:bg-db-dark/30 p-3 border border-db-dark/5 dark:border-white/5">
+              <p className="text-xs font-bold text-db-dark dark:text-white mb-1">Was du dafür brauchst:</p>
+              <p className="text-xs font-semibold text-db-rail dark:text-white/60">{course.requirements}</p>
             </div>
           )}
         </div>
@@ -142,12 +142,12 @@ export function LearningHubView() {
       <div className="space-y-6 animate-fadeIn">
         {renderHeader()}
         
-        <div className="mb-6 border-b border-db-dark/10 pb-4">
-          <h2 className="text-xl font-black text-db-dark flex items-center gap-2">
-            <Search className="h-6 w-6 text-db-dark" />
+        <div className="mb-6 border-b border-db-dark/10 dark:border-white/10 pb-4">
+          <h2 className="text-xl font-black text-db-dark dark:text-white flex items-center gap-2">
+            <Search className="h-6 w-6 text-db-dark dark:text-white" />
             Suchergebnisse für "{searchQuery}"
           </h2>
-          <p className="text-sm font-semibold text-db-rail mt-1">
+          <p className="text-sm font-semibold text-db-rail dark:text-white/60 mt-1">
             {filteredCourses.length} {filteredCourses.length === 1 ? "Kurs" : "Kurse"} gefunden
           </p>
         </div>
@@ -156,8 +156,8 @@ export function LearningHubView() {
           {filteredCourses.map(renderCourse)}
           {filteredCourses.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-db-dark font-bold">Keine Kurse gefunden.</p>
-              <p className="text-sm text-db-rail">Probiere einen anderen Suchbegriff (z.B. "Online" oder "Konflikt").</p>
+              <p className="text-db-dark dark:text-white font-bold">Keine Kurse gefunden.</p>
+              <p className="text-sm text-db-rail dark:text-white/60">Probiere einen anderen Suchbegriff (z.B. "Online" oder "Konflikt").</p>
             </div>
           )}
         </div>
@@ -188,13 +188,13 @@ export function LearningHubView() {
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className="group rounded-xl border border-db-dark/10 bg-white p-5 hover:-translate-y-1 hover:border-db-dark transition shadow-sm relative overflow-hidden"
+                  className="group rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 hover:-translate-y-1 hover:border-db-dark dark:hover:border-white/50 transition shadow-sm relative overflow-hidden"
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <Icon className={`h-6 w-6 ${cat.textColor}`} />
-                    <span className="font-black text-db-dark text-lg group-hover:text-db-red transition-colors">{cat.title}</span>
+                    <span className="font-black text-db-dark dark:text-white text-lg group-hover:text-db-red dark:group-hover:text-db-red transition-colors">{cat.title}</span>
                   </div>
-                  <p className="text-sm font-semibold text-db-rail">{cat.desc}</p>
+                  <p className="text-sm font-semibold text-db-rail dark:text-white/60">{cat.desc}</p>
                 </button>
               );
             })}
@@ -211,11 +211,11 @@ export function LearningHubView() {
         {renderHeader()}
         <button
           onClick={() => setActiveCategory(null)}
-          className="flex items-center gap-2 text-sm font-bold text-db-rail hover:text-db-red transition"
+          className="flex items-center gap-2 text-sm font-bold text-db-rail dark:text-white/60 hover:text-db-red dark:hover:text-db-red transition"
         >
           <ArrowLeft className="h-4 w-4" /> Zurück zum Katalog
         </button>
-        <div className="rounded-md bg-white border border-db-dark/10 p-4 sm:p-6 shadow-sm">
+        <div className="rounded-md bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 p-4 sm:p-6 shadow-sm">
           <TrainingMode />
         </div>
       </div>
@@ -223,7 +223,7 @@ export function LearningHubView() {
   }
 
   // Detail View: External Courses (Online, Partner, Zertifikat)
-  const currentCategoryObj = courseCategories.find(c => c.id === activeCategory);
+  const currentCategoryObj = courseCategories.find(c => c.id === activeCategory) || courseCategories[0];
   const coursesList = coursesData[activeCategory] || [];
 
   return (
@@ -233,18 +233,18 @@ export function LearningHubView() {
       <div className="flex items-center justify-between">
         <button
           onClick={() => setActiveCategory(null)}
-          className="flex items-center gap-2 text-sm font-bold text-db-rail hover:text-db-red transition"
+          className="flex items-center gap-2 text-sm font-bold text-db-rail dark:text-white/60 hover:text-db-red dark:hover:text-db-red transition"
         >
           <ArrowLeft className="h-4 w-4" /> Zurück zum Katalog
         </button>
       </div>
 
-      <div className="mb-6 border-b border-db-dark/10 pb-4">
-        <h2 className="text-xl font-black text-db-dark flex items-center gap-2">
+      <div className="mb-6 border-b border-db-dark/10 dark:border-white/10 pb-4">
+        <h2 className="text-xl font-black text-db-dark dark:text-white flex items-center gap-2">
           <currentCategoryObj.icon className={`h-6 w-6 ${currentCategoryObj.textColor}`} />
           {currentCategoryObj.title}
         </h2>
-        <p className="text-sm font-semibold text-db-rail mt-1">
+        <p className="text-sm font-semibold text-db-rail dark:text-white/60 mt-1">
           {currentCategoryObj.desc}
         </p>
       </div>

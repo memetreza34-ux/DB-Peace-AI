@@ -3,7 +3,7 @@ import { HeartHandshake, BarChart3, Info, ShieldCheck } from "lucide-react";
 
 export function Footer({ onNavigate, onToggleHR }) {
   return (
-    <footer className="mt-16 border-t border-db-dark/10 bg-white py-8 text-xs font-semibold text-db-rail">
+    <footer className="mt-16 border-t border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark py-8 text-xs font-semibold text-db-rail dark:text-white/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           {/* Left: Brand & Disclaimer */}
@@ -12,18 +12,18 @@ export function Footer({ onNavigate, onToggleHR }) {
               <HeartHandshake className="h-5 w-5" />
             </div>
             <div>
-              <div className="font-extrabold text-db-dark">DB Peace AI — Lokaler Innovationsprototyp</div>
-              <div className="text-db-rail/70">Nicht offizielle Anwendung der Deutsche Bahn AG.</div>
+              <div className="font-extrabold text-db-dark dark:text-white">DB Peace AI — Lokaler Innovationsprototyp</div>
+              <div className="text-db-rail/70 dark:text-white/40">Nicht offizielle Anwendung der Deutsche Bahn AG.</div>
             </div>
           </div>
 
           {/* Core Safety Statement */}
-          <div className="rounded-xl bg-db-warm px-4 py-2 text-center text-xs font-bold text-db-dark border border-db-dark/5">
+          <div className="rounded-xl bg-db-warm dark:bg-db-dark/50 px-4 py-2 text-center text-xs font-bold text-db-dark dark:text-white border border-db-dark/5 dark:border-white/5">
             🛡️ <span className="text-db-red font-black">„Menschen entscheiden, nicht die KI.“</span> — Keine Rechts- oder Medizinberatung.
           </div>
 
           {/* Quick Access Links */}
-          <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-db-rail">
+          <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-db-rail dark:text-white/60">
             <button
               type="button"
               onClick={() => onNavigate("analytics")}
