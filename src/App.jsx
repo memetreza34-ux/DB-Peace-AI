@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navigation } from "./components/Navigation.jsx";
 import { DashboardHome } from "./components/DashboardHome.jsx";
 import SupportPage from "./components/SupportPage.jsx";
@@ -19,7 +19,7 @@ import { SSOLoginModal } from "./components/SSOLoginModal.jsx";
 import DashboardAnalytics from "./components/DashboardAnalytics.jsx";
 import ProjectOverview from "./components/ProjectOverview.jsx";
 import PrivacyCompliance from "./components/PrivacyCompliance.jsx";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, WifiOff } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const pageVariants = {
@@ -34,6 +34,20 @@ export default function App() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isHRMode, setIsHRMode] = useState(false);
   const [isLocked, setIsLocked] = useState(true);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
   const [isSSOOpen, setIsSSOOpen] = useState(false);
 
   if (isLocked) {
@@ -176,6 +190,14 @@ export default function App() {
         isOpen={isEmergencyOpen}
         onClose={() => setIsEmergencyOpen(false)}
       />
+
+      {/* Offline Banner */}
+      {isOffline && (
+        <div className="bg-db-red text-white text-xs font-bold py-1.5 px-4 flex items-center justify-center gap-2 z-50">
+          <WifiOff className="w-3 h-3" />
+          Offline-Modus aktiv. Eingaben werden lokal gespeichert und später synchronisiert.
+        </div>
+      )}
 
       {/* Footer */}
       <Footer onNavigate={setActiveTab} onToggleHR={() => setIsHRMode(true)} />

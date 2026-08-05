@@ -16,6 +16,7 @@ import {
   Sparkles,
   TrainFront,
   Wrench,
+  Star,
 } from "lucide-react";
 
 const scenarios = [
@@ -580,7 +581,15 @@ function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
   return (
     <div className="rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
       <p className="text-sm font-black uppercase tracking-wide text-db-red">Abschluss</p>
-      <h3 className="mt-2 text-3xl font-black">Gesamtbewertung: {average}%</h3>
+      <div className="flex items-center gap-4 mt-6">
+        <h3 className="text-3xl font-black">Gesamtbewertung: {average}%</h3>
+        {average > 50 && (
+          <div className="bg-amber-100 border border-amber-300 text-amber-700 px-4 py-2 rounded-full font-bold flex items-center gap-2 animate-bounce">
+            <Star className="w-5 h-5 fill-amber-500 text-amber-500" />
+            +50 DB Peace Points
+          </div>
+        )}
+      </div>
       <p className="mt-3 text-lg font-semibold leading-8 text-db-rail">
         Du hast das Szenario "{scenario.title}" abgeschlossen. Die Auswertung basiert nur auf
         lokaler Demo-Logik.

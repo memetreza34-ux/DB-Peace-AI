@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { motion, useAnimation, useMotionValue, useTransform } from "framer-motion";
-import { Phone, CheckCircle2 } from "lucide-react";
+import { Phone, CheckCircle2, MapPin, Loader2 } from "lucide-react";
 
 export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500", iconColor = "text-red-500" }) {
   const [isTriggered, setIsTriggered] = useState(false);
+  const [gpsStatus, setGpsStatus] = useState(false); // false = not sending, true = sent
   const controls = useAnimation();
   const x = useMotionValue(0);
   const containerWidth = 280; // approximate width of the slider container
@@ -18,8 +19,15 @@ export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500",
       // Triggered!
       setIsTriggered(true);
       controls.start({ x: maxDrag });
-      // Execute call
-      window.location.href = `tel:${phoneNumber.replace(/\s+/g, '')}`;
+      
+      // Simulate GPS dispatch
+      setTimeout(() => {
+        setGpsStatus(true);
+        setTimeout(() => {
+          // Execute call after GPS simulation
+          window.location.href = `tel:${phoneNumber.replace(/\s+/g, '')}`;
+        }, 1500);
+      }, 1500);
     } else {
       // Not dragged enough, snap back
       controls.start({ x: 0, transition: { type: "spring", stiffness: 300, damping: 20 } });
@@ -31,10 +39,20 @@ export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500",
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full h-16 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold shadow-lg"
+        className={`w-full h-16 rounded-full flex items-center justify-center text-white font-bold shadow-lg transition-colors duration-500 ${gpsStatus ? 'bg-emerald-500' : 'bg-db-dark'}`}
       >
-        <CheckCircle2 className="h-6 w-6 mr-2" />
-        Anruf wird gestartet...
+        {!gpsStatus ? (
+          <>
+            <Loader2 className="h-5 w-5 mr-2 animate-spin text-amber-400" />
+            <MapPin className="h-4 w-4 mr-1 text-amber-400" />
+            <span className="text-sm">GPS wird gesendet...</span>
+          </>
+        ) : (
+          <>
+            <CheckCircle2 className="h-6 w-6 mr-2" />
+            <span className="text-sm">Standort übermittelt. Anruf startet...</span>
+          </>
+        )}
       </motion.div>
     );
   }

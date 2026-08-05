@@ -12,28 +12,32 @@ const courseCategories = [
     title: "Kostenlose Online-Kurse",
     icon: Globe,
     desc: "Staatliche & NGO-Angebote, frei zugänglich.",
-    color: "blue"
+    color: "blue",
+    textColor: "text-blue-500"
   },
   {
     id: "partner",
     title: "Präsenz-Seminare & DB Partner",
     icon: UsersRound,
     desc: "Gewerkschaftliche Trainings und DB Initiativen.",
-    color: "emerald"
+    color: "emerald",
+    textColor: "text-emerald-500"
   },
   {
     id: "zertifikat",
     title: "Zertifikatslehrgänge",
     icon: Award,
     desc: "Offizielle Kurse mit anerkanntem Abschluss.",
-    color: "red"
+    color: "red",
+    textColor: "text-red-500"
   },
   {
     id: "training",
     title: "Interaktives App-Training",
     icon: Video,
     desc: "Unser In-App Szenario-Simulator für Zivilcourage.",
-    color: "amber"
+    color: "amber",
+    textColor: "text-amber-500"
   }
 ];
 
@@ -187,7 +191,7 @@ export function LearningHubView() {
                   className="group rounded-xl border border-db-dark/10 bg-white p-5 hover:-translate-y-1 hover:border-db-dark transition shadow-sm relative overflow-hidden"
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <Icon className={`h-6 w-6 text-${cat.color}-500`} />
+                    <Icon className={`h-6 w-6 ${cat.textColor}`} />
                     <span className="font-black text-db-dark text-lg group-hover:text-db-red transition-colors">{cat.title}</span>
                   </div>
                   <p className="text-sm font-semibold text-db-rail">{cat.desc}</p>
@@ -237,7 +241,7 @@ export function LearningHubView() {
 
       <div className="mb-6 border-b border-db-dark/10 pb-4">
         <h2 className="text-xl font-black text-db-dark flex items-center gap-2">
-          <currentCategoryObj.icon className={`h-6 w-6 text-${currentCategoryObj.color}-500`} />
+          <currentCategoryObj.icon className={`h-6 w-6 ${currentCategoryObj.textColor}`} />
           {currentCategoryObj.title}
         </h2>
         <p className="text-sm font-semibold text-db-rail mt-1">

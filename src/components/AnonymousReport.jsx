@@ -12,13 +12,15 @@ import {
   FileText,
   Handshake,
   HelpCircle,
+  Info,
   LockKeyhole,
   MessageSquareText,
+  Mic,
+  MicOff,
   RefreshCw,
   Scale,
   ShieldAlert,
   ShieldCheck,
-  Sparkles,
   UserX,
   UsersRound,
   Upload,
@@ -357,17 +359,44 @@ function ContextStep({ form, update }) {
 }
 
 function DescriptionStep({ form, togglePerspective, update }) {
+  const [isRecording, setIsRecording] = useState(false);
+
+  const toggleRecording = () => {
+    if (isRecording) {
+      setIsRecording(false);
+      // Simulate appending transcribed text
+      const currentText = form.description ? form.description + " " : "";
+      update("description", currentText + "[Spracheingabe: 'Der Kollege hat mich gestern wieder vor versammelter Mannschaft angeschrien.']");
+    } else {
+      setIsRecording(true);
+    }
+  };
+
   return (
     <StepPanel
       title="Beschreibung"
       text="Beschreibe kurz, was passiert ist. Keine Namen nötig, wenn du anonym bleiben möchtest."
     >
-      <textarea
-        value={form.description}
-        onChange={(event) => update("description", event.target.value)}
-        className="field min-h-44 resize-y py-3"
-        placeholder="Beschreibe kurz, was passiert ist."
-      />
+      <div className="relative">
+        <textarea
+          value={form.description}
+          onChange={(event) => update("description", event.target.value)}
+          className="field min-h-44 resize-y py-3 pr-12"
+          placeholder="Beschreibe kurz, was passiert ist."
+        />
+        <button
+          type="button"
+          onClick={toggleRecording}
+          className={`absolute bottom-4 right-4 p-2 rounded-full transition-all shadow-sm ${
+            isRecording 
+              ? 'bg-red-500 text-white animate-pulse' 
+              : 'bg-db-soft text-db-dark hover:bg-db-dark/10'
+          }`}
+          title="Diktierfunktion (Speech-to-Text)"
+        >
+          {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+        </button>
+      </div>
       
       {/* Evidence Upload Simulation */}
       <div className="mt-4">

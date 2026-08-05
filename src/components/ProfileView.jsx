@@ -13,7 +13,14 @@ import {
   Video,
   Inbox,
   MessageSquare,
-  Send
+  Send,
+  Download,
+  Trash2,
+  Shield,
+  Eye,
+  Lock,
+  ArrowRight,
+  Star
 } from "lucide-react";
 import { mockTicketsData, subscribeToTickets, updateTickets } from "../data/mockTickets";
 
@@ -191,10 +198,16 @@ export function ProfileView() {
                 <h4 className="font-black text-db-dark dark:text-white text-lg mb-1">{record.category}</h4>
                 <p className="text-sm text-db-dark/80 dark:text-white/80">{record.description}</p>
                 <div className="mt-4 flex gap-2">
-                  <button className="text-xs font-bold bg-db-dark/5 dark:bg-white/5 hover:bg-db-dark/10 dark:hover:bg-white/10 px-3 py-1.5 rounded-lg text-db-dark dark:text-white transition">
+                  <button 
+                    onClick={() => alert("Funktion 'Bearbeiten' ist in der aktuellen Demo-Version noch nicht verfügbar.")}
+                    className="text-xs font-bold bg-db-dark/5 dark:bg-white/5 hover:bg-db-dark/10 dark:hover:bg-white/10 px-3 py-1.5 rounded-lg text-db-dark dark:text-white transition"
+                  >
                     Bearbeiten
                   </button>
-                  <button className="text-xs font-bold bg-db-red/10 hover:bg-db-red/20 text-db-red px-3 py-1.5 rounded-lg transition">
+                  <button 
+                    onClick={() => alert("Funktion 'Meldung erstellen' ist in der aktuellen Demo-Version noch nicht verfügbar.")}
+                    className="text-xs font-bold bg-db-red/10 hover:bg-db-red/20 text-db-red px-3 py-1.5 rounded-lg transition"
+                  >
                     Meldung daraus erstellen
                   </button>
                 </div>
@@ -286,9 +299,20 @@ export function ProfileView() {
         <div className="relative z-10 w-24 h-24 rounded-full bg-db-red flex items-center justify-center border-4 border-white/20 shadow-lg shrink-0">
           <User className="w-12 h-12 text-white" />
         </div>
-        <div className="relative z-10 text-white">
+        <div className="relative z-10 text-white flex-1">
           <h1 className="text-3xl font-black mb-1">Mein DB Peace</h1>
-          <p className="text-white/70 font-medium">Dein sicherer, privater Raum.</p>
+          <p className="text-white/70 font-medium mb-4">Dein sicherer, privater Raum.</p>
+          <div className="flex gap-4">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 flex items-center gap-3">
+              <div className="bg-amber-400/20 p-2 rounded-lg text-amber-400">
+                <Star className="w-5 h-5 fill-amber-400" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-white/60 uppercase tracking-wider">Level 3 • Zivilcourage Experte</div>
+                <div className="font-black text-xl">850 DB Peace Points</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

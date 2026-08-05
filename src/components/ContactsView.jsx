@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Phone, ShieldAlert, HeartHandshake, Building2, PhoneCall, ExternalLink, ArrowRight } from "lucide-react";
+import { ShieldAlert, HeartHandshake, Building2, PhoneCall, ArrowRight } from "lucide-react";
 
 export function ContactsView() {
   return (
@@ -139,7 +139,10 @@ function ContactCard({ name, number, desc, urgent, action, icon }) {
           {number}
         </a>
       ) : (
-        <button className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-white dark:bg-db-dark text-db-dark dark:text-white border border-db-dark/10 dark:border-white/10 hover:shadow-sm">
+        <button 
+          onClick={() => alert(`Kontakt-Funktion für '${name}' ist in dieser Demo-Version noch nicht angebunden.`)}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-white dark:bg-db-dark text-db-dark dark:text-white border border-db-dark/10 dark:border-white/10 hover:shadow-sm"
+        >
           {action}
           {icon}
         </button>

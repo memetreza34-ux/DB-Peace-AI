@@ -1,0 +1,16 @@
+{
+  "name": "DB Peace AI",
+  "short_name": "Peace AI",
+  "description": "Zivilcourage und Meldemanagement für die Deutsche Bahn",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F3F4F6",
+  "theme_color": "#F1142A",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

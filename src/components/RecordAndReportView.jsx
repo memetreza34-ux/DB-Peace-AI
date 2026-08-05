@@ -1,9 +1,10 @@
 import React, { useState, useRef } from "react";
 import AnonymousReport from "./AnonymousReport.jsx";
-import { NotebookPen, Megaphone, ShieldCheck, Download, Plus, Clock, FileText, CheckCircle2, Camera, X, ArrowLeft } from "lucide-react";
+import { AISmartReport } from "./AISmartReport.jsx";
+import { NotebookPen, Megaphone, Plus, Clock, FileText, CheckCircle2, Camera, X, ArrowLeft } from "lucide-react";
 
 export function RecordAndReportView() {
-  const [subTab, setSubTab] = useState(null); // null | 'protokoll' | 'meldung'
+  const [subTab, setSubTab] = useState(null); // null | 'protokoll' | 'meldung' | 'ki'
 
   // Local storage / state for recorded entries
   const [records, setRecords] = useState([
@@ -63,6 +64,7 @@ export function RecordAndReportView() {
     setRecords([entry, ...records]);
     setNewDesc("");
     setNewLoc("");
+    newFiles.forEach(f => { if (f.url) URL.revokeObjectURL(f.url); });
     setNewFiles([]);
     setShowForm(false);
   };
@@ -92,7 +94,7 @@ export function RecordAndReportView() {
       {!subTab && (
         <div className="text-center space-y-6 py-4">
           <h2 className="text-2xl sm:text-3xl font-black text-db-dark">Was möchtest du tun?</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 text-left">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 text-left">
             <button
               onClick={() => setSubTab("protokoll")}
               className="group rounded-xl border border-db-dark/10 bg-white p-5 hover:-translate-y-1 hover:border-amber-400 transition shadow-sm"
@@ -114,6 +116,16 @@ export function RecordAndReportView() {
               </div>
               <p className="text-sm font-semibold text-db-rail">Einen Vorfall offiziell, sachlich und auf Wunsch anonym melden.</p>
             </button>
+
+            <button
+              onClick={() => setSubTab("ki")}
+              className="group rounded-xl border border-db-dark/10 bg-white p-5 hover:-translate-y-1 hover:border-blue-500 transition shadow-sm"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <span className="font-black text-db-dark text-lg group-hover:text-blue-600 transition-colors">🤖 KI-Assistent</span>
+              </div>
+              <p className="text-sm font-semibold text-db-rail">Schreibe oder diktiere frei, was passiert ist. Die KI füllt das Formular für dich aus.</p>
+            </button>
           </div>
         </div>
       )}
@@ -126,6 +138,25 @@ export function RecordAndReportView() {
         >
           <ArrowLeft className="h-4 w-4" /> Zurück zur Übersicht
         </button>
+      )}
+
+      {/* Sub-Tab 3: KI Assistent */}
+      {subTab === "ki" && (
+        <AISmartReport 
+          onReportGenerated={(generatedReport) => {
+            const entry = {
+              id: Date.now(),
+              date: generatedReport.date,
+              time: generatedReport.time,
+              location: generatedReport.location,
+              category: generatedReport.category,
+              description: generatedReport.description,
+              witnesses: "Keine Angaben",
+              files: [],
+            };
+            setRecords([entry, ...records]);
+          }} 
+        />
       )}
 
       {/* Sub-Tab 1: Vorfall Festhalten (Gedächtnisprotokoll) */}
@@ -234,7 +265,11 @@ export function RecordAndReportView() {
                 <div className="flex justify-end gap-2">
                   <button
                     type="button"
-                    onClick={() => { setShowForm(false); setNewFiles([]); }}
+                    onClick={() => { 
+                      newFiles.forEach(f => { if (f.url) URL.revokeObjectURL(f.url); });
+                      setNewFiles([]); 
+                      setShowForm(false); 
+                    }}
                     className="rounded-lg px-3 py-1.5 text-xs font-bold text-db-rail hover:bg-db-dark/5"
                   >
                     Abbrechen
