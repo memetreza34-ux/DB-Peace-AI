@@ -3,6 +3,7 @@ import TrainingMode from "./TrainingMode.jsx";
 import { GraduationCap, ArrowLeft, ExternalLink, Globe, Award, UsersRound, Video, Search, TentTree } from "lucide-react";
 import coursesDataJSON from "../data/coursesData.json";
 import { BildungsurlaubModal } from "./BildungsurlaubModal.jsx";
+import { CourseDetailModal } from "./CourseDetailModal.jsx";
 
 // Real-world course data
 const courseCategories = [
@@ -42,6 +43,7 @@ export function LearningHubView() {
   const [activeCategory, setActiveCategory] = useState(null); // null | 'online' | 'partner' | 'zertifikat' | 'training'
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCourseForLeave, setSelectedCourseForLeave] = useState(null);
+  const [selectedCourseDetail, setSelectedCourseDetail] = useState(null);
 
   // Header UI
   const renderHeader = () => (
@@ -113,9 +115,12 @@ export function LearningHubView() {
           )}
         </div>
         <div className="shrink-0 pt-2 sm:pt-0 flex flex-col gap-2">
-          <a href={course.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg bg-db-dark px-4 py-2 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-sm w-full sm:w-auto justify-center">
+          <button
+            onClick={() => setSelectedCourseDetail(course)}
+            className="inline-flex items-center gap-2 rounded-lg bg-db-dark px-4 py-2 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-sm w-full sm:w-auto justify-center"
+          >
             Zum Kurs <ExternalLink className="h-4 w-4" />
-          </a>
+          </button>
           <button
             onClick={() => setSelectedCourseForLeave(course)}
             className="inline-flex items-center gap-2 rounded-lg bg-teal-50 px-4 py-2 text-sm font-extrabold text-teal-700 hover:bg-teal-100 border border-teal-200 transition shadow-sm w-full sm:w-auto justify-center"
@@ -156,6 +161,10 @@ export function LearningHubView() {
         <BildungsurlaubModal
           course={selectedCourseForLeave}
           onClose={() => setSelectedCourseForLeave(null)}
+        />
+        <CourseDetailModal
+          course={selectedCourseDetail}
+          onClose={() => setSelectedCourseDetail(null)}
         />
       </div>
     );
@@ -243,6 +252,11 @@ export function LearningHubView() {
       <BildungsurlaubModal
         course={selectedCourseForLeave}
         onClose={() => setSelectedCourseForLeave(null)}
+      />
+
+      <CourseDetailModal
+        course={selectedCourseDetail}
+        onClose={() => setSelectedCourseDetail(null)}
       />
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { X, Copy, CheckCircle2, TentTree, User, Building2, Calendar, FileText } from "lucide-react";
+import { X, Copy, CheckCircle2, TentTree, User, Building2, Calendar, FileText, Download } from "lucide-react";
+import { jsPDF } from "jspdf";
 
 export function BildungsurlaubModal({ course, onClose }) {
   const [step, setStep] = useState(1);
@@ -37,6 +38,35 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
     navigator.clipboard.writeText(generatedText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFillColor(13, 148, 136); // Teal 600
+    doc.rect(0, 0, 210, 25, "F");
+    
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor(255, 255, 255);
+    doc.text("ANTRAG AUF BILDUNGSURLAUB / BILDUNGSZEIT", 15, 17);
+
+    doc.setFontSize(11);
+    doc.setTextColor(40, 40, 40);
+    doc.setFont("helvetica", "normal");
+    
+    const lines = doc.splitTextToSize(generatedText, 180);
+    doc.text(lines, 15, 40);
+
+    doc.setDrawColor(200, 200, 200);
+    doc.line(15, 250, 195, 250);
+
+    doc.setFontSize(9);
+    doc.setTextColor(120, 120, 120);
+    doc.text("Erstellt mit DB Peace AI - Vorlage gem. BZGB / Bildungszeitgesetz", 15, 260);
+
+    doc.save(`Bildungsurlaub_Antrag_${course.title.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
   };
 
   return (
@@ -112,13 +142,22 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
               <pre className="whitespace-pre-wrap text-sm font-medium text-db-dark font-sans leading-relaxed">
                 {generatedText}
               </pre>
-              <button
-                onClick={copyToClipboard}
-                className="absolute top-4 right-4 p-2.5 bg-white rounded-lg shadow-sm border border-db-dark/10 hover:bg-db-warm transition flex items-center gap-2 text-xs font-bold text-db-dark"
-              >
-                {copied ? <CheckCircle2 className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
-                {copied ? "Kopiert!" : "Kopieren"}
-              </button>
+              <div className="absolute top-4 right-4 flex gap-2">
+                <button
+                  onClick={copyToClipboard}
+                  className="p-2 bg-white rounded-lg shadow-sm border border-db-dark/10 hover:bg-db-warm transition flex items-center gap-1.5 text-xs font-bold text-db-dark"
+                >
+                  {copied ? <CheckCircle2 className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
+                  {copied ? "Kopiert!" : "Kopieren"}
+                </button>
+                <button
+                  onClick={handleDownloadPDF}
+                  className="p-2 bg-teal-600 text-white rounded-lg shadow-sm hover:bg-teal-700 transition flex items-center gap-1.5 text-xs font-bold"
+                >
+                  <Download className="h-4 w-4" />
+                  PDF Herunterladen
+                </button>
+              </div>
             </div>
             
             <div className="bg-teal-50 rounded-xl p-4 border border-teal-200">
