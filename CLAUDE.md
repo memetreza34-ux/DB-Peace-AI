@@ -11,6 +11,7 @@ React- und Vite-Frontend mit lokalem Node.js-API-Proxy. Der KI-Begleiter nutzt d
 - **KI:** Gemini über `@google/genai`
 - **Dokumente:** jsPDF
 - **PWA:** Manifest und Service Worker
+- **Laufzeit:** Node.js 22, npm 10 oder 11
 
 ## Start
 
