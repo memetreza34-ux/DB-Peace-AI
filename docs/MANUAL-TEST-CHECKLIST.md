@@ -6,6 +6,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 
 ## 0. Installation und Entwicklungsstart
 
+- [ ] Node.js 22 wird verwendet.
 - [ ] `npm ci` läuft ohne Fehler.
 - [ ] `npm run dev -- --host 127.0.0.1 --port 5173 --strictPort` startet API und Vite gemeinsam.
 - [ ] Die API meldet den lokalen Port und das konfigurierte Modell.
