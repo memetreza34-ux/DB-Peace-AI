@@ -1,204 +1,268 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, ArrowRight, ShieldAlert, GraduationCap, Users, FileText, PhoneCall, LayoutDashboard } from "lucide-react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowRight,
+  BarChart3,
+  FileText,
+  GraduationCap,
+  HeartHandshake,
+  Info,
+  LayoutDashboard,
+  PhoneCall,
+  Scale,
+  Search,
+  ShieldAlert,
+  X,
+} from "lucide-react";
 
-// The Search Index
-const SEARCH_INDEX = [
+const searchIndex = [
   {
-    id: "action-report",
-    title: "Vorfall offiziell melden",
-    description: "Dokumentiere und melde einen Vorfall sicher und vertraulich.",
-    category: "Aktion",
-    icon: <FileText className="w-5 h-5 text-db-red" />,
-    keywords: ["melden", "vorfall", "report", "anzeigen", "beschwerde", "mobbing", "diskriminierung"],
-    action: (navigate) => navigate("record-report")
+    id: "report-draft",
+    title: "Meldungsentwurf vorbereiten",
+    description: "Einen Vorfall strukturiert festhalten, kopieren oder als PDF exportieren. Es wird nichts automatisch versendet.",
+    category: "Vorbereiten",
+    icon: FileText,
+    iconClass: "text-db-red",
+    keywords: ["melden", "vorfall", "entwurf", "beschwerde", "mobbing", "diskriminierung", "pdf"],
+    target: "record-report",
   },
   {
-    id: "action-chat",
-    title: "KI-Konflikthelfer öffnen",
-    description: "Hol dir schnellen, anonymen Rat in schwierigen Situationen.",
-    category: "Aktion",
-    icon: <ShieldAlert className="w-5 h-5 text-db-red" />,
-    keywords: ["chat", "ki", "hilfe", "rat", "konflikt", "streit", "helfer"],
-    action: (navigate) => navigate("home") // Currently on home page
+    id: "ai-guide",
+    title: "Startseite mit KI-Begleiter",
+    description: "Der KI-Begleiter unten rechts gibt unverbindliche Orientierung und kann einen lokalen Fallback verwenden.",
+    category: "Orientierung",
+    icon: ShieldAlert,
+    iconClass: "text-violet-600",
+    keywords: ["chat", "ki", "hilfe", "orientierung", "konflikt", "begleiter"],
+    target: "home",
   },
   {
-    id: "nav-learning",
-    title: "Trainings & Quiz",
-    description: "Lerne, wie du in kritischen Situationen richtig reagierst.",
+    id: "learning",
+    title: "Demo-Training und Wissens-Quiz",
+    description: "Lokale Szenarien üben oder KI-/Fallback-Fragen beantworten. Kein offizieller Abschluss.",
     category: "Lernen",
-    icon: <GraduationCap className="w-5 h-5 text-emerald-600" />,
-    keywords: ["lernen", "quiz", "kurs", "training", "weiterbildung", "üben"],
-    action: (navigate) => navigate("learning")
+    icon: GraduationCap,
+    iconClass: "text-emerald-600",
+    keywords: ["lernen", "quiz", "kurs", "training", "üben", "szenario"],
+    target: "learning",
   },
   {
-    id: "nav-projects",
-    title: "Initiativen & Projekte",
-    description: "Engagiere dich gemeinsam mit Kollegen für ein besseres Klima.",
-    category: "Projekte",
-    icon: <Users className="w-5 h-5 text-blue-600" />,
-    keywords: ["projekt", "initiative", "mitmachen", "zivilcourage", "kampagne", "event"],
-    action: (navigate) => navigate("project")
+    id: "rights",
+    title: "Rechte und Gesetze zur Orientierung",
+    description: "Allgemeine Hinweise mit Quellen öffnen. Keine Rechtsberatung und keine Einzelfallentscheidung.",
+    category: "Orientierung",
+    icon: Scale,
+    iconClass: "text-blue-600",
+    keywords: ["recht", "gesetz", "arbeitszeit", "berufsschule", "jav", "bbig", "jarbschg"],
+    target: "rights",
   },
   {
-    id: "contact-sos",
-    title: "Notfall & Akute Hilfe (Polizei)",
-    description: "Sofortige Hilfe bei Gewalt oder akuter Gefahr (110).",
-    category: "Kontakte",
-    icon: <PhoneCall className="w-5 h-5 text-red-600" />,
-    keywords: ["polizei", "notfall", "110", "gefahr", "sos", "sicherheit", "db sicherheit"],
-    action: (navigate) => navigate("contacts")
+    id: "contacts",
+    title: "Geprüfte externe Hilfe und interne Suchwege",
+    description: "110, 112 und externe Beratung sowie Hinweise zum Finden bestätigter interner Kontakte.",
+    category: "Hilfe",
+    icon: PhoneCall,
+    iconClass: "text-red-600",
+    keywords: ["polizei", "notfall", "110", "112", "telefonseelsorge", "beratung", "kontakt", "jav", "betriebsrat"],
+    target: "contacts",
   },
   {
-    id: "contact-internal",
-    title: "Betriebsrat & JAV finden",
-    description: "Deine Interessenvertretung im Betrieb.",
-    category: "Kontakte",
-    icon: <PhoneCall className="w-5 h-5 text-db-dark dark:text-white" />,
-    keywords: ["betriebsrat", "br", "jav", "ausbildung", "afk", "ngk", "hr", "personal"],
-    action: (navigate) => navigate("contacts")
+    id: "ideas",
+    title: "Projektideen als Demo verwalten",
+    description: "Fiktive Ideen ansehen und eigene Entwürfe nur für die aktuelle Sitzung ergänzen.",
+    category: "Demo",
+    icon: HeartHandshake,
+    iconClass: "text-amber-600",
+    keywords: ["projekt", "idee", "initiative", "workshop", "kampagne", "entwurf"],
+    target: "project",
   },
   {
-    id: "contact-external",
-    title: "Telefonseelsorge & Beratung",
-    description: "Vertrauliche Gespräche bei Sorgen und Problemen.",
-    category: "Kontakte",
-    icon: <PhoneCall className="w-5 h-5 text-emerald-600" />,
-    keywords: ["seelsorge", "kummer", "sorgen", "reden", "psychologe", "gewalt", "frauen"],
-    action: (navigate) => navigate("contacts")
+    id: "privacy",
+    title: "Datenschutz- und Sicherheitsstatus",
+    description: "Nachlesen, welche Schutzmaßnahmen umgesetzt sind und welche vor einem Pilotbetrieb fehlen.",
+    category: "Transparenz",
+    icon: Info,
+    iconClass: "text-slate-600",
+    keywords: ["datenschutz", "sicherheit", "dsgvo", "speicherung", "verschlüsselung", "compliance"],
+    target: "privacy",
   },
   {
-    id: "nav-dashboard",
-    title: "Startseite (Dashboard)",
-    description: "Zurück zur Hauptübersicht von DB Peace.",
+    id: "analytics",
+    title: "Demo-Analytics",
+    description: "Ausschließlich fiktive Kennzahlen und einen Szenario-Rechner anzeigen.",
+    category: "Demo",
+    icon: BarChart3,
+    iconClass: "text-purple-600",
+    keywords: ["analytics", "kennzahl", "kpi", "kosten", "dashboard", "demo"],
+    target: "analytics",
+  },
+  {
+    id: "home",
+    title: "Zur Übersicht",
+    description: "Die Hauptübersicht des Innovationsprototyps öffnen.",
     category: "Navigation",
-    icon: <LayoutDashboard className="w-5 h-5 text-db-dark dark:text-white" />,
+    icon: LayoutDashboard,
+    iconClass: "text-db-dark dark:text-white",
     keywords: ["home", "start", "übersicht", "dashboard", "hauptseite"],
-    action: (navigate) => navigate("home")
-  }
+    target: "home",
+  },
 ];
 
 export function GlobalSearch({ isOpen, onClose, onNavigate }) {
   const [query, setQuery] = useState("");
   const inputRef = useRef(null);
+  const panelRef = useRef(null);
 
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      setTimeout(() => inputRef.current.focus(), 100);
-      setQuery("");
+    if (!isOpen) return undefined;
+
+    setQuery("");
+    const focusTimer = window.setTimeout(() => inputRef.current?.focus(), 80);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") onClose();
+      if (event.key !== "Tab" || !panelRef.current) return;
+
+      const focusable = panelRef.current.querySelectorAll(
+        'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
-    
-    // Add escape key listener
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
     };
-    if (isOpen) window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
+  const displayResults = useMemo(() => {
+    const normalized = query.trim().toLocaleLowerCase("de-DE");
+    if (!normalized) return searchIndex.slice(0, 5);
 
-  // Filter logic
-  const filteredResults = query.trim() === "" 
-    ? []
-    : SEARCH_INDEX.filter(item => {
-        const searchStr = query.toLowerCase();
-        const matchesTitle = item.title.toLowerCase().includes(searchStr);
-        const matchesDesc = item.description.toLowerCase().includes(searchStr);
-        const matchesKeywords = item.keywords.some(kw => kw.toLowerCase().includes(searchStr));
-        return matchesTitle || matchesDesc || matchesKeywords;
-      });
+    return searchIndex.filter((item) => {
+      const searchable = [item.title, item.description, item.category, ...item.keywords]
+        .join(" ")
+        .toLocaleLowerCase("de-DE");
+      return searchable.includes(normalized);
+    });
+  }, [query]);
 
-  const displayResults = query.trim() === "" ? SEARCH_INDEX.slice(0, 4) : filteredResults;
-
-  const handleSelect = (item) => {
-    item.action(onNavigate);
+  function selectResult(item) {
+    onNavigate(item.target);
     onClose();
-  };
+  }
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 sm:px-6">
-        {/* Backdrop */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="absolute inset-0 bg-db-dark/40 dark:bg-black/60 backdrop-blur-sm"
-        />
-        
-        {/* Search Panel */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: -20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: -20 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
-          className="relative w-full max-w-2xl bg-white dark:bg-db-dark rounded-lg shadow-lg border border-db-dark/10 dark:border-white/10 overflow-hidden flex flex-col max-h-[80vh]"
-        >
-          {/* Search Input Area */}
-          <div className="flex items-center px-4 py-4 border-b border-db-dark/10 dark:border-white/10 bg-db-dark/5 dark:bg-white/5">
-            <Search className="w-6 h-6 text-db-rail dark:text-white/50 ml-2 shrink-0" />
-            <input
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Wonach suchst du? (z.B. 'Mobbing', 'Betriebsrat', 'melden')"
-              className="flex-grow bg-transparent border-none outline-none px-4 text-xl font-medium text-db-dark dark:text-white placeholder:text-db-rail dark:placeholder:text-white/40"
-            />
-            <button 
-              onClick={onClose}
-              className="p-2 text-db-rail hover:text-db-dark dark:text-white/50 dark:hover:text-white bg-db-dark/5 dark:bg-white/5 hover:bg-db-dark/10 dark:hover:bg-white/10 rounded-full transition shrink-0"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+        <div className="fixed inset-0 z-[100] flex items-start justify-center px-4 pt-[8vh] sm:px-6">
+          <motion.button
+            type="button"
+            aria-label="Suche schließen"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 h-full w-full cursor-default bg-db-dark/55 backdrop-blur-sm"
+          />
 
-          {/* Results Area */}
-          <div className="overflow-y-auto p-2 db-scrollbar">
-            {query.trim() === "" && (
-              <div className="px-4 py-3 text-xs font-bold text-db-rail dark:text-white/50 uppercase tracking-wider">
-                Häufig gesucht
-              </div>
-            )}
-            
-            {query.trim() !== "" && displayResults.length === 0 && (
-              <div className="px-6 py-12 text-center">
-                <Search className="w-12 h-12 text-db-rail dark:text-white/30 mx-auto mb-4 opacity-50" />
-                <h3 className="text-lg font-bold text-db-dark dark:text-white">Keine Ergebnisse gefunden</h3>
-                <p className="text-db-rail dark:text-white/60 mt-1">Versuche andere Suchbegriffe wie "Hilfe" oder "Kontakt".</p>
-              </div>
-            )}
-
-            <div className="space-y-1">
-              {displayResults.map((item, index) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleSelect(item)}
-                  className="w-full flex items-center justify-between p-4 rounded-md hover:bg-db-dark/5 dark:hover:bg-white/5 transition-colors group text-left"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-db-dark border border-db-dark/10 dark:border-white/10 flex items-center justify-center shadow-sm shrink-0">
-                      {item.icon}
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-db-dark dark:text-white">{item.title}</h4>
-                      <p className="text-sm font-medium text-db-rail dark:text-white/60">{item.description}</p>
-                    </div>
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-db-rail dark:text-white/30 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0" />
-                </button>
-              ))}
+          <motion.div
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="global-search-title"
+            initial={{ opacity: 0, scale: 0.97, y: -16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97, y: -16 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="relative flex max-h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-db-dark/10 bg-white shadow-2xl dark:border-white/10 dark:bg-db-dark"
+          >
+            <div className="flex items-center border-b border-db-dark/10 bg-db-soft px-4 py-4 dark:border-white/10 dark:bg-white/5">
+              <Search className="ml-1 h-6 w-6 shrink-0 text-db-rail dark:text-white/50" aria-hidden="true" />
+              <label className="sr-only" htmlFor="global-search-input">Bereiche durchsuchen</label>
+              <input
+                id="global-search-input"
+                ref={inputRef}
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value.slice(0, 120))}
+                placeholder="Bereich oder Thema suchen"
+                className="min-w-0 flex-1 bg-transparent px-4 text-lg font-bold text-db-dark outline-none placeholder:text-db-rail/70 dark:text-white dark:placeholder:text-white/35"
+              />
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-full p-2 text-db-rail transition hover:bg-db-dark/10 hover:text-db-dark dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
+                aria-label="Suche schließen"
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
             </div>
-          </div>
-          
-          {/* Footer */}
-          <div className="px-6 py-3 bg-db-dark/5 dark:bg-white/5 border-t border-db-dark/10 dark:border-white/10 text-xs font-semibold text-db-rail dark:text-white/50 flex justify-between items-center">
-            <span>Die Suche hilft dir, schneller zum Ziel zu kommen.</span>
-            <span className="flex items-center gap-1"><kbd className="bg-white dark:bg-db-dark px-1.5 py-0.5 rounded border border-db-dark/20 dark:border-white/20 shadow-sm font-sans font-bold">ESC</kbd> zum Schließen</span>
-          </div>
-        </motion.div>
+
+            <div className="overflow-y-auto p-2">
+              <div className="px-4 py-3 text-xs font-black uppercase tracking-wider text-db-rail dark:text-white/45">
+                {query.trim() ? `${displayResults.length} Treffer` : "Wichtige Bereiche"}
+              </div>
+
+              {displayResults.length === 0 ? (
+                <div className="px-6 py-12 text-center">
+                  <Search className="mx-auto h-10 w-10 text-db-rail/35 dark:text-white/25" aria-hidden="true" />
+                  <h2 id="global-search-title" className="mt-4 text-lg font-black text-db-dark dark:text-white">Keine passenden Bereiche</h2>
+                  <p className="mt-2 text-sm font-medium text-db-rail dark:text-white/55">Nutze Begriffe wie „Meldung“, „Notfall“, „Rechte“ oder „Datenschutz“.</p>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  <h2 id="global-search-title" className="sr-only">App-Bereiche durchsuchen</h2>
+                  {displayResults.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        type="button"
+                        key={item.id}
+                        onClick={() => selectResult(item)}
+                        className="group flex w-full items-center justify-between gap-4 rounded-xl p-4 text-left transition hover:bg-db-soft dark:hover:bg-white/5"
+                      >
+                        <div className="flex min-w-0 items-center gap-4">
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-db-dark/10 bg-white shadow-sm dark:border-white/10 dark:bg-white/5">
+                            <Icon className={`h-5 w-5 ${item.iconClass}`} aria-hidden="true" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <h3 className="font-black text-db-dark dark:text-white">{item.title}</h3>
+                              <span className="rounded-full bg-db-dark/5 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-db-rail dark:bg-white/10 dark:text-white/45">
+                                {item.category}
+                              </span>
+                            </div>
+                            <p className="mt-1 text-sm font-medium leading-6 text-db-rail dark:text-white/55">{item.description}</p>
+                          </div>
+                        </div>
+                        <ArrowRight className="h-5 w-5 shrink-0 text-db-rail/40 transition group-hover:translate-x-1 group-hover:text-db-red dark:text-white/25" aria-hidden="true" />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-db-dark/10 bg-db-soft px-5 py-3 text-xs font-semibold text-db-rail dark:border-white/10 dark:bg-white/5 dark:text-white/45">
+              <span>Die Suche öffnet nur vorhandene Bereiche und führt keine Aktion automatisch aus.</span>
+              <span><kbd className="rounded border border-db-dark/15 bg-white px-1.5 py-0.5 font-sans font-black dark:border-white/15 dark:bg-db-dark">Esc</kbd> schließt</span>
+            </footer>
+          </motion.div>
         </div>
       )}
     </AnimatePresence>
