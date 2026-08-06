@@ -62,6 +62,24 @@ npm run check       # Verify und Production-Build nacheinander ausführen
 npm run preview     # gebauten Stand lokal anzeigen
 ```
 
+## Prüfung vor dem Zusammenführen
+
+1. Abhängigkeiten exakt aus dem Lockfile installieren:
+
+```bash
+npm ci
+```
+
+2. Repository-Regeln und Production-Build prüfen:
+
+```bash
+npm run check
+```
+
+3. Die Kernwege anhand von [`docs/MANUAL-TEST-CHECKLIST.md`](docs/MANUAL-TEST-CHECKLIST.md) ausschließlich mit synthetischen Daten manuell testen.
+
+4. Den getesteten Commit, Browser, Betriebssystem und offene Blocker im Abschlussprotokoll dokumentieren.
+
 ## Sicherheitsregeln
 
 - ausschließlich erfundene Beispieldaten verwenden
