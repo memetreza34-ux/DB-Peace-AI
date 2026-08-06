@@ -1,183 +1,256 @@
-import React, { useState } from "react";
-import { X, Copy, CheckCircle2, TentTree, User, Building2, Calendar, FileText, Download } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import {
+  Building2,
+  Calendar,
+  CheckCircle2,
+  Copy,
+  Download,
+  FileText,
+  Info,
+  TentTree,
+  User,
+  X,
+} from "lucide-react";
 import { jsPDF } from "jspdf";
 
 export function BildungsurlaubModal({ course, onClose }) {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    name: "",
-    department: "",
-    dates: "",
-  });
-  const [copied, setCopied] = useState(false);
+  const [formData, setFormData] = useState({ name: "", department: "", dates: "" });
+  const [copyState, setCopyState] = useState("idle");
+
+  const safeCourse = useMemo(() => ({
+    title: String(course?.title || "[Kurstitel prüfen]").slice(0, 180),
+    provider: String(course?.provider || "[Anbieter prüfen]").slice(0, 140),
+  }), [course]);
 
   if (!course) return null;
 
-  const handleGenerate = (e) => {
-    e.preventDefault();
-    setStep(2);
-  };
+  const generatedText = `Betreff: Bitte um Prüfung einer Freistellung für Weiterbildung
 
-  const generatedText = `Sehr geehrte Vorgesetzte, sehr geehrte Personalabteilung,
+Sehr geehrte Damen und Herren,
 
-hiermit beantrage ich gem. Bildungszeitgesetz / Anspruch auf Bildungsurlaub die Freistellung für die Teilnahme an folgender beruflicher Weiterbildung:
+ich interessiere mich für die folgende Weiterbildung und bitte um Prüfung, ob eine Freistellung, Bildungszeit oder eine andere betriebliche Unterstützung möglich ist:
 
-Titel des Seminars: ${course.title}
-Anbieter: ${course.provider}
+Kurstitel: ${safeCourse.title}
+Anbieter laut Demo-Katalog: ${safeCourse.provider}
 ${formData.dates ? `Geplanter Zeitraum: ${formData.dates}\n` : ""}
-Die Veranstaltung ist eine anerkannte Weiterbildung und dient meiner beruflichen sowie persönlichen Qualifizierung, insbesondere im Bereich Konfliktmanagement und Deeskalation.
+Bitte prüfen Sie insbesondere:
+- ob das Angebot aktuell tatsächlich stattfindet,
+- ob der Anbieter und die Veranstaltung die erforderliche Anerkennung besitzen,
+- welche gesetzliche, tarifliche oder betriebliche Regelung in meinem Fall gilt,
+- welche Fristen und Nachweise einzuhalten sind.
 
-Bitte lassen Sie mich wissen, welche weiteren Unterlagen (z.B. Anmeldebestätigung, Ablaufplan) Sie für die finale Genehmigung benötigen.
+Ich reiche offizielle Kursbeschreibung, Termin, Kosten, Anerkennungsnachweis und Anmeldeunterlagen nach, sobald diese direkt beim Anbieter geprüft wurden.
 
-Mit freundlichen Grüßen,
-${formData.name || "[Dein Name]"}
-${formData.department ? `Abteilung: ${formData.department}` : ""}
-`;
+Mit freundlichen Grüßen
+${formData.name || "[Name ergänzen]"}
+${formData.department ? `Bereich: ${formData.department}` : ""}`;
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(generatedText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  async function copyToClipboard() {
+    try {
+      await navigator.clipboard.writeText(generatedText);
+      setCopyState("copied");
+    } catch {
+      setCopyState("error");
+    }
+  }
 
-  const handleDownloadPDF = () => {
+  function downloadPdf() {
     const doc = new jsPDF();
-    
-    // Header
-    doc.setFillColor(13, 148, 136); // Teal 600
-    doc.rect(0, 0, 210, 25, "F");
-    
+    doc.setFillColor(15, 118, 110);
+    doc.rect(0, 0, 210, 26, "F");
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
+    doc.setFontSize(15);
     doc.setTextColor(255, 255, 255);
-    doc.text("ANTRAG AUF BILDUNGSURLAUB / BILDUNGSZEIT", 15, 17);
+    doc.text("ANFRAGE ZUR PRÜFUNG EINER FREISTELLUNG", 15, 17);
 
-    doc.setFontSize(11);
-    doc.setTextColor(40, 40, 40);
     doc.setFont("helvetica", "normal");
-    
-    const lines = doc.splitTextToSize(generatedText, 180);
-    doc.text(lines, 15, 40);
+    doc.setFontSize(10.5);
+    doc.setTextColor(35, 35, 35);
+    doc.text(doc.splitTextToSize(generatedText, 180), 15, 40);
 
-    doc.setDrawColor(200, 200, 200);
-    doc.line(15, 250, 195, 250);
-
-    doc.setFontSize(9);
-    doc.setTextColor(120, 120, 120);
-    doc.text("Erstellt mit DB Peace AI - Vorlage gem. BZGB / Bildungszeitgesetz", 15, 260);
-
-    doc.save(`Bildungsurlaub_Antrag_${course.title.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
-  };
+    doc.setDrawColor(210, 210, 210);
+    doc.line(15, 260, 195, 260);
+    doc.setFontSize(8.5);
+    doc.setTextColor(110, 110, 110);
+    doc.text("Erstellt mit DB Peace AI – unverbindliche Vorlage aus einem Demonstrationsprototyp.", 15, 268);
+    doc.text("Kein Anerkennungsnachweis, keine Genehmigung und keine Rechtsberatung.", 15, 274);
+    doc.save(`Freistellungsanfrage_${safeFileName(safeCourse.title)}.pdf`);
+  }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-db-dark/60 backdrop-blur-sm p-4 animate-fadeIn">
-      <div className="bg-white rounded-lg p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative shadow-lg">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-db-dark/70 p-4 backdrop-blur-sm">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="leave-request-title"
+        className="relative max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl sm:p-8"
+      >
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full hover:bg-db-dark/5 transition"
+          className="absolute right-5 top-5 rounded-full p-2 text-db-dark/50 transition hover:bg-db-dark/5 hover:text-db-dark"
+          aria-label="Vorlage schließen"
         >
-          <X className="h-6 w-6 text-db-dark/50" />
+          <X className="h-6 w-6" aria-hidden="true" />
         </button>
 
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-3 bg-teal-50 rounded-xl">
-            <TentTree className="h-6 w-6 text-teal-600" />
+        <div className="flex items-center gap-3 pr-12">
+          <div className="rounded-xl bg-teal-50 p-3 text-teal-700">
+            <TentTree className="h-6 w-6" aria-hidden="true" />
           </div>
-          <h2 className="text-2xl font-black text-db-dark">Antrag auf Bildungsurlaub</h2>
+          <div>
+            <p className="text-xs font-black uppercase tracking-wider text-teal-700">Unverbindliche Vorlage</p>
+            <h2 id="leave-request-title" className="text-2xl font-black text-db-dark">Freistellung prüfen lassen</h2>
+          </div>
         </div>
-        <p className="text-sm font-semibold text-db-rail mb-8">
-          Für den Kurs: <span className="font-bold text-db-dark">{course.title}</span>
+
+        <p className="mt-4 text-sm font-semibold leading-6 text-db-rail">
+          Demo-Katalogeintrag: <span className="font-black text-db-dark">{safeCourse.title}</span>
         </p>
 
+        <div className="mt-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-950">
+          <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          <p>
+            Die App prüft weder Anerkennung noch Anspruch, Bundesland, Tarifvertrag, Frist oder betriebliche Regelung.
+            Der Kursdatensatz ist ungeprüft. Vor dem Versenden alle Angaben direkt beim Anbieter und bei der zuständigen Stelle bestätigen.
+          </p>
+        </div>
+
         {step === 1 ? (
-          <form onSubmit={handleGenerate} className="space-y-6 animate-fadeIn">
-            <div className="bg-db-soft rounded-xl p-4 border border-db-dark/5 text-xs font-semibold text-db-rail leading-relaxed">
-              <span className="font-bold text-db-dark">Datenschutz-Hinweis:</span> Alle Eingaben sind zu 100% freiwillig. Die Daten werden nicht gespeichert, sondern dienen nur dazu, den Antragstext für dich im Browser zu generieren. Du kannst die Felder auch leer lassen und später selbst im Text ergänzen.
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              setStep(2);
+              setCopyState("idle");
+            }}
+            className="mt-7 space-y-6"
+          >
+            <div className="rounded-xl border border-db-dark/5 bg-db-soft p-4 text-xs font-semibold leading-5 text-db-rail">
+              Die Angaben bleiben nur im React-Zustand dieser geöffneten Seite. Sie werden von dieser Funktion nicht an einen Server gesendet.
+              Ein Browser, Gerät oder Erweiterungen können dennoch eigene Spuren hinterlassen; nutze bei sensiblen Angaben ein vertrauenswürdiges Gerät.
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-db-dark flex items-center gap-1.5"><User className="h-3.5 w-3.5"/> Dein Name (optional)</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Max Mustermann"
-                  className="w-full rounded-lg border border-db-dark/15 p-2.5 text-sm font-semibold focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-db-dark flex items-center gap-1.5"><Building2 className="h-3.5 w-3.5"/> Abteilung / Bereich (optional)</label>
-                <input
-                  type="text"
-                  value={formData.department}
-                  onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                  placeholder="z.B. Instandhaltung"
-                  className="w-full rounded-lg border border-db-dark/15 p-2.5 text-sm font-semibold focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                />
-              </div>
-              <div className="space-y-1 sm:col-span-2">
-                <label className="text-xs font-bold text-db-dark flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5"/> Kurs-Datum / Zeitraum (optional)</label>
-                <input
-                  type="text"
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field
+                icon={User}
+                label="Name (optional)"
+                value={formData.name}
+                placeholder="Name erst vor dem Versenden ergänzen"
+                onChange={(value) => setFormData((current) => ({ ...current, name: value }))}
+              />
+              <Field
+                icon={Building2}
+                label="Bereich (optional)"
+                value={formData.department}
+                placeholder="z. B. Instandhaltung"
+                onChange={(value) => setFormData((current) => ({ ...current, department: value }))}
+              />
+              <div className="sm:col-span-2">
+                <Field
+                  icon={Calendar}
+                  label="Geplanter Zeitraum (optional)"
                   value={formData.dates}
-                  onChange={(e) => setFormData({ ...formData, dates: e.target.value })}
-                  placeholder="z.B. 12.10.2026 - 14.10.2026"
-                  className="w-full rounded-lg border border-db-dark/15 p-2.5 text-sm font-semibold focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  placeholder="z. B. 12.–14. Oktober 2026"
+                  onChange={(value) => setFormData((current) => ({ ...current, dates: value }))}
                 />
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full rounded-xl bg-teal-600 px-6 py-3.5 text-sm font-extrabold text-white hover:bg-teal-700 transition shadow-lg flex items-center justify-center gap-2"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-teal-700 px-6 py-3.5 text-sm font-black text-white transition hover:bg-teal-800"
             >
-              <FileText className="h-4 w-4" />
-              Antrag jetzt generieren
+              <FileText className="h-4 w-4" aria-hidden="true" />
+              Unverbindlichen Text erzeugen
             </button>
           </form>
         ) : (
-          <div className="space-y-6 animate-fadeIn">
-            <div className="bg-db-dark/5 rounded-xl p-4 sm:p-6 border border-db-dark/10 relative group">
-              <pre className="whitespace-pre-wrap text-sm font-medium text-db-dark font-sans leading-relaxed">
-                {generatedText}
-              </pre>
-              <div className="absolute top-4 right-4 flex gap-2">
-                <button
-                  onClick={copyToClipboard}
-                  className="p-2 bg-white rounded-lg shadow-sm border border-db-dark/10 hover:bg-db-warm transition flex items-center gap-1.5 text-xs font-bold text-db-dark"
-                >
-                  {copied ? <CheckCircle2 className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
-                  {copied ? "Kopiert!" : "Kopieren"}
-                </button>
-                <button
-                  onClick={handleDownloadPDF}
-                  className="p-2 bg-teal-600 text-white rounded-lg shadow-sm hover:bg-teal-700 transition flex items-center gap-1.5 text-xs font-bold"
-                >
-                  <Download className="h-4 w-4" />
-                  PDF Herunterladen
-                </button>
-              </div>
-            </div>
-            
-            <div className="bg-teal-50 rounded-xl p-4 border border-teal-200">
-              <p className="text-sm font-bold text-teal-800">
-                Nächster Schritt:
-              </p>
-              <p className="text-xs font-semibold text-teal-700 mt-1">
-                Kopiere diesen Text und schicke ihn per E-Mail an deine Führungskraft. Vergiss nicht, später die offizielle Anmeldebestätigung des Kursanbieters nachzureichen.
-              </p>
+          <div className="mt-7 space-y-6">
+            <div className="rounded-xl border border-db-dark/10 bg-db-soft p-5">
+              <pre className="whitespace-pre-wrap font-sans text-sm font-medium leading-7 text-db-dark">{generatedText}</pre>
             </div>
 
-            <button
-              onClick={onClose}
-              className="w-full rounded-xl bg-db-dark px-6 py-3 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-lg"
-            >
-              Fenster schließen
-            </button>
+            {copyState === "error" && (
+              <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs font-bold text-red-800">
+                Automatisches Kopieren war nicht möglich. Markiere den Text manuell.
+              </p>
+            )}
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => void copyToClipboard()}
+                className="flex items-center justify-center gap-2 rounded-xl border border-db-dark/10 bg-white px-5 py-3 text-sm font-black text-db-dark transition hover:border-teal-600 hover:text-teal-700"
+              >
+                {copyState === "copied" ? (
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" aria-hidden="true" />
+                ) : (
+                  <Copy className="h-4 w-4" aria-hidden="true" />
+                )}
+                {copyState === "copied" ? "Kopiert" : "Text kopieren"}
+              </button>
+              <button
+                type="button"
+                onClick={downloadPdf}
+                className="flex items-center justify-center gap-2 rounded-xl bg-teal-700 px-5 py-3 text-sm font-black text-white transition hover:bg-teal-800"
+              >
+                <Download className="h-4 w-4" aria-hidden="true" />
+                PDF-Vorlage herunterladen
+              </button>
+            </div>
+
+            <div className="rounded-xl border border-teal-200 bg-teal-50 p-4 text-sm font-semibold leading-6 text-teal-950">
+              <p className="font-black">Vor dem Versenden ergänzen und prüfen:</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5">
+                <li>offizielle Kursseite und genauer Termin</li>
+                <li>Anerkennungsnachweis für das zuständige Bundesland</li>
+                <li>Antragsfrist und betrieblicher Prozess</li>
+                <li>Kosten, Arbeitszeit und erforderliche Anlagen</li>
+              </ul>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="rounded-xl border border-db-dark/10 px-5 py-3 text-sm font-black text-db-dark hover:bg-db-soft"
+              >
+                Angaben bearbeiten
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-xl bg-db-dark px-5 py-3 text-sm font-black text-white hover:bg-slate-800"
+              >
+                Schließen
+              </button>
+            </div>
           </div>
         )}
       </div>
     </div>
   );
+}
+
+function Field({ icon: Icon, label, onChange, placeholder, value }) {
+  return (
+    <label className="block space-y-2">
+      <span className="flex items-center gap-2 text-xs font-black text-db-dark">
+        <Icon className="h-4 w-4" aria-hidden="true" />
+        {label}
+      </span>
+      <input
+        type="text"
+        value={value}
+        onChange={(event) => onChange(event.target.value.slice(0, 160))}
+        placeholder={placeholder}
+        className="w-full rounded-xl border border-db-dark/15 p-3 text-sm font-semibold outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/15"
+      />
+    </label>
+  );
+}
+
+function safeFileName(value) {
+  return value.replace(/[^a-zA-Z0-9äöüÄÖÜß-]+/g, "_").slice(0, 80);
 }
