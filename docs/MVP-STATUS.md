@@ -6,7 +6,7 @@ Integration: Draft Pull Request #1
 
 ## Ziel des aktuellen MVP
 
-Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. Er unterstützt dabei, schwierige Situationen zu reflektieren, Beobachtungen strukturiert festzuhalten, Meldungsentwürfe vorzubereiten und reale Hilfewege zu finden. Er ist keine produktive Meldestelle und keine offizielle DB-Anwendung.
+Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. Er unterstützt dabei, schwierige Situationen zu reflektieren, Beobachtungen sachlich festzuhalten, Meldungsentwürfe vorzubereiten und reale Hilfewege zu finden. Er ist keine produktive Meldestelle und keine offizielle DB-Anwendung.
 
 ## Technisch umgesetzte Funktionen
 
@@ -24,6 +24,7 @@ Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. 
 - geprüfte externe Hilfsnummern und interne Suchhinweise
 - Service Worker ohne Caching von `/api/`-Antworten
 - Repository-Verifikation und GitHub-Actions-Workflow
+- manuelle Abnahmecheckliste unter `docs/MANUAL-TEST-CHECKLIST.md`
 
 ## Klar gekennzeichnete Demonstrationsbereiche
 
@@ -67,6 +68,7 @@ Solange die jeweilige Technik oder Freigabe fehlt, darf die App nicht behaupten:
 
 - `npm run check` ist erfolgreich
 - GitHub-Actions-Check ist erfolgreich oder ein gleichwertiger lokaler Build wurde dokumentiert
+- die manuelle Abnahmecheckliste wurde für den getesteten Commit ausgefüllt
 - keine erfundenen Telefonnummern, E-Mail-Adressen oder offiziellen Nachweise
 - alle Demonstrationsbereiche sind sichtbar gekennzeichnet
 - keine echten personenbezogenen oder sensiblen Daten
