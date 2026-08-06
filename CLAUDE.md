@@ -4,6 +4,8 @@
 
 React- und Vite-Frontend mit lokalem Node.js-API-Proxy. Der KI-Begleiter nutzt die Gemini API. Das Projekt ist ein lokaler Innovations- und Demonstrationsprototyp und keine offizielle DB-Anwendung.
 
+Der Branch `agent/mvp-stabilization` ist für die technische Abnahme eingefroren. Keine neuen Produktfunktionen in diesen PR aufnehmen; nur konkrete Build-, Sicherheits- oder Abnahmefehler korrigieren.
+
 ## Tech-Stack
 
 - **Frontend:** React 19, Vite 7, Tailwind CSS 3, Framer Motion, Lucide
