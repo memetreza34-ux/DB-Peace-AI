@@ -3,6 +3,7 @@
 Stand: 6. August 2026  
 Branch: `agent/mvp-stabilization`  
 Integration: Draft Pull Request #1  
+Pilot-Roadmap: GitHub Issue #2  
 Unterstützte Entwicklungsumgebung: Node.js 22, npm 10 oder 11
 
 ## Ziel des aktuellen MVP
