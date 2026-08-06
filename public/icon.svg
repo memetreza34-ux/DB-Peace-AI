@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">DB Peace AI</title>
+  <desc id="desc">Rotes App-Symbol mit weißem Schild und Herz</desc>
+  <rect width="512" height="512" rx="112" fill="#e2001a"/>
+  <path d="M256 76 405 132v111c0 98-57 158-149 197-92-39-149-99-149-197V132L256 76Z" fill="#fff"/>
+  <path d="M256 349c-14-13-91-68-91-125 0-34 25-59 58-59 18 0 35 8 45 23 10-15 27-23 45-23 33 0 58 25 58 59 0 57-77 112-91 125l-12 11-12-11Z" fill="#e2001a"/>
+</svg>
