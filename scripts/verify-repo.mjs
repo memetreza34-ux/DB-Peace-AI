@@ -14,6 +14,8 @@ const requiredFiles = [
   "src/components/ContactsView.jsx",
   "src/components/EmergencyModal.jsx",
   "src/components/PrivacyCompliance.jsx",
+  "src/components/TrainingMode.jsx",
+  "src/components/ProjectOverview.jsx",
   "public/manifest.json",
   "public/sw.js",
   "public/icon.svg",
@@ -50,6 +52,15 @@ const forbiddenPatterns = [
   [/Über 150 offizielle Weiterbildungsangebote/i, "Ungeprüfter Kurskatalog wird als offiziell dargestellt."],
   [/Die Veranstaltung ist eine anerkannte Weiterbildung/i, "Kursanerkennung wird ohne Prüfung behauptet."],
   [/Die Gespräche sind absolut vertraulich/i, "Absolute Vertraulichkeitsgarantie gefunden."],
+  [/\+50 DB Peace Points/i, "Erfundene Produktpunkte gefunden."],
+  [/Demo-Zertifikat/i, "Ein Training erzeugt weiterhin ein Zertifikat oder Zertifikatsversprechen."],
+  [/KI-Trainingsmodus/i, "Statisches Szenario wird als KI-Training dargestellt."],
+  [/Projekt veröffentlichen/i, "Ein lokaler Ideenentwurf wird als Veröffentlichung dargestellt."],
+  [/Anfrage gesendet \(Ausstehend\)/i, "Eine nicht versendete Projektanfrage wird als gesendet dargestellt."],
+  [/Teilnahme bestätigt!/i, "Eine nicht vorhandene Projektteilnahme wird als bestätigt dargestellt."],
+  [/Du \(Dein DB-Profil\)/i, "Eine nicht vorhandene DB-Profilintegration wird im Projektbereich dargestellt."],
+  [/Vorfall offiziell melden/i, "Ein Entwurf wird als offizielle Meldung bezeichnet."],
+  [/sicher und vertraulich melden/i, "Eine nicht vorhandene sichere Übermittlung wird behauptet."],
 ];
 
 for (const filePath of textFiles) {
