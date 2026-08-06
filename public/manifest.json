@@ -1,16 +1,19 @@
 {
-  "name": "DB Peace AI",
-  "short_name": "Peace AI",
-  "description": "Zivilcourage und Meldemanagement für die Deutsche Bahn",
+  "name": "DB Peace AI – Prototyp",
+  "short_name": "DB Peace",
+  "description": "Lokaler Demonstrationsprototyp für Orientierung, Prävention und strukturierte Meldungsentwürfe.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#F3F4F6",
-  "theme_color": "#F1142A",
+  "background_color": "#f3f4f6",
+  "theme_color": "#e2001a",
+  "lang": "de-DE",
   "icons": [
     {
-      "src": "/vite.svg",
+      "src": "/icon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
