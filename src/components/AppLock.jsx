@@ -4,6 +4,7 @@ import { Delete, Lock, RotateCcw, ShieldCheck } from "lucide-react";
 
 const LOCK_STORAGE_KEY = "db-peace-lock-v2";
 const SESSION_UNLOCK_KEY = "db-peace-unlocked";
+const PIN_LENGTH = 4;
 
 export function AppLock({ onUnlock }) {
   const existingConfig = useMemo(() => readLockConfig(), []);
@@ -19,7 +20,7 @@ export function AppLock({ onUnlock }) {
   }, [onUnlock]);
 
   useEffect(() => {
-    if (mode === "unlock" && pin.length >= 4) void verifyPin();
+    if (mode === "unlock" && pin.length === PIN_LENGTH) void verifyPin();
   }, [pin, mode]);
 
   async function verifyPin() {
@@ -40,8 +41,8 @@ export function AppLock({ onUnlock }) {
   }
 
   async function completeSetup() {
-    if (pin.length < 4) {
-      setError("Die PIN muss mindestens vier Ziffern haben.");
+    if (pin.length !== PIN_LENGTH) {
+      setError("Die PIN muss genau vier Ziffern haben.");
       return;
     }
 
@@ -64,13 +65,13 @@ export function AppLock({ onUnlock }) {
     setIsWorking(true);
     const salt = randomBase64(16);
     const verifier = await createVerifier(pin, salt);
-    localStorage.setItem(LOCK_STORAGE_KEY, JSON.stringify({ salt, verifier, version: 2 }));
+    localStorage.setItem(LOCK_STORAGE_KEY, JSON.stringify({ salt, verifier, version: 2, pinLength: PIN_LENGTH }));
     sessionStorage.setItem(SESSION_UNLOCK_KEY, "1");
     onUnlock();
   }
 
   function pressDigit(digit) {
-    if (pin.length >= 8 || isWorking) return;
+    if (pin.length >= PIN_LENGTH || isWorking) return;
     setPin((current) => current + digit);
     setError("");
   }
@@ -82,7 +83,8 @@ export function AppLock({ onUnlock }) {
     setPin("");
     setConfirmation("");
     setPhase("pin");
-    setError("Lokale Sperre zurückgesetzt. Lege eine neue PIN fest.");
+    setIsWorking(false);
+    setError("Lokale Sperre zurückgesetzt. Lege eine neue vierstellige PIN fest.");
   }
 
   const title = mode === "setup"
@@ -90,7 +92,7 @@ export function AppLock({ onUnlock }) {
     : "DB Peace entsperren";
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6 text-white selection:bg-db-red">
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-6 text-white selection:bg-db-red">
       <motion.main
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
@@ -103,52 +105,33 @@ export function AppLock({ onUnlock }) {
         <h1 className="mt-5 text-center text-2xl font-black">{title}</h1>
         <p className="mt-2 text-center text-sm font-medium leading-6 text-slate-400">
           {mode === "setup"
-            ? "Die PIN schützt die Ansicht auf diesem Browser. Sie ersetzt keine Anmeldung und keine Datenverschlüsselung."
-            : "Gib deine lokale PIN ein. Nach einem Schließen des Tabs wird die Ansicht erneut gesperrt."}
+            ? "Lege eine vierstellige PIN als lokalen Sichtschutz fest. Sie ersetzt keine Anmeldung und keine Datenverschlüsselung."
+            : "Gib deine vierstellige lokale PIN ein. Nach dem Schließen des Tabs wird die Ansicht erneut gesperrt."}
         </p>
 
-        <div className="mt-7 flex min-h-6 justify-center gap-3" aria-label={`${pin.length} Ziffern eingegeben`}>
-          {Array.from({ length: Math.max(4, pin.length) }, (_, index) => (
-            <span
-              key={index}
-              className={`h-3.5 w-3.5 rounded-full border-2 transition ${pin.length > index ? "border-db-red bg-db-red" : "border-slate-600"}`}
-            />
+        <div className="mt-7 flex min-h-6 justify-center gap-3" aria-label={`${pin.length} von ${PIN_LENGTH} Ziffern eingegeben`}>
+          {Array.from({ length: PIN_LENGTH }, (_, index) => (
+            <span key={index} className={`h-3.5 w-3.5 rounded-full border-2 transition ${pin.length > index ? "border-db-red bg-db-red" : "border-slate-600"}`} />
           ))}
         </div>
 
-        {error && (
-          <p role="alert" className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-center text-xs font-bold text-red-200">
-            {error}
-          </p>
-        )}
+        {error && <p role="alert" className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-center text-xs font-bold text-red-200">{error}</p>}
 
         <div className="mx-auto mt-7 grid max-w-xs grid-cols-3 gap-4">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((digit) => (
-            <button
-              key={digit}
-              type="button"
-              onClick={() => pressDigit(String(digit))}
-              className="h-14 rounded-full bg-slate-800 text-xl font-black transition hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-db-red"
-            >
+            <button key={digit} type="button" onClick={() => pressDigit(String(digit))} className="h-14 rounded-full bg-slate-800 text-xl font-black transition hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-db-red">
               {digit}
             </button>
           ))}
           <div />
-          <button type="button" onClick={() => pressDigit("0")} className="h-14 rounded-full bg-slate-800 text-xl font-black hover:bg-slate-700">
-            0
-          </button>
+          <button type="button" onClick={() => pressDigit("0")} className="h-14 rounded-full bg-slate-800 text-xl font-black hover:bg-slate-700">0</button>
           <button type="button" onClick={() => setPin((current) => current.slice(0, -1))} className="h-14 rounded-full text-slate-400 hover:bg-slate-800" aria-label="Letzte Ziffer löschen">
             <Delete className="mx-auto h-5 w-5" />
           </button>
         </div>
 
         {mode === "setup" && (
-          <button
-            type="button"
-            disabled={pin.length < 4 || isWorking}
-            onClick={() => void completeSetup()}
-            className="mt-6 w-full rounded-xl bg-db-red px-4 py-3 text-sm font-black text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40"
-          >
+          <button type="button" disabled={pin.length !== PIN_LENGTH || isWorking} onClick={() => void completeSetup()} className="mt-6 w-full rounded-xl bg-db-red px-4 py-3 text-sm font-black text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40">
             {phase === "pin" ? "PIN übernehmen" : "PIN speichern und öffnen"}
           </button>
         )}
@@ -181,22 +164,12 @@ function readLockConfig() {
 async function createVerifier(pin, saltBase64) {
   const encoder = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey("raw", encoder.encode(pin), "PBKDF2", false, ["deriveBits"]);
-  const bits = await crypto.subtle.deriveBits(
-    {
-      name: "PBKDF2",
-      salt: base64ToBytes(saltBase64),
-      iterations: 150_000,
-      hash: "SHA-256",
-    },
-    keyMaterial,
-    256,
-  );
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt: base64ToBytes(saltBase64), iterations: 150_000, hash: "SHA-256" }, keyMaterial, 256);
   return bytesToBase64(new Uint8Array(bits));
 }
 
 function randomBase64(length) {
-  const bytes = crypto.getRandomValues(new Uint8Array(length));
-  return bytesToBase64(bytes);
+  return bytesToBase64(crypto.getRandomValues(new Uint8Array(length)));
 }
 
 function bytesToBase64(bytes) {
