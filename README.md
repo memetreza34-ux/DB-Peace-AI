@@ -2,6 +2,8 @@
 
 DB Peace AI ist ein lokaler Innovations- und Demonstrationsprototyp für Auszubildende. Die Anwendung ist **keine offizielle Deutsche-Bahn-Anwendung** und darf ohne fachliche, rechtliche und technische Freigabe nicht mit echten Fall-, Gesundheits- oder Personendaten betrieben werden.
 
+Aktueller Stabilisierungsstand: Branch `agent/mvp-stabilization`, Draft Pull Request #1. Die Roadmap für einen möglichen sicheren Pilotbetrieb wird in GitHub Issue #2 gepflegt.
+
 ## Voraussetzungen
 
 - Node.js 22
