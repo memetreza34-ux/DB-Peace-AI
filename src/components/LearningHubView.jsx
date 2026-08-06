@@ -1,267 +1,320 @@
-import React, { useState } from "react";
-import TrainingMode from "./TrainingMode.jsx";
-import { GraduationCap, ArrowLeft, ExternalLink, Globe, Award, UsersRound, Video, Search, TentTree } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import {
+  ArrowLeft,
+  Award,
+  BookOpenCheck,
+  GraduationCap,
+  Info,
+  Search,
+  TentTree,
+  UsersRound,
+  Video,
+} from "lucide-react";
 import coursesDataJSON from "../data/coursesData.json";
+import TrainingMode from "./TrainingMode.jsx";
 import { BildungsurlaubModal } from "./BildungsurlaubModal.jsx";
 import { CourseDetailModal } from "./CourseDetailModal.jsx";
 
-// Real-world course data
-const courseCategories = [
+const categoryDefinitions = [
   {
     id: "online",
-    title: "Kostenlose Online-Kurse",
-    icon: Globe,
-    desc: "Staatliche & NGO-Angebote, frei zugänglich.",
-    color: "blue",
-    textColor: "text-blue-500"
+    title: "Online-Angebote im Demo-Datensatz",
+    icon: BookOpenCheck,
+    description: "Ungeprüfte Beispiele für digitale Lernangebote.",
+    iconClass: "text-blue-600",
   },
   {
     id: "partner",
-    title: "Präsenz-Seminare & DB Partner",
+    title: "Präsenz- und Partnerbeispiele",
     icon: UsersRound,
-    desc: "Gewerkschaftliche Trainings und DB Initiativen.",
-    color: "emerald",
-    textColor: "text-emerald-500"
+    description: "Beispieldaten zu möglichen Seminaren und Trägern.",
+    iconClass: "text-emerald-600",
   },
   {
     id: "zertifikat",
-    title: "Zertifikatslehrgänge",
+    title: "Weiterbildungen mit behauptetem Abschluss",
     icon: Award,
-    desc: "Offizielle Kurse mit anerkanntem Abschluss.",
-    color: "red",
-    textColor: "text-red-500"
+    description: "Anerkennung und Abschluss müssen direkt beim Anbieter geprüft werden.",
+    iconClass: "text-red-600",
   },
   {
     id: "training",
-    title: "Interaktives App-Training",
+    title: "In-App-Demo-Training",
     icon: Video,
-    desc: "Unser In-App Szenario-Simulator für Zivilcourage.",
-    color: "amber",
-    textColor: "text-amber-500"
-  }
+    description: "Lokaler Szenario-Simulator ohne offiziellen Abschluss.",
+    iconClass: "text-amber-600",
+  },
 ];
 
 const coursesData = coursesDataJSON;
 
 export function LearningHubView() {
-  const [activeCategory, setActiveCategory] = useState(null); // null | 'online' | 'partner' | 'zertifikat' | 'training'
+  const [activeCategory, setActiveCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCourseForLeave, setSelectedCourseForLeave] = useState(null);
   const [selectedCourseDetail, setSelectedCourseDetail] = useState(null);
 
-  // Header UI
-  const renderHeader = () => (
-    <div className="rounded-md bg-gradient-to-r from-db-dark via-db-dark/90 to-db-rail p-6 text-white shadow-md relative overflow-hidden">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-2 max-w-2xl">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm backdrop-blur-md">
-            <GraduationCap className="h-3.5 w-3.5 text-amber-400" />
-            <span>Säule 3: Wissen & Prävention</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-            Kurs- & Seminar-Katalog
-          </h1>
-          <p className="text-sm font-medium text-white/80 leading-relaxed">
-            Über 150 offizielle Weiterbildungsangebote, Zertifikatslehrgänge und lokale Präsenz-Seminare.
-          </p>
-        </div>
-
-        {/* Search Bar */}
-        <div className="w-full md:w-72 relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-db-warm group-focus-within:text-db-red transition-colors" />
-          </div>
-          <input
-            type="text"
-            placeholder="Kurse durchsuchen..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/10 border border-white/20 rounded-xl py-3 pl-10 pr-4 text-sm font-semibold text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-db-red focus:bg-white/20 transition-all backdrop-blur-sm shadow-inner"
-          />
-        </div>
-      </div>
-    </div>
+  const allCourses = useMemo(
+    () => Object.values(coursesData).flat().map(normalizeCourse),
+    [],
   );
 
-  const allCourses = Object.values(coursesData).flat();
-  const filteredCourses = searchQuery.trim() !== ""
-    ? allCourses.filter(c =>
-        c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.provider.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()))
-      )
+  const filteredCourses = useMemo(() => {
+    const query = searchQuery.trim().toLocaleLowerCase("de-DE");
+    if (!query) return [];
+
+    return allCourses.filter((course) =>
+      [course.title, course.provider, course.description, course.tags.join(" ")]
+        .join(" ")
+        .toLocaleLowerCase("de-DE")
+        .includes(query),
+    );
+  }, [allCourses, searchQuery]);
+
+  const currentCategory = categoryDefinitions.find((category) => category.id === activeCategory);
+  const currentCourses = activeCategory && activeCategory !== "training"
+    ? (coursesData[activeCategory] || []).map(normalizeCourse)
     : [];
 
-  const renderCourse = (course) => (
-    <div key={course.id} className="rounded-md border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 sm:p-6 shadow-sm hover:shadow-md transition group">
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
-        <div className="space-y-3">
-          <div>
-            <h3 className="text-lg font-black text-db-dark dark:text-white">{course.title}</h3>
-            <p className="text-xs font-bold text-db-rail dark:text-white/60 uppercase tracking-wider">{course.provider}</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {course.tags.map(tag => (
-              <span key={tag} className="px-2.5 py-1 rounded bg-db-warm/50 dark:bg-db-dark/30 border border-db-dark/5 dark:border-white/5 text-[10px] font-bold text-db-dark dark:text-white">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <p className="text-sm font-semibold text-db-dark/80 dark:text-white/80 max-w-2xl leading-relaxed">
-            {course.desc}
-          </p>
-          {course.requirements && (
-            <div className="mt-3 rounded-lg bg-db-soft dark:bg-db-dark/30 p-3 border border-db-dark/5 dark:border-white/5">
-              <p className="text-xs font-bold text-db-dark dark:text-white mb-1">Was du dafür brauchst:</p>
-              <p className="text-xs font-semibold text-db-rail dark:text-white/60">{course.requirements}</p>
-            </div>
-          )}
-        </div>
-        <div className="shrink-0 pt-2 sm:pt-0 flex flex-col gap-2">
-          <button
-            onClick={() => setSelectedCourseDetail(course)}
-            className="inline-flex items-center gap-2 rounded-lg bg-db-dark px-4 py-2 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-sm w-full sm:w-auto justify-center"
-          >
-            Zum Kurs <ExternalLink className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => setSelectedCourseForLeave(course)}
-            className="inline-flex items-center gap-2 rounded-lg bg-teal-50 px-4 py-2 text-sm font-extrabold text-teal-700 hover:bg-teal-100 border border-teal-200 transition shadow-sm w-full sm:w-auto justify-center"
-          >
-            <TentTree className="h-4 w-4" /> Bildungsurlaub
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Search Results View
-  if (searchQuery.trim() !== "") {
+  function renderHeader() {
     return (
-      <div className="space-y-6 animate-fadeIn">
-        {renderHeader()}
-        
-        <div className="mb-6 border-b border-db-dark/10 dark:border-white/10 pb-4">
-          <h2 className="text-xl font-black text-db-dark dark:text-white flex items-center gap-2">
-            <Search className="h-6 w-6 text-db-dark dark:text-white" />
-            Suchergebnisse für "{searchQuery}"
-          </h2>
-          <p className="text-sm font-semibold text-db-rail dark:text-white/60 mt-1">
-            {filteredCourses.length} {filteredCourses.length === 1 ? "Kurs" : "Kurse"} gefunden
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4">
-          {filteredCourses.map(renderCourse)}
-          {filteredCourses.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-db-dark dark:text-white font-bold">Keine Kurse gefunden.</p>
-              <p className="text-sm text-db-rail dark:text-white/60">Probiere einen anderen Suchbegriff (z.B. "Online" oder "Konflikt").</p>
+      <header className="relative overflow-hidden rounded-xl bg-gradient-to-r from-db-dark to-slate-700 p-6 text-white shadow-md">
+        <div className="grid gap-6 md:grid-cols-[1fr_19rem] md:items-center">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-black text-red-100">
+              <GraduationCap className="h-4 w-4" aria-hidden="true" />
+              Lern- und Präventionsprototyp
             </div>
-          )}
-        </div>
+            <h1 className="mt-3 text-3xl font-black">Kurskatalog mit ungeprüften Demo-Einträgen</h1>
+            <p className="mt-3 text-sm font-semibold leading-6 text-white/70">
+              Der Datensatz enthält {allCourses.length} synthetische oder nicht verifizierte Einträge. Titel, Anbieter,
+              Termine, Kosten, Anerkennung und Verfügbarkeit können falsch oder veraltet sein.
+            </p>
+          </div>
 
-        <BildungsurlaubModal
-          course={selectedCourseForLeave}
-          onClose={() => setSelectedCourseForLeave(null)}
-        />
-        <CourseDetailModal
-          course={selectedCourseDetail}
-          onClose={() => setSelectedCourseDetail(null)}
+          <label className="relative block">
+            <span className="sr-only">Demo-Kurse durchsuchen</span>
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/50" aria-hidden="true" />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Demo-Einträge durchsuchen"
+              className="w-full rounded-xl border border-white/20 bg-white/10 py-3 pl-10 pr-4 text-sm font-semibold text-white outline-none placeholder:text-white/45 focus:border-white/50 focus:bg-white/15"
+            />
+          </label>
+        </div>
+      </header>
+    );
+  }
+
+  function renderNotice() {
+    return (
+      <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-950 dark:border-amber-800/50 dark:bg-amber-950/25 dark:text-amber-100">
+        <Info className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+        <p>
+          Diese Liste ist keine Empfehlung und keine Buchungsplattform. Vor jeder Anmeldung die offizielle Anbieter-Seite,
+          den aktuellen Termin, die Kosten, die Anerkennung und den betrieblichen Freistellungsprozess selbst prüfen.
+        </p>
+      </div>
+    );
+  }
+
+  function renderCourse(course) {
+    return (
+      <article
+        key={course.id}
+        className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm transition hover:border-db-dark/20 hover:shadow-md dark:border-white/10 dark:bg-white/5"
+      >
+        <div className="flex flex-col justify-between gap-5 lg:flex-row">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-violet-100 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-violet-800">
+                Demo-Eintrag
+              </span>
+              <span className="text-xs font-bold text-db-rail dark:text-white/50">{course.provider}</span>
+            </div>
+            <h2 className="mt-3 text-lg font-black text-db-dark dark:text-white">{course.title}</h2>
+            <p className="mt-3 max-w-3xl text-sm font-medium leading-7 text-db-rail dark:text-white/65">
+              {course.description}
+            </p>
+
+            {course.tags.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {course.tags.map((tag) => (
+                  <span key={tag} className="rounded-lg border border-db-dark/5 bg-db-soft px-2.5 py-1 text-[10px] font-black text-db-dark dark:border-white/10 dark:bg-white/5 dark:text-white/70">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="flex shrink-0 flex-col gap-2 sm:flex-row lg:w-48 lg:flex-col">
+            <button
+              type="button"
+              onClick={() => setSelectedCourseDetail(course.raw)}
+              className="rounded-xl bg-db-dark px-4 py-2.5 text-sm font-black text-white transition hover:bg-slate-700"
+            >
+              Details und Demo-Training
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedCourseForLeave(course.raw)}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-4 py-2.5 text-sm font-black text-teal-800 transition hover:bg-teal-100"
+            >
+              <TentTree className="h-4 w-4" aria-hidden="true" />
+              Prüfanfrage erstellen
+            </button>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
+  if (searchQuery.trim()) {
+    return (
+      <div className="space-y-6">
+        {renderHeader()}
+        {renderNotice()}
+        <section>
+          <h2 className="text-2xl font-black text-db-dark dark:text-white">Suchergebnisse</h2>
+          <p className="mt-1 text-sm font-semibold text-db-rail dark:text-white/60">
+            {filteredCourses.length} Demo-Einträge für „{searchQuery}“
+          </p>
+          <div className="mt-5 grid gap-4">
+            {filteredCourses.length > 0 ? filteredCourses.map(renderCourse) : (
+              <div className="rounded-xl border border-db-dark/10 bg-white p-8 text-center dark:border-white/10 dark:bg-white/5">
+                <p className="font-black text-db-dark dark:text-white">Keine passenden Demo-Einträge gefunden.</p>
+              </div>
+            )}
+          </div>
+        </section>
+        <Modals
+          selectedCourseDetail={selectedCourseDetail}
+          selectedCourseForLeave={selectedCourseForLeave}
+          setSelectedCourseDetail={setSelectedCourseDetail}
+          setSelectedCourseForLeave={setSelectedCourseForLeave}
         />
       </div>
     );
   }
 
-  // Grid Selection View
   if (!activeCategory) {
     return (
-      <div className="space-y-8 animate-fadeIn">
+      <div className="space-y-6">
         {renderHeader()}
-
-        <div className="text-center space-y-6 py-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 text-left">
-            {courseCategories.map((cat) => {
-              const Icon = cat.icon;
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className="group rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 hover:-translate-y-1 hover:border-db-dark dark:hover:border-white/50 transition shadow-sm relative overflow-hidden"
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <Icon className={`h-6 w-6 ${cat.textColor}`} />
-                    <span className="font-black text-db-dark dark:text-white text-lg group-hover:text-db-red dark:group-hover:text-db-red transition-colors">{cat.title}</span>
+        {renderNotice()}
+        <div className="grid gap-4 sm:grid-cols-2">
+          {categoryDefinitions.map((category) => {
+            const Icon = category.icon;
+            const count = category.id === "training" ? 1 : (coursesData[category.id] || []).length;
+            return (
+              <button
+                type="button"
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className="rounded-xl border border-db-dark/10 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-db-red hover:shadow-md dark:border-white/10 dark:bg-white/5"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <Icon className={`h-6 w-6 ${category.iconClass}`} aria-hidden="true" />
+                    <h2 className="font-black text-db-dark dark:text-white">{category.title}</h2>
                   </div>
-                  <p className="text-sm font-semibold text-db-rail dark:text-white/60">{cat.desc}</p>
-                </button>
-              );
-            })}
-          </div>
+                  <span className="rounded-full bg-db-soft px-2.5 py-1 text-xs font-black text-db-rail dark:bg-white/10 dark:text-white/60">{count}</span>
+                </div>
+                <p className="mt-3 text-sm font-medium leading-6 text-db-rail dark:text-white/60">{category.description}</p>
+              </button>
+            );
+          })}
         </div>
       </div>
     );
   }
 
-  // Detail View: In-App Training
   if (activeCategory === "training") {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6">
         {renderHeader()}
-        <button
-          onClick={() => setActiveCategory(null)}
-          className="flex items-center gap-2 text-sm font-bold text-db-rail dark:text-white/60 hover:text-db-red dark:hover:text-db-red transition"
-        >
-          <ArrowLeft className="h-4 w-4" /> Zurück zum Katalog
-        </button>
-        <div className="rounded-md bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 p-4 sm:p-6 shadow-sm">
+        <BackButton onClick={() => setActiveCategory(null)} />
+        {renderNotice()}
+        <div className="rounded-xl border border-db-dark/10 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-6">
           <TrainingMode />
         </div>
       </div>
     );
   }
 
-  // Detail View: External Courses (Online, Partner, Zertifikat)
-  const currentCategoryObj = courseCategories.find(c => c.id === activeCategory) || courseCategories[0];
-  const coursesList = coursesData[activeCategory] || [];
+  const CategoryIcon = currentCategory?.icon || GraduationCap;
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6">
       {renderHeader()}
-      
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => setActiveCategory(null)}
-          className="flex items-center gap-2 text-sm font-bold text-db-rail dark:text-white/60 hover:text-db-red dark:hover:text-db-red transition"
-        >
-          <ArrowLeft className="h-4 w-4" /> Zurück zum Katalog
-        </button>
-      </div>
-
-      <div className="mb-6 border-b border-db-dark/10 dark:border-white/10 pb-4">
-        <h2 className="text-xl font-black text-db-dark dark:text-white flex items-center gap-2">
-          <currentCategoryObj.icon className={`h-6 w-6 ${currentCategoryObj.textColor}`} />
-          {currentCategoryObj.title}
-        </h2>
-        <p className="text-sm font-semibold text-db-rail dark:text-white/60 mt-1">
-          {currentCategoryObj.desc}
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4">
-        {coursesList.map(renderCourse)}
-      </div>
-
-      <BildungsurlaubModal
-        course={selectedCourseForLeave}
-        onClose={() => setSelectedCourseForLeave(null)}
-      />
-
-      <CourseDetailModal
-        course={selectedCourseDetail}
-        onClose={() => setSelectedCourseDetail(null)}
+      <BackButton onClick={() => setActiveCategory(null)} />
+      {renderNotice()}
+      <section>
+        <div className="flex items-center gap-3 border-b border-db-dark/10 pb-4 dark:border-white/10">
+          <CategoryIcon className={`h-6 w-6 ${currentCategory?.iconClass || "text-db-red"}`} aria-hidden="true" />
+          <div>
+            <h2 className="text-2xl font-black text-db-dark dark:text-white">{currentCategory?.title}</h2>
+            <p className="mt-1 text-sm font-semibold text-db-rail dark:text-white/60">{currentCategory?.description}</p>
+          </div>
+        </div>
+        <div className="mt-5 grid gap-4">{currentCourses.map(renderCourse)}</div>
+      </section>
+      <Modals
+        selectedCourseDetail={selectedCourseDetail}
+        selectedCourseForLeave={selectedCourseForLeave}
+        setSelectedCourseDetail={setSelectedCourseDetail}
+        setSelectedCourseForLeave={setSelectedCourseForLeave}
       />
     </div>
   );
+}
+
+function BackButton({ onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center gap-2 rounded-xl border border-db-dark/10 bg-white px-4 py-2 text-sm font-black text-db-dark hover:border-db-red hover:text-db-red dark:border-white/10 dark:bg-white/5 dark:text-white"
+    >
+      <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+      Zurück zu den Kategorien
+    </button>
+  );
+}
+
+function Modals({
+  selectedCourseDetail,
+  selectedCourseForLeave,
+  setSelectedCourseDetail,
+  setSelectedCourseForLeave,
+}) {
+  return (
+    <>
+      <BildungsurlaubModal course={selectedCourseForLeave} onClose={() => setSelectedCourseForLeave(null)} />
+      <CourseDetailModal course={selectedCourseDetail} onClose={() => setSelectedCourseDetail(null)} />
+    </>
+  );
+}
+
+function normalizeCourse(course) {
+  const raw = course || {};
+  return {
+    id: String(raw.id || `${raw.provider || "demo"}-${raw.title || "course"}`),
+    title: String(raw.title || "Unbenannter Demo-Eintrag").slice(0, 180),
+    provider: String(raw.provider || "Anbieter nicht verifiziert").slice(0, 140),
+    description: sanitizeDemoText(raw.desc || "Keine Beschreibung hinterlegt."),
+    tags: Array.isArray(raw.tags) ? raw.tags.map((tag) => String(tag).slice(0, 50)).slice(0, 8) : [],
+    raw,
+  };
+}
+
+function sanitizeDemoText(value) {
+  return String(value)
+    .replace(/offizielles angebot/gi, "Ungeprüfter Demo-Eintrag")
+    .replace(/offiziell anerkannt/gi, "laut Demo-Datensatz anerkannt")
+    .replace(/anerkannter abschluss/gi, "im Demo-Datensatz behaupteter Abschluss")
+    .slice(0, 1_200);
 }
