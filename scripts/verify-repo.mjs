@@ -92,6 +92,9 @@ const packageJson = parseJson("package.json");
 if (packageJson?.scripts?.check !== "npm run verify && npm run build") {
   failures.push("package.json muss den kombinierten Check aus Verify und Build enthalten.");
 }
+if (packageJson?.engines?.node !== ">=22 <23") {
+  failures.push("package.json muss Node.js 22 als unterstützte Laufzeit festlegen.");
+}
 
 const serviceWorker = read("public/sw.js");
 if (!serviceWorker.includes('url.pathname.startsWith("/api/")')) {
