@@ -1,401 +1,168 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  User, 
-  FolderLock, 
-  LineChart, 
-  Bookmark, 
-  Award,
-  FileText,
-  Clock,
-  ChevronRight,
-  ShieldCheck,
-  Video,
-  Inbox,
-  MessageSquare,
-  Send,
-  Download,
-  Trash2,
-  Shield,
-  Eye,
-  Lock,
-  ArrowRight,
-  Star
-} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { BookOpen, FileText, FlaskConical, Inbox, Send, Trash2 } from "lucide-react";
 import { mockTicketsData, subscribeToTickets, updateTickets } from "../data/mockTickets";
 
+const demoCourses = [
+  { title: "Zivilcourage im Arbeitsalltag", duration: "15 Min.", status: "Demo-Merkliste" },
+  { title: "Konflikte früh ansprechen", duration: "20 Min.", status: "Demo-Merkliste" },
+];
+
 export function ProfileView() {
-  const [activeTab, setActiveTab] = useState("postfach");
+  const [activeTab, setActiveTab] = useState("inbox");
   const [tickets, setTickets] = useState([...mockTicketsData]);
-  const [selectedTicketId, setSelectedTicketId] = useState(null);
+  const [selectedTicketId, setSelectedTicketId] = useState(mockTicketsData[0]?.id || null);
   const [replyText, setReplyText] = useState("");
 
-  useEffect(() => {
-    const unsubscribe = subscribeToTickets((newTickets) => {
-      setTickets([...newTickets]);
-    });
-    return () => unsubscribe();
-  }, []);
+  useEffect(() => subscribeToTickets((nextTickets) => setTickets([...nextTickets])), []);
 
-  const handleSendReply = (e) => {
-    e.preventDefault();
-    const selectedTicket = tickets.find(t => t.id === selectedTicketId);
-    if (!replyText.trim() || !selectedTicket) return;
+  const selectedTicket = tickets.find((ticket) => ticket.id === selectedTicketId) || null;
 
-    const newMsg = {
-      id: Date.now(),
-      sender: "azubi",
-      text: replyText,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
+  function sendDemoReply(event) {
+    event.preventDefault();
+    const text = replyText.trim();
+    if (!text || !selectedTicket) return;
 
-    const updatedTickets = tickets.map(t => {
-      if (t.id === selectedTicket.id) {
-        return { ...t, messages: [...t.messages, newMsg] };
-      }
-      return t;
-    });
-
-    updateTickets(updatedTickets);
+    const updated = tickets.map((ticket) => ticket.id === selectedTicket.id
+      ? {
+          ...ticket,
+          messages: [
+            ...ticket.messages,
+            {
+              id: Date.now(),
+              sender: "azubi",
+              text,
+              timestamp: new Intl.DateTimeFormat("de-DE", { hour: "2-digit", minute: "2-digit" }).format(new Date()),
+            },
+          ],
+        }
+      : ticket);
+    updateTickets(updated);
     setReplyText("");
-  };
+  }
 
-  // Mock Data for the Profile Collections
-  const savedRecords = [
-    {
-      id: 1,
-      date: "2026-07-20",
-      time: "14:15",
-      category: "Beleidigung & Ausgrenzung",
-      description: "Wiederholte abwertende Sprüche während der Teambesprechung.",
-    }
-  ];
+  function resetDemoInbox() {
+    updateTickets(mockTicketsData.map((ticket) => ({ ...ticket, messages: [...ticket.messages] })));
+    setReplyText("");
+  }
 
-  const moodHistory = [
-    { date: "Heute", mood: "Gut", icon: "🙂", color: "text-emerald-500" },
-    { date: "Gestern", mood: "Gestresst", icon: "😞", color: "text-red-500" },
-    { date: "Vorgestern", mood: "Okay", icon: "😐", color: "text-amber-500" },
-  ];
+  return (
+    <section className="space-y-6">
+      <header className="rounded-xl bg-gradient-to-r from-db-dark to-db-rail p-6 text-white shadow-md">
+        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-black text-violet-200">
+          <FlaskConical className="h-3.5 w-3.5" />
+          Demo-Sammlung
+        </div>
+        <h1 className="mt-3 text-3xl font-black">Sammlung und Beispiel-Postfach</h1>
+        <p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-white/70">
+          Dieser Bereich enthält keine echten Profile, Meldungen, Zertifikate oder DB-Nachrichten. Er demonstriert ausschließlich mögliche Bedienabläufe mit erfundenen Daten.
+        </p>
+      </header>
 
-  const savedCourses = [
-    {
-      title: "Zivilcourage im Zug",
-      duration: "15 Min",
-      type: "Video-Training",
-    },
-    {
-      title: "Grenzen setzen lernen",
-      duration: "20 Min",
-      type: "Interaktiver Kurs",
-    }
-  ];
+      <div className="flex flex-wrap gap-2 rounded-xl bg-db-dark/5 p-1.5 dark:bg-white/5">
+        <TabButton active={activeTab === "inbox"} onClick={() => setActiveTab("inbox")} icon={Inbox}>Demo-Postfach</TabButton>
+        <TabButton active={activeTab === "records"} onClick={() => setActiveTab("records")} icon={FileText}>Protokolle</TabButton>
+        <TabButton active={activeTab === "courses"} onClick={() => setActiveTab("courses")} icon={BookOpen}>Merkliste</TabButton>
+      </div>
 
-  const badges = [
-    {
-      title: "DB Peace Guardian",
-      description: "Hat alle Quiz-Fragen richtig beantwortet.",
-      icon: ShieldCheck,
-      color: "text-amber-500",
-      bg: "bg-amber-500/20"
-    }
-  ];
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case "postfach":
-        const selectedTicket = tickets.find(t => t.id === selectedTicketId);
-        return (
-          <div className="space-y-4">
-            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Meine Meldungen & Postfach</h3>
-            <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-6">
-              Hier siehst du deine eingereichten, anonymen Meldungen und kannst sicher mit den Bearbeitern (JAV, HR) schreiben.
-            </p>
-            
-            <div className="flex flex-col lg:flex-row gap-4 h-[500px]">
-              {/* Inbox List */}
-              <div className="w-full lg:w-1/3 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 flex flex-col overflow-hidden shrink-0">
-                 <div className="overflow-y-auto flex-1 p-2 space-y-2">
-                   {tickets.map(ticket => (
-                     <button
-                       key={ticket.id}
-                       onClick={() => setSelectedTicketId(ticket.id)}
-                       className={`w-full text-left p-4 rounded-xl border transition-all ${selectedTicketId === ticket.id ? 'border-db-red bg-db-red/5 dark:bg-db-red/10' : 'border-transparent hover:bg-db-dark/5 dark:hover:bg-white/5'}`}
-                     >
-                       <div className="flex justify-between items-start mb-1">
-                          <span className="font-black text-db-dark dark:text-white text-sm">{ticket.id}</span>
-                          <span className="bg-db-dark/5 dark:bg-white/10 text-db-dark dark:text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded">{ticket.status}</span>
-                       </div>
-                       <p className="text-xs font-bold text-db-rail dark:text-white/60 mb-2 truncate">{ticket.category}</p>
-                     </button>
-                   ))}
-                 </div>
-              </div>
-
-              {/* Chat Area */}
-              <div className="w-full lg:w-2/3 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 flex flex-col overflow-hidden">
-                {selectedTicket ? (
-                  <>
-                    <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
-                       {selectedTicket.messages.map(msg => (
-                          <div key={msg.id} className={`flex ${msg.sender === 'azubi' ? 'justify-end' : 'justify-start'}`}>
-                            {msg.sender === 'system' ? (
-                              <div className="w-full text-center py-2">
-                                 <span className="text-[10px] font-bold uppercase text-db-rail dark:text-white/40 bg-db-dark/5 dark:bg-white/5 px-3 py-1 rounded-full">{msg.text}</span>
-                              </div>
-                            ) : (
-                              <div className={`max-w-[85%] rounded-md p-4 ${msg.sender === 'azubi' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-db-soft dark:bg-white/5 text-db-dark dark:text-white rounded-tl-sm border border-db-dark/10 dark:border-white/10'}`}>
-                                 <div className="flex items-center gap-2 mb-1 opacity-70 text-[10px] font-bold uppercase tracking-wider">
-                                    {msg.sender === 'azubi' ? 'Du' : 'HR / Vorgesetzter'} • {msg.timestamp}
-                                 </div>
-                                 <p className="text-sm font-medium">{msg.text}</p>
-                              </div>
-                            )}
-                          </div>
-                       ))}
-                    </div>
-                    <div className="p-3 border-t border-db-dark/10 dark:border-white/10 bg-white dark:bg-transparent shrink-0">
-                       <form onSubmit={handleSendReply} className="flex gap-2">
-                          <input 
-                            type="text" 
-                            value={replyText}
-                            onChange={(e) => setReplyText(e.target.value)}
-                            placeholder="Anonym antworten..."
-                            className="flex-1 bg-db-dark/5 dark:bg-white/5 border border-db-dark/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-db-dark dark:text-white focus:outline-none focus:border-db-red"
-                          />
-                          <button 
-                            type="submit"
-                            disabled={!replyText.trim() || selectedTicket.status === 'closed'}
-                            className="bg-db-red text-white p-3 rounded-xl hover:bg-red-700 transition disabled:opacity-50"
-                          >
-                             <Send className="w-5 h-5" />
-                          </button>
-                       </form>
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center text-db-rail dark:text-white/40 p-8 text-center">
-                     <Inbox className="w-12 h-12 mb-4 opacity-20" />
-                     <h3 className="text-sm font-black">Wähle eine Meldung aus</h3>
-                  </div>
-                )}
-              </div>
-            </div>
+      {activeTab === "inbox" && (
+        <div className="space-y-4">
+          <div className="flex flex-col gap-3 rounded-xl border border-violet-200 bg-violet-50 p-4 text-sm font-semibold leading-6 text-violet-950 dark:border-violet-900/50 dark:bg-violet-950/25 dark:text-violet-200 sm:flex-row sm:items-center sm:justify-between">
+            <span>Alle Fälle und Nachrichten sind erfunden und bleiben nur im lokalen Demo-Zustand.</span>
+            <button type="button" onClick={resetDemoInbox} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-violet-300 px-3 py-2 text-xs font-black hover:bg-white/40 dark:border-violet-800">
+              <Trash2 className="h-3.5 w-3.5" />
+              Demo zurücksetzen
+            </button>
           </div>
-        );
-      case "protokolle":
-        return (
-          <div className="space-y-4">
-            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Meine Gedächtnisprotokolle</h3>
-            <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-6">
-              Diese Einträge sind lokal verschlüsselt und nur für dich sichtbar.
-            </p>
-            {savedRecords.map(record => (
-              <div key={record.id} className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm hover:shadow-md transition">
-                <div className="flex items-center gap-2 text-xs font-bold text-db-rail dark:text-white/60 mb-2">
-                  <Clock className="w-3 h-3" />
-                  {record.date} • {record.time}
-                </div>
-                <h4 className="font-black text-db-dark dark:text-white text-lg mb-1">{record.category}</h4>
-                <p className="text-sm text-db-dark/80 dark:text-white/80">{record.description}</p>
-                <div className="mt-4 flex gap-2">
-                  <button 
-                    onClick={() => alert("Funktion 'Bearbeiten' ist in der aktuellen Demo-Version noch nicht verfügbar.")}
-                    className="text-xs font-bold bg-db-dark/5 dark:bg-white/5 hover:bg-db-dark/10 dark:hover:bg-white/10 px-3 py-1.5 rounded-lg text-db-dark dark:text-white transition"
-                  >
-                    Bearbeiten
-                  </button>
-                  <button 
-                    onClick={() => alert("Funktion 'Meldung erstellen' ist in der aktuellen Demo-Version noch nicht verfügbar.")}
-                    className="text-xs font-bold bg-db-red/10 hover:bg-db-red/20 text-db-red px-3 py-1.5 rounded-lg transition"
-                  >
-                    Meldung daraus erstellen
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        );
-      case "stimmung":
-        return (
-          <div className="space-y-4">
-            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Stimmungs-Verlauf</h3>
-            <div className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-6 shadow-sm">
-              <div className="space-y-6">
-                {moodHistory.map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between border-b border-db-dark/5 dark:border-white/5 pb-4 last:border-0 last:pb-0">
-                    <div>
-                      <div className="text-xs font-bold text-db-rail dark:text-white/60 mb-1">{item.date}</div>
-                      <div className="font-black text-db-dark dark:text-white">{item.mood}</div>
+
+          <div className="grid min-h-[540px] gap-4 lg:grid-cols-[0.75fr_1.25fr]">
+            <div className="overflow-hidden rounded-xl border border-db-dark/10 bg-white dark:border-white/10 dark:bg-db-dark/50">
+              <div className="border-b border-db-dark/10 bg-db-soft p-4 text-xs font-black uppercase tracking-wide text-db-rail dark:border-white/10 dark:bg-white/5 dark:text-white/60">Erfundene Fälle</div>
+              <div className="divide-y divide-db-dark/5 dark:divide-white/5">
+                {tickets.map((ticket) => (
+                  <button key={ticket.id} type="button" onClick={() => setSelectedTicketId(ticket.id)} className={`w-full p-4 text-left transition ${selectedTicketId === ticket.id ? "border-l-4 border-violet-600 bg-violet-50/70 dark:bg-violet-950/20" : "border-l-4 border-transparent hover:bg-db-soft dark:hover:bg-white/5"}`}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-black text-db-dark dark:text-white">{ticket.id}</p>
+                        <p className="mt-1 text-sm font-bold text-db-rail dark:text-white/60">{ticket.category}</p>
+                      </div>
+                      <span className="rounded-full bg-db-soft px-2 py-1 text-[9px] font-black uppercase text-db-rail dark:bg-white/10 dark:text-white/60">Demo</span>
                     </div>
-                    <div className={`text-4xl ${item.color}`}>{item.icon}</div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
-          </div>
-        );
-      case "kurse":
-        return (
-          <div className="space-y-4">
-            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Gemerkte Kurse</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {savedCourses.map((course, idx) => (
-                <div key={idx} className="group bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm hover:border-db-red dark:hover:border-db-red transition cursor-pointer flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 text-xs font-bold text-db-rail dark:text-white/60 mb-2 uppercase tracking-wider">
-                      <Video className="w-3 h-3" />
-                      {course.type}
-                    </div>
-                    <h4 className="font-black text-db-dark dark:text-white text-lg group-hover:text-db-red transition">{course.title}</h4>
-                  </div>
-                  <div className="mt-6 flex items-center justify-between">
-                    <span className="text-xs font-bold text-db-dark/70 dark:text-white/70">{course.duration}</span>
-                    <ChevronRight className="w-5 h-5 text-db-dark/30 dark:text-white/30 group-hover:text-db-red transition translate-x-0 group-hover:translate-x-1" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      case "abzeichen":
-        return (
-          <div className="space-y-4">
-            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Meine Erfolge</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {badges.map((badge, idx) => {
-                const Icon = badge.icon;
-                return (
-                  <div key={idx} className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm flex items-start gap-4">
-                    <div className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${badge.bg}`}>
-                      <Icon className={`w-8 h-8 ${badge.color}`} />
-                    </div>
-                    <div>
-                      <h4 className="font-black text-db-dark dark:text-white text-lg">{badge.title}</h4>
-                      <p className="text-sm font-medium text-db-dark/70 dark:text-white/70 mt-1">{badge.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
 
+            <div className="flex min-h-[540px] flex-col overflow-hidden rounded-xl border border-db-dark/10 bg-white dark:border-white/10 dark:bg-db-dark/50">
+              {selectedTicket ? (
+                <>
+                  <div className="border-b border-db-dark/10 bg-db-soft p-4 dark:border-white/10 dark:bg-white/5">
+                    <p className="text-[10px] font-black uppercase tracking-wide text-violet-700 dark:text-violet-300">Erfundener Dialog</p>
+                    <h2 className="mt-1 font-black text-db-dark dark:text-white">{selectedTicket.id} · {selectedTicket.category}</h2>
+                  </div>
+                  <div className="flex-1 space-y-4 overflow-y-auto p-4">
+                    {selectedTicket.messages.map((message) => (
+                      <div key={message.id} className={`flex ${message.sender === "azubi" ? "justify-end" : "justify-start"}`}>
+                        <div className={`max-w-[86%] rounded-xl px-4 py-3 text-sm font-medium leading-6 ${message.sender === "azubi" ? "rounded-br-sm bg-db-red text-white" : "rounded-bl-sm border border-db-dark/10 bg-db-soft text-db-dark dark:border-white/10 dark:bg-white/5 dark:text-white"}`}>
+                          <p className="mb-1 text-[9px] font-black uppercase tracking-wide opacity-60">{message.sender === "azubi" ? "Demo-Nutzer" : "Demo-System"} · {message.timestamp}</p>
+                          {message.text}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <form onSubmit={sendDemoReply} className="border-t border-db-dark/10 p-4 dark:border-white/10">
+                    <p className="mb-2 text-[10px] font-bold text-db-rail dark:text-white/50">Die Antwort wird nicht gesendet und nur im Demo-Zustand ergänzt.</p>
+                    <div className="flex gap-2">
+                      <input value={replyText} onChange={(event) => setReplyText(event.target.value.slice(0, 800))} maxLength={800} placeholder="Demo-Antwort …" className="min-w-0 flex-1 rounded-xl border border-db-dark/15 bg-white px-4 py-2.5 text-sm text-db-dark outline-none focus:border-db-red dark:border-white/15 dark:bg-db-dark/40 dark:text-white" />
+                      <button type="submit" disabled={!replyText.trim()} className="flex h-11 w-11 items-center justify-center rounded-xl bg-db-red text-white disabled:opacity-40" aria-label="Demo-Antwort ergänzen"><Send className="h-4 w-4" /></button>
+                    </div>
+                  </form>
+                </>
+              ) : (
+                <div className="flex flex-1 items-center justify-center p-8 text-center text-sm font-semibold text-db-rail dark:text-white/50">Wähle einen erfundenen Fall aus.</div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "records" && (
+        <EmptyCollection
+          icon={FileText}
+          title="Protokolle liegen im Bereich „Festhalten & Melden“"
+          text="Der Prototyp besitzt bewusst kein zentrales Nutzerkonto und keine verschlüsselte Cloud-Sammlung. Entwürfe müssen dort als PDF exportiert werden."
+        />
+      )}
+
+      {activeTab === "courses" && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {demoCourses.map((course) => (
+            <article key={course.title} className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-db-dark/50">
+              <span className="rounded-full bg-violet-50 px-2.5 py-1 text-[10px] font-black uppercase text-violet-700 dark:bg-violet-950/30 dark:text-violet-300">{course.status}</span>
+              <h2 className="mt-4 text-lg font-black text-db-dark dark:text-white">{course.title}</h2>
+              <p className="mt-2 text-sm font-semibold text-db-rail dark:text-white/60">{course.duration} · nicht mit einem Nutzerkonto synchronisiert</p>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function TabButton({ active, children, icon: Icon, onClick }) {
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="max-w-4xl mx-auto py-8 px-4 sm:px-6"
-    >
-      {/* Profile Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-10 bg-db-dark p-8 rounded-lg shadow-md shadow-db-dark/10 relative overflow-hidden">
-        <div className="absolute -top-20 -right-20 opacity-5 pointer-events-none">
-          <User className="w-80 h-80 text-white" />
-        </div>
-        <div className="relative z-10 w-24 h-24 rounded-full bg-db-red flex items-center justify-center border-4 border-white/20 shadow-lg shrink-0">
-          <User className="w-12 h-12 text-white" />
-        </div>
-        <div className="relative z-10 text-white flex-1">
-          <h1 className="text-3xl font-black mb-1">Mein DB Peace</h1>
-          <p className="text-white/70 font-medium mb-4">Dein sicherer, privater Raum.</p>
-          <div className="flex gap-4">
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 flex items-center gap-3">
-              <div className="bg-amber-400/20 p-2 rounded-lg text-amber-400">
-                <Star className="w-5 h-5 fill-amber-400" />
-              </div>
-              <div>
-                <div className="text-xs font-bold text-white/60 uppercase tracking-wider">Level 3 • Zivilcourage Experte</div>
-                <div className="font-black text-xl">850 DB Peace Points</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <button type="button" onClick={onClick} className={`inline-flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-black transition sm:flex-none ${active ? "bg-white text-db-dark shadow-sm dark:bg-db-dark dark:text-white" : "text-db-rail dark:text-white/60"}`}>
+      <Icon className="h-4 w-4" />
+      {children}
+    </button>
+  );
+}
 
-      {/* Tabs Layout */}
-      <div className="flex flex-col md:flex-row gap-8">
-        
-        {/* Sidebar Nav */}
-        <div className="w-full md:w-64 shrink-0 space-y-2">
-          <button 
-            onClick={() => setActiveTab("postfach")}
-            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold transition-all ${
-              activeTab === "postfach" 
-                ? "bg-db-red text-white shadow-md" 
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <Inbox className="w-5 h-5" /> Postfach
-            </div>
-            <div className="bg-db-dark/20 text-xs px-2 py-0.5 rounded-full">{tickets.length}</div>
-          </button>
-          
-          <button 
-            onClick={() => setActiveTab("protokolle")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
-              activeTab === "protokolle" 
-                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-md" 
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
-            }`}
-          >
-            <FolderLock className="w-5 h-5" /> Gedächtnisprotokolle
-          </button>
-          
-          <button 
-            onClick={() => setActiveTab("stimmung")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
-              activeTab === "stimmung" 
-                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-md" 
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
-            }`}
-          >
-            <LineChart className="w-5 h-5" /> Stimmungs-Verlauf
-          </button>
-          
-          <button 
-            onClick={() => setActiveTab("kurse")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
-              activeTab === "kurse" 
-                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-md" 
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
-            }`}
-          >
-            <Bookmark className="w-5 h-5" /> Gemerkte Kurse
-          </button>
-          
-          <button 
-            onClick={() => setActiveTab("abzeichen")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
-              activeTab === "abzeichen" 
-                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-md" 
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
-            }`}
-          >
-            <Award className="w-5 h-5" /> Erfolge & Abzeichen
-          </button>
-        </div>
-
-        {/* Main Content Area */}
-        <div className="flex-1">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              {renderContent()}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-      </div>
-    </motion.div>
+function EmptyCollection({ icon: Icon, title, text }) {
+  return (
+    <div className="rounded-xl border border-dashed border-db-dark/15 bg-white py-14 text-center dark:border-white/15 dark:bg-db-dark/50">
+      <Icon className="mx-auto h-11 w-11 text-db-dark/15 dark:text-white/15" />
+      <h2 className="mt-4 text-xl font-black text-db-dark dark:text-white">{title}</h2>
+      <p className="mx-auto mt-2 max-w-xl text-sm font-semibold leading-6 text-db-rail dark:text-white/60">{text}</p>
+    </div>
   );
 }
