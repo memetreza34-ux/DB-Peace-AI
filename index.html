@@ -3,16 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self';" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; form-action 'self';"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="color-scheme" content="light dark" />
     <meta
       name="description"
-      content="DB Peace AI ist ein lokaler Demo-Prototyp für KI-unterstützte Prävention gegen Hass, Gewalt, Mobbing und Arbeitsplatzkonflikte."
+      content="DB Peace AI ist ein lokaler Demonstrationsprototyp für Orientierung, Prävention und strukturierte Meldungsentwürfe. Keine offizielle DB-Anwendung."
     />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#F1142A" />
-    <title>DB Peace AI</title>
+    <meta name="theme-color" content="#e2001a" />
+    <title>DB Peace AI – Prototyp</title>
   </head>
   <body>
+    <noscript>DB Peace AI benötigt JavaScript.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
