@@ -3,6 +3,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const failures = [];
+const verifierPath = path.join(root, "scripts", "verify-repo.mjs");
 
 const requiredFiles = [
   "index.html",
@@ -12,60 +13,51 @@ const requiredFiles = [
   "src/App.jsx",
   "public/manifest.json",
   "public/sw.js",
+  "public/icon.svg",
   ".env.example",
   "SECURITY.md",
   "docs/MVP-STATUS.md",
 ];
 
 for (const relativePath of requiredFiles) {
-  if (!fs.existsSync(path.join(root, relativePath))) {
-    failures.push(`Pflichtdatei fehlt: ${relativePath}`);
-  }
+  if (!fs.existsSync(path.join(root, relativePath))) failures.push(`Pflichtdatei fehlt: ${relativePath}`);
 }
 
 const textFiles = [];
 walk(root);
 
 const forbiddenPatterns = [
-  {
-    pattern: /CORRECT_PIN\s*=\s*["']1234["']/,
-    message: "Fest codierter Demo-PIN 1234 gefunden.",
-  },
-  {
-    pattern: /0800\s*1234567/,
-    message: "Platzhalter-Telefonnummer für DB Sicherheit gefunden.",
-  },
-  {
-    pattern: /GPS wird gesendet|Standort übermittelt\. Anruf startet/,
-    message: "Nicht implementierte Standortübertragung wird behauptet.",
-  },
-  {
-    pattern: /Live Sync API \(Stand: Heute\)/,
-    message: "Statische Rechtsdaten werden als Live-Sync bezeichnet.",
-  },
-  {
-    pattern: /Eingaben werden lokal gespeichert und später synchronisiert/,
-    message: "Nicht implementierte Offline-Synchronisation wird behauptet.",
-  },
+  [/CORRECT_PIN\s*=\s*["']1234["']/, "Fest codierter Demo-PIN 1234 gefunden."],
+  [/0800\s*1234567/, "Platzhalter-Telefonnummer für DB Sicherheit gefunden."],
+  [/GPS wird gesendet|Standort übermittelt\. Anruf startet/i, "Nicht implementierte Standortübertragung wird behauptet."],
+  [/Live Sync API(?: \(Stand: Heute\))?/i, "Statische Daten werden als Live-Sync bezeichnet."],
+  [/Eingaben werden lokal gespeichert und später synchronisiert/i, "Nicht implementierte Offline-Synchronisation wird behauptet."],
+  [/Mit DB Azure AD anmelden/i, "Simulierte Unternehmensanmeldung wird als echte Anmeldung dargestellt."],
+  [/HSMS Verschlüsselt|AGG-Geprüft/i, "Unbelegte Sicherheits- oder Compliance-Aussage gefunden."],
+  [/Sicher\s*&\s*verschlüsselt anhängen/i, "Nicht implementierte verschlüsselte Dateiübertragung wird behauptet."],
+  [/Deine DB-Profildaten werden.*mitgesendet/i, "Nicht vorhandene DB-Profilintegration wird behauptet."],
+  [/lokal verschlüsselt und nur für dich sichtbar/i, "Nicht implementierte lokale Verschlüsselung wird behauptet."],
 ];
 
 for (const filePath of textFiles) {
+  if (filePath === verifierPath) continue;
   const content = fs.readFileSync(filePath, "utf8");
-  for (const rule of forbiddenPatterns) {
-    if (rule.pattern.test(content)) {
-      failures.push(`${path.relative(root, filePath)}: ${rule.message}`);
-    }
+  for (const [pattern, message] of forbiddenPatterns) {
+    if (pattern.test(content)) failures.push(`${path.relative(root, filePath)}: ${message}`);
   }
 }
 
 const envExample = read(".env.example");
-if (!envExample.includes("GEMINI_API_KEY")) {
-  failures.push(".env.example muss GEMINI_API_KEY dokumentieren.");
-}
+if (!envExample.includes("GEMINI_API_KEY")) failures.push(".env.example muss GEMINI_API_KEY dokumentieren.");
 
 const readme = read("README.md");
 if (!readme.includes("keine offizielle Deutsche-Bahn-Anwendung")) {
   failures.push("README muss den Prototyp-Status eindeutig nennen.");
+}
+
+const serviceWorker = read("public/sw.js");
+if (!serviceWorker.includes('url.pathname.startsWith("/api/")')) {
+  failures.push("Der Service Worker muss API-Antworten ausdrücklich vom Cache ausschließen.");
 }
 
 if (failures.length > 0) {
@@ -74,7 +66,7 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Repository-Prüfung erfolgreich: ${textFiles.length} Textdateien geprüft.`);
+console.log(`Repository-Prüfung erfolgreich: ${textFiles.length - 1} Textdateien geprüft.`);
 
 function read(relativePath) {
   const filePath = path.join(root, relativePath);
@@ -90,8 +82,6 @@ function walk(directory) {
       walk(entryPath);
       continue;
     }
-    if (/\.(?:js|jsx|mjs|json|md|html|css|yml|yaml|example)$/.test(entry.name)) {
-      textFiles.push(entryPath);
-    }
+    if (/\.(?:js|jsx|mjs|json|md|html|css|yml|yaml|example|svg)$/.test(entry.name)) textFiles.push(entryPath);
   }
 }
