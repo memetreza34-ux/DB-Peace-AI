@@ -114,9 +114,14 @@ function isRateLimited(req) {
   return current.count > RATE_LIMIT_MAX_REQUESTS;
 }
 
-async function handleChat(req, res) {
+function createAi() {
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
+  return apiKey ? new GoogleGenAI({ apiKey }) : null;
+}
+
+async function handleChat(req, res) {
+  const ai = createAi();
+  if (!ai) {
     sendJson(res, 503, {
       error: "missing_api_key",
       reply: "",
@@ -132,7 +137,6 @@ async function handleChat(req, res) {
     return;
   }
 
-  const ai = new GoogleGenAI({ apiKey });
   const history = messages.slice(0, -1);
   const lastMessage = messages.at(-1).parts[0].text;
   const chat = ai.chats.create({
@@ -152,14 +156,68 @@ async function handleChat(req, res) {
   });
 }
 
+async function handleReportExtraction(req, res) {
+  const ai = createAi();
+  if (!ai) {
+    sendJson(res, 503, { error: "missing_api_key", report: null });
+    return;
+  }
+
+  const payload = await readJson(req);
+  const sourceText = String(payload.text || "").trim().slice(0, 4_000);
+  if (sourceText.length < 20) {
+    sendJson(res, 400, { error: "text_too_short", report: null });
+    return;
+  }
+
+  const chat = ai.chats.create({
+    model: MODEL,
+    config: {
+      systemInstruction: [
+        "Du strukturierst einen vom Nutzer selbst verfassten Vorfallstext für einen lokalen Demonstrationsprototyp.",
+        "Erfinde keine Fakten und keine internen DB-Regeln.",
+        "Antworte ausschließlich mit einem JSON-Objekt.",
+        "Keys exakt: category, description, date, time, location, witnesses, urgency, missingFields.",
+        "category, description, date, time, location, witnesses und urgency sind Strings.",
+        "missingFields ist ein Array aus kurzen Strings.",
+        "Nutze 'Nicht angegeben', wenn eine Angabe fehlt.",
+        "urgency ist nur einer der Werte: niedrig, mittel, hoch, akut.",
+        "Bei Drohung, Gewalt oder unmittelbarer Gefahr urgency auf hoch oder akut setzen.",
+      ].join(" "),
+      temperature: 0.2,
+    },
+  });
+
+  const response = await chat.sendMessage({ message: sourceText });
+  const parsed = parseJsonObject(response.text);
+  if (!parsed) {
+    sendJson(res, 502, { error: "invalid_model_response", report: null });
+    return;
+  }
+
+  const report = {
+    category: cleanString(parsed.category, 120, "Vorfall / Konflikt"),
+    description: cleanString(parsed.description, 2_500, sourceText),
+    date: cleanString(parsed.date, 80, "Nicht angegeben"),
+    time: cleanString(parsed.time, 80, "Nicht angegeben"),
+    location: cleanString(parsed.location, 180, "Nicht angegeben"),
+    witnesses: cleanString(parsed.witnesses, 300, "Nicht angegeben"),
+    urgency: normalizeUrgency(parsed.urgency),
+    missingFields: Array.isArray(parsed.missingFields)
+      ? parsed.missingFields.slice(0, 8).map((item) => cleanString(item, 120, "")).filter(Boolean)
+      : [],
+  };
+
+  sendJson(res, 200, { report, model: MODEL });
+}
+
 async function handleQuiz(_req, res) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
+  const ai = createAi();
+  if (!ai) {
     sendJson(res, 503, { error: "missing_api_key", questions: [] });
     return;
   }
 
-  const ai = new GoogleGenAI({ apiKey });
   const chat = ai.chats.create({
     model: MODEL,
     config: {
@@ -175,29 +233,57 @@ async function handleQuiz(_req, res) {
   });
 
   const response = await chat.sendMessage({ message: "Erzeuge vier neue Fragen." });
-  const text = String(response.text || "[]")
-    .replace(/```json/gi, "")
-    .replace(/```/g, "")
-    .trim();
+  const parsed = parseJsonArray(response.text);
+  const questions = parsed
+    ? parsed.slice(0, 4).map((question, index) => ({
+        id: Number(question.id) || index + 1,
+        question: cleanString(question.question, 300, ""),
+        answer: Boolean(question.answer),
+        explanation: cleanString(question.explanation, 600, ""),
+      })).filter((question) => question.question && question.explanation)
+    : [];
 
-  let parsed;
-  try {
-    parsed = JSON.parse(text);
-  } catch {
+  if (!questions.length) {
     sendJson(res, 502, { error: "invalid_model_response", questions: [] });
     return;
   }
 
-  const questions = Array.isArray(parsed)
-    ? parsed.slice(0, 4).map((question, index) => ({
-        id: Number(question.id) || index + 1,
-        question: String(question.question || "").slice(0, 300),
-        answer: Boolean(question.answer),
-        explanation: String(question.explanation || "").slice(0, 600),
-      })).filter((question) => question.question && question.explanation)
-    : [];
-
   sendJson(res, 200, { questions });
+}
+
+function parseJsonObject(value) {
+  try {
+    const parsed = JSON.parse(cleanJsonText(value));
+    return parsed && !Array.isArray(parsed) && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function parseJsonArray(value) {
+  try {
+    const parsed = JSON.parse(cleanJsonText(value));
+    return Array.isArray(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function cleanJsonText(value) {
+  return String(value || "")
+    .replace(/```json/gi, "")
+    .replace(/```/g, "")
+    .trim();
+}
+
+function cleanString(value, maxLength, fallback) {
+  const text = String(value || "").trim().slice(0, maxLength);
+  return text || fallback;
+}
+
+function normalizeUrgency(value) {
+  const normalized = String(value || "").toLowerCase();
+  return ["niedrig", "mittel", "hoch", "akut"].includes(normalized) ? normalized : "mittel";
 }
 
 const server = http.createServer(async (req, res) => {
@@ -225,6 +311,11 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "POST" && url.pathname === "/api/chat") {
       await handleChat(req, res);
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/report/extract") {
+      await handleReportExtraction(req, res);
       return;
     }
 
