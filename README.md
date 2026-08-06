@@ -16,7 +16,7 @@ Die in `package.json` festgelegten Engine-Bereiche dienen einer reproduzierbaren
 
 - responsive React-Oberfläche mit Navigation, Suche und Dark Mode
 - lokale vierstellige Sichtschutz-PIN ohne Speicherung des Klartext-PINs
-- KI-Begleiter über einen lokalen Gemini-Proxy mit gekennzeichnetem lokalen Fallback
+- KI-Begleiter über einen lokalen Gemini-Proxy mit gekennzeichnetem lokalem Fallback
 - KI-gestützte Strukturierung eines Meldungsentwurfs über `/api/report/analyze`
 - validierter Meldungsentwurf mit Kopierfunktion und PDF-Export
 - Gedächtnisprotokolle und Stimmungseinträge nur im Zustand der aktuellen Sitzung
