@@ -1,23 +1,39 @@
 # DB Peace AI
 
-Lokaler Innovations- und Demonstrationsprototyp für Auszubildende. Die Anwendung ist **keine offizielle Deutsche-Bahn-Anwendung** und darf ohne fachliche, rechtliche und technische Freigabe nicht mit echten Fall- oder Personendaten betrieben werden.
+DB Peace AI ist ein lokaler Innovations- und Demonstrationsprototyp für Auszubildende. Die Anwendung ist **keine offizielle Deutsche-Bahn-Anwendung** und darf ohne fachliche, rechtliche und technische Freigabe nicht mit echten Fall-, Gesundheits- oder Personendaten betrieben werden.
 
-## Aktueller MVP-Umfang
+## Was der aktuelle MVP tatsächlich kann
 
-- Hilfe- und Orientierungshilfen
-- privates Gedächtnisprotokoll als Demo
-- strukturierter Meldungsentwurf
-- PDF-Export
-- KI-Begleiter über einen lokalen Gemini-Proxy
-- Lern-, Rechte- und Projektbereiche
+- responsive React-Oberfläche mit Navigation, Suche und Dark Mode
+- lokale vierstellige Sichtschutz-PIN ohne Speicherung des Klartext-PINs
+- KI-Begleiter über einen lokalen Gemini-Proxy mit gekennzeichnetem lokalen Fallback
+- KI-gestützte Strukturierung eines Meldungsentwurfs über `/api/report/analyze`
+- validierter Meldungsentwurf mit Kopierfunktion und PDF-Export
+- Gedächtnisprotokolle und Stimmungseinträge nur im Zustand der aktuellen Sitzung
+- Quiz über `/api/quiz` mit transparentem lokalem Fragenset als Fallback
+- lokale, statische Szenario-Übungen ohne KI, Punkte oder Zertifikat
+- allgemeine Rechteorientierung mit Links zu gesetzlichen Primärquellen
+- geprüfte externe Hilfsnummern und klare Wege zum Finden interner Kontakte
+- ungeprüfter Kurskatalog, der sichtbar als synthetischer Demo-Datensatz gekennzeichnet ist
+- HR-, Projekt- und Analytics-Ansichten ausschließlich mit fiktiven Demonstrationsdaten
+- PWA-Grundstruktur; API-Antworten werden nicht offline gecacht
 
-Simulierte Funktionen sind in der Oberfläche als Demo zu kennzeichnen. Aussagen wie „verschlüsselt“, „anonym übermittelt“, „SSO“ oder „Standort gesendet“ dürfen nur verwendet werden, wenn sie technisch tatsächlich umgesetzt sind.
+## Was der MVP ausdrücklich nicht kann
 
-## Lokalen KI-Modus aktivieren
+- keine Meldung automatisch an DB, HR, JAV, Betriebsrat oder eine andere Stelle senden
+- keine echte SSO-/OIDC-Anmeldung oder Rollenverwaltung
+- keine serverseitige Speicherung von Fällen, Profilen oder Anhängen
+- keine Verschlüsselung gespeicherter Falldaten
+- keine anonyme Rückkommunikation
+- keine Standortübertragung oder Offline-Synchronisation
+- keine offiziellen Zertifikate, Teilnahmebestätigungen oder Bildungszeit-Anerkennungen ausstellen
+- keine Rechts-, Medizin- oder Krisenberatung ersetzen
 
-1. `.env.example` kopieren und als `.env` speichern.
-2. `GEMINI_API_KEY` in `.env` eintragen.
-3. Optional `GEMINI_MODEL` anpassen.
+## Lokalen KI-Modus einrichten
+
+1. `.env.example` als `.env` kopieren.
+2. `GEMINI_API_KEY` eintragen.
+3. Optional `GEMINI_MODEL` und `API_PORT` anpassen.
 4. Abhängigkeiten installieren:
 
 ```bash
@@ -30,23 +46,41 @@ npm install
 npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
-Die App ist anschließend unter `http://127.0.0.1:5173/` erreichbar. Der API-Proxy läuft standardmäßig unter `http://127.0.0.1:8787`.
+Die App läuft anschließend unter `http://127.0.0.1:5173/`. Der API-Proxy bindet standardmäßig ausschließlich an `http://127.0.0.1:8787`.
 
-Ohne `GEMINI_API_KEY` bleibt die App bedienbar. Der Chat verwendet dann ausschließlich klar gekennzeichnete lokale Orientierungstexte.
+Ohne `GEMINI_API_KEY` bleiben die statischen Bereiche nutzbar. Chat, Quiz und Meldeanalyse verwenden dann klar gekennzeichnete lokale Fallbacks oder melden, dass der KI-Dienst nicht eingerichtet ist.
 
-## Qualitätsprüfung
+## Verfügbare Befehle
 
 ```bash
-npm run check
+npm run dev         # API und Vite gemeinsam starten
+npm run dev:app     # nur Vite
+npm run dev:server  # nur lokalen API-Proxy
+npm run verify      # Repository-Regeln und kritische Behauptungen prüfen
+npm run build       # Production-Build erstellen
+npm run check       # Verify und Production-Build nacheinander ausführen
+npm run preview     # gebauten Stand lokal anzeigen
 ```
 
-Der Check prüft kritische Platzhalter und erstellt anschließend den Production-Build.
+## Sicherheitsregeln
 
-## Sicherheitsgrenzen
+- ausschließlich erfundene Beispieldaten verwenden
+- `.env`, API-Schlüssel und interne Kontaktdaten niemals committen
+- Notfall-, Rechts- und Hilfeinhalte vor jeder echten Veröffentlichung fachlich prüfen
+- Demo-Funktionen sichtbar als Demo kennzeichnen
+- keine Anonymität, Vertraulichkeit, Verschlüsselung, Anerkennung oder offizielle Integration garantieren, solange sie nicht technisch und organisatorisch umgesetzt ist
+- Pull Requests erst nach erfolgreichem `npm run check` und manueller Prüfung der Kernwege zusammenführen
 
-- Keine echten Meldungen oder personenbezogenen Daten für Präsentationen verwenden.
-- `.env` niemals committen.
-- Interne Kontaktdaten und Rechtsinformationen vor Veröffentlichung fachlich prüfen.
-- Eine produktive Einführung benötigt mindestens Authentifizierung, Rollen, sichere Datenhaltung, Verschlüsselung, Audit-Logs, Löschfristen, Datenschutzprüfung, IT-Sicherheitsprüfung und Beteiligung der zuständigen Gremien.
+## Produktiver Pilotbetrieb
 
-Weitere Details stehen in `SECURITY.md` und `docs/MVP-STATUS.md`.
+Ein echter Pilot benötigt mindestens:
+
+- verantwortliche Organisationseinheit und verbindliche Prozesse
+- Datenschutz-Folgenabschätzung und Beteiligung der zuständigen Gremien
+- echte Authentifizierung, serverseitige Autorisierung und Rollen
+- sichere Datenbank, Verschlüsselung, Anhänge, Audit-Logs und Löschfristen
+- bestätigte interne Kontakte und fachlich freigegebene Inhalte
+- automatisierte Tests, Barrierefreiheitsprüfung, Monitoring und Incident Response
+- IT-Sicherheitsprüfung und Penetrationstest
+
+Weitere Details stehen in [`SECURITY.md`](SECURITY.md), [`docs/MVP-STATUS.md`](docs/MVP-STATUS.md) und der Pilot-Roadmap in GitHub Issue #2.
