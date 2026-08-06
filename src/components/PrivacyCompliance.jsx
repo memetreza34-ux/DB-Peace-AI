@@ -2,71 +2,65 @@ import { useState } from "react";
 import {
   BadgeCheck,
   CheckCircle2,
+  Database,
   EyeOff,
   FileText,
-  KeyRound,
   LockKeyhole,
   Scale,
+  Server,
+  ShieldAlert,
   ShieldCheck,
   UserCheck,
   UsersRound,
   XCircle,
 } from "lucide-react";
 
-const principles = [
-  ["Zweckbindung", "Daten werden nur für Hilfe, Prävention und Fallklärung genutzt.", ShieldCheck],
-  ["Datensparsamkeit", "Es werden nur Angaben erfasst, die wirklich gebraucht werden.", LockKeyhole],
-  ["Transparenz", "Nutzende sehen klar, was die Demo macht und was nicht.", FileText],
-  ["Freiwilligkeit", "Die Nutzung bleibt freiwillig und ohne versteckte Überwachung.", UserCheck],
-  ["Anonymisierung", "Meldungen können ohne Namen vorbereitet werden.", EyeOff],
-  ["Menschliche Prüfung", "Die KI gibt nur Vorschläge. Menschen entscheiden.", UsersRound],
+const implementedControls = [
+  ["Prototyp-Hinweis", "Die Oberfläche weist sichtbar darauf hin, dass keine echten Personen- oder Falldaten eingegeben werden sollen.", BadgeCheck],
+  ["Temporäre Eingaben", "Chat, Stimmung und Protokolle werden im aktuellen MVP nicht dauerhaft serverseitig gespeichert.", EyeOff],
+  ["Lokaler Sichtschutz", "Die selbst gewählte PIN schützt die Ansicht im Browser, ist aber ausdrücklich keine Datenverschlüsselung.", LockKeyhole],
+  ["Kein API-Cache", "Der Service Worker speichert keine Antworten aus /api/ im Offline-Cache.", Server],
+  ["Menschliche Entscheidung", "KI-Ausgaben werden als Orientierung gekennzeichnet und ersetzen keine zuständige Prüfung.", UsersRound],
+  ["Dokumentierte Grenzen", "SECURITY.md und MVP-Status benennen nicht implementierte Produkt- und Sicherheitsfunktionen.", FileText],
 ];
 
-const aiAllowed = [
-  "Meldungen strukturieren",
-  "Risiken als Vorschlag einstufen",
-  "Zusammenfassungen erstellen",
-  "Deeskalationshinweise geben",
-];
-
-const aiForbidden = [
-  "Menschen automatisch bestrafen",
-  "heimlich Chats überwachen",
-  "Entscheidungen allein treffen",
-  "vertrauliche Daten unnötig speichern",
+const notImplemented = [
+  "echte SSO- oder OIDC-Anmeldung",
+  "serverseitige Rollen und Berechtigungen",
+  "produktive Datenbank und verschlüsselte Datenspeicherung",
+  "sichere Anhänge und Schadsoftwareprüfung",
+  "Audit-Logs, Speicherfristen und Betroffenenrechte",
+  "offizielle DB-Systemintegration oder anonyme Rückkommunikation",
 ];
 
 const checklistItems = [
-  "Datenschutzbeauftragte einbeziehen",
-  "Betriebsrat/JAV prüfen lassen",
-  "Zugriffsrechte definieren",
-  "Speicherfristen festlegen",
-  "Sicherheitskonzept erstellen",
-  "KI-Risiken bewerten",
-  "Transparenz für Nutzende sicherstellen",
-  "Testphase mit anonymisierten Daten durchführen",
+  "Verantwortliche Organisationseinheit und Zweck festlegen",
+  "Datenschutz-Folgenabschätzung durchführen",
+  "Datenschutz, Compliance, Betriebsrat und JAV beteiligen",
+  "Datenkategorien, Rechtsgrundlagen und Einwilligungen dokumentieren",
+  "Rollen, Berechtigungen und Löschfristen definieren",
+  "KI-Anbieter, Verträge und Datenflüsse prüfen",
+  "Bedrohungsmodell, Penetrationstest und Incident Response umsetzen",
+  "Pilot ausschließlich mit freigegebenen synthetischen Daten starten",
 ];
 
 function PrivacyCompliance() {
-  const [checked, setChecked] = useState([
-    "Datenschutzbeauftragte einbeziehen",
-    "Zugriffsrechte definieren",
-  ]);
+  const [planningChecks, setPlanningChecks] = useState([]);
 
   function toggle(item) {
-    setChecked((current) =>
-      current.includes(item) ? current.filter((entry) => entry !== item) : [...current, item]
+    setPlanningChecks((current) =>
+      current.includes(item) ? current.filter((entry) => entry !== item) : [...current, item],
     );
   }
 
   return (
-    <section id="datenschutz" className="py-16 lg:py-20">
+    <section id="datenschutz" className="py-12 lg:py-16">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <EntryHeader />
-        <Principles />
+        <ImplementedControls />
+        <MissingControls />
         <AiBoundaries />
-        <UserControl />
-        <ComplianceChecklist checked={checked} toggle={toggle} />
+        <PlanningChecklist checked={planningChecks} toggle={toggle} />
         <FinalDisclaimer />
       </div>
     </section>
@@ -75,35 +69,39 @@ function PrivacyCompliance() {
 
 function EntryHeader() {
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_0.78fr] lg:items-end">
+    <div className="grid gap-6 lg:grid-cols-[1fr_0.8fr] lg:items-end">
       <div>
-        <p className="text-sm font-black uppercase tracking-wider text-db-red">Datenschutz</p>
-        <h2 className="mt-3 text-4xl font-black leading-tight tracking-normal text-db-dark sm:text-5xl">
-          Datenschutz & Standards
+        <p className="text-sm font-black uppercase tracking-wider text-db-red">Datenschutz und Sicherheit</p>
+        <h2 className="mt-3 text-4xl font-black leading-tight text-db-dark dark:text-white sm:text-5xl">
+          Technischer Ist-Stand statt Compliance-Versprechen
         </h2>
-        <p className="mt-4 max-w-3xl text-lg leading-8 text-db-rail">
-          DSGVO-bewusstes Konzept - keine finale Rechtsprüfung.
+        <p className="mt-4 max-w-3xl text-lg font-medium leading-8 text-db-rail dark:text-white/65">
+          Diese Seite unterscheidet klar zwischen bereits umgesetzten Schutzmaßnahmen und Voraussetzungen,
+          die vor einer echten Einführung noch fehlen.
         </p>
       </div>
-      <div className="rounded-lg border border-db-dark/10 bg-db-soft p-4 shadow-sm">
-        <p className="flex items-start gap-3 text-sm font-black text-db-dark">
-          <Scale className="mt-0.5 shrink-0 text-db-red" size={18} aria-hidden="true" />
-          Diese Demo ersetzt keine rechtliche Prüfung durch Datenschutz, Compliance oder Betriebsrat.
+      <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 shadow-sm dark:border-amber-800/50 dark:bg-amber-950/25">
+        <p className="flex items-start gap-3 text-sm font-black leading-6 text-amber-950 dark:text-amber-100">
+          <Scale className="mt-0.5 shrink-0" size={19} aria-hidden="true" />
+          Der Prototyp ist weder DSGVO-zertifiziert noch durch Datenschutz, Compliance, Betriebsrat, JAV oder IT-Sicherheit freigegeben.
         </p>
       </div>
     </div>
   );
 }
 
-function Principles() {
+function ImplementedControls() {
   return (
-    <Section title="Kernprinzipien" text="Die Demo zeigt klare Leitplanken für eine spätere Einführung.">
+    <Section
+      title="Im aktuellen MVP umgesetzt"
+      text="Diese Aussagen beschreiben konkrete Funktionen im Branch und keine geplanten Zielbilder."
+    >
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {principles.map(([title, text, Icon]) => (
-          <article key={title} className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-sm">
-            <Icon className="text-db-red" size={24} aria-hidden="true" />
-            <h3 className="mt-4 text-lg font-black">{title}</h3>
-            <p className="mt-2 text-sm font-semibold leading-6 text-db-rail">{text}</p>
+        {implementedControls.map(([title, text, Icon]) => (
+          <article key={title} className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-5 shadow-sm dark:border-emerald-900/40 dark:bg-emerald-950/20">
+            <Icon className="text-emerald-700 dark:text-emerald-300" size={24} aria-hidden="true" />
+            <h3 className="mt-4 text-lg font-black text-db-dark dark:text-white">{title}</h3>
+            <p className="mt-2 text-sm font-medium leading-6 text-db-rail dark:text-white/65">{text}</p>
           </article>
         ))}
       </div>
@@ -111,12 +109,44 @@ function Principles() {
   );
 }
 
-function AiBoundaries() {
+function MissingControls() {
   return (
-    <Section title="Was die KI darf / nicht darf" text="KI unterstützt, Menschen entscheiden.">
+    <Section
+      title="Noch nicht umgesetzt"
+      text="Ohne diese Funktionen dürfen keine realen sensiblen Meldungen verarbeitet werden."
+    >
+      <div className="grid gap-3 md:grid-cols-2">
+        {notImplemented.map((item) => (
+          <div key={item} className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-semibold leading-6 text-red-950 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-100">
+            <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600 dark:text-red-300" aria-hidden="true" />
+            {item}
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function AiBoundaries() {
+  const allowed = [
+    "einen Text strukturieren oder zusammenfassen",
+    "unverbindliche nächste Schritte vorschlagen",
+    "Lernfragen und Entwürfe erzeugen",
+    "auf reale Hilfe und menschliche Prüfung verweisen",
+  ];
+
+  const forbidden = [
+    "arbeitsrechtliche oder medizinische Entscheidungen treffen",
+    "automatisch sanktionieren oder Fälle abschließen",
+    "Vertraulichkeit, Anonymität oder Rechtssicherheit garantieren",
+    "unnötige Klarnamen, Personalnummern oder Gesundheitsdaten anfordern",
+  ];
+
+  return (
+    <Section title="KI-Leitplanken" text="Technische und organisatorische Grenzen müssen gleichzeitig gelten.">
       <div className="grid gap-6 lg:grid-cols-2">
-        <BoundaryColumn title="Die KI darf" items={aiAllowed} allowed />
-        <BoundaryColumn title="Die KI darf nicht" items={aiForbidden} />
+        <BoundaryColumn title="Zulässige Unterstützung" items={allowed} allowed />
+        <BoundaryColumn title="Nicht zulässig" items={forbidden} />
       </div>
     </Section>
   );
@@ -124,15 +154,15 @@ function AiBoundaries() {
 
 function BoundaryColumn({ allowed = false, items, title }) {
   return (
-    <div className={`rounded-lg p-5 shadow-panel ${allowed ? "bg-white" : "bg-db-dark text-white"}`}>
+    <div className={`rounded-xl p-5 shadow-sm ${allowed ? "border border-db-dark/10 bg-white dark:border-white/10 dark:bg-white/5" : "bg-db-dark text-white"}`}>
       <h3 className="text-2xl font-black">{title}</h3>
       <div className="mt-5 space-y-3">
         {items.map((item) => (
-          <p key={item} className={`flex gap-3 font-semibold ${allowed ? "text-db-rail" : "text-white/80"}`}>
+          <p key={item} className={`flex items-start gap-3 text-sm font-semibold leading-6 ${allowed ? "text-db-rail dark:text-white/70" : "text-white/75"}`}>
             {allowed ? (
-              <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-600" size={18} />
+              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
             ) : (
-              <XCircle className="mt-0.5 shrink-0 text-red-200" size={18} />
+              <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-red-300" aria-hidden="true" />
             )}
             {item}
           </p>
@@ -142,41 +172,22 @@ function BoundaryColumn({ allowed = false, items, title }) {
   );
 }
 
-function UserControl() {
-  const items = [
-    "Anonyme Nutzung bleibt möglich",
-    "Kontaktangaben sind freiwillig",
-    "Meldungsvorschau vor Absenden",
-    "Keine versteckte Analyse realer Chats",
-  ];
-
+function PlanningChecklist({ checked, toggle }) {
   return (
-    <Section title="Nutzerkontrolle" text="Nutzende behalten die Kontrolle über ihre Eingaben.">
-      <div className="grid gap-3 md:grid-cols-2">
-        {items.map((item) => (
-          <div key={item} className="flex gap-3 rounded-lg border border-db-dark/10 bg-white p-4 font-semibold text-db-rail shadow-sm">
-            <BadgeCheck className="mt-0.5 shrink-0 text-db-red" size={18} />
-            {item}
-          </div>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-function ComplianceChecklist({ checked, toggle }) {
-  return (
-    <Section title="Checkliste vor echter Einführung" text="Diese Punkte müssten vor einer produktiven Nutzung geklärt werden.">
+    <Section
+      title="Interaktive Planungscheckliste"
+      text="Die Häkchen gelten nur in dieser Browser-Sitzung und sind kein Nachweis einer erfolgten Freigabe. Standardmäßig ist deshalb nichts als erledigt markiert."
+    >
       <div className="grid gap-3 md:grid-cols-2">
         {checklistItems.map((item) => (
-          <label key={item} className="flex items-start gap-3 rounded-lg border border-db-dark/10 bg-white p-4 font-semibold text-db-dark shadow-sm">
+          <label key={item} className="flex cursor-pointer items-start gap-3 rounded-xl border border-db-dark/10 bg-white p-4 font-semibold text-db-dark shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-white">
             <input
               type="checkbox"
               checked={checked.includes(item)}
               onChange={() => toggle(item)}
               className="mt-1 h-4 w-4 accent-db-red"
             />
-            {item}
+            <span>{item}</span>
           </label>
         ))}
       </div>
@@ -186,13 +197,17 @@ function ComplianceChecklist({ checked, toggle }) {
 
 function FinalDisclaimer() {
   return (
-    <div className="mt-10 rounded-lg border border-db-dark/10 bg-db-dark p-6 text-white shadow-panel">
-      <h3 className="text-2xl font-black">Hinweis</h3>
-      <p className="mt-3 max-w-4xl font-semibold leading-7 text-white/80">
-        DB Peace AI ist ein Innovations- und Demonstrationsprototyp. Für eine echte Einführung wären
-        Datenschutzprüfung, Compliance-Bewertung, IT-Sicherheitsprüfung und Beteiligung zuständiger
-        Gremien notwendig.
-      </p>
+    <div className="mt-10 rounded-xl bg-db-dark p-6 text-white shadow-panel">
+      <div className="flex items-start gap-3">
+        <Database className="mt-1 h-6 w-6 shrink-0 text-red-200" aria-hidden="true" />
+        <div>
+          <h3 className="text-2xl font-black">Keine realen sensiblen Daten</h3>
+          <p className="mt-3 max-w-4xl font-semibold leading-7 text-white/75">
+            Bis Authentifizierung, sichere Datenhaltung, Rollen, Löschung, Auditierung sowie fachliche und rechtliche Freigaben umgesetzt sind,
+            darf DB Peace AI ausschließlich mit erfundenen Beispieldaten demonstriert werden.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -201,8 +216,8 @@ function Section({ children, text, title }) {
   return (
     <div className="mt-10">
       <div className="max-w-3xl">
-        <h3 className="text-3xl font-black text-db-dark">{title}</h3>
-        {text && <p className="mt-3 font-semibold leading-7 text-db-rail">{text}</p>}
+        <h3 className="text-3xl font-black text-db-dark dark:text-white">{title}</h3>
+        {text && <p className="mt-3 font-semibold leading-7 text-db-rail dark:text-white/65">{text}</p>}
       </div>
       <div className="mt-6">{children}</div>
     </div>
