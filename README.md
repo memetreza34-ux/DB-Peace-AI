@@ -2,6 +2,12 @@
 
 DB Peace AI ist ein lokaler Innovations- und Demonstrationsprototyp für Auszubildende. Die Anwendung ist **keine offizielle Deutsche-Bahn-Anwendung** und darf ohne fachliche, rechtliche und technische Freigabe nicht mit echten Fall-, Gesundheits- oder Personendaten betrieben werden.
 
+## Voraussetzungen
+
+- Node.js 22
+- npm mit Unterstützung für das vorhandene `package-lock.json`
+- optional ein Gemini-API-Schlüssel für die KI-Funktionen
+
 ## Was der aktuelle MVP tatsächlich kann
 
 - responsive React-Oberfläche mit Navigation, Suche und Dark Mode
