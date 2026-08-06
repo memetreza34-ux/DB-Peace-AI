@@ -4,6 +4,15 @@ Stand: 6. August 2026
 
 Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdaten verwenden. Ein erfolgreicher Durchlauf bedeutet **präsentationsreif**, nicht pilot- oder produktionsreif.
 
+## 0. Installation und Entwicklungsstart
+
+- [ ] `npm ci` läuft ohne Fehler.
+- [ ] `npm run dev -- --host 127.0.0.1 --port 5173 --strictPort` startet API und Vite gemeinsam.
+- [ ] Die API meldet den lokalen Port und das konfigurierte Modell.
+- [ ] Ein Port- oder Startfehler beendet beide Prozesse mit verständlicher Meldung.
+- [ ] Strg+C beendet API und Vite ohne hängen gebliebenen Prozess.
+- [ ] `npm run check` führt Repository-Prüfung und Production-Build aus.
+
 ## 1. Start und lokale Sperre
 
 - [ ] App öffnet ohne weißen Bildschirm oder Error Boundary.
