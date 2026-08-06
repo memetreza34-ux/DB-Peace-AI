@@ -5,7 +5,7 @@ DB Peace AI ist ein lokaler Innovations- und Demonstrationsprototyp für Auszubi
 ## Voraussetzungen
 
 - Node.js 22
-- npm mit Unterstützung für das vorhandene `package-lock.json`
+- npm 10 oder 11
 - optional ein Gemini-API-Schlüssel für die KI-Funktionen
 
 ## Was der aktuelle MVP tatsächlich kann
