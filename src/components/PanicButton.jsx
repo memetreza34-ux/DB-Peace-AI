@@ -1,24 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 import { LogOut } from "lucide-react";
 
 export function PanicButton() {
-  const handlePanic = () => {
-    // In a real app, this might immediately replace the DOM or redirect to Google
-    window.location.href = "https://www.google.de/search?q=wetter";
-  };
+  function handleQuickExit() {
+    try {
+      sessionStorage.removeItem("db-peace-mood-session");
+      sessionStorage.removeItem("db-peace-unlocked");
+    } catch {
+      // Der Seitenwechsel funktioniert auch, wenn Session Storage blockiert ist.
+    }
+    window.location.replace("https://www.google.de/search?q=wetter");
+  }
 
   return (
     <button
-      onClick={handlePanic}
-      className="fixed bottom-6 left-6 z-[100] flex items-center justify-center w-12 h-12 bg-db-rail text-white/50 hover:text-white hover:bg-slate-800 rounded-full shadow-lg transition-all border border-white/10 group"
-      title="Quick Exit (Schnell verlassen)"
+      type="button"
+      onClick={handleQuickExit}
+      className="group fixed bottom-5 left-4 z-[100] flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-db-rail text-white/60 shadow-lg transition hover:bg-slate-800 hover:text-white sm:bottom-6 sm:left-6"
+      title="App sofort verlassen und temporäre Sitzungseinträge löschen"
+      aria-label="Schnell verlassen"
     >
-      <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-      
-      {/* Tooltip */}
-      <div className="absolute left-full ml-4 bg-slate-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-        Quick Exit
-      </div>
+      <LogOut className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
+      <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-black text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+        Schnell verlassen
+      </span>
     </button>
   );
 }
