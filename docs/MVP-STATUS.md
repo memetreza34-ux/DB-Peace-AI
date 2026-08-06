@@ -6,7 +6,7 @@ Integration: Draft Pull Request #1
 Pilot-Roadmap: GitHub Issue #2  
 Unterstützte Entwicklungsumgebung: Node.js 22, npm 10 oder 11
 
-Der Funktionsumfang dieses Stabilisierungsbranches ist für die technische Abnahme eingefroren. Weitere Produktfunktionen sollen in getrennten Änderungen erfolgen.
+Der Funktionsumfang dieses Stabilisierungsbranches ist für die technische Abnahme eingefroren. Nach dem Scope-Freeze sind nur konkrete Build-, Sicherheits- oder Abnahmefehler zulässig. Weitere Produktfunktionen sollen in getrennten Änderungen erfolgen.
 
 ## Ziel des aktuellen MVP
 
