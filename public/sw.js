@@ -1,52 +1,63 @@
-const CACHE_NAME = "db-peace-ai-v1";
-const ASSETS_TO_CACHE = [
-  "/",
-  "/index.html",
-  "/manifest.json",
-  "/vite.svg"
-];
+const CACHE_NAME = "db-peace-ai-v2";
+const APP_SHELL = ["/", "/index.html", "/manifest.json", "/icon.svg"];
 
-// Install event: cache assets
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
   self.skipWaiting();
 });
 
-// Activate event: clean up old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      );
-    })
+    caches.keys().then((cacheNames) => Promise.all(
+      cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name)),
+    )),
   );
   self.clients.claim();
 });
 
-// Fetch event: network first, fallback to cache
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== 'GET') return;
-  
+  const request = event.request;
+  const url = new URL(request.url);
+
+  if (request.method !== "GET") return;
+  if (url.origin !== self.location.origin) return;
+
+  // API-, Chat- und Quiz-Antworten können sensible Inhalte enthalten und werden nie gecacht.
+  if (url.pathname.startsWith("/api/")) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put("/index.html", copy));
+          return response;
+        })
+        .catch(() => caches.match("/index.html")),
+    );
+    return;
+  }
+
   event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        // Clone response to cache it
-        const responseClone = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseClone);
-        });
-        return networkResponse;
-      })
-      .catch(() => {
-        // Fallback to cache if network fails
-        return caches.match(event.request);
-      })
+    caches.match(request).then((cached) => {
+      const network = fetch(request)
+        .then((response) => {
+          if (response.ok && isStaticAsset(url.pathname)) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => cached);
+
+      return cached || network;
+    }),
   );
 });
+
+function isStaticAsset(pathname) {
+  return /\.(?:js|css|svg|png|jpg|jpeg|webp|woff2?|json)$/.test(pathname);
+}
