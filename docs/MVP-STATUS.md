@@ -6,6 +6,8 @@ Integration: Draft Pull Request #1
 Pilot-Roadmap: GitHub Issue #2  
 Unterstützte Entwicklungsumgebung: Node.js 22, npm 10 oder 11
 
+Der Funktionsumfang dieses Stabilisierungsbranches ist für die technische Abnahme eingefroren. Weitere Produktfunktionen sollen in getrennten Änderungen erfolgen.
+
 ## Ziel des aktuellen MVP
 
 Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. Er unterstützt dabei, schwierige Situationen zu reflektieren, Beobachtungen sachlich festzuhalten, Meldungsentwürfe vorzubereiten und reale Hilfewege zu finden. Er ist keine produktive Meldestelle und keine offizielle DB-Anwendung.
