@@ -15,7 +15,7 @@ React- und Vite-Frontend mit lokalem Node.js-API-Proxy. Der KI-Begleiter nutzt d
 ## Start
 
 ```bash
-npm install
+npm ci
 npm run dev
 npm run check
 ```
