@@ -34,10 +34,10 @@ DB Peace AI ist ein lokaler Innovations- und Demonstrationsprototyp für Auszubi
 1. `.env.example` als `.env` kopieren.
 2. `GEMINI_API_KEY` eintragen.
 3. Optional `GEMINI_MODEL` und `API_PORT` anpassen.
-4. Abhängigkeiten installieren:
+4. Abhängigkeiten exakt aus dem Lockfile installieren:
 
 ```bash
-npm install
+npm ci
 ```
 
 5. Frontend und lokalen API-Proxy starten:
