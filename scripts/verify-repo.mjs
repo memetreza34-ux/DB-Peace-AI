@@ -21,8 +21,10 @@ const requiredFiles = [
   "public/icon.svg",
   ".env.example",
   ".github/workflows/ci.yml",
+  ".github/dependabot.yml",
   "SECURITY.md",
   "docs/MVP-STATUS.md",
+  "docs/MANUAL-TEST-CHECKLIST.md",
 ];
 
 for (const relativePath of requiredFiles) {
@@ -81,6 +83,9 @@ if (!envExample.includes("GEMINI_API_KEY")) {
 const readme = read("README.md");
 if (!readme.includes("keine offizielle Deutsche-Bahn-Anwendung")) {
   failures.push("README muss den Prototyp-Status eindeutig nennen.");
+}
+if (!readme.includes("docs/MANUAL-TEST-CHECKLIST.md")) {
+  failures.push("README muss die manuelle Abnahmecheckliste verlinken.");
 }
 
 const packageJson = parseJson("package.json");
