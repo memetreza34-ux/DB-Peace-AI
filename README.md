@@ -8,6 +8,8 @@ DB Peace AI ist ein lokaler Innovations- und Demonstrationsprototyp für Auszubi
 - npm 10 oder 11
 - optional ein Gemini-API-Schlüssel für die KI-Funktionen
 
+Die in `package.json` festgelegten Engine-Bereiche dienen einer reproduzierbaren Entwicklungs- und CI-Umgebung. Andere Laufzeiten sind nicht getestet.
+
 ## Was der aktuelle MVP tatsächlich kann
 
 - responsive React-Oberfläche mit Navigation, Suche und Dark Mode
