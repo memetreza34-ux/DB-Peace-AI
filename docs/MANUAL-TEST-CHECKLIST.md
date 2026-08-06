@@ -7,6 +7,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 ## 0. Installation und Entwicklungsstart
 
 - [ ] Node.js 22 wird verwendet.
+- [ ] npm 10 oder 11 wird verwendet.
 - [ ] `npm ci` läuft ohne Fehler.
 - [ ] `npm run dev -- --host 127.0.0.1 --port 5173 --strictPort` startet API und Vite gemeinsam.
 - [ ] Die API meldet den lokalen Port und das konfigurierte Modell.
@@ -130,6 +131,7 @@ Mindestens prüfen bei 360 px, 768 px und 1280 px Breite:
 ## 12. Abschlussprotokoll
 
 - getesteter Commit: `[SHA]`
+- Node/npm: `[Versionen]`
 - Browser und Version: `[Angabe]`
 - Betriebssystem: `[Angabe]`
 - Testdatum: `[Datum]`
