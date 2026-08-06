@@ -28,9 +28,7 @@ const requiredFiles = [
 ];
 
 for (const relativePath of requiredFiles) {
-  if (!fs.existsSync(path.join(root, relativePath))) {
-    failures.push(`Pflichtdatei fehlt: ${relativePath}`);
-  }
+  if (!fs.existsSync(path.join(root, relativePath))) failures.push(`Pflichtdatei fehlt: ${relativePath}`);
 }
 
 const textFiles = [];
@@ -69,43 +67,28 @@ for (const filePath of textFiles) {
   if (filePath === verifierPath) continue;
   const content = fs.readFileSync(filePath, "utf8");
   for (const [pattern, message] of forbiddenPatterns) {
-    if (pattern.test(content)) {
-      failures.push(`${path.relative(root, filePath)}: ${message}`);
-    }
+    if (pattern.test(content)) failures.push(`${path.relative(root, filePath)}: ${message}`);
   }
 }
 
 const envExample = read(".env.example");
-if (!envExample.includes("GEMINI_API_KEY")) {
-  failures.push(".env.example muss GEMINI_API_KEY dokumentieren.");
-}
+if (!envExample.includes("GEMINI_API_KEY")) failures.push(".env.example muss GEMINI_API_KEY dokumentieren.");
 
 const readme = read("README.md");
-if (!readme.includes("keine offizielle Deutsche-Bahn-Anwendung")) {
-  failures.push("README muss den Prototyp-Status eindeutig nennen.");
-}
-if (!readme.includes("docs/MANUAL-TEST-CHECKLIST.md")) {
-  failures.push("README muss die manuelle Abnahmecheckliste verlinken.");
-}
+if (!readme.includes("keine offizielle Deutsche-Bahn-Anwendung")) failures.push("README muss den Prototyp-Status eindeutig nennen.");
+if (!readme.includes("docs/MANUAL-TEST-CHECKLIST.md")) failures.push("README muss die manuelle Abnahmecheckliste verlinken.");
 
 const packageJson = parseJson("package.json");
-if (packageJson?.scripts?.check !== "npm run verify && npm run build") {
-  failures.push("package.json muss den kombinierten Check aus Verify und Build enthalten.");
-}
-if (packageJson?.engines?.node !== ">=22 <23") {
-  failures.push("package.json muss Node.js 22 als unterstützte Laufzeit festlegen.");
-}
+if (packageJson?.scripts?.check !== "npm run verify && npm run build") failures.push("package.json muss den kombinierten Check aus Verify und Build enthalten.");
+if (packageJson?.engines?.node !== ">=22 <23") failures.push("package.json muss Node.js 22 als unterstützte Laufzeit festlegen.");
+if (packageJson?.engines?.npm !== ">=10 <12") failures.push("package.json muss npm 10 oder 11 als unterstützte Laufzeit festlegen.");
 
 const serviceWorker = read("public/sw.js");
-if (!serviceWorker.includes('url.pathname.startsWith("/api/")')) {
-  failures.push("Der Service Worker muss API-Antworten ausdrücklich vom Cache ausschließen.");
-}
+if (!serviceWorker.includes('url.pathname.startsWith("/api/")')) failures.push("Der Service Worker muss API-Antworten ausdrücklich vom Cache ausschließen.");
 
 const contacts = read("src/components/ContactsView.jsx");
 for (const requiredNumber of ["110", "112", "116 123", "116 016", "0800 546 546 5"]) {
-  if (!contacts.includes(requiredNumber)) {
-    failures.push(`ContactsView muss die geprüfte Hilfsnummer ${requiredNumber} enthalten.`);
-  }
+  if (!contacts.includes(requiredNumber)) failures.push(`ContactsView muss die geprüfte Hilfsnummer ${requiredNumber} enthalten.`);
 }
 
 if (failures.length > 0) {
@@ -139,8 +122,6 @@ function walk(directory) {
       walk(entryPath);
       continue;
     }
-    if (/\.(?:js|jsx|mjs|json|md|html|css|yml|yaml|example|svg)$/.test(entry.name)) {
-      textFiles.push(entryPath);
-    }
+    if (/\.(?:js|jsx|mjs|json|md|html|css|yml|yaml|example|svg)$/.test(entry.name)) textFiles.push(entryPath);
   }
 }
