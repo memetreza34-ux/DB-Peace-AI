@@ -8,12 +8,15 @@ export function AISmartReport({ onReportGenerated }) {
   const [mode, setMode] = useState(null);
   const [error, setError] = useState("");
   const activeControllerRef = useRef(null);
-  const isMountedRef = useRef(true);
+  const isMountedRef = useRef(false);
 
-  useEffect(() => () => {
-    isMountedRef.current = false;
-    activeControllerRef.current?.abort();
-    activeControllerRef.current = null;
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      activeControllerRef.current?.abort();
+      activeControllerRef.current = null;
+    };
   }, []);
 
   async function handleGenerate(event) {
