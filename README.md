@@ -18,19 +18,22 @@ Die in `package.json` festgelegten Engine-Bereiche dienen einer reproduzierbaren
 
 - responsive React-Oberfläche mit Navigation, Suche und Dark Mode
 - lokale vierstellige Sichtschutz-PIN ohne Speicherung des Klartext-PINs; Fehlversuche werden innerhalb der Browser-Sitzung gedrosselt
+- Entsperrstatus wird nicht in Browser-Speicher geschrieben; Reload sowie ein neuer oder duplizierter Tab verlangen erneut die PIN
 - KI-Begleiter über einen lokalen Gemini-Proxy mit klar gekennzeichnetem lokalem Fallback
 - `/api/chat/status` zeigt nur, ob ein Gemini-Schlüssel konfiguriert ist; erst eine erfolgreiche Chatantwort bestätigt eine tatsächliche Verbindung
-- KI-Aufrufe werden serverseitig nach 20 Sekunden mit einem kontrollierten Upstream-Timeout beendet
+- KI-Aufrufe werden serverseitig nach 20 Sekunden kontrolliert beendet; der lokale SDK-Request erhält dabei ein AbortSignal
 - KI-gestützte Strukturierung eines Meldungsentwurfs über `/api/report/extract`
 - validierter Meldungsentwurf mit Kopierfunktion und PDF-Export
 - Gedächtnisprotokolle und Stimmungseinträge nur im Zustand der aktuellen Sitzung
-- Quiz über `/api/quiz` mit transparentem lokalem Fragenset als Fallback; KI-Fragen sind auf allgemeine Sicherheits- und Orientierungsinhalte begrenzt
+- Quiz über `POST /api/quiz` mit transparentem lokalem Fragenset als Fallback; KI-Fragen sind auf allgemeine Sicherheits- und Orientierungsinhalte begrenzt
 - lokale, statische Szenario-Übungen ohne KI, Punkte, Prozentwertung oder Zertifikat
 - kuratierte Rechteorientierung mit vorsichtigen Paraphrasen und Links zu amtlichen Einzelnormen
 - geprüfte externe Hilfsnummern und klare Wege zum Finden interner Kontakte
 - vollständig fiktiver Lernkatalog mit erfundenen Anbietern und Angeboten ausschließlich für die UI-Demonstration
 - HR-, Projekt- und Analytics-Ansichten ausschließlich mit fiktiven Demonstrationsdaten beziehungsweise Szenarioannahmen
-- PWA-Grundstruktur; API-Antworten werden nicht offline gecacht und der Service Worker löscht nur eigene alte Caches
+- PWA-Grundstruktur; API-Antworten werden nicht offline gecacht, statische Assets werden online Network-first geladen und der Service Worker löscht nur eigene alte Caches
+- lokaler API-Proxy blockiert fremde Browser-Origin-/Cross-Site-Anfragen und akzeptiert auf POST-Routen nur echtes `application/json`
+- Produktions-CSP ohne Inline-Skripte; nur der lokale Vite-Serve-Modus erhält die für React Refresh notwendige eng begrenzte Ausnahme
 
 ## Was der MVP ausdrücklich nicht kann
 
@@ -65,6 +68,8 @@ npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
 Die App läuft anschließend unter `http://127.0.0.1:5173/`. Der API-Proxy bindet standardmäßig ausschließlich an `http://127.0.0.1:8787`.
 
 Ohne `GEMINI_API_KEY` bleiben die statischen Bereiche nutzbar. Chat, Quiz und Meldeanalyse verwenden dann klar gekennzeichnete lokale Fallbacks oder melden, dass der KI-Dienst nicht eingerichtet ist. Ein vorhandener Schlüssel bedeutet noch nicht, dass der externe Dienst erreichbar oder der Schlüssel gültig ist.
+
+Ein clientseitig abgebrochener Gemini-Request garantiert nicht, dass eine beim externen Dienst bereits laufende Operation dort sofort beendet wird. Der Timeout begrenzt vor allem das lokale Warten und lokale Ressourcen.
 
 ## Verfügbare Befehle
 
