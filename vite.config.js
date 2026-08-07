@@ -1,5 +1,5 @@
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 
 function allowReactRefreshPreambleInDevelopment() {
   return {
@@ -15,14 +15,30 @@ function allowReactRefreshPreambleInDevelopment() {
   };
 }
 
-export default defineConfig({
-  plugins: [allowReactRefreshPreambleInDevelopment(), react()],
-  server: {
-    host: "127.0.0.1",
-    port: 5173,
-    strictPort: true,
-    proxy: {
-      "/api": "http://127.0.0.1:8787",
+function parsePort(value, fallback) {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 1 && parsed <= 65_535 ? parsed : fallback;
+}
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const apiPort = parsePort(process.env.API_PORT || env.API_PORT, 8787);
+  const apiTarget = `http://127.0.0.1:${apiPort}`;
+  const proxy = { "/api": apiTarget };
+
+  return {
+    plugins: [allowReactRefreshPreambleInDevelopment(), react()],
+    server: {
+      host: "127.0.0.1",
+      port: 5173,
+      strictPort: true,
+      proxy,
     },
-  },
+    preview: {
+      host: "127.0.0.1",
+      port: 4173,
+      strictPort: true,
+      proxy,
+    },
+  };
 });
