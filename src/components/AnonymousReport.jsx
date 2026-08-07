@@ -28,9 +28,10 @@ const incidentOptions = [
   { value: "Sonstiges", description: "Ein anderer Vorfall, der sachlich strukturiert werden soll.", icon: FileText },
 ];
 
-const repetitionOptions = ["Einmalig", "Mehrfach", "Regelmäßig", "Schon länger", "Unklar"];
+const repetitionOptions = ["Einmalig", "Mehrfach", "Regelmäßig", "Schon länger", "Unklar", "Nicht angegeben"];
 const dangerOptions = ["Keine akute Gefahr", "Unsicher", "Eskalation möglich", "Direkte Gefahr"];
-const perspectiveOptions = ["Direkt betroffen", "Beobachtet", "Für andere Person", "Unsicher"];
+const perspectiveOptions = ["Direkt betroffen", "Beobachtet", "Für andere Person", "Unsicher", "Nicht angegeben"];
+const stressOptions = ["1", "2", "3", "4", "5", "Nicht angegeben"];
 const recipientOptions = [
   "Noch offen",
   "Ausbildungsbetreuung",
@@ -39,6 +40,7 @@ const recipientOptions = [
   "Führungskraft",
   "Compliance- oder Beschwerdestelle",
 ];
+const draftStyleOptions = ["Ohne persönliche Angaben", "Persönliche Angaben später manuell ergänzen"];
 
 const stepTitles = [
   "Kategorie und Kontext",
@@ -261,8 +263,9 @@ function IncidentStep({ form, update }) {
   return (
     <div className="space-y-5">
       <fieldset>
-        <legend className="sr-only">Kategorie auswählen</legend>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <legend className="font-black text-db-dark dark:text-white">Kategorie bewusst auswählen</legend>
+        <p className="mt-1 text-xs font-semibold text-db-rail dark:text-white/60">Es ist absichtlich keine Kategorie vorausgewählt.</p>
+        <div className="mt-2 grid gap-3 sm:grid-cols-2">
           {incidentOptions.map(({ value, description, icon: Icon }) => (
             <button key={value} type="button" aria-pressed={form.type === value} onClick={() => update("type", value)} className={`rounded-xl border p-4 text-left transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-db-red/30 ${form.type === value ? "border-db-red bg-db-red/5" : "border-db-dark/10 hover:border-db-red/40 dark:border-white/10"}`}>
               <Icon className={`h-5 w-5 ${form.type === value ? "text-db-red" : "text-db-rail dark:text-white/50"}`} aria-hidden="true" />
@@ -272,7 +275,7 @@ function IncidentStep({ form, update }) {
           ))}
         </div>
       </fieldset>
-      <TextField label="Ort oder Kontext" hint="Keine Klarnamen verwenden.">
+      <TextField label="Ort oder Kontext" hint="Optional. Keine Klarnamen verwenden.">
         <input value={form.context} onChange={(event) => update("context", event.target.value.slice(0, 180))} maxLength={180} placeholder="Werkstatt, Bahnhof, Büro, Gruppenchat …" className="field dark:border-white/15 dark:bg-db-dark/40 dark:text-white" />
       </TextField>
     </div>
@@ -299,17 +302,8 @@ function FactsStep({ form, update }) {
 function RiskStep({ form, update }) {
   return (
     <div className="space-y-6">
-      <ChoiceField label="Besteht gerade Gefahr?" options={dangerOptions} value={form.danger} onChange={(value) => update("danger", value)} />
-      <label className="block rounded-xl border border-db-dark/10 bg-db-soft p-4 dark:border-white/10 dark:bg-white/5">
-        <span className="flex items-center justify-between gap-4">
-          <span>
-            <strong className="block text-db-dark dark:text-white">Wie stark belastet dich die Situation?</strong>
-            <span className="mt-1 block text-xs font-semibold text-db-rail dark:text-white/60">Nur zur Orientierung im Entwurf.</span>
-          </span>
-          <span className="rounded-lg bg-db-red px-3 py-1 text-sm font-black text-white">{form.stress}/5</span>
-        </span>
-        <input type="range" min="1" max="5" value={form.stress} onChange={(event) => update("stress", Number(event.target.value))} className="mt-5 w-full accent-db-red" />
-      </label>
+      <ChoiceField label="Besteht gerade Gefahr?" hint="Bitte bewusst auswählen; die App nimmt nicht automatisch „keine Gefahr“ an." options={dangerOptions} value={form.danger} onChange={(value) => update("danger", value)} />
+      <ChoiceField label="Wie stark belastet dich die Situation?" hint="Wähle 1 bis 5 oder ausdrücklich „Nicht angegeben“. Der Wert dient nur der lokalen Orientierung." options={stressOptions} value={form.stress} onChange={(value) => update("stress", value)} />
     </div>
   );
 }
@@ -318,13 +312,7 @@ function RoutingStep({ form, update }) {
   return (
     <div className="space-y-5">
       <ChoiceField label="Für wen soll der Entwurf vorbereitet werden?" hint="Die Auswahl sendet nichts." options={recipientOptions} value={form.recipient} onChange={(value) => update("recipient", value)} />
-      <label className="flex items-start gap-3 rounded-xl border border-db-dark/10 bg-db-soft p-4 dark:border-white/10 dark:bg-white/5">
-        <input type="checkbox" checked={form.anonymousDraft} onChange={(event) => update("anonymousDraft", event.target.checked)} className="mt-1 h-5 w-5 accent-db-red" />
-        <span>
-          <strong className="block text-db-dark dark:text-white">Entwurf ohne persönliche Angaben formulieren</strong>
-          <span className="mt-1 block text-xs font-semibold leading-5 text-db-rail dark:text-white/60">Die App kennt kein DB-Profil. Diese Einstellung kennzeichnet nur die gewünschte Form des exportierten Textes.</span>
-        </span>
-      </label>
+      <ChoiceField label="Welche Form soll der Entwurf haben?" hint="Die App kennt kein DB-Profil und ergänzt keine persönlichen Daten automatisch." options={draftStyleOptions} value={form.draftStyle} onChange={(value) => update("draftStyle", value)} />
     </div>
   );
 }
@@ -333,15 +321,15 @@ function ReviewStep({ form, analysis, reportId, createdAt }) {
   const rows = [
     ["Entwurfsnummer", reportId],
     ["Erstellt", formatDateTime(createdAt)],
-    ["Kategorie", form.type],
-    ["Ort / Kontext", form.context || "Nicht angegeben"],
-    ["Datum und Uhrzeit", `${form.date || "Nicht angegeben"}${form.time ? `, ${form.time} Uhr` : ""}`],
-    ["Wiederholung", form.repetition],
-    ["Perspektive", form.perspective],
-    ["Gefahr", form.danger],
-    ["Belastung", `${form.stress}/5`],
-    ["Geplanter Empfänger", form.recipient],
-    ["Form", form.anonymousDraft ? "Ohne persönliche Angaben" : "Persönliche Angaben später manuell ergänzen"],
+    ["Kategorie", valueOrNotProvided(form.type)],
+    ["Ort / Kontext", valueOrNotProvided(form.context)],
+    ["Datum und Uhrzeit", formatIncidentDateTime(form.date, form.time)],
+    ["Wiederholung", valueOrNotProvided(form.repetition)],
+    ["Perspektive", valueOrNotProvided(form.perspective)],
+    ["Gefahr", valueOrNotProvided(form.danger)],
+    ["Belastung", formatStress(form.stress)],
+    ["Geplanter Empfänger", valueOrNotProvided(form.recipient)],
+    ["Form", valueOrNotProvided(form.draftStyle)],
     ["Lokale Dringlichkeit", analysis.urgency],
   ];
 
@@ -400,26 +388,30 @@ function TextField({ children, label, hint }) {
 }
 
 function validateStep(step, form) {
-  if (step === 1 && !form.type) return "Wähle eine Kategorie.";
+  if (step === 1 && !form.type) return "Wähle bewusst eine Kategorie.";
   if (step === 2 && form.description.trim().length < 20) return "Beschreibe den Sachverhalt mit mindestens 20 Zeichen.";
-  if (step === 3 && !form.danger) return "Wähle eine Einschätzung zur aktuellen Gefahr.";
+  if (step === 2 && !form.repetition) return "Wähle die Häufigkeit oder ausdrücklich „Nicht angegeben“.";
+  if (step === 2 && !form.perspective) return "Wähle deine Perspektive oder ausdrücklich „Nicht angegeben“.";
+  if (step === 3 && !form.danger) return "Wähle bewusst eine Einschätzung zur aktuellen Gefahr.";
+  if (step === 3 && !form.stress) return "Wähle die Belastung oder ausdrücklich „Nicht angegeben“.";
   if (step === 4 && !form.recipient) return "Wähle einen geplanten nächsten Schritt oder „Noch offen“.";
+  if (step === 4 && !form.draftStyle) return "Wähle bewusst, welche Form der Entwurf haben soll.";
   return "";
 }
 
 function createInitialForm() {
   return {
-    type: "Mobbing",
+    type: "",
     context: "",
     date: "",
     time: "",
-    repetition: "Einmalig",
+    repetition: "",
     description: "",
-    perspective: "Direkt betroffen",
-    danger: "Keine akute Gefahr",
-    stress: 3,
-    recipient: "Noch offen",
-    anonymousDraft: true,
+    perspective: "",
+    danger: "",
+    stress: "",
+    recipient: "",
+    draftStyle: "",
   };
 }
 
@@ -427,7 +419,7 @@ function createLocalAnalysis(form) {
   const text = `${form.type} ${form.context} ${form.description} ${form.danger}`.toLowerCase();
   const acute = form.danger === "Direkte Gefahr" || ["waffe", "messer", "schuss", "akute gefahr"].some((word) => text.includes(word));
   const high = form.danger === "Eskalation möglich" || ["drohung", "bedroht", "gewalt", "schlagen", "angst"].some((word) => text.includes(word));
-  const medium = form.stress >= 4 || form.repetition === "Regelmäßig" || form.repetition === "Schon länger" || ["mobbing", "diskrimin", "rassistisch", "ausgeschlossen"].some((word) => text.includes(word));
+  const medium = form.danger === "Unsicher" || Number(form.stress) >= 4 || form.repetition === "Regelmäßig" || form.repetition === "Schon länger" || ["mobbing", "diskrimin", "rassistisch", "ausgeschlossen"].some((word) => text.includes(word));
   const urgency = acute ? "akut" : high ? "hoch" : medium ? "mittel" : "niedrig";
   const nextStep = urgency === "akut"
     ? "Sicherheit zuerst: Verlasse wenn möglich die Gefahrenzone und hole sofort reale Hilfe über 110 oder 112. Erstelle den Entwurf erst, wenn du sicher bist."
@@ -446,16 +438,16 @@ function createReportText(form, analysis, reportId, createdAt) {
     "",
     `Entwurfsnummer: ${reportId}`,
     `Erstellt: ${formatDateTime(createdAt)}`,
-    `Kategorie: ${form.type}`,
-    `Ort / Kontext: ${form.context || "Nicht angegeben"}`,
-    `Datum: ${form.date || "Nicht angegeben"}`,
-    `Uhrzeit: ${form.time || "Nicht angegeben"}`,
-    `Wiederholung: ${form.repetition}`,
-    `Perspektive: ${form.perspective}`,
-    `Aktuelle Gefahr: ${form.danger}`,
-    `Belastung: ${form.stress}/5`,
-    `Geplanter Empfänger: ${form.recipient}`,
-    `Gewünschte Form: ${form.anonymousDraft ? "ohne persönliche Angaben" : "persönliche Angaben später manuell ergänzen"}`,
+    `Kategorie: ${valueOrNotProvided(form.type)}`,
+    `Ort / Kontext: ${valueOrNotProvided(form.context)}`,
+    `Datum: ${valueOrNotProvided(form.date)}`,
+    `Uhrzeit: ${valueOrNotProvided(form.time)}`,
+    `Wiederholung: ${valueOrNotProvided(form.repetition)}`,
+    `Perspektive: ${valueOrNotProvided(form.perspective)}`,
+    `Aktuelle Gefahr: ${valueOrNotProvided(form.danger)}`,
+    `Belastung: ${formatStress(form.stress)}`,
+    `Geplanter Empfänger: ${valueOrNotProvided(form.recipient)}`,
+    `Gewünschte Form: ${valueOrNotProvided(form.draftStyle)}`,
     `Lokale Orientierung zur Dringlichkeit: ${analysis.urgency}`,
     "",
     "SACHVERHALT",
@@ -490,6 +482,19 @@ function createReportId() {
   const suffix = globalThis.crypto?.randomUUID?.().slice(0, 8).toUpperCase()
     || `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`.toUpperCase();
   return `DEMO-${suffix}`;
+}
+
+function valueOrNotProvided(value) {
+  return String(value || "").trim() || "Nicht angegeben";
+}
+
+function formatStress(value) {
+  return !value || value === "Nicht angegeben" ? "Nicht angegeben" : `${value}/5`;
+}
+
+function formatIncidentDateTime(date, time) {
+  if (!date && !time) return "Nicht angegeben";
+  return `${date || "Datum nicht angegeben"}${time ? `, ${time} Uhr` : ""}`;
 }
 
 function formatDateTime(value) {
