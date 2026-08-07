@@ -62,7 +62,7 @@ function shutdown(code = 0) {
 }
 
 function terminateChild(child, force) {
-  if (!child.pid || child.exitCode !== null || child.killed) return;
+  if (!child.pid || child.exitCode !== null) return;
 
   if (process.platform === "win32") {
     const args = ["/PID", String(child.pid), "/T"];
@@ -72,7 +72,11 @@ function terminateChild(child, force) {
     return;
   }
 
-  child.kill(force ? "SIGKILL" : "SIGTERM");
+  try {
+    child.kill(force ? "SIGKILL" : "SIGTERM");
+  } catch (error) {
+    if (error?.code !== "ESRCH") console.error("Kindprozess konnte nicht beendet werden:", error);
+  }
 }
 
 function finishIfStopped() {

@@ -2,6 +2,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
+import {
+  mockTicketsData,
+  resetTickets,
+  updateTickets,
+} from "../src/data/mockTickets.js";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -61,6 +66,33 @@ test("PWA-Manifest verweist auf vorhandene lokale Ressourcen", () => {
     assert.ok(icon.src.startsWith("/"));
     assert.ok(fs.existsSync(path.join(root, "public", icon.src.slice(1))), `Manifest-Ressource fehlt: ${icon.src}`);
   }
+});
+
+test("Service Worker läuft nur im Produktionsbuild und cachet keine API", () => {
+  const main = read("src/main.jsx");
+  const serviceWorker = read("public/sw.js");
+
+  assert.match(main, /import\.meta\.env\.PROD/);
+  assert.match(main, /serviceWorker\.register\("\/sw\.js"\)/);
+  assert.match(serviceWorker, /url\.pathname\.startsWith\("\/api\/"\)/);
+  assert.match(serviceWorker, /no-store/i);
+});
+
+test("Demo-Postfach lässt sich auf unveränderte Ausgangsdaten zurücksetzen", () => {
+  const initialIds = mockTicketsData.map((ticket) => ticket.id);
+  updateTickets([{ id: "TEMP", messages: [] }]);
+  assert.deepEqual(mockTicketsData.map((ticket) => ticket.id), ["TEMP"]);
+
+  resetTickets();
+  assert.deepEqual(mockTicketsData.map((ticket) => ticket.id), initialIds);
+  assert.ok(mockTicketsData.every((ticket) => ticket.id.startsWith("DEMO-")));
+});
+
+test("Entwicklungsstarter kann nach SIGTERM zwangsweise beenden", () => {
+  const devScript = read("scripts/dev.js");
+  assert.doesNotMatch(devScript, /child\.killed/);
+  assert.match(devScript, /SIGKILL/);
+  assert.match(devScript, /taskkill/);
 });
 
 test("historische Backup-Verzeichnisse sind nicht Teil des aktiven Repositorys", () => {
