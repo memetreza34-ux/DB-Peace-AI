@@ -58,6 +58,26 @@ test("API-Proxy enthält die erwarteten Schutzmaßnahmen", () => {
   assert.match(server, /process\.once\("SIGTERM"/);
 });
 
+test("KI-Status unterscheidet Konfiguration von erfolgreicher Verbindung", () => {
+  const server = read("server.js");
+  const chat = read("src/components/FloatingChatWidget.jsx");
+
+  assert.match(server, /configured:\s*Boolean/);
+  assert.doesNotMatch(server, /connected:\s*Boolean/);
+  assert.match(chat, /data\.configured\s*\?\s*"configured"/);
+  assert.match(chat, /Gemini-Antwort erhalten/);
+  assert.match(chat, /Verbindung noch nicht geprüft/);
+});
+
+test("KI-Quiz bleibt bei allgemeinen Sicherheits- und Orientierungsfragen", () => {
+  const server = read("server.js");
+  const prohibitedTopic = ["Rechte", "in", "der", "Ausbildung"].join(" ");
+
+  assert.match(server, /Themen ausschließlich: Eigenschutz bei Konflikten/);
+  assert.match(server, /keine Frage, deren richtige Antwort einen konkreten Rechtsanspruch/);
+  assert.doesNotMatch(server, new RegExp(prohibitedTopic, "i"));
+});
+
 test("alle lokalen JavaScript-Importe können aufgelöst werden", () => {
   const sourceFiles = collectFiles("src", /\.(?:js|jsx|mjs)$/);
   sourceFiles.push(path.join(root, "vite.config.js"));
@@ -120,6 +140,35 @@ test("Produktions-Fehleransicht zeigt technische Details nur in Entwicklung", ()
   const main = read("src/main.jsx");
   assert.match(main, /import\.meta\.env\.DEV/);
   assert.match(main, /showTechnicalDetails/);
+});
+
+test("Rechtsdaten bestehen nur aus kuratierten amtlichen Verweisen", () => {
+  const laws = json("src/data/lawsData.json");
+  assert.match(String(laws.lastChecked || ""), /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(Object.hasOwn(laws, "dbRichtlinien"), false);
+  assert.ok(Array.isArray(laws.bundesgesetze) && laws.bundesgesetze.length >= 8 && laws.bundesgesetze.length <= 20);
+
+  for (const law of laws.bundesgesetze) {
+    assert.ok(String(law.id || "").trim());
+    assert.ok(String(law.officialText || "").trim());
+    assert.ok(String(law.translation || "").trim());
+    assert.ok(String(law.actionTip || "").trim());
+    assert.match(String(law.sourceUrl || ""), /^https:\/\/www\.gesetze-im-internet\.de\//);
+  }
+  assert.equal(fs.existsSync(path.join(root, "src/data/generate_laws.py")), false);
+});
+
+test("Lernkatalog enthält nur kleine fiktive Demo-Datensätze", () => {
+  const courses = json("src/data/coursesData.json");
+  const allCourses = Object.values(courses).flat();
+
+  assert.ok(allCourses.length > 0 && allCourses.length <= 12);
+  assert.deepEqual(Object.keys(courses).sort(), ["online", "praesenz", "zertifikat"]);
+  for (const course of allCourses) {
+    assert.match(String(course.provider || ""), /^Fiktiv/i);
+    assert.match(String(course.title || ""), /Demo/i);
+    assert.ok(!course.link || /^https:\/\//.test(course.link));
+  }
 });
 
 test("Analytics ist als Szenario und nicht als reale Auswertung gekennzeichnet", () => {
