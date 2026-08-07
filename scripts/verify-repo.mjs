@@ -8,6 +8,7 @@ const verifierPath = path.join(root, "scripts", "verify-repo.mjs");
 const requiredFiles = [
   "index.html",
   "package.json",
+  "package-lock.json",
   "server.js",
   "src/main.jsx",
   "src/App.jsx",
@@ -77,11 +78,20 @@ if (!envExample.includes("GEMINI_API_KEY")) failures.push(".env.example muss GEM
 const readme = read("README.md");
 if (!readme.includes("keine offizielle Deutsche-Bahn-Anwendung")) failures.push("README muss den Prototyp-Status eindeutig nennen.");
 if (!readme.includes("docs/MANUAL-TEST-CHECKLIST.md")) failures.push("README muss die manuelle Abnahmecheckliste verlinken.");
+if (!readme.includes("/api/report/extract")) failures.push("README muss die tatsächlich implementierte Report-Route dokumentieren.");
 
 const packageJson = parseJson("package.json");
+const packageLock = parseJson("package-lock.json");
 if (packageJson?.scripts?.check !== "npm run verify && npm run build") failures.push("package.json muss den kombinierten Check aus Verify und Build enthalten.");
 if (packageJson?.engines?.node !== ">=22 <23") failures.push("package.json muss Node.js 22 als unterstützte Laufzeit festlegen.");
 if (packageJson?.engines?.npm !== ">=10 <12") failures.push("package.json muss npm 10 oder 11 als unterstützte Laufzeit festlegen.");
+if (packageLock?.version !== packageJson?.version || packageLock?.packages?.[""]?.version !== packageJson?.version) {
+  failures.push("Versionen in package.json und package-lock.json müssen übereinstimmen.");
+}
+
+const reportRoute = "/api/report/extract";
+if (!read("server.js").includes(reportRoute)) failures.push("server.js muss die dokumentierte Report-Route bereitstellen.");
+if (!read("src/components/AISmartReport.jsx").includes(reportRoute)) failures.push("AISmartReport muss dieselbe Report-Route wie der Server verwenden.");
 
 const serviceWorker = read("public/sw.js");
 if (!serviceWorker.includes('url.pathname.startsWith("/api/")')) failures.push("Der Service Worker muss API-Antworten ausdrücklich vom Cache ausschließen.");
