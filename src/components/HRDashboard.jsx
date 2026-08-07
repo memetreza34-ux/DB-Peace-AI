@@ -122,7 +122,7 @@ export function HRDashboard({ onExit }) {
           Dieses Dashboard zeigt nur einen möglichen Bedienablauf. Kennzahlen, Prioritäten, Dialoge und Fälle sind erfunden und nicht fachlich, rechtlich oder organisatorisch validiert.
         </div>
 
-        <div className="flex max-w-md rounded-xl bg-slate-200 p-1" role="tablist" aria-label="HR-Demo-Bereiche">
+        <div className="flex max-w-md rounded-xl bg-slate-200 p-1" role="group" aria-label="HR-Demo-Bereich anzeigen">
           <TabButton active={activeTab === "tickets"} onClick={() => setActiveTab("tickets")}>Fälle</TabButton>
           <TabButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")}>Demo-Auswertung</TabButton>
         </div>
@@ -135,7 +135,7 @@ export function HRDashboard({ onExit }) {
         </section>
 
         {activeTab === "tickets" ? (
-          <section className="grid min-h-[620px] gap-5 lg:grid-cols-[0.85fr_1.15fr]" role="tabpanel">
+          <section className="grid min-h-[620px] gap-5 lg:grid-cols-[0.85fr_1.15fr]">
             <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
               <div className="border-b border-slate-100 bg-slate-50 p-4">
                 <label className="relative block">
@@ -210,7 +210,7 @@ export function HRDashboard({ onExit }) {
 }
 
 function TabButton({ active, children, onClick }) {
-  return <button type="button" role="tab" aria-selected={active} onClick={onClick} className={`flex-1 rounded-lg px-4 py-2 text-sm font-black focus:outline-none focus:ring-2 focus:ring-violet-500/30 ${active ? "bg-white shadow-sm" : "text-slate-600"}`}>{children}</button>;
+  return <button type="button" aria-pressed={active} onClick={onClick} className={`flex-1 rounded-lg px-4 py-2 text-sm font-black focus:outline-none focus:ring-2 focus:ring-violet-500/30 ${active ? "bg-white shadow-sm" : "text-slate-600"}`}>{children}</button>;
 }
 
 function Metric({ label, value, icon: Icon, tone = "slate" }) {
@@ -231,7 +231,7 @@ function AnalyticsDemo({ tickets }) {
   const max = Math.max(1, ...categories.map(([, count]) => count));
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm" role="tabpanel">
+    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-violet-700"><BarChart3 className="h-5 w-5" aria-hidden="true" /></div>
         <div><h2 className="text-xl font-black">Auswertung der erfundenen Beispieldaten</h2><p className="mt-1 text-sm font-semibold leading-6 text-slate-500">Keine Prognose, kein Frühwarnsystem und keine Aussage über reale Standorte oder Beschäftigte.</p></div>
