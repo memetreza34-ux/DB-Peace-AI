@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "db-peace-ai-";
-const CACHE_NAME = `${CACHE_PREFIX}v3`;
+const CACHE_NAME = `${CACHE_PREFIX}v4`;
 const APP_SHELL = ["/", "/index.html", "/manifest.json", "/icon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -56,17 +56,15 @@ async function handleNavigation(request) {
 }
 
 async function handleStaticRequest(request, url) {
-  const cached = await caches.match(request);
-
   try {
     const response = await fetch(request);
     if (canCache(response) && isStaticAsset(url.pathname)) {
       const cache = await caches.open(CACHE_NAME);
       await cache.put(request, response.clone());
     }
-    return cached || response;
+    return response;
   } catch {
-    return cached || Response.error();
+    return (await caches.match(request)) || Response.error();
   }
 }
 
