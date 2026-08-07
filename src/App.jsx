@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, FlaskConical, WifiOff } from "lucide-react";
 import { AppLock } from "./components/AppLock.jsx";
 import { ContactsView } from "./components/ContactsView.jsx";
@@ -28,6 +28,7 @@ const pageVariants = {
 };
 
 export default function App() {
+  const reduceMotion = useReducedMotion();
   const [activeTab, setActiveTab] = useState("home");
   const [isEmergencyOpen, setIsEmergencyOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -49,9 +50,15 @@ export default function App() {
 
   if (isLocked) return <AppLock onUnlock={() => setIsLocked(false)} />;
 
-  if (isHRMode) {
-    return <HRDashboard onExit={() => setIsHRMode(false)} />;
-  }
+  if (isHRMode) return <HRDashboard onExit={() => setIsHRMode(false)} />;
+
+  const view = (
+    <ActiveView
+      activeTab={activeTab}
+      onNavigate={setActiveTab}
+      onOpenEmergency={() => setIsEmergencyOpen(true)}
+    />
+  );
 
   return (
     <div className="relative flex min-h-screen flex-col bg-db-soft text-slate-900 selection:bg-db-red selection:text-white dark:bg-db-dark dark:text-white">
@@ -72,22 +79,22 @@ export default function App() {
           <button
             type="button"
             onClick={() => setActiveTab("home")}
-            className="mb-5 inline-flex items-center gap-2 rounded-xl border border-db-dark/10 bg-white px-4 py-2 text-xs font-black text-db-dark shadow-sm transition hover:border-db-red hover:text-db-red dark:border-white/10 dark:bg-white/5 dark:text-white"
+            className="mb-5 inline-flex items-center gap-2 rounded-xl border border-db-dark/10 bg-white px-4 py-2 text-xs font-black text-db-dark shadow-sm transition hover:border-db-red hover:text-db-red focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:border-white/10 dark:bg-white/5 dark:text-white"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Zur Übersicht
           </button>
         )}
 
-        <AnimatePresence mode="wait">
-          <motion.div key={activeTab} variants={pageVariants} initial="initial" animate="animate" exit="exit">
-            <ActiveView
-              activeTab={activeTab}
-              onNavigate={setActiveTab}
-              onOpenEmergency={() => setIsEmergencyOpen(true)}
-            />
-          </motion.div>
-        </AnimatePresence>
+        {reduceMotion ? (
+          <div key={activeTab}>{view}</div>
+        ) : (
+          <AnimatePresence mode="wait">
+            <motion.div key={activeTab} variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              {view}
+            </motion.div>
+          </AnimatePresence>
+        )}
       </main>
 
       <SSOLoginModal
@@ -104,8 +111,8 @@ export default function App() {
       <EmergencyModal isOpen={isEmergencyOpen} onClose={() => setIsEmergencyOpen(false)} />
 
       {isOffline && (
-        <div className="fixed inset-x-0 bottom-0 z-[80] flex items-center justify-center gap-2 bg-amber-500 px-4 py-2 text-xs font-black text-amber-950 shadow-lg">
-          <WifiOff className="h-4 w-4" />
+        <div className="fixed inset-x-0 bottom-0 z-[80] flex items-center justify-center gap-2 bg-amber-500 px-4 py-2 text-xs font-black text-amber-950 shadow-lg" role="status" aria-live="polite">
+          <WifiOff className="h-4 w-4" aria-hidden="true" />
           Offline: Bereits geladene statische Inhalte können verfügbar sein. Eingaben und Meldungen werden nicht automatisch übertragen oder synchronisiert.
         </div>
       )}
@@ -145,7 +152,7 @@ function PrototypeBanner() {
   return (
     <div className="border-b border-violet-200 bg-violet-50 px-4 py-2 text-violet-950 dark:border-violet-900/50 dark:bg-violet-950/25 dark:text-violet-200">
       <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 text-center text-[11px] font-bold sm:text-xs">
-        <FlaskConical className="h-3.5 w-3.5 shrink-0" />
+        <FlaskConical className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
         Innovationsprototyp · keine offizielle DB-Anwendung · keine echten Personen- oder Falldaten eingeben
       </div>
     </div>
