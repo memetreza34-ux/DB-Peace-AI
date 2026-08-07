@@ -383,7 +383,7 @@ function cleanEnvironmentValue(value, fallback, maxLength) {
 
 function normalizeUrgency(value) {
   const normalized = String(value || "").toLowerCase();
-  return ["niedrig", "mittel", "hoch", "akut"].includes(normalized) ? normalized : "mittel";
+  return ["niedrig", "mittel", "hoch", "akut"].includes(normalized) ? normalized : "Nicht angegeben";
 }
 
 function normalizeBoolean(value) {
