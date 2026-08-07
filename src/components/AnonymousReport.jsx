@@ -242,6 +242,7 @@ function Progress({ step }) {
 
 function SafetyCard({ analysis }) {
   const tones = {
+    "noch nicht bewertet": "border-slate-200 bg-slate-50 text-slate-800 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-200",
     niedrig: "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900/50 dark:bg-emerald-950/25 dark:text-emerald-200",
     mittel: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/25 dark:text-amber-200",
     hoch: "border-red-200 bg-red-50 text-red-900 dark:border-red-900/50 dark:bg-red-950/25 dark:text-red-200",
@@ -249,7 +250,7 @@ function SafetyCard({ analysis }) {
   };
 
   return (
-    <div className={`rounded-xl border p-4 ${tones[analysis.urgency]}`} role="status" aria-live="polite">
+    <div className={`rounded-xl border p-4 ${tones[analysis.urgency] || tones["noch nicht bewertet"]}`} role="status" aria-live="polite">
       <div className="flex items-center gap-2">
         <ShieldAlert className="h-5 w-5" aria-hidden="true" />
         <p className="font-black">Lokale Orientierung: {analysis.urgency}</p>
@@ -416,7 +417,14 @@ function createInitialForm() {
 }
 
 function createLocalAnalysis(form) {
-  const text = `${form.type} ${form.context} ${form.description} ${form.danger}`.toLowerCase();
+  if (!form.danger) {
+    return {
+      urgency: "noch nicht bewertet",
+      nextStep: "Wähle in Schritt 3 bewusst aus, ob aktuell Gefahr besteht. Vorher nimmt die App keine Dringlichkeit an.",
+    };
+  }
+
+  const text = `${form.context} ${form.description}`.toLowerCase();
   const acute = form.danger === "Direkte Gefahr" || ["waffe", "messer", "schuss", "akute gefahr"].some((word) => text.includes(word));
   const high = form.danger === "Eskalation möglich" || ["drohung", "bedroht", "gewalt", "schlagen", "angst"].some((word) => text.includes(word));
   const medium = form.danger === "Unsicher" || Number(form.stress) >= 4 || form.repetition === "Regelmäßig" || form.repetition === "Schon länger" || ["mobbing", "diskrimin", "rassistisch", "ausgeschlossen"].some((word) => text.includes(word));
