@@ -139,7 +139,7 @@ export function AISmartReport({ onReportGenerated }) {
             {mode === "local" ? (
               <p className="mt-3 flex items-start gap-2 rounded-lg bg-amber-100/80 p-3 text-xs font-semibold leading-5 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-                Die KI war nicht erreichbar. Der Entwurf wurde nur mit einfacher lokaler Schlüsselwortlogik erstellt; fehlende Fakten bleiben „Nicht angegeben“.
+                Die KI war nicht erreichbar. Der lokale Basisentwurf übernimmt nur deinen Originaltext; Kategorie, Zeit, Ort, Zeug:innen und Dringlichkeit bleiben offen.
               </p>
             ) : (
               <p className="mt-3 flex items-start gap-2 rounded-lg bg-amber-100/80 p-3 text-xs font-semibold leading-5 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
@@ -192,38 +192,21 @@ function normalizeReport(report, sourceText) {
     time: valueOrNotProvided(report.time),
     location: valueOrNotProvided(report.location),
     witnesses: valueOrNotProvided(report.witnesses),
-    urgency: valueOrNotProvided(report.urgency, "mittel"),
+    urgency: valueOrNotProvided(report.urgency),
     missingFields: Array.isArray(report.missingFields) ? report.missingFields : [],
   };
 }
 
 function createLocalDraft(sourceText) {
-  const lower = sourceText.toLowerCase();
-  const urgency = ["waffe", "messer", "schlagen", "akute gefahr"].some((word) => lower.includes(word))
-    ? "akut"
-    : ["drohung", "bedroht", "gewalt", "angst"].some((word) => lower.includes(word))
-      ? "hoch"
-      : ["mobbing", "diskrimin", "beleidigt", "ausgeschlossen"].some((word) => lower.includes(word))
-        ? "mittel"
-        : "niedrig";
-
-  const category = lower.includes("diskrimin") || lower.includes("rassistisch")
-    ? "Diskriminierung"
-    : lower.includes("droh") || lower.includes("gewalt")
-      ? "Bedrohung / Gewalt"
-      : lower.includes("mobbing") || lower.includes("ausgeschlossen")
-        ? "Mobbing / Ausgrenzung"
-        : "Vorfall / Konflikt";
-
   return {
-    category,
+    category: "Nicht angegeben",
     description: sourceText,
     date: "Nicht angegeben",
     time: "Nicht angegeben",
     location: "Nicht angegeben",
     witnesses: "Nicht angegeben",
-    urgency,
-    missingFields: ["Datum prüfen", "Uhrzeit prüfen", "Ort prüfen", "mögliche Zeug:innen ergänzen"],
+    urgency: "Nicht automatisch bewertet",
+    missingFields: ["Kategorie prüfen", "Datum prüfen", "Uhrzeit prüfen", "Ort prüfen", "mögliche Zeug:innen ergänzen", "Dringlichkeit durch eine Person prüfen"],
   };
 }
 
