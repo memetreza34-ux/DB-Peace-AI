@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AlertTriangle, Bot, CheckCircle2, FileText, Loader2, Send, ShieldAlert } from "lucide-react";
 
 export function AISmartReport({ onReportGenerated }) {
@@ -8,6 +8,13 @@ export function AISmartReport({ onReportGenerated }) {
   const [mode, setMode] = useState(null);
   const [error, setError] = useState("");
   const activeControllerRef = useRef(null);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => () => {
+    isMountedRef.current = false;
+    activeControllerRef.current?.abort();
+    activeControllerRef.current = null;
+  }, []);
 
   async function handleGenerate(event) {
     event.preventDefault();
@@ -37,18 +44,21 @@ export function AISmartReport({ onReportGenerated }) {
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok || !data.report) throw new Error(data.error || "extract_failed");
-      if (controller.signal.aborted) return;
+      if (!isMountedRef.current || controller.signal.aborted) return;
 
       setGeneratedReport(normalizeReport(data.report, text));
       setMode("ai");
     } catch (requestError) {
-      if (requestError?.name === "AbortError" && activeControllerRef.current !== controller) return;
+      if (!isMountedRef.current || activeControllerRef.current !== controller) return;
+      if (requestError?.name === "AbortError" && controller.signal.aborted) {
+        setError("Der KI-Dienst hat nicht rechtzeitig geantwortet. Es wurde ein lokaler Fallback-Entwurf erstellt.");
+      }
       setGeneratedReport(createLocalDraft(text));
       setMode("local");
     } finally {
       window.clearTimeout(timeout);
       if (activeControllerRef.current === controller) activeControllerRef.current = null;
-      setIsLoading(false);
+      if (isMountedRef.current) setIsLoading(false);
     }
   }
 
@@ -109,7 +119,7 @@ export function AISmartReport({ onReportGenerated }) {
           </div>
         </form>
 
-        {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p>}
+        {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700 dark:border-red-900/50 dark:bg-red-950/25 dark:text-red-300">{error}</p>}
 
         {generatedReport && (
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-900/50 dark:bg-emerald-950/25">
@@ -161,7 +171,7 @@ function ReportField({ label, value, wide = false }) {
   return (
     <div className={`rounded-xl bg-white/70 p-3 dark:bg-black/15 ${wide ? "sm:col-span-2" : ""}`}>
       <dt className="text-[10px] font-black uppercase tracking-wide text-emerald-700 dark:text-emerald-400">{label}</dt>
-      <dd className="mt-1 whitespace-pre-wrap text-sm font-semibold leading-6 text-emerald-950 dark:text-emerald-200">{value}</dd>
+      <dd className="mt-1 whitespace-pre-wrap break-words text-sm font-semibold leading-6 text-emerald-950 dark:text-emerald-200">{value}</dd>
     </div>
   );
 }

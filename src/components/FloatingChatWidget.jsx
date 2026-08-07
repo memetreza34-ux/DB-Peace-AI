@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Bot, MessageSquareText, Send, ShieldAlert, Trash2, WifiOff, X } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 const INITIAL_MESSAGE = {
   id: "welcome",
@@ -9,34 +9,52 @@ const INITIAL_MESSAGE = {
 };
 
 export function FloatingChatWidget() {
+  const reduceMotion = useReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState(() => [INITIAL_MESSAGE]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [mode, setMode] = useState("checking");
   const scrollRef = useRef(null);
+  const inputRef = useRef(null);
+  const toggleButtonRef = useRef(null);
   const activeRequestRef = useRef(null);
   const requestGenerationRef = useRef(0);
 
-  useEffect(() => () => abortActiveRequest(), []);
+  useEffect(() => () => {
+    requestGenerationRef.current += 1;
+    activeRequestRef.current?.abort();
+    activeRequestRef.current = null;
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return undefined;
+    let active = true;
     setMode("checking");
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 4_000);
+    const focusFrame = window.requestAnimationFrame(() => inputRef.current?.focus());
 
-    fetch("/api/chat/status", { signal: controller.signal })
+    fetch("/api/chat/status", { signal: controller.signal, cache: "no-store" })
       .then((response) => response.ok ? response.json() : Promise.reject(new Error("status_failed")))
-      .then((data) => setMode(data.connected ? "online" : "demo"))
+      .then((data) => {
+        if (active) setMode(data.connected ? "online" : "demo");
+      })
       .catch((error) => {
-        if (error?.name !== "AbortError") setMode("demo");
-        else setMode("demo");
+        if (active && error?.name !== "AbortError") setMode("demo");
       })
       .finally(() => window.clearTimeout(timeout));
 
+    function handleKeyDown(event) {
+      if (event.key === "Escape") closeChat();
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
     return () => {
+      active = false;
+      window.cancelAnimationFrame(focusFrame);
       window.clearTimeout(timeout);
+      window.removeEventListener("keydown", handleKeyDown);
       controller.abort();
     };
   }, [isOpen]);
@@ -65,7 +83,7 @@ export function FloatingChatWidget() {
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           messages: nextMessages.map((message) => ({ role: message.role, content: message.text })),
         }),
@@ -103,11 +121,13 @@ export function FloatingChatWidget() {
     abortActiveRequest();
     setMessages([INITIAL_MESSAGE]);
     setInput("");
+    window.requestAnimationFrame(() => inputRef.current?.focus());
   }
 
   function closeChat() {
     abortActiveRequest();
     setIsOpen(false);
+    window.requestAnimationFrame(() => toggleButtonRef.current?.focus());
   }
 
   function toggleChat() {
@@ -120,9 +140,9 @@ export function FloatingChatWidget() {
       <AnimatePresence>
         {isOpen && (
           <motion.section
-            initial={{ opacity: 0, y: 20, scale: 0.96 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 20, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.96 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 20, scale: 0.96 }}
             className="absolute bottom-20 right-0 flex h-[min(560px,78vh)] w-[min(370px,calc(100vw-2rem))] flex-col overflow-hidden rounded-xl border border-db-dark/10 bg-white shadow-2xl dark:border-white/10 dark:bg-db-dark"
             role="dialog"
             aria-modal="false"
@@ -168,8 +188,8 @@ export function FloatingChatWidget() {
 
             <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto bg-db-soft/50 p-4 dark:bg-transparent" role="log" aria-live="polite" aria-busy={isTyping} aria-relevant="additions">
               {messages.map((message) => (
-                <motion.div key={message.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[86%] rounded-xl px-4 py-3 text-sm font-medium leading-6 ${message.role === "user" ? "rounded-br-sm bg-db-red text-white" : "rounded-bl-sm border border-db-dark/5 bg-white text-db-dark shadow-sm dark:border-white/10 dark:bg-db-rail dark:text-white"}`}>
+                <motion.div key={message.id} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-[86%] break-words rounded-xl px-4 py-3 text-sm font-medium leading-6 ${message.role === "user" ? "rounded-br-sm bg-db-red text-white" : "rounded-bl-sm border border-db-dark/5 bg-white text-db-dark shadow-sm dark:border-white/10 dark:bg-db-rail dark:text-white"}`}>
                     {message.text}
                   </div>
                 </motion.div>
@@ -177,9 +197,7 @@ export function FloatingChatWidget() {
 
               {isTyping && (
                 <div className="flex justify-start" role="status">
-                  <div className="rounded-xl rounded-bl-sm border border-db-dark/5 bg-white px-4 py-3 text-xs font-bold text-db-rail dark:border-white/10 dark:bg-db-rail dark:text-white/60">
-                    Antwort wird erstellt …
-                  </div>
+                  <div className="rounded-xl rounded-bl-sm border border-db-dark/5 bg-white px-4 py-3 text-xs font-bold text-db-rail dark:border-white/10 dark:bg-db-rail dark:text-white/60">Antwort wird erstellt …</div>
                 </div>
               )}
             </div>
@@ -188,6 +206,7 @@ export function FloatingChatWidget() {
               <label className="sr-only" htmlFor="chat-message-input">Nachricht an den Azubi-Begleiter</label>
               <div className="flex gap-2">
                 <input
+                  ref={inputRef}
                   id="chat-message-input"
                   value={input}
                   onChange={(event) => setInput(event.target.value.slice(0, 1_200))}
@@ -206,9 +225,10 @@ export function FloatingChatWidget() {
       </AnimatePresence>
 
       <motion.button
+        ref={toggleButtonRef}
         type="button"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={reduceMotion ? undefined : { scale: 1.05 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.95 }}
         onClick={toggleChat}
         className={`flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg focus:outline-none focus:ring-4 focus:ring-db-red/25 ${isOpen ? "bg-db-dark" : "bg-db-red"}`}
         aria-label={isOpen ? "Chat schließen" : "Azubi-Begleiter öffnen"}
