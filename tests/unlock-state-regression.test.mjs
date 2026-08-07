@@ -18,3 +18,11 @@ test("Entsperrstatus wird nicht in localStorage oder sessionStorage persistiert"
   assert.doesNotMatch(lock, /SESSION_UNLOCK_KEY/);
   assert.match(lock, /Nach Neuladen oder Öffnen in einem neuen Tab/);
 });
+
+test("Schnell-Verlassen bleibt über kritischen App-Dialogen anklickbar", () => {
+  const panic = read("src/components/PanicButton.jsx");
+  const emergency = read("src/components/EmergencyModal.jsx");
+
+  assert.match(panic, /z-\[140\]/);
+  assert.match(emergency, /z-\[100\]/);
+});
