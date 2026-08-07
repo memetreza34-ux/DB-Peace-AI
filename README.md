@@ -67,28 +67,22 @@ npm run dev         # API und Vite gemeinsam starten
 npm run dev:app     # nur Vite
 npm run dev:server  # nur lokalen API-Proxy
 npm run verify      # Repository-Regeln und kritische Behauptungen prüfen
+npm test            # statische Integritäts- und Importtests ausführen
 npm run build       # Production-Build erstellen
-npm run check       # Verify und Production-Build nacheinander ausführen
+npm run check       # Verify, Tests und Production-Build nacheinander ausführen
 npm run preview     # gebauten Stand lokal anzeigen
 ```
 
 ## Prüfung vor dem Zusammenführen
 
-1. Abhängigkeiten exakt aus dem Lockfile installieren:
-
 ```bash
 npm ci
-```
-
-2. Repository-Regeln und Production-Build prüfen:
-
-```bash
 npm run check
 ```
 
-3. Die Kernwege anhand von [`docs/MANUAL-TEST-CHECKLIST.md`](docs/MANUAL-TEST-CHECKLIST.md) ausschließlich mit synthetischen Daten manuell testen.
+Danach die Kernwege anhand von [`docs/MANUAL-TEST-CHECKLIST.md`](docs/MANUAL-TEST-CHECKLIST.md) ausschließlich mit synthetischen Daten manuell testen und das Ergebnis in [`docs/FINAL-ACCEPTANCE.md`](docs/FINAL-ACCEPTANCE.md) dokumentieren.
 
-4. Den getesteten Commit, Browser, Betriebssystem und offene Blocker im Abschlussprotokoll dokumentieren.
+Der GitHub-Actions-Lauf muss für exakt denselben finalen Commit erfolgreich sein. Hinweise zu externen Actions-Blockern stehen in [`docs/CI-TROUBLESHOOTING.md`](docs/CI-TROUBLESHOOTING.md).
 
 ## Sicherheitsregeln
 
@@ -111,4 +105,4 @@ Ein echter Pilot benötigt mindestens:
 - automatisierte Tests, Barrierefreiheitsprüfung, Monitoring und Incident Response
 - IT-Sicherheitsprüfung und Penetrationstest
 
-Weitere Details stehen in [`SECURITY.md`](SECURITY.md), [`docs/MVP-STATUS.md`](docs/MVP-STATUS.md) und der Pilot-Roadmap in GitHub Issue #2.
+Weitere Details stehen in [`SECURITY.md`](SECURITY.md), [`docs/SECURITY-MODEL.md`](docs/SECURITY-MODEL.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/MVP-STATUS.md`](docs/MVP-STATUS.md) und der Pilot-Roadmap in GitHub Issue #2.

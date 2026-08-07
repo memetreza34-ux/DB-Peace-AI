@@ -21,15 +21,34 @@ const requiredFiles = [
   "public/sw.js",
   "public/icon.svg",
   ".env.example",
+  ".nvmrc",
+  ".npmrc",
+  ".editorconfig",
+  ".gitattributes",
   ".github/workflows/ci.yml",
   ".github/dependabot.yml",
+  ".github/CODEOWNERS",
+  "CONTRIBUTING.md",
+  "LICENSE",
   "SECURITY.md",
+  "CHANGELOG.md",
+  "docs/ARCHITECTURE.md",
+  "docs/SECURITY-MODEL.md",
   "docs/MVP-STATUS.md",
   "docs/MANUAL-TEST-CHECKLIST.md",
+  "docs/RELEASE-CHECKLIST.md",
+  "docs/FINAL-ACCEPTANCE.md",
+  "tests/repository.test.mjs",
 ];
 
 for (const relativePath of requiredFiles) {
   if (!fs.existsSync(path.join(root, relativePath))) failures.push(`Pflichtdatei fehlt: ${relativePath}`);
+}
+
+for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+  if (entry.isDirectory() && entry.name.startsWith("backup-before-")) {
+    failures.push(`Historisches Backup-Verzeichnis muss aus dem aktiven Repository entfernt werden: ${entry.name}`);
+  }
 }
 
 const textFiles = [];
@@ -72,8 +91,16 @@ for (const filePath of textFiles) {
   }
 }
 
+verifyLocalImports();
+
 const envExample = read(".env.example");
 if (!envExample.includes("GEMINI_API_KEY")) failures.push(".env.example muss GEMINI_API_KEY dokumentieren.");
+if (envExample.includes("OPENAI_API_KEY")) failures.push(".env.example darf keinen veralteten OpenAI-Schlüssel dokumentieren.");
+
+const gitignore = read(".gitignore");
+for (const ignoredPath of ["node_modules", "dist", ".env"]) {
+  if (!gitignore.includes(ignoredPath)) failures.push(`.gitignore muss ${ignoredPath} ausschließen.`);
+}
 
 const readme = read("README.md");
 if (!readme.includes("keine offizielle Deutsche-Bahn-Anwendung")) failures.push("README muss den Prototyp-Status eindeutig nennen.");
@@ -82,18 +109,26 @@ if (!readme.includes("/api/report/extract")) failures.push("README muss die tats
 
 const packageJson = parseJson("package.json");
 const packageLock = parseJson("package-lock.json");
-if (packageJson?.scripts?.check !== "npm run verify && npm run build") failures.push("package.json muss den kombinierten Check aus Verify und Build enthalten.");
+if (packageJson?.scripts?.test !== "node --test tests/*.test.mjs") failures.push("package.json muss den Node-Testlauf enthalten.");
+if (packageJson?.scripts?.check !== "npm run verify && npm test && npm run build") failures.push("package.json muss Verify, Tests und Build kombinieren.");
 if (packageJson?.engines?.node !== ">=22 <23") failures.push("package.json muss Node.js 22 als unterstützte Laufzeit festlegen.");
 if (packageJson?.engines?.npm !== ">=10 <12") failures.push("package.json muss npm 10 oder 11 als unterstützte Laufzeit festlegen.");
 if (packageLock?.version !== packageJson?.version || packageLock?.packages?.[""]?.version !== packageJson?.version) {
   failures.push("Versionen in package.json und package-lock.json müssen übereinstimmen.");
 }
+verifyDependencyMap("dependencies", packageJson, packageLock);
+verifyDependencyMap("devDependencies", packageJson, packageLock);
 
 const reportRoute = "/api/report/extract";
 if (!read("server.js").includes(reportRoute)) failures.push("server.js muss die dokumentierte Report-Route bereitstellen.");
 if (!read("src/components/AISmartReport.jsx").includes(reportRoute)) failures.push("AISmartReport muss dieselbe Report-Route wie der Server verwenden.");
 
+const manifest = parseJson("public/manifest.json");
+if (manifest?.start_url !== "/" || manifest?.scope !== "/") failures.push("PWA-Manifest muss start_url und scope auf / setzen.");
+if (!Array.isArray(manifest?.icons) || manifest.icons.length === 0) failures.push("PWA-Manifest muss mindestens ein Icon enthalten.");
+
 const serviceWorker = read("public/sw.js");
+if (!serviceWorker.includes('request.method !== "GET"')) failures.push("Der Service Worker darf nur GET-Anfragen behandeln.");
 if (!serviceWorker.includes('url.pathname.startsWith("/api/")')) failures.push("Der Service Worker muss API-Antworten ausdrücklich vom Cache ausschließen.");
 
 const contacts = read("src/components/ContactsView.jsx");
@@ -123,12 +158,60 @@ function parseJson(relativePath) {
   }
 }
 
+function verifyDependencyMap(key, packageJson, packageLock) {
+  const expected = packageJson?.[key] || {};
+  const locked = packageLock?.packages?.[""]?.[key] || {};
+  if (JSON.stringify(expected) !== JSON.stringify(locked)) {
+    failures.push(`${key} in package.json und package-lock.json müssen übereinstimmen.`);
+  }
+}
+
+function verifyLocalImports() {
+  const sourceFiles = textFiles.filter((filePath) => /\.(?:js|jsx|mjs)$/.test(filePath));
+  for (const filePath of sourceFiles) {
+    const content = fs.readFileSync(filePath, "utf8");
+    for (const specifier of localImportSpecifiers(content)) {
+      if (!resolveImport(filePath, specifier)) {
+        failures.push(`${path.relative(root, filePath)}: Lokaler Import fehlt: ${specifier}`);
+      }
+    }
+  }
+}
+
+function localImportSpecifiers(content) {
+  const specifiers = [];
+  const patterns = [
+    /(?:import|export)\s+(?:[^"']*?\s+from\s+)?["'](\.{1,2}\/[^"']+)["']/g,
+    /import\(\s*["'](\.{1,2}\/[^"']+)["']\s*\)/g,
+  ];
+  for (const pattern of patterns) {
+    for (const match of content.matchAll(pattern)) specifiers.push(match[1]);
+  }
+  return specifiers;
+}
+
+function resolveImport(importer, specifier) {
+  const clean = specifier.split(/[?#]/, 1)[0];
+  const base = path.resolve(path.dirname(importer), clean);
+  return [
+    base,
+    `${base}.js`,
+    `${base}.jsx`,
+    `${base}.mjs`,
+    `${base}.json`,
+    path.join(base, "index.js"),
+    path.join(base, "index.jsx"),
+    path.join(base, "index.mjs"),
+  ].some((candidate) => fs.existsSync(candidate));
+}
+
 function walk(directory) {
   const ignored = new Set([".git", "node_modules", "dist", ".npm-cache"]);
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    if (ignored.has(entry.name) || entry.name.startsWith("backup-before-")) continue;
+    if (ignored.has(entry.name)) continue;
     const entryPath = path.join(directory, entry.name);
     if (entry.isDirectory()) {
+      if (entry.name.startsWith("backup-before-")) continue;
       walk(entryPath);
       continue;
     }

@@ -1,0 +1,45 @@
+name: Fehlerbericht
+description: Reproduzierbaren technischen Fehler melden
+title: "Bug: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keine echten Personen-, Fall-, Gesundheits- oder internen Unternehmensdaten eintragen.
+  - type: input
+    id: version
+    attributes:
+      label: Commit oder Version
+      placeholder: z. B. Commit-SHA
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduktionsschritte
+      description: Nur synthetische Beispieldaten verwenden.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Erwartetes Verhalten
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Tatsächliches Verhalten
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Umgebung
+      placeholder: Browser, Betriebssystem, Node-Version
+    validations:
+      required: true
