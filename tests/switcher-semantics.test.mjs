@@ -9,8 +9,12 @@ function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), "utf8");
 }
 
-test("Profil- und HR-Umschalter verwenden keine unvollständigen ARIA-Tabs", () => {
-  for (const file of ["src/components/ProfileView.jsx", "src/components/HRDashboard.jsx"]) {
+test("Ansichtsumschalter verwenden keine unvollständigen ARIA-Tabs", () => {
+  for (const file of [
+    "src/components/ProfileView.jsx",
+    "src/components/HRDashboard.jsx",
+    "src/components/CourseDetailModal.jsx",
+  ]) {
     const source = read(file);
     assert.doesNotMatch(source, /role="tab"/);
     assert.doesNotMatch(source, /role="tabpanel"/);
