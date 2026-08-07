@@ -1,33 +1,62 @@
-# CI-Fehlerdiagnose
+# GitHub Actions — Troubleshooting für DB Peace AI
 
-## Standardablauf
+## Erwarteter Workflow
 
-1. Den exakten PR-Head notieren.
-2. Prüfen, ob ein Workflow-Lauf genau für diesen Commit existiert.
-3. Jobschritte und Annotationen lesen.
-4. Nur bei tatsächlich gestarteten Schritten Code- oder Buildfehler diagnostizieren.
-5. Nach jeder Korrektur den neuen Head erneut prüfen.
+Der Workflow `.github/workflows/ci.yml` läuft bei Pull Requests, Pushes auf `main` und manuell über `workflow_dispatch`.
 
-## Aktueller externer Blocker
+Ein normal gestarteter Job muss mindestens diese Schritte enthalten:
 
-GitHub Actions startet den Job derzeit nicht. Die Annotation meldet fehlgeschlagene Kontozahlungen oder ein zu niedriges Spending-Limit. Dadurch wurden weder Checkout noch `npm ci`, Tests oder Build ausgeführt.
+1. Checkout
+2. Setup Node 22
+3. `npm ci`
+4. `npm run verify`
+5. `npm test`
+6. `npm run build`
 
-Zu prüfen:
+## Aktuell beobachtetes Fehlerbild
 
-- GitHub-Kontoeinstellungen unter **Billing & plans**
-- offene oder fehlgeschlagene Zahlungen
-- Actions-Spending-Limit und verfügbares Budget
-- ob Actions für das private Repository aktiviert sind
+Beim Audit am 7. August 2026 wurden Actions-Läufe beobachtet, bei denen der Job innerhalb weniger Sekunden als fehlgeschlagen endete, ohne einen Runner zu erhalten:
 
-Nach der Behebung den fehlgeschlagenen Lauf erneut starten oder einen neuen Commit beziehungsweise `workflow_dispatch` auslösen. Ein roter Status ohne gestartete Jobschritte ist kein nachgewiesener Codefehler.
+- `steps: []`
+- `runner_id: 0`
+- leerer Runner-Name
 
-## Erwarteter erfolgreicher Ablauf
+Damit wurde **kein Repository-Code ausgeführt**. Insbesondere liefen weder Checkout noch `npm ci`, Verifier, Tests oder Build.
 
-- Checkout
-- Node.js 22 einrichten
-- `npm ci`
-- `npm run verify`
-- `npm test`
-- `npm run build`
+Ein solcher Status darf nicht als Buildfehler interpretiert werden. Er ist aber ebenso wenig ein erfolgreicher Check.
 
-Erst ein erfolgreicher Lauf für den unveränderten finalen Head kann als CI-Nachweis gelten.
+## Zu prüfen in GitHub
+
+Bei diesem Muster zuerst außerhalb des Codes prüfen:
+
+- Repository → **Actions**: Sind Actions für das Repository erlaubt?
+- Repository/Organisation → **Actions settings**: Darf GitHub-hosted `ubuntu-latest` verwendet werden?
+- Konto/Organisation → **Billing & plans**: Gibt es ein Spending-Limit, Zahlungsproblem oder eine Actions-Sperre?
+- Falls eine Organisation beteiligt ist: Richtlinien für Workflows und Third-Party-Actions prüfen.
+- Prüfen, ob eine manuelle Workflow-Ausführung überhaupt einen Runner erhält.
+
+## Nach Behebung des externen Blockers
+
+Für den dann aktuellen finalen Branch-Head einen neuen Lauf starten und verifizieren:
+
+- der Job besitzt einen `runner_id` ungleich `0`,
+- die einzelnen Steps sind sichtbar,
+- `npm ci` ist erfolgreich,
+- `npm run verify` ist erfolgreich,
+- `npm test` ist erfolgreich,
+- `npm run build` ist erfolgreich.
+
+Nur ein Lauf für exakt denselben finalen Commit zählt als CI-Nachweis.
+
+## Lokale Ersatzprüfung
+
+Bis Actions tatsächlich einen Runner startet, kann eine lokale Node-22-Umgebung die technische Prüfung ausführen:
+
+```bash
+npm ci
+npm run check
+```
+
+Das Ergebnis zusammen mit Node-/npm-Version, Betriebssystem und getestetem Commit in `docs/FINAL-ACCEPTANCE.md` dokumentieren.
+
+Ein lokaler erfolgreicher Lauf ersetzt nicht automatisch organisatorische Freigaben oder die manuelle Browser-/Barrierefreiheitsabnahme.
