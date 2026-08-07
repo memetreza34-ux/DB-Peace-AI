@@ -7,19 +7,25 @@ Alle wesentlichen Änderungen werden in dieser Datei dokumentiert.
 ### Stabilisiert
 
 - Produkt-, Sicherheits- und DB-Behauptungen an den tatsächlich implementierten Funktionsumfang angepasst
-- Gemini-Proxy mit Größenlimits, Rate Limiting, 20-Sekunden-Upstream-Timeout und kontrolliertem Shutdown gehärtet
+- Gemini-Proxy mit Größenlimits, Rate Limiting, 20-Sekunden-Upstream-Timeout, lokalem AbortSignal und kontrolliertem Shutdown gehärtet
+- Browser-Origin-/Cross-Site-Schutz für den lokalen API-Proxy ergänzt und POST-Routen auf echtes `application/json` begrenzt
 - KI-Status trennt „API-Key konfiguriert“ von einer tatsächlich erfolgreichen Gemini-Antwort
-- KI-Quiz auf allgemeine Sicherheits- und Orientierungsfragen begrenzt; keine generierten konkreten Rechtsauslegungen
+- KI-Quiz auf `POST /api/quiz` umgestellt und auf allgemeine Sicherheits- und Orientierungsfragen begrenzt; keine generierten konkreten Rechtsauslegungen
 - Meldungsentwurf, Quiz-Fallback und Sitzungsdaten klar abgegrenzt
-- lokalen PIN-Sichtschutz ohne In-App-Reset umgesetzt und Fehlversuchs-Drosselung gegen Reload-Umgehung abgesichert
+- React-StrictMode-Lifecycle der KI-Meldungsanalyse korrigiert
+- lokalen PIN-Sichtschutz ohne In-App-Reset umgesetzt, Fehlversuchs-Drosselung gegen Reload-Umgehung abgesichert und Entsperrstatus aus Browser-Speicher entfernt
 - Notfall-, Kontakt-, Lern-, HR-, Projekt- und Analytics-Bereiche als Prototyp abgesichert
 - Rechtsdaten vollständig auf kuratierte Paraphrasen mit amtlichen Einzelnorm-Links umgestellt; problematischen Generator entfernt
 - großen synthetischen Kurskatalog durch neun vollständig fiktive Demo-Einträge ersetzt
 - statisches Training von Punkt-/Prozentwertung bereinigt
-- Service-Worker-Cachebereinigung auf eigene `db-peace-ai-*`-Caches begrenzt
-- reduzierte Bewegung, Dialogfokus und Produktionsfehleranzeige gehärtet
+- Service-Worker-Cachebereinigung auf eigene `db-peace-ai-*`-Caches begrenzt und statische Assets auf echtes Network-first mit Offline-Fallback umgestellt
+- Produktions-CSP verschärft; Inline-Skripte bleiben nur im lokalen Vite-Serve-Modus für React Refresh erlaubt
+- reduzierte Bewegung, Dialogfokus, Umschalter-Semantik und Produktionsfehleranzeige gehärtet
+- Schnell-Verlassen-Schaltfläche über die Dialogebene gehoben
+- Protokoll-PDF-Export gegen Fehler abgesichert und Fehler sichtbar gemacht
 - historische Backups und bestätigten unreferenzierten JavaScript-Altcode entfernt
-- Repository-Verifier, Importgraph-Test, Node-Regressionstests und diagnostisch getrennten GitHub-Actions-Workflow ergänzt
+- Repository-Verifier, Importgraph-Test und Node-Regressionstests erweitert
+- GitHub-Actions-Workflow auf `actions/checkout@v7` und `actions/setup-node@v7` aktualisiert; persistente Checkout-Credentials deaktiviert
 - Sicherheits-, Release-, Architektur-, Audit- und Abnahmedokumentation ergänzt
 
 ### Weiterhin offen
