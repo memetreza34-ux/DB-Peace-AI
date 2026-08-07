@@ -58,11 +58,10 @@ export function RecordAndReportView() {
       return;
     }
 
-    const now = new Date();
     const entry = {
       id: createRecordId(),
-      date: draft.date || now.toISOString().split("T")[0],
-      time: draft.time || now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }),
+      date: draft.date || "Nicht angegeben",
+      time: draft.time || "Nicht angegeben",
       location: draft.location.trim() || "Nicht angegeben",
       description,
       witnesses: draft.witnesses.trim() || "Nicht angegeben",
@@ -77,14 +76,14 @@ export function RecordAndReportView() {
     const sourceMode = report.sourceMode === "ai" ? "ai" : "local";
     const entry = {
       id: createRecordId(),
-      date: report.date || new Date().toISOString().split("T")[0],
+      date: report.date || "Nicht angegeben",
       time: report.time || "Nicht angegeben",
       location: report.location || "Nicht angegeben",
       description: report.description,
       witnesses: report.witnesses || "Nicht angegeben",
       category: report.category,
       urgency: report.urgency,
-      source: sourceMode === "ai" ? "Gemini-strukturierter Entwurf" : "Lokaler Schlüsselwort-Fallback",
+      source: sourceMode === "ai" ? "Gemini-strukturierter Entwurf · ungeprüft" : "Lokaler Schlüsselwort-Fallback",
     };
 
     setRecords((current) => [entry, ...current]);
@@ -145,7 +144,7 @@ export function RecordAndReportView() {
         doc.text(line, 18, y);
         y += 5.5;
       }
-      doc.save(`DB-Peace-Protokoll-${record.date}-${record.id.slice(0, 8)}.pdf`);
+      doc.save(`DB-Peace-Protokoll-${safeFileSegment(record.date)}-${record.id.slice(0, 8)}.pdf`);
     } catch {
       setExportError("Das Gedächtnisprotokoll konnte nicht als PDF erzeugt werden. Der Sitzungsentwurf wurde nicht verändert.");
     }
@@ -281,11 +280,11 @@ function ProtocolView({ records, draft, error, showForm, onOpenForm, onCancelFor
       {showForm && (
         <form onSubmit={onSubmit} className="mt-5 space-y-4 rounded-xl border border-db-dark/10 bg-db-soft p-4 dark:border-white/10 dark:bg-white/5">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Input label="Datum" type="date" value={draft.date} onChange={(value) => onUpdate("date", value)} />
-            <Input label="Uhrzeit" type="time" value={draft.time} onChange={(value) => onUpdate("time", value)} />
-            <Input label="Ort / Kontext" value={draft.location} maxLength={180} placeholder="Ohne Klarnamen" onChange={(value) => onUpdate("location", value)} />
+            <Input label="Datum optional" type="date" value={draft.date} onChange={(value) => onUpdate("date", value)} />
+            <Input label="Uhrzeit optional" type="time" value={draft.time} onChange={(value) => onUpdate("time", value)} />
+            <Input label="Ort / Kontext optional" value={draft.location} maxLength={180} placeholder="Ohne Klarnamen" onChange={(value) => onUpdate("location", value)} />
           </div>
-          <Input label="Mögliche Zeug:innen" value={draft.witnesses} maxLength={300} placeholder="z. B. zwei Kolleg:innen – keine Klarnamen" onChange={(value) => onUpdate("witnesses", value)} />
+          <Input label="Mögliche Zeug:innen optional" value={draft.witnesses} maxLength={300} placeholder="z. B. zwei Kolleg:innen – keine Klarnamen" onChange={(value) => onUpdate("witnesses", value)} />
           <label className="block">
             <span className="text-sm font-black text-db-dark dark:text-white">Sachliche Beschreibung</span>
             <textarea value={draft.description} onChange={(event) => onUpdate("description", event.target.value.slice(0, 3_000))} maxLength={3_000} rows={6} className="mt-2 w-full rounded-xl border border-db-dark/15 bg-white p-3 text-sm font-medium leading-6 text-db-dark outline-none focus:border-db-red focus:ring-2 focus:ring-db-red/20 dark:border-white/15 dark:bg-db-dark/40 dark:text-white" placeholder="Was wurde gesagt oder getan? Was hast du selbst beobachtet?" />
@@ -390,4 +389,11 @@ function RecordModal({ record, exportError, onClose, onDelete, onExport }) {
 
 function createRecordId() {
   return globalThis.crypto?.randomUUID?.() || `record-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function safeFileSegment(value) {
+  return String(value || "Nicht-angegeben")
+    .replace(/[^a-zA-Z0-9äöüÄÖÜß-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40) || "Nicht-angegeben";
 }
