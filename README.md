@@ -4,6 +4,8 @@ DB Peace AI ist ein lokaler Innovations- und Demonstrationsprototyp für Auszubi
 
 Aktueller Stabilisierungsstand: Branch `agent/mvp-stabilization`, Draft Pull Request #1. Die Roadmap für einen möglichen sicheren Pilotbetrieb wird in GitHub Issue #2 gepflegt. Der Funktionsumfang dieses Branches ist für die technische Abnahme eingefroren; weitere Produktfunktionen gehören in getrennte Änderungen.
 
+Der technische Auditstand wird in [`docs/AUDIT-RESULTS.md`](docs/AUDIT-RESULTS.md) dokumentiert. Dieses Dokument ersetzt keinen erfolgreichen Build- oder Abnahmenachweis.
+
 ## Voraussetzungen
 
 - Node.js 22
@@ -15,18 +17,20 @@ Die in `package.json` festgelegten Engine-Bereiche dienen einer reproduzierbaren
 ## Was der aktuelle MVP tatsächlich kann
 
 - responsive React-Oberfläche mit Navigation, Suche und Dark Mode
-- lokale vierstellige Sichtschutz-PIN ohne Speicherung des Klartext-PINs
-- KI-Begleiter über einen lokalen Gemini-Proxy mit gekennzeichnetem lokalem Fallback
+- lokale vierstellige Sichtschutz-PIN ohne Speicherung des Klartext-PINs; Fehlversuche werden innerhalb der Browser-Sitzung gedrosselt
+- KI-Begleiter über einen lokalen Gemini-Proxy mit klar gekennzeichnetem lokalem Fallback
+- `/api/chat/status` zeigt nur, ob ein Gemini-Schlüssel konfiguriert ist; erst eine erfolgreiche Chatantwort bestätigt eine tatsächliche Verbindung
+- KI-Aufrufe werden serverseitig nach 20 Sekunden mit einem kontrollierten Upstream-Timeout beendet
 - KI-gestützte Strukturierung eines Meldungsentwurfs über `/api/report/extract`
 - validierter Meldungsentwurf mit Kopierfunktion und PDF-Export
 - Gedächtnisprotokolle und Stimmungseinträge nur im Zustand der aktuellen Sitzung
-- Quiz über `/api/quiz` mit transparentem lokalem Fragenset als Fallback
-- lokale, statische Szenario-Übungen ohne KI, Punkte oder Zertifikat
-- allgemeine Rechteorientierung mit Links zu gesetzlichen Primärquellen
+- Quiz über `/api/quiz` mit transparentem lokalem Fragenset als Fallback; KI-Fragen sind auf allgemeine Sicherheits- und Orientierungsinhalte begrenzt
+- lokale, statische Szenario-Übungen ohne KI, Punkte, Prozentwertung oder Zertifikat
+- kuratierte Rechteorientierung mit vorsichtigen Paraphrasen und Links zu amtlichen Einzelnormen
 - geprüfte externe Hilfsnummern und klare Wege zum Finden interner Kontakte
-- ungeprüfter Kurskatalog, der sichtbar als synthetischer Demo-Datensatz gekennzeichnet ist
-- HR-, Projekt- und Analytics-Ansichten ausschließlich mit fiktiven Demonstrationsdaten
-- PWA-Grundstruktur; API-Antworten werden nicht offline gecacht
+- vollständig fiktiver Lernkatalog mit erfundenen Anbietern und Angeboten ausschließlich für die UI-Demonstration
+- HR-, Projekt- und Analytics-Ansichten ausschließlich mit fiktiven Demonstrationsdaten beziehungsweise Szenarioannahmen
+- PWA-Grundstruktur; API-Antworten werden nicht offline gecacht und der Service Worker löscht nur eigene alte Caches
 
 ## Was der MVP ausdrücklich nicht kann
 
@@ -37,7 +41,9 @@ Die in `package.json` festgelegten Engine-Bereiche dienen einer reproduzierbaren
 - keine anonyme Rückkommunikation
 - keine Standortübertragung oder Offline-Synchronisation
 - keine offiziellen Zertifikate, Teilnahmebestätigungen oder Bildungszeit-Anerkennungen ausstellen
+- keine echte Kursbuchung oder reale Anbieterangebote bereitstellen
 - keine Rechts-, Medizin- oder Krisenberatung ersetzen
+- nicht selbst entscheiden, ob ein Rechtsverstoß vorliegt
 
 ## Lokalen KI-Modus einrichten
 
@@ -58,7 +64,7 @@ npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
 
 Die App läuft anschließend unter `http://127.0.0.1:5173/`. Der API-Proxy bindet standardmäßig ausschließlich an `http://127.0.0.1:8787`.
 
-Ohne `GEMINI_API_KEY` bleiben die statischen Bereiche nutzbar. Chat, Quiz und Meldeanalyse verwenden dann klar gekennzeichnete lokale Fallbacks oder melden, dass der KI-Dienst nicht eingerichtet ist.
+Ohne `GEMINI_API_KEY` bleiben die statischen Bereiche nutzbar. Chat, Quiz und Meldeanalyse verwenden dann klar gekennzeichnete lokale Fallbacks oder melden, dass der KI-Dienst nicht eingerichtet ist. Ein vorhandener Schlüssel bedeutet noch nicht, dass der externe Dienst erreichbar oder der Schlüssel gültig ist.
 
 ## Verfügbare Befehle
 
@@ -67,7 +73,7 @@ npm run dev         # API und Vite gemeinsam starten
 npm run dev:app     # nur Vite
 npm run dev:server  # nur lokalen API-Proxy
 npm run verify      # Repository-Regeln und kritische Behauptungen prüfen
-npm test            # statische Integritäts- und Importtests ausführen
+npm test            # statische Integritäts-, Import- und Regressionstests ausführen
 npm run build       # Production-Build erstellen
 npm run check       # Verify, Tests und Production-Build nacheinander ausführen
 npm run preview     # gebauten Stand lokal anzeigen
@@ -82,13 +88,14 @@ npm run check
 
 Danach die Kernwege anhand von [`docs/MANUAL-TEST-CHECKLIST.md`](docs/MANUAL-TEST-CHECKLIST.md) ausschließlich mit synthetischen Daten manuell testen und das Ergebnis in [`docs/FINAL-ACCEPTANCE.md`](docs/FINAL-ACCEPTANCE.md) dokumentieren.
 
-Der GitHub-Actions-Lauf muss für exakt denselben finalen Commit erfolgreich sein. Hinweise zu externen Actions-Blockern stehen in [`docs/CI-TROUBLESHOOTING.md`](docs/CI-TROUBLESHOOTING.md).
+Der GitHub-Actions-Lauf muss für exakt denselben finalen Commit erfolgreich sein. Hinweise zu externen Actions-Blockern stehen in [`docs/CI-TROUBLESHOOTING.md`](docs/CI-TROUBLESHOOTING.md). Die bisherige Audit-Historie steht in [`docs/AUDIT-RESULTS.md`](docs/AUDIT-RESULTS.md).
 
 ## Sicherheitsregeln
 
 - ausschließlich erfundene Beispieldaten verwenden
 - `.env`, API-Schlüssel und interne Kontaktdaten niemals committen
 - Notfall-, Rechts- und Hilfeinhalte vor jeder echten Veröffentlichung fachlich prüfen
+- Rechtskarten immer gegen die verlinkte aktuelle amtliche Norm prüfen; die App enthält nur Paraphrasen
 - Demo-Funktionen sichtbar als Demo kennzeichnen
 - keine Anonymität, Vertraulichkeit, Verschlüsselung, Anerkennung oder offizielle Integration garantieren, solange sie nicht technisch und organisatorisch umgesetzt ist
 - Pull Requests erst nach erfolgreichem `npm run check` und manueller Prüfung der Kernwege zusammenführen
@@ -105,4 +112,4 @@ Ein echter Pilot benötigt mindestens:
 - automatisierte Tests, Barrierefreiheitsprüfung, Monitoring und Incident Response
 - IT-Sicherheitsprüfung und Penetrationstest
 
-Weitere Details stehen in [`SECURITY.md`](SECURITY.md), [`docs/SECURITY-MODEL.md`](docs/SECURITY-MODEL.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/MVP-STATUS.md`](docs/MVP-STATUS.md) und der Pilot-Roadmap in GitHub Issue #2.
+Weitere Details stehen in [`SECURITY.md`](SECURITY.md), [`docs/SECURITY-MODEL.md`](docs/SECURITY-MODEL.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/MVP-STATUS.md`](docs/MVP-STATUS.md), [`docs/AUDIT-RESULTS.md`](docs/AUDIT-RESULTS.md) und der Pilot-Roadmap in GitHub Issue #2.
