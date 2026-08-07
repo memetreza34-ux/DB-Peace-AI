@@ -89,7 +89,7 @@ Die Node-Tests prüfen unter anderem:
 
 ## GitHub-Actions-Status
 
-Bei einem früher im Audit geprüften Branch-Stand wurde ein GitHub-Actions-Lauf erzeugt, dessen Job keinen Runner startete: Es gab keine ausgeführten Steps und `runner_id` blieb `0`. Damit wurde weder `npm ci` noch ein Test oder Build ausgeführt.
+Bei im Audit geprüften Branch-Ständen wurden GitHub-Actions-Läufe erzeugt, deren Jobs keinen Runner starteten: Es gab keine ausgeführten Steps und `runner_id` blieb `0`. Damit wurden weder Checkout noch `npm ci`, Verifier, Tests oder Build ausgeführt.
 
 Ein solcher Lauf ist kein bestandener Test, aber auch kein nachgewiesener Code- oder Buildfehler. Nach Abschluss aller Änderungen muss der Actions-Status für den **dann exakten finalen Head** erneut geprüft werden.
 
