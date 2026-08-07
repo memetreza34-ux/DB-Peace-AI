@@ -14,6 +14,7 @@ import {
   ShieldAlert,
   X,
 } from "lucide-react";
+import { useModalDialog } from "../hooks/useModalDialog.js";
 
 const searchIndex = [
   {
@@ -88,12 +89,12 @@ const searchIndex = [
   },
   {
     id: "analytics",
-    title: "Demo-Analytics",
-    description: "Ausschließlich fiktive Kennzahlen und einen Szenario-Rechner anzeigen.",
+    title: "Szenario-Rechner",
+    description: "Ausschließlich fiktive Annahmen und eine transparente Rechenhilfe anzeigen.",
     category: "Demo",
     icon: BarChart3,
     iconClass: "text-purple-600",
-    keywords: ["analytics", "kennzahl", "kpi", "kosten", "dashboard", "demo"],
+    keywords: ["analytics", "kennzahl", "kpi", "kosten", "dashboard", "szenario", "demo"],
     target: "analytics",
   },
   {
@@ -112,42 +113,11 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
   const [query, setQuery] = useState("");
   const inputRef = useRef(null);
   const panelRef = useRef(null);
+  useModalDialog({ isOpen, onClose, dialogRef: panelRef, initialFocusRef: inputRef });
 
   useEffect(() => {
-    if (!isOpen) return undefined;
-
-    setQuery("");
-    const focusTimer = window.setTimeout(() => inputRef.current?.focus(), 80);
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    function handleKeyDown(event) {
-      if (event.key === "Escape") onClose();
-      if (event.key !== "Tab" || !panelRef.current) return;
-
-      const focusable = panelRef.current.querySelectorAll(
-        'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
-      );
-      if (focusable.length === 0) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.clearTimeout(focusTimer);
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [isOpen, onClose]);
+    if (isOpen) setQuery("");
+  }, [isOpen]);
 
   const displayResults = useMemo(() => {
     const normalized = query.trim().toLocaleLowerCase("de-DE");
@@ -177,11 +147,12 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 h-full w-full cursor-default bg-db-dark/55 backdrop-blur-sm"
+            className="absolute inset-0 h-full w-full cursor-default bg-db-dark/55 backdrop-blur-sm focus:outline-none"
           />
 
           <motion.div
             ref={panelRef}
+            tabIndex={-1}
             role="dialog"
             aria-modal="true"
             aria-labelledby="global-search-title"
@@ -189,7 +160,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: -16 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="relative flex max-h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-db-dark/10 bg-white shadow-2xl dark:border-white/10 dark:bg-db-dark"
+            className="relative flex max-h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-db-dark/10 bg-white shadow-2xl outline-none dark:border-white/10 dark:bg-db-dark"
           >
             <div className="flex items-center border-b border-db-dark/10 bg-db-soft px-4 py-4 dark:border-white/10 dark:bg-white/5">
               <Search className="ml-1 h-6 w-6 shrink-0 text-db-rail dark:text-white/50" aria-hidden="true" />
@@ -200,21 +171,17 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value.slice(0, 120))}
+                maxLength={120}
                 placeholder="Bereich oder Thema suchen"
                 className="min-w-0 flex-1 bg-transparent px-4 text-lg font-bold text-db-dark outline-none placeholder:text-db-rail/70 dark:text-white dark:placeholder:text-white/35"
               />
-              <button
-                type="button"
-                onClick={onClose}
-                className="rounded-full p-2 text-db-rail transition hover:bg-db-dark/10 hover:text-db-dark dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
-                aria-label="Suche schließen"
-              >
+              <button type="button" onClick={onClose} className="rounded-full p-2 text-db-rail transition hover:bg-db-dark/10 hover:text-db-dark focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white" aria-label="Suche schließen">
                 <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
 
-            <div className="overflow-y-auto p-2">
-              <div className="px-4 py-3 text-xs font-black uppercase tracking-wider text-db-rail dark:text-white/45">
+            <div className="overflow-y-auto p-2" role="search">
+              <div className="px-4 py-3 text-xs font-black uppercase tracking-wider text-db-rail dark:text-white/45" role="status" aria-live="polite">
                 {query.trim() ? `${displayResults.length} Treffer` : "Wichtige Bereiche"}
               </div>
 
@@ -230,22 +197,13 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
                   {displayResults.map((item) => {
                     const Icon = item.icon;
                     return (
-                      <button
-                        type="button"
-                        key={item.id}
-                        onClick={() => selectResult(item)}
-                        className="group flex w-full items-center justify-between gap-4 rounded-xl p-4 text-left transition hover:bg-db-soft dark:hover:bg-white/5"
-                      >
+                      <button type="button" key={item.id} onClick={() => selectResult(item)} className="group flex w-full items-center justify-between gap-4 rounded-xl p-4 text-left transition hover:bg-db-soft focus:outline-none focus:ring-2 focus:ring-inset focus:ring-db-red/30 dark:hover:bg-white/5">
                         <div className="flex min-w-0 items-center gap-4">
-                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-db-dark/10 bg-white shadow-sm dark:border-white/10 dark:bg-white/5">
-                            <Icon className={`h-5 w-5 ${item.iconClass}`} aria-hidden="true" />
-                          </div>
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-db-dark/10 bg-white shadow-sm dark:border-white/10 dark:bg-white/5"><Icon className={`h-5 w-5 ${item.iconClass}`} aria-hidden="true" /></div>
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
                               <h3 className="font-black text-db-dark dark:text-white">{item.title}</h3>
-                              <span className="rounded-full bg-db-dark/5 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-db-rail dark:bg-white/10 dark:text-white/45">
-                                {item.category}
-                              </span>
+                              <span className="rounded-full bg-db-dark/5 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-db-rail dark:bg-white/10 dark:text-white/45">{item.category}</span>
                             </div>
                             <p className="mt-1 text-sm font-medium leading-6 text-db-rail dark:text-white/55">{item.description}</p>
                           </div>
