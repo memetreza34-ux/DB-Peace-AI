@@ -1,4 +1,5 @@
-const CACHE_NAME = "db-peace-ai-v3";
+const CACHE_PREFIX = "db-peace-ai-";
+const CACHE_NAME = `${CACHE_PREFIX}v3`;
 const APP_SHELL = ["/", "/index.html", "/manifest.json", "/icon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -9,7 +10,9 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => Promise.all(
-      cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name)),
+      cacheNames
+        .filter((name) => name.startsWith(CACHE_PREFIX) && name !== CACHE_NAME)
+        .map((name) => caches.delete(name)),
     )),
   );
   self.clients.claim();
