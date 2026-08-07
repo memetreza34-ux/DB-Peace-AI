@@ -48,6 +48,9 @@ test("API-Proxy enthält die erwarteten Schutzmaßnahmen", () => {
   const server = read("server.js");
   assert.match(server, /unsupported_media_type/);
   assert.match(server, /MAX_BODY_BYTES/);
+  assert.match(server, /AI_TIMEOUT_MS/);
+  assert.match(server, /withTimeout/);
+  assert.match(server, /upstream_timeout/);
   assert.match(server, /Retry-After/);
   assert.match(server, /Cross-Origin-Resource-Policy/);
   assert.match(server, /normalizeBoolean/);
@@ -65,6 +68,17 @@ test("alle lokalen JavaScript-Importe können aufgelöst werden", () => {
       assert.ok(resolveImport(filePath, specifier), `${path.relative(root, filePath)}: ${specifier} fehlt`);
     }
   }
+});
+
+test("alle JavaScript-Laufzeitdateien unter src sind vom Einstiegspunkt erreichbar", () => {
+  const runtimeFiles = collectFiles("src", /\.(?:js|jsx|mjs)$/).map((file) => path.resolve(file));
+  const reachable = collectReachableRuntimeFiles(path.join(root, "src/main.jsx"));
+  const unreachable = runtimeFiles
+    .filter((file) => !reachable.has(file))
+    .map((file) => path.relative(root, file))
+    .sort();
+
+  assert.deepEqual(unreachable, [], `Nicht erreichbare Laufzeitdateien: ${unreachable.join(", ")}`);
 });
 
 test("kritische Dialoge nutzen die gemeinsame Fokus- und Escape-Steuerung", () => {
@@ -100,6 +114,12 @@ test("bewegte Hauptoberflächen respektieren reduzierte Bewegung", () => {
   assert.match(read("src/App.jsx"), /useReducedMotion/);
   assert.match(read("src/components/DashboardHome.jsx"), /useReducedMotion/);
   assert.match(read("src/components/FloatingChatWidget.jsx"), /useReducedMotion/);
+});
+
+test("Produktions-Fehleransicht zeigt technische Details nur in Entwicklung", () => {
+  const main = read("src/main.jsx");
+  assert.match(main, /import\.meta\.env\.DEV/);
+  assert.match(main, /showTechnicalDetails/);
 });
 
 test("Analytics ist als Szenario und nicht als reale Auswertung gekennzeichnet", () => {
@@ -193,6 +213,25 @@ function collectFiles(relativeDirectory, pattern) {
     else if (pattern.test(entry.name)) result.push(entryPath);
   }
   return result;
+}
+
+function collectReachableRuntimeFiles(entryFile) {
+  const reachable = new Set();
+  const queue = [path.resolve(entryFile)];
+
+  while (queue.length) {
+    const filePath = queue.shift();
+    if (reachable.has(filePath) || !fs.existsSync(filePath)) continue;
+    reachable.add(filePath);
+
+    const content = fs.readFileSync(filePath, "utf8");
+    for (const specifier of localImportSpecifiers(content)) {
+      const resolved = resolveImport(filePath, specifier);
+      if (resolved && /\.(?:js|jsx|mjs)$/.test(resolved)) queue.push(path.resolve(resolved));
+    }
+  }
+
+  return reachable;
 }
 
 function localImportSpecifiers(content) {
