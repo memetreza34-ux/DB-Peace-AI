@@ -12,6 +12,10 @@ const AI_TIMEOUT_MS = 20_000;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 30;
 const MAX_RATE_LIMIT_KEYS = 1_000;
+const ALLOWED_BROWSER_ORIGINS = new Set([
+  "http://127.0.0.1:5173",
+  "http://localhost:5173",
+]);
 const rateLimitState = new Map();
 let requestsSincePrune = 0;
 let isShuttingDown = false;
@@ -74,9 +78,25 @@ function sendJson(res, status, data, extraHeaders = {}) {
   res.end(JSON.stringify(data));
 }
 
+function requireAllowedBrowserRequest(req) {
+  const fetchSite = String(req.headers["sec-fetch-site"] || "").toLowerCase();
+  if (fetchSite === "cross-site") {
+    const error = new Error("cross_site_request_blocked");
+    error.status = 403;
+    throw error;
+  }
+
+  const origin = String(req.headers.origin || "").trim();
+  if (origin && !ALLOWED_BROWSER_ORIGINS.has(origin)) {
+    const error = new Error("origin_not_allowed");
+    error.status = 403;
+    throw error;
+  }
+}
+
 function requireJsonRequest(req) {
   const contentType = String(req.headers["content-type"] || "").toLowerCase();
-  if (!contentType.startsWith("application/json")) {
+  if (!/^application\/json(?:\s*;|$)/.test(contentType)) {
     const error = new Error("unsupported_media_type");
     error.status = 415;
     throw error;
@@ -375,6 +395,8 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    requireAllowedBrowserRequest(req);
+
     if (isRateLimited(req)) {
       sendJson(res, 429, { error: "rate_limited", reply: "" }, { "Retry-After": "60" });
       return;
@@ -408,7 +430,9 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    if (req.method === "GET" && url.pathname === "/api/quiz") {
+    if (req.method === "POST" && url.pathname === "/api/quiz") {
+      requireJsonRequest(req);
+      await readJson(req);
       await handleQuiz(req, res);
       return;
     }
@@ -439,7 +463,7 @@ server.listen(PORT, "127.0.0.1", () => {
 });
 
 function allowedMethods(pathname) {
-  return pathname === "/api/chat" || pathname === "/api/report/extract" ? "POST" : "GET";
+  return ["/api/chat", "/api/report/extract", "/api/quiz"].includes(pathname) ? "POST" : "GET";
 }
 
 function shutdown(signal) {
