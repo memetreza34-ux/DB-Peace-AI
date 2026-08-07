@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { jsPDF } from "jspdf";
 import {
   AlertTriangle,
@@ -18,14 +18,14 @@ import {
 } from "lucide-react";
 
 const incidentOptions = [
-  ["Mobbing", "Wiederholtes Herabsetzen, Bloßstellen oder Schikanieren.", UserX],
-  ["Beleidigung", "Abwertende Sprache oder persönliche Angriffe.", AlertTriangle],
-  ["Diskriminierung", "Benachteiligung wegen eines persönlichen Merkmals.", Scale],
-  ["Bedrohung oder Gewalt", "Drohung, Einschüchterung oder körperliche Eskalation.", ShieldAlert],
-  ["Ausgrenzung", "Systematisches Ignorieren oder Ausschließen.", EyeOff],
-  ["Konflikt im Team", "Wiederkehrender Streit oder belastete Zusammenarbeit.", UsersRound],
-  ["Aggressiver Kundenkontakt", "Aggression, Beleidigung oder Bedrohung im Kundenkontakt.", ShieldAlert],
-  ["Sonstiges", "Ein anderer Vorfall, der sachlich strukturiert werden soll.", FileText],
+  { value: "Mobbing", description: "Wiederholtes Herabsetzen, Bloßstellen oder Schikanieren.", icon: UserX },
+  { value: "Beleidigung", description: "Abwertende Sprache oder persönliche Angriffe.", icon: AlertTriangle },
+  { value: "Diskriminierung", description: "Benachteiligung wegen eines persönlichen Merkmals.", icon: Scale },
+  { value: "Bedrohung oder Gewalt", description: "Drohung, Einschüchterung oder körperliche Eskalation.", icon: ShieldAlert },
+  { value: "Ausgrenzung", description: "Systematisches Ignorieren oder Ausschließen.", icon: EyeOff },
+  { value: "Konflikt im Team", description: "Wiederkehrender Streit oder belastete Zusammenarbeit.", icon: UsersRound },
+  { value: "Aggressiver Kundenkontakt", description: "Aggression, Beleidigung oder Bedrohung im Kundenkontakt.", icon: ShieldAlert },
+  { value: "Sonstiges", description: "Ein anderer Vorfall, der sachlich strukturiert werden soll.", icon: FileText },
 ];
 
 const repetitionOptions = ["Einmalig", "Mehrfach", "Regelmäßig", "Schon länger", "Unklar"];
@@ -40,28 +40,28 @@ const recipientOptions = [
   "Compliance- oder Beschwerdestelle",
 ];
 
-const initialForm = {
-  type: "Mobbing",
-  context: "",
-  date: "",
-  time: "",
-  repetition: "Einmalig",
-  description: "",
-  perspective: "Direkt betroffen",
-  danger: "Keine akute Gefahr",
-  stress: 3,
-  recipient: "Noch offen",
-  anonymousDraft: true,
-};
+const stepTitles = [
+  "Kategorie und Kontext",
+  "Sachverhalt und Fakten",
+  "Dringlichkeit und Belastung",
+  "Geplanter nächster Schritt",
+  "Entwurf prüfen und exportieren",
+];
 
 export default function AnonymousReport() {
+  const sectionRef = useRef(null);
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState(createInitialForm);
+  const [reportId, setReportId] = useState(createReportId);
+  const [createdAt, setCreatedAt] = useState(() => new Date());
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+
   const analysis = useMemo(() => createLocalAnalysis(form), [form]);
-  const reportId = useMemo(() => createReportId(), []);
-  const reportText = useMemo(() => createReportText(form, analysis, reportId), [form, analysis, reportId]);
+  const reportText = useMemo(
+    () => createReportText(form, analysis, reportId, createdAt),
+    [form, analysis, reportId, createdAt],
+  );
 
   function update(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -75,6 +75,7 @@ export default function AnonymousReport() {
       setError(validationError);
       return;
     }
+    setError("");
     setStep((current) => Math.min(5, current + 1));
   }
 
@@ -85,53 +86,64 @@ export default function AnonymousReport() {
 
   async function copyReport() {
     try {
-      await navigator.clipboard.writeText(reportText);
+      await copyText(reportText);
       setCopied(true);
+      setError("");
     } catch {
+      setCopied(false);
       setError("Der Text konnte nicht automatisch kopiert werden. Nutze stattdessen den PDF-Export.");
     }
   }
 
   function downloadPdf() {
-    const doc = new jsPDF();
-    const margin = 18;
-    const width = 174;
-    let y = 20;
+    try {
+      const doc = new jsPDF();
+      const margin = 18;
+      const width = 174;
+      let y = 20;
 
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.setTextColor(226, 0, 26);
-    doc.text("DB Peace – Meldungsentwurf", margin, y);
-    y += 10;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(20);
+      doc.setTextColor(226, 0, 26);
+      doc.text("DB Peace – Meldungsentwurf", margin, y);
+      y += 10;
 
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.setTextColor(90, 90, 90);
-    doc.text("Lokaler Demonstrationsentwurf – nicht automatisch übermittelt", margin, y);
-    y += 10;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(90, 90, 90);
+      doc.text("Lokaler Demonstrationsentwurf – nicht automatisch übermittelt", margin, y);
+      y += 10;
 
-    const lines = doc.splitTextToSize(reportText, width);
-    for (const line of lines) {
-      if (y > 278) {
-        doc.addPage();
-        y = 20;
+      const lines = doc.splitTextToSize(reportText, width);
+      doc.setTextColor(30, 30, 30);
+      for (const line of lines) {
+        if (y > 278) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(line, margin, y);
+        y += 5.2;
       }
-      doc.text(line, margin, y);
-      y += 5.2;
-    }
 
-    doc.save(`DB-Peace-Meldungsentwurf-${reportId}.pdf`);
+      doc.save(`DB-Peace-Meldungsentwurf-${reportId}.pdf`);
+      setError("");
+    } catch {
+      setError("Der PDF-Export ist fehlgeschlagen. Kopiere den Text oder versuche es erneut.");
+    }
   }
 
   function reset() {
-    setForm(initialForm);
+    setForm(createInitialForm());
+    setReportId(createReportId());
+    setCreatedAt(new Date());
     setStep(1);
     setError("");
     setCopied(false);
+    window.requestAnimationFrame(() => sectionRef.current?.focus());
   }
 
   return (
-    <section className="space-y-6">
+    <section ref={sectionRef} tabIndex={-1} className="space-y-6 outline-none">
       <header className="grid gap-5 lg:grid-cols-[1fr_0.7fr] lg:items-end">
         <div>
           <p className="text-xs font-black uppercase tracking-widest text-db-red">Meldungsentwurf</p>
@@ -141,7 +153,7 @@ export default function AnonymousReport() {
           </p>
         </div>
         <div className="flex items-start gap-3 rounded-xl border border-violet-200 bg-violet-50 p-4 text-sm font-semibold leading-6 text-violet-950 dark:border-violet-900/50 dark:bg-violet-950/25 dark:text-violet-200">
-          <LockKeyhole className="mt-0.5 h-5 w-5 shrink-0" />
+          <LockKeyhole className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
           Keine Klarnamen, Personalnummern oder vertraulichen Anhänge eingeben. Dieser Entwurf bleibt nur im aktuellen React-Zustand.
         </div>
       </header>
@@ -152,7 +164,7 @@ export default function AnonymousReport() {
           <SafetyCard analysis={analysis} />
           <div className="rounded-xl border border-db-dark/10 bg-white p-4 text-xs font-semibold leading-5 text-db-rail shadow-sm dark:border-white/10 dark:bg-db-dark/50 dark:text-white/60">
             <strong className="block text-db-dark dark:text-white">Wichtig</strong>
-            Die lokale Einstufung ist nur eine technische Orientierung anhand deiner Auswahl und einzelner Schlüsselwörter. Menschen müssen den Sachverhalt prüfen.
+            Die Einstufung ist nur lokale Schlüsselwort- und Auswahl-Logik. Menschen müssen den Sachverhalt prüfen.
           </div>
         </aside>
 
@@ -167,32 +179,32 @@ export default function AnonymousReport() {
             {step === 2 && <FactsStep form={form} update={update} />}
             {step === 3 && <RiskStep form={form} update={update} />}
             {step === 4 && <RoutingStep form={form} update={update} />}
-            {step === 5 && <ReviewStep form={form} analysis={analysis} reportId={reportId} />}
+            {step === 5 && <ReviewStep form={form} analysis={analysis} reportId={reportId} createdAt={createdAt} />}
 
             {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700 dark:border-red-900/50 dark:bg-red-950/25 dark:text-red-300">{error}</p>}
 
             <div className="mt-6 flex flex-col gap-3 border-t border-db-dark/10 pt-5 dark:border-white/10 sm:flex-row sm:justify-between">
-              <button type="button" onClick={back} disabled={step === 1} className="inline-flex items-center justify-center gap-2 rounded-xl border border-db-dark/15 px-5 py-3 text-sm font-black text-db-dark disabled:opacity-30 dark:border-white/15 dark:text-white">
-                <ArrowLeft className="h-4 w-4" />
+              <button type="button" onClick={back} disabled={step === 1} className="inline-flex items-center justify-center gap-2 rounded-xl border border-db-dark/15 px-5 py-3 text-sm font-black text-db-dark focus:outline-none focus:ring-2 focus:ring-db-red/30 disabled:opacity-30 dark:border-white/15 dark:text-white">
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                 Zurück
               </button>
 
               {step < 5 ? (
-                <button type="button" onClick={next} className="inline-flex items-center justify-center gap-2 rounded-xl bg-db-red px-5 py-3 text-sm font-black text-white hover:bg-red-700">
+                <button type="button" onClick={next} className="inline-flex items-center justify-center gap-2 rounded-xl bg-db-red px-5 py-3 text-sm font-black text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-db-red/30">
                   Weiter
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </button>
               ) : (
                 <div className="grid gap-3 sm:grid-cols-3">
-                  <button type="button" onClick={() => void copyReport()} className="inline-flex items-center justify-center gap-2 rounded-xl border border-db-dark/15 px-4 py-3 text-xs font-black text-db-dark dark:border-white/15 dark:text-white">
-                    {copied ? <CheckCircle2 className="h-4 w-4 text-emerald-600" /> : <Clipboard className="h-4 w-4" />}
+                  <button type="button" onClick={() => void copyReport()} className="inline-flex items-center justify-center gap-2 rounded-xl border border-db-dark/15 px-4 py-3 text-xs font-black text-db-dark focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:border-white/15 dark:text-white">
+                    {copied ? <CheckCircle2 className="h-4 w-4 text-emerald-600" aria-hidden="true" /> : <Clipboard className="h-4 w-4" aria-hidden="true" />}
                     {copied ? "Kopiert" : "Text kopieren"}
                   </button>
-                  <button type="button" onClick={downloadPdf} className="inline-flex items-center justify-center gap-2 rounded-xl bg-db-dark px-4 py-3 text-xs font-black text-white dark:bg-white dark:text-db-dark">
-                    <Download className="h-4 w-4" />
+                  <button type="button" onClick={downloadPdf} className="inline-flex items-center justify-center gap-2 rounded-xl bg-db-dark px-4 py-3 text-xs font-black text-white focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:bg-white dark:text-db-dark">
+                    <Download className="h-4 w-4" aria-hidden="true" />
                     PDF exportieren
                   </button>
-                  <button type="button" onClick={reset} className="rounded-xl bg-db-red px-4 py-3 text-xs font-black text-white hover:bg-red-700">Neu starten</button>
+                  <button type="button" onClick={reset} className="rounded-xl bg-db-red px-4 py-3 text-xs font-black text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-db-red/30">Neu starten</button>
                 </div>
               )}
             </div>
@@ -203,33 +215,25 @@ export default function AnonymousReport() {
   );
 }
 
-const stepTitles = [
-  "Kategorie und Kontext",
-  "Sachverhalt und Fakten",
-  "Dringlichkeit und Belastung",
-  "Geplanter nächster Schritt",
-  "Entwurf prüfen und exportieren",
-];
-
 function Progress({ step }) {
   return (
     <div className="rounded-xl bg-db-dark p-5 text-white shadow-sm">
       <p className="text-xs font-black uppercase tracking-wide text-red-200">Fortschritt</p>
-      <div className="mt-4 space-y-3">
+      <ol className="mt-4 space-y-3">
         {stepTitles.map((title, index) => {
           const number = index + 1;
           const done = number < step;
           const active = number === step;
           return (
-            <div key={title} className="flex items-center gap-3">
+            <li key={title} className="flex items-center gap-3" aria-current={active ? "step" : undefined}>
               <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-black ${done ? "bg-emerald-500" : active ? "bg-db-red" : "bg-white/10"}`}>
                 {done ? "✓" : number}
               </span>
               <span className={`text-xs font-bold ${active ? "text-white" : "text-white/60"}`}>{title}</span>
-            </div>
+            </li>
           );
         })}
-      </div>
+      </ol>
     </div>
   );
 }
@@ -243,9 +247,9 @@ function SafetyCard({ analysis }) {
   };
 
   return (
-    <div className={`rounded-xl border p-4 ${tones[analysis.urgency]}`}>
+    <div className={`rounded-xl border p-4 ${tones[analysis.urgency]}`} role="status" aria-live="polite">
       <div className="flex items-center gap-2">
-        <ShieldAlert className="h-5 w-5" />
+        <ShieldAlert className="h-5 w-5" aria-hidden="true" />
         <p className="font-black">Lokale Orientierung: {analysis.urgency}</p>
       </div>
       <p className="mt-2 text-xs font-semibold leading-5">{analysis.nextStep}</p>
@@ -256,18 +260,21 @@ function SafetyCard({ analysis }) {
 function IncidentStep({ form, update }) {
   return (
     <div className="space-y-5">
-      <div className="grid gap-3 sm:grid-cols-2">
-        {incidentOptions.map(([value, description, Icon]) => (
-          <button key={value} type="button" onClick={() => update("type", value)} className={`rounded-xl border p-4 text-left transition hover:-translate-y-0.5 ${form.type === value ? "border-db-red bg-db-red/5" : "border-db-dark/10 hover:border-db-red/40 dark:border-white/10"}`}>
-            <Icon className={`h-5 w-5 ${form.type === value ? "text-db-red" : "text-db-rail dark:text-white/50"}`} />
-            <span className="mt-3 block font-black text-db-dark dark:text-white">{value}</span>
-            <span className="mt-1 block text-xs font-semibold leading-5 text-db-rail dark:text-white/60">{description}</span>
-          </button>
-        ))}
-      </div>
-      <Field label="Ort oder Kontext" hint="Keine Klarnamen verwenden.">
+      <fieldset>
+        <legend className="sr-only">Kategorie auswählen</legend>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {incidentOptions.map(({ value, description, icon: Icon }) => (
+            <button key={value} type="button" aria-pressed={form.type === value} onClick={() => update("type", value)} className={`rounded-xl border p-4 text-left transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-db-red/30 ${form.type === value ? "border-db-red bg-db-red/5" : "border-db-dark/10 hover:border-db-red/40 dark:border-white/10"}`}>
+              <Icon className={`h-5 w-5 ${form.type === value ? "text-db-red" : "text-db-rail dark:text-white/50"}`} aria-hidden="true" />
+              <span className="mt-3 block font-black text-db-dark dark:text-white">{value}</span>
+              <span className="mt-1 block text-xs font-semibold leading-5 text-db-rail dark:text-white/60">{description}</span>
+            </button>
+          ))}
+        </div>
+      </fieldset>
+      <TextField label="Ort oder Kontext" hint="Keine Klarnamen verwenden.">
         <input value={form.context} onChange={(event) => update("context", event.target.value.slice(0, 180))} maxLength={180} placeholder="Werkstatt, Bahnhof, Büro, Gruppenchat …" className="field dark:border-white/15 dark:bg-db-dark/40 dark:text-white" />
-      </Field>
+      </TextField>
     </div>
   );
 }
@@ -276,17 +283,15 @@ function FactsStep({ form, update }) {
   return (
     <div className="space-y-5">
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Datum optional"><input type="date" value={form.date} onChange={(event) => update("date", event.target.value)} className="field dark:border-white/15 dark:bg-db-dark/40 dark:text-white" /></Field>
-        <Field label="Uhrzeit optional"><input type="time" value={form.time} onChange={(event) => update("time", event.target.value)} className="field dark:border-white/15 dark:bg-db-dark/40 dark:text-white" /></Field>
+        <TextField label="Datum optional"><input type="date" value={form.date} onChange={(event) => update("date", event.target.value)} className="field dark:border-white/15 dark:bg-db-dark/40 dark:text-white" /></TextField>
+        <TextField label="Uhrzeit optional"><input type="time" value={form.time} onChange={(event) => update("time", event.target.value)} className="field dark:border-white/15 dark:bg-db-dark/40 dark:text-white" /></TextField>
       </div>
-      <Field label="Wie oft ist es passiert?">
-        <ChoiceGrid options={repetitionOptions} value={form.repetition} onChange={(value) => update("repetition", value)} />
-      </Field>
-      <Field label="Was ist konkret passiert?" hint="Trenne Beobachtungen von Vermutungen. Möglichst genauer Wortlaut, Handlungen und anwesende Personen – ohne Klarnamen.">
+      <ChoiceField label="Wie oft ist es passiert?" options={repetitionOptions} value={form.repetition} onChange={(value) => update("repetition", value)} />
+      <TextField label="Was ist konkret passiert?" hint="Trenne Beobachtungen von Vermutungen. Möglichst genauer Wortlaut und Handlungen – ohne Klarnamen.">
         <textarea value={form.description} onChange={(event) => update("description", event.target.value.slice(0, 3_000))} maxLength={3_000} rows={8} placeholder="Sachliche Beschreibung …" className="field resize-y dark:border-white/15 dark:bg-db-dark/40 dark:text-white" />
-        <p className="mt-1 text-right text-[10px] font-bold text-db-rail/60 dark:text-white/40">{form.description.length}/3000</p>
-      </Field>
-      <Field label="Deine Perspektive"><ChoiceGrid options={perspectiveOptions} value={form.perspective} onChange={(value) => update("perspective", value)} /></Field>
+        <span className="mt-1 block text-right text-[10px] font-bold text-db-rail/60 dark:text-white/40">{form.description.length}/3000</span>
+      </TextField>
+      <ChoiceField label="Deine Perspektive" options={perspectiveOptions} value={form.perspective} onChange={(value) => update("perspective", value)} />
     </div>
   );
 }
@@ -294,17 +299,17 @@ function FactsStep({ form, update }) {
 function RiskStep({ form, update }) {
   return (
     <div className="space-y-6">
-      <Field label="Besteht gerade Gefahr?"><ChoiceGrid options={dangerOptions} value={form.danger} onChange={(value) => update("danger", value)} /></Field>
-      <div className="rounded-xl border border-db-dark/10 bg-db-soft p-4 dark:border-white/10 dark:bg-white/5">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="font-black text-db-dark dark:text-white">Wie stark belastet dich die Situation?</p>
-            <p className="mt-1 text-xs font-semibold text-db-rail dark:text-white/60">Nur zur Orientierung im Entwurf.</p>
-          </div>
+      <ChoiceField label="Besteht gerade Gefahr?" options={dangerOptions} value={form.danger} onChange={(value) => update("danger", value)} />
+      <label className="block rounded-xl border border-db-dark/10 bg-db-soft p-4 dark:border-white/10 dark:bg-white/5">
+        <span className="flex items-center justify-between gap-4">
+          <span>
+            <strong className="block text-db-dark dark:text-white">Wie stark belastet dich die Situation?</strong>
+            <span className="mt-1 block text-xs font-semibold text-db-rail dark:text-white/60">Nur zur Orientierung im Entwurf.</span>
+          </span>
           <span className="rounded-lg bg-db-red px-3 py-1 text-sm font-black text-white">{form.stress}/5</span>
-        </div>
+        </span>
         <input type="range" min="1" max="5" value={form.stress} onChange={(event) => update("stress", Number(event.target.value))} className="mt-5 w-full accent-db-red" />
-      </div>
+      </label>
     </div>
   );
 }
@@ -312,23 +317,22 @@ function RiskStep({ form, update }) {
 function RoutingStep({ form, update }) {
   return (
     <div className="space-y-5">
-      <Field label="Für wen soll der Entwurf vorbereitet werden?" hint="Die Auswahl sendet nichts.">
-        <ChoiceGrid options={recipientOptions} value={form.recipient} onChange={(value) => update("recipient", value)} />
-      </Field>
+      <ChoiceField label="Für wen soll der Entwurf vorbereitet werden?" hint="Die Auswahl sendet nichts." options={recipientOptions} value={form.recipient} onChange={(value) => update("recipient", value)} />
       <label className="flex items-start gap-3 rounded-xl border border-db-dark/10 bg-db-soft p-4 dark:border-white/10 dark:bg-white/5">
         <input type="checkbox" checked={form.anonymousDraft} onChange={(event) => update("anonymousDraft", event.target.checked)} className="mt-1 h-5 w-5 accent-db-red" />
         <span>
           <strong className="block text-db-dark dark:text-white">Entwurf ohne persönliche Angaben formulieren</strong>
-          <span className="mt-1 block text-xs font-semibold leading-5 text-db-rail dark:text-white/60">Die App kennt ohnehin kein DB-Profil. Diese Einstellung kennzeichnet nur deine gewünschte Form des exportierten Textes.</span>
+          <span className="mt-1 block text-xs font-semibold leading-5 text-db-rail dark:text-white/60">Die App kennt kein DB-Profil. Diese Einstellung kennzeichnet nur die gewünschte Form des exportierten Textes.</span>
         </span>
       </label>
     </div>
   );
 }
 
-function ReviewStep({ form, analysis, reportId }) {
+function ReviewStep({ form, analysis, reportId, createdAt }) {
   const rows = [
     ["Entwurfsnummer", reportId],
+    ["Erstellt", formatDateTime(createdAt)],
     ["Kategorie", form.type],
     ["Ort / Kontext", form.context || "Nicht angegeben"],
     ["Datum und Uhrzeit", `${form.date || "Nicht angegeben"}${form.time ? `, ${form.time} Uhr` : ""}`],
@@ -337,7 +341,7 @@ function ReviewStep({ form, analysis, reportId }) {
     ["Gefahr", form.danger],
     ["Belastung", `${form.stress}/5`],
     ["Geplanter Empfänger", form.recipient],
-    ["Form", form.anonymousDraft ? "Ohne persönliche Angaben" : "Persönliche Angaben können später manuell ergänzt werden"],
+    ["Form", form.anonymousDraft ? "Ohne persönliche Angaben" : "Persönliche Angaben später manuell ergänzen"],
     ["Lokale Dringlichkeit", analysis.urgency],
   ];
 
@@ -345,7 +349,7 @@ function ReviewStep({ form, analysis, reportId }) {
     <div className="space-y-5">
       {(analysis.urgency === "hoch" || analysis.urgency === "akut") && (
         <div className="flex items-start gap-3 rounded-xl border border-red-300 bg-red-50 p-4 text-sm font-semibold leading-6 text-red-900 dark:border-red-800 dark:bg-red-950/30 dark:text-red-200">
-          <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0" />
+          <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
           {analysis.nextStep}
         </div>
       )}
@@ -353,40 +357,44 @@ function ReviewStep({ form, analysis, reportId }) {
         {rows.map(([label, value]) => (
           <div key={label} className="rounded-xl bg-db-soft p-4 dark:bg-white/5">
             <dt className="text-[10px] font-black uppercase tracking-wide text-db-red">{label}</dt>
-            <dd className="mt-1 text-sm font-semibold leading-6 text-db-dark dark:text-white">{value}</dd>
+            <dd className="mt-1 break-words text-sm font-semibold leading-6 text-db-dark dark:text-white">{value}</dd>
           </div>
         ))}
         <div className="rounded-xl bg-db-soft p-4 sm:col-span-2 dark:bg-white/5">
           <dt className="text-[10px] font-black uppercase tracking-wide text-db-red">Sachverhalt</dt>
-          <dd className="mt-1 whitespace-pre-wrap text-sm font-semibold leading-6 text-db-dark dark:text-white">{form.description}</dd>
+          <dd className="mt-1 whitespace-pre-wrap break-words text-sm font-semibold leading-6 text-db-dark dark:text-white">{form.description}</dd>
         </div>
       </dl>
       <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-xs font-semibold leading-5 text-emerald-900 dark:border-emerald-900/50 dark:bg-emerald-950/25 dark:text-emerald-200">
-        <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0" />
+        <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
         Prüfe alle Angaben vor dem Export. Eine zuständige Person muss entscheiden, ob und wie der Entwurf verwendet wird.
       </div>
     </div>
   );
 }
 
-function ChoiceGrid({ options, value, onChange }) {
+function ChoiceField({ label, hint, options, value, onChange }) {
   return (
-    <div className="grid gap-2 sm:grid-cols-2">
-      {options.map((option) => (
-        <button key={option} type="button" onClick={() => onChange(option)} className={`rounded-xl border px-4 py-3 text-left text-sm font-black transition ${value === option ? "border-db-red bg-db-red/5 text-db-red" : "border-db-dark/10 text-db-dark hover:border-db-red/40 dark:border-white/10 dark:text-white"}`}>
-          {option}
-        </button>
-      ))}
-    </div>
+    <fieldset>
+      <legend className="font-black text-db-dark dark:text-white">{label}</legend>
+      {hint && <p className="mt-1 text-xs font-semibold leading-5 text-db-rail dark:text-white/60">{hint}</p>}
+      <div className="mt-2 grid gap-2 sm:grid-cols-2">
+        {options.map((option) => (
+          <button key={option} type="button" aria-pressed={value === option} onClick={() => onChange(option)} className={`rounded-xl border px-4 py-3 text-left text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-db-red/30 ${value === option ? "border-db-red bg-db-red/5 text-db-red" : "border-db-dark/10 text-db-dark hover:border-db-red/40 dark:border-white/10 dark:text-white"}`}>
+            {option}
+          </button>
+        ))}
+      </div>
+    </fieldset>
   );
 }
 
-function Field({ children, label, hint }) {
+function TextField({ children, label, hint }) {
   return (
     <label className="block">
       <span className="font-black text-db-dark dark:text-white">{label}</span>
       {hint && <span className="mt-1 block text-xs font-semibold leading-5 text-db-rail dark:text-white/60">{hint}</span>}
-      <div className="mt-2">{children}</div>
+      <span className="mt-2 block">{children}</span>
     </label>
   );
 }
@@ -397,6 +405,22 @@ function validateStep(step, form) {
   if (step === 3 && !form.danger) return "Wähle eine Einschätzung zur aktuellen Gefahr.";
   if (step === 4 && !form.recipient) return "Wähle einen geplanten nächsten Schritt oder „Noch offen“.";
   return "";
+}
+
+function createInitialForm() {
+  return {
+    type: "Mobbing",
+    context: "",
+    date: "",
+    time: "",
+    repetition: "Einmalig",
+    description: "",
+    perspective: "Direkt betroffen",
+    danger: "Keine akute Gefahr",
+    stress: 3,
+    recipient: "Noch offen",
+    anonymousDraft: true,
+  };
 }
 
 function createLocalAnalysis(form) {
@@ -415,13 +439,13 @@ function createLocalAnalysis(form) {
   return { urgency, nextStep };
 }
 
-function createReportText(form, analysis, reportId) {
+function createReportText(form, analysis, reportId, createdAt) {
   return [
     "DB PEACE – LOKALER MELDUNGSENTWURF",
     "Keine automatische Übermittlung · keine offizielle DB-Meldung",
     "",
     `Entwurfsnummer: ${reportId}`,
-    `Erstellt: ${new Intl.DateTimeFormat("de-DE", { dateStyle: "medium", timeStyle: "short" }).format(new Date())}`,
+    `Erstellt: ${formatDateTime(createdAt)}`,
     `Kategorie: ${form.type}`,
     `Ort / Kontext: ${form.context || "Nicht angegeben"}`,
     `Datum: ${form.date || "Nicht angegeben"}`,
@@ -444,9 +468,30 @@ function createReportText(form, analysis, reportId) {
   ].join("\n");
 }
 
+async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  if (!copied) throw new Error("copy_failed");
+}
+
 function createReportId() {
-  const suffix = typeof crypto !== "undefined" && crypto.randomUUID
-    ? crypto.randomUUID().slice(0, 8).toUpperCase()
-    : Math.random().toString(36).slice(2, 10).toUpperCase();
+  const suffix = globalThis.crypto?.randomUUID?.().slice(0, 8).toUpperCase()
+    || `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`.toUpperCase();
   return `DEMO-${suffix}`;
+}
+
+function formatDateTime(value) {
+  return new Intl.DateTimeFormat("de-DE", { dateStyle: "medium", timeStyle: "short" }).format(value);
 }
