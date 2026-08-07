@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Delete, Lock, ShieldCheck } from "lucide-react";
 
 const LOCK_STORAGE_KEY = "db-peace-lock-v2";
-const SESSION_UNLOCK_KEY = "db-peace-unlocked";
 const THROTTLE_STORAGE_KEY = "db-peace-lock-throttle";
 const PIN_LENGTH = 4;
 const MAX_FAILED_ATTEMPTS = 5;
@@ -24,10 +23,6 @@ export function AppLock({ onUnlock }) {
 
   const retrySeconds = Math.max(0, Math.ceil((blockedUntil - clock) / 1_000));
   const isBlocked = retrySeconds > 0;
-
-  useEffect(() => {
-    if (safeStorageGet("session", SESSION_UNLOCK_KEY) === "1") onUnlock();
-  }, [onUnlock]);
 
   useEffect(() => {
     if (!blockedUntil) return undefined;
@@ -83,7 +78,6 @@ export function AppLock({ onUnlock }) {
         clearThrottle();
         setFailedAttempts(0);
         setBlockedUntil(0);
-        safeStorageSet("session", SESSION_UNLOCK_KEY, "1");
         onUnlock();
         return;
       }
@@ -150,7 +144,6 @@ export function AppLock({ onUnlock }) {
       }
 
       clearThrottle();
-      safeStorageSet("session", SESSION_UNLOCK_KEY, "1");
       onUnlock();
     } catch {
       setError("Die lokale PIN konnte nicht erstellt werden, weil Web Crypto in diesem Browser nicht verfügbar ist.");
@@ -190,7 +183,7 @@ export function AppLock({ onUnlock }) {
         <p className="mt-2 text-center text-sm font-medium leading-6 text-slate-400">
           {mode === "setup"
             ? "Lege eine vierstellige PIN als lokalen Sichtschutz fest. Sie ersetzt keine Anmeldung und keine Datenverschlüsselung."
-            : "Gib deine vierstellige lokale PIN ein. Nach dem Schließen des Tabs wird die Ansicht erneut gesperrt."}
+            : "Gib deine vierstellige lokale PIN ein. Nach Neuladen oder Öffnen in einem neuen Tab wird die Ansicht erneut gesperrt."}
         </p>
 
         <div
