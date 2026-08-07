@@ -97,6 +97,7 @@ test("KI-Oberflächen brechen Requests beim Verlassen oder Zurücksetzen ab", ()
 });
 
 test("bewegte Hauptoberflächen respektieren reduzierte Bewegung", () => {
+  assert.match(read("src/App.jsx"), /useReducedMotion/);
   assert.match(read("src/components/DashboardHome.jsx"), /useReducedMotion/);
   assert.match(read("src/components/FloatingChatWidget.jsx"), /useReducedMotion/);
 });
@@ -127,7 +128,7 @@ test("PWA-Manifest verweist auf vorhandene lokale Ressourcen", () => {
   }
 });
 
-test("Service Worker läuft nur im Produktionsbuild und cachet keine API", () => {
+test("Service Worker läuft nur im Produktionsbuild, cachet keine API und löscht nur eigene Caches", () => {
   const main = read("src/main.jsx");
   const serviceWorker = read("public/sw.js");
 
@@ -135,6 +136,30 @@ test("Service Worker läuft nur im Produktionsbuild und cachet keine API", () =>
   assert.match(main, /serviceWorker\.register\("\/sw\.js"\)/);
   assert.match(serviceWorker, /url\.pathname\.startsWith\("\/api\/"\)/);
   assert.match(serviceWorker, /no-store/i);
+  assert.match(serviceWorker, /CACHE_PREFIX\s*=\s*"db-peace-ai-"/);
+  assert.match(serviceWorker, /name\.startsWith\(CACHE_PREFIX\)/);
+});
+
+test("lokaler PIN-Sichtschutz besitzt keinen In-App-Reset und drosselt über Reloads hinweg", () => {
+  const lock = read("src/components/AppLock.jsx");
+  const resetPhrase = ["Lokale PIN", "vergessen oder zurücksetzen"].join(" ");
+
+  assert.match(lock, /THROTTLE_STORAGE_KEY/);
+  assert.match(lock, /readThrottle/);
+  assert.match(lock, /writeThrottle/);
+  assert.match(lock, /clearThrottle/);
+  assert.doesNotMatch(lock, new RegExp(resetPhrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  assert.doesNotMatch(lock, /safeStorageRemove\("local",\s*LOCK_STORAGE_KEY\)/);
+});
+
+test("statisches Training vergibt weder Punkte noch Prozentwerte", () => {
+  const training = read("src/components/TrainingMode.jsx");
+
+  assert.match(training, /Keine Punktzahl und keine Kompetenzbewertung/);
+  assert.doesNotMatch(training, /\bpoints\s*:/);
+  assert.doesNotMatch(training, /\bpercentage\b/);
+  assert.doesNotMatch(training, /Orientierungswert/);
+  assert.doesNotMatch(training, /<main(?:\s|>)/);
 });
 
 test("Demo-Postfach lässt sich auf unveränderte Ausgangsdaten zurücksetzen", () => {
