@@ -1,12 +1,12 @@
 # DB Peace AI — MVP-Status
 
-Stand: 6. August 2026  
+Stand: 7. August 2026  
 Branch: `agent/mvp-stabilization`  
 Integration: Draft Pull Request #1  
 Pilot-Roadmap: GitHub Issue #2  
 Unterstützte Entwicklungsumgebung: Node.js 22, npm 10 oder 11
 
-Der Funktionsumfang dieses Stabilisierungsbranches ist für die technische Abnahme eingefroren. Nach dem Scope-Freeze sind nur konkrete Build-, Sicherheits- oder Abnahmefehler zulässig. Weitere Produktfunktionen sollen in getrennten Änderungen erfolgen.
+Der Funktionsumfang dieses Stabilisierungsbranches ist für die technische Abnahme eingefroren. Nach dem Scope-Freeze sind nur konkrete Build-, Sicherheits-, Datenwahrheits- oder Abnahmefehler zulässig. Weitere Produktfunktionen sollen in getrennten Änderungen erfolgen.
 
 ## Ziel des aktuellen MVP
 
@@ -16,29 +16,49 @@ Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. 
 
 - React-19-Frontend mit Vite und Tailwind CSS
 - responsive Navigation, globale Suche und Dark Mode
-- lokale vierstellige Sichtschutz-PIN mit PBKDF2-Prüfwert
+- reduzierte Bewegung wird in zentralen animierten Oberflächen berücksichtigt
+- lokale vierstellige Sichtschutz-PIN mit PBKDF2-Prüfwert; kein In-App-Bypass, Fehlversuche werden innerhalb der Browser-Sitzung gedrosselt
 - Node.js-API-Proxy auf `127.0.0.1`
 - Gemini-Chat mit klar gekennzeichnetem lokalem Fallback
+- KI-Status unterscheidet einen konfigurierten Schlüssel von einer tatsächlich erfolgreichen Gemini-Antwort
+- externe Gemini-Aufrufe besitzen ein serverseitiges 20-Sekunden-Limit
 - Gemini-Endpunkt zur Strukturierung eines Meldungsentwurfs
-- Gemini-Quiz mit validierter Ausgabe und lokalem Fragenset als Fallback
+- KI-Quiz mit validierter Ausgabe, begrenztem Themenumfang und lokalem Fragenset als Fallback
 - Meldungsentwurf mit Formularvalidierung, Kopierfunktion und PDF-Export
 - Gedächtnisprotokolle und Stimmungseinträge nur für die aktuelle Sitzung
-- statische Szenario-Übung mit transparenter lokaler Bewertungslogik
-- Rechteorientierung mit Links zu offiziellen Gesetzestexten
+- statische Szenario-Übung ohne KI, Punktzahl, Prozentwert oder Zertifikat
+- kuratierte Rechteorientierung mit vorsichtigen Paraphrasen und amtlichen Einzelnorm-Links
 - geprüfte externe Hilfsnummern und interne Suchhinweise
-- Service Worker ohne Caching von `/api/`-Antworten
-- Repository-Verifikation und GitHub-Actions-Workflow
+- vollständig fiktiver Lernkatalog ohne Zuordnung erfundener Angebote zu realen Organisationen
+- Service Worker ohne Caching von `/api/`-Antworten und mit auf `db-peace-ai-*` begrenzter Cache-Bereinigung
+- Repository-Verifikation, Node-Regressionstests und GitHub-Actions-Workflow
+- Importgraph-Test gegen unreferenzierten JavaScript-Altcode
 - manuelle Abnahmecheckliste unter `docs/MANUAL-TEST-CHECKLIST.md`
+- Auditprotokoll unter `docs/AUDIT-RESULTS.md`
 
 ## Klar gekennzeichnete Demonstrationsbereiche
 
 - HR-Dashboard und Postfach enthalten ausschließlich fiktive Fälle
-- Analytics und Kostenrechner verwenden erfundene beziehungsweise frei veränderbare Werte
+- Analytics und Kostenrechner verwenden erfundene beziehungsweise frei veränderbare Szenarioannahmen
 - Projektideen sind Beispiele oder Sitzungsentwürfe und werden nicht veröffentlicht
-- Kurskatalog enthält synthetische oder ungeprüfte Einträge
+- der Lernkatalog enthält ausschließlich fiktive Anbieter und fiktive Angebote
 - In-App-Training ist kein externer Kurs und erzeugt nur eine persönliche Lernnotiz
 - Bildungszeit-Funktion erstellt nur eine neutrale Prüfanfrage
-- lokale PIN ist ein Sichtschutz und keine Verschlüsselung sensibler Daten
+- lokale PIN ist ein Sichtschutz und keine echte Authentifizierung oder Verschlüsselung sensibler Daten
+- Rechtskarten sind Paraphrasen zur Orientierung und keine amtlichen Volltexte oder Einzelfallbewertung
+
+## Im Audit zusätzlich entfernt oder korrigiert
+
+- historischer Backup-Code und unreferenzierte Quellaltlasten
+- direkter PIN-Zurücksetzen-Knopf auf dem Sperrbildschirm
+- reload-umgehbare Fehlversuchspause der PIN
+- Prozent-/Punktbewertung im statischen Training
+- Service-Worker-Bereinigung fremder Origin-Caches
+- ungeprüfter Rechtsdatensatz mit absoluten oder falschen Handlungs- und Sanktionsbehauptungen
+- Generator für die alten problematischen Rechtsdaten
+- großer synthetischer Kurskatalog, der reale Organisationen mit erfundenen Angeboten verknüpfte
+- KI-Verbindungsanzeige, die einen vorhandenen API-Key fälschlich als erfolgreiche Verbindung bezeichnete
+- KI-Quiz-Prompt, der ungeprüfte konkrete Rechtsfragen erzeugen konnte
 
 ## Nicht implementiert
 
@@ -51,6 +71,7 @@ Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. 
 - offizielle interne DB-Kontakte oder Systemintegration
 - Standortübertragung und Offline-Synchronisation
 - offizielle Zertifikate, Teilnahmebestätigungen oder Kursanerkennung
+- reale Kursbuchung oder verifizierter Anbieterkatalog
 - Monitoring, Incident Response und produktive Betriebsprozesse
 
 ## Nicht behaupten
@@ -60,18 +81,32 @@ Solange die jeweilige Technik oder Freigabe fehlt, darf die App nicht behaupten:
 - Daten seien verschlüsselt gespeichert
 - eine Meldung sei anonym oder offiziell übermittelt worden
 - eine Anmeldung sei über DB Azure AD oder ein anderes SSO erfolgt
+- ein konfigurierter API-Key beweise eine funktionierende Gemini-Verbindung
 - GPS oder Standort seien versendet worden
 - Offline-Eingaben würden später synchronisiert
 - statische Daten seien live synchronisiert
 - ein Kurs, Zertifikat oder Bildungszeit-Antrag sei anerkannt
+- ein fiktiver Katalogeintrag stamme von einem realen Anbieter
 - interne Kontakte seien vollständig oder offiziell bestätigt
 - Demo-Werte seien geprüft, konform oder reale Unternehmenskennzahlen
+- eine Rechtskarte entscheide den konkreten Einzelfall oder garantiere eine bestimmte Sanktion beziehungsweise Folge
 - ein Gespräch sei unter allen Umständen absolut vertraulich
+
+## Aktueller Validierungsstatus
+
+Noch nicht nachgewiesen:
+
+- erfolgreicher `npm ci`-Lauf
+- erfolgreicher `npm run check`-Lauf
+- erfolgreicher Vite-Produktionsbuild für den finalen Head
+- vollständige manuelle Browser-, Mobil-, PDF- und Tastaturabnahme
+
+Bisher beobachtete GitHub-Actions-Läufe erreichten keinen Runner und enthielten keine ausgeführten Steps. Deshalb liegt weder ein bestandener Check noch ein nachgewiesener Code-/Buildfehler aus diesen Läufen vor. Für den finalen Head muss erneut geprüft werden.
 
 ## Definition „präsentationsreif“
 
 - `npm run check` ist erfolgreich
-- GitHub-Actions-Check ist erfolgreich oder ein gleichwertiger lokaler Build wurde dokumentiert
+- GitHub-Actions-Check ist erfolgreich oder ein gleichwertiger lokaler Build wurde für exakt denselben Commit dokumentiert
 - die manuelle Abnahmecheckliste wurde für den getesteten Commit ausgefüllt
 - keine erfundenen Telefonnummern, E-Mail-Adressen oder offiziellen Nachweise
 - alle Demonstrationsbereiche sind sichtbar gekennzeichnet
@@ -92,4 +127,4 @@ Zusätzlich zur Präsentationsreife:
 - automatisierte Tests, Barrierefreiheitsprüfung und Browser-/Mobiltests
 - Bedrohungsmodell, Penetrationstest, Monitoring und Incident Response
 
-Die vollständige Pilot-Roadmap befindet sich in GitHub Issue #2.
+Die vollständige Pilot-Roadmap befindet sich in GitHub Issue #2. Der aktuelle Auditstand steht in `docs/AUDIT-RESULTS.md`.
