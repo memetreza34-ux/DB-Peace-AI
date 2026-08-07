@@ -12,6 +12,8 @@ const requiredFiles = [
   "server.js",
   "src/main.jsx",
   "src/App.jsx",
+  "src/hooks/useModalDialog.js",
+  "src/components/AISmartReport.jsx",
   "src/components/ContactsView.jsx",
   "src/components/EmergencyModal.jsx",
   "src/components/PrivacyCompliance.jsx",
@@ -71,7 +73,7 @@ const forbiddenPatterns = [
   [/Neue, endlose Fragen laden/i, "Begrenztes statisches Quiz wird als endlos dargestellt."],
   [/Über 150 offizielle Weiterbildungsangebote/i, "Ungeprüfter Kurskatalog wird als offiziell dargestellt."],
   [/Die Veranstaltung ist eine anerkannte Weiterbildung/i, "Kursanerkennung wird ohne Prüfung behauptet."],
-  [/Die Gespräche sind absolut vertraulich/i, "Absolute Vertraulichkeitsgarantie gefunden."],
+  [/Die Gespräche sind absolut vertraulich|Vertraulicher Einstieg/i, "Unbelegte Vertraulichkeitsgarantie gefunden."],
   [/\+50 DB Peace Points/i, "Erfundene Produktpunkte gefunden."],
   [/Demo-Zertifikat/i, "Ein Training erzeugt weiterhin ein Zertifikat oder Zertifikatsversprechen."],
   [/KI-Trainingsmodus/i, "Statisches Szenario wird als KI-Training dargestellt."],
@@ -81,6 +83,7 @@ const forbiddenPatterns = [
   [/Du \(Dein DB-Profil\)/i, "Eine nicht vorhandene DB-Profilintegration wird im Projektbereich dargestellt."],
   [/Vorfall offiziell melden/i, "Ein Entwurf wird als offizielle Meldung bezeichnet."],
   [/sicher und vertraulich melden/i, "Eine nicht vorhandene sichere Übermittlung wird behauptet."],
+  [/anonymisierte Meldungen|Live-Daten/i, "Demo-Analytics werden als reale oder aktuelle Daten dargestellt."],
 ];
 
 for (const filePath of textFiles) {
@@ -92,6 +95,7 @@ for (const filePath of textFiles) {
 }
 
 verifyLocalImports();
+verifyModalSurfaces();
 
 const envExample = read(".env.example");
 if (!envExample.includes("GEMINI_API_KEY")) failures.push(".env.example muss GEMINI_API_KEY dokumentieren.");
@@ -113,15 +117,20 @@ if (packageJson?.scripts?.test !== "node --test tests/*.test.mjs") failures.push
 if (packageJson?.scripts?.check !== "npm run verify && npm test && npm run build") failures.push("package.json muss Verify, Tests und Build kombinieren.");
 if (packageJson?.engines?.node !== ">=22 <23") failures.push("package.json muss Node.js 22 als unterstützte Laufzeit festlegen.");
 if (packageJson?.engines?.npm !== ">=10 <12") failures.push("package.json muss npm 10 oder 11 als unterstützte Laufzeit festlegen.");
-if (packageLock?.version !== packageJson?.version || packageLock?.packages?.[""]?.version !== packageJson?.version) {
-  failures.push("Versionen in package.json und package-lock.json müssen übereinstimmen.");
-}
+if (packageLock?.version !== packageJson?.version || packageLock?.packages?.[""]?.version !== packageJson?.version) failures.push("Versionen in package.json und package-lock.json müssen übereinstimmen.");
 verifyDependencyMap("dependencies", packageJson, packageLock);
 verifyDependencyMap("devDependencies", packageJson, packageLock);
 
+const server = read("server.js");
+for (const requiredServerControl of ["unsupported_media_type", "MAX_BODY_BYTES", "Retry-After", "normalizeBoolean", "server.requestTimeout", "Cross-Origin-Resource-Policy"]) {
+  if (!server.includes(requiredServerControl)) failures.push(`server.js muss die Schutzmaßnahme ${requiredServerControl} enthalten.`);
+}
+
 const reportRoute = "/api/report/extract";
-if (!read("server.js").includes(reportRoute)) failures.push("server.js muss die dokumentierte Report-Route bereitstellen.");
+if (!server.includes(reportRoute)) failures.push("server.js muss die dokumentierte Report-Route bereitstellen.");
 if (!read("src/components/AISmartReport.jsx").includes(reportRoute)) failures.push("AISmartReport muss dieselbe Report-Route wie der Server verwenden.");
+if (!read("src/components/AISmartReport.jsx").includes("isMountedRef")) failures.push("AISmartReport muss State-Updates nach Unmount verhindern.");
+if (!read("src/components/DashboardHome.jsx").includes("useReducedMotion")) failures.push("DashboardHome muss reduzierte Bewegung respektieren.");
 
 const manifest = parseJson("public/manifest.json");
 if (manifest?.start_url !== "/" || manifest?.scope !== "/") failures.push("PWA-Manifest muss start_url und scope auf / setzen.");
@@ -161,8 +170,21 @@ function parseJson(relativePath) {
 function verifyDependencyMap(key, packageJson, packageLock) {
   const expected = packageJson?.[key] || {};
   const locked = packageLock?.packages?.[""]?.[key] || {};
-  if (JSON.stringify(expected) !== JSON.stringify(locked)) {
-    failures.push(`${key} in package.json und package-lock.json müssen übereinstimmen.`);
+  if (JSON.stringify(expected) !== JSON.stringify(locked)) failures.push(`${key} in package.json und package-lock.json müssen übereinstimmen.`);
+}
+
+function verifyModalSurfaces() {
+  const modalFiles = [
+    "src/components/EmergencyModal.jsx",
+    "src/components/SSOLoginModal.jsx",
+    "src/components/BildungsurlaubModal.jsx",
+    "src/components/CourseDetailModal.jsx",
+    "src/components/GlobalSearch.jsx",
+  ];
+  for (const relativePath of modalFiles) {
+    const content = read(relativePath);
+    if (!content.includes("useModalDialog")) failures.push(`${relativePath} muss die gemeinsame Dialogsteuerung verwenden.`);
+    if (!content.includes('aria-modal="true"')) failures.push(`${relativePath} muss als modaler Dialog ausgezeichnet sein.`);
   }
 }
 
@@ -171,9 +193,7 @@ function verifyLocalImports() {
   for (const filePath of sourceFiles) {
     const content = fs.readFileSync(filePath, "utf8");
     for (const specifier of localImportSpecifiers(content)) {
-      if (!resolveImport(filePath, specifier)) {
-        failures.push(`${path.relative(root, filePath)}: Lokaler Import fehlt: ${specifier}`);
-      }
+      if (!resolveImport(filePath, specifier)) failures.push(`${path.relative(root, filePath)}: Lokaler Import fehlt: ${specifier}`);
     }
   }
 }
@@ -193,16 +213,7 @@ function localImportSpecifiers(content) {
 function resolveImport(importer, specifier) {
   const clean = specifier.split(/[?#]/, 1)[0];
   const base = path.resolve(path.dirname(importer), clean);
-  return [
-    base,
-    `${base}.js`,
-    `${base}.jsx`,
-    `${base}.mjs`,
-    `${base}.json`,
-    path.join(base, "index.js"),
-    path.join(base, "index.jsx"),
-    path.join(base, "index.mjs"),
-  ].some((candidate) => fs.existsSync(candidate));
+  return [base, `${base}.js`, `${base}.jsx`, `${base}.mjs`, `${base}.json`, path.join(base, "index.js"), path.join(base, "index.jsx"), path.join(base, "index.mjs")].some((candidate) => fs.existsSync(candidate));
 }
 
 function walk(directory) {
