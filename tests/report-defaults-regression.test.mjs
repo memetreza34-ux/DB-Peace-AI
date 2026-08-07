@@ -4,10 +4,18 @@ import path from "node:path";
 import test from "node:test";
 
 const root = path.resolve(import.meta.dirname, "..");
-const source = fs.readFileSync(path.join(root, "src/components/AnonymousReport.jsx"), "utf8");
+
+function read(relativePath) {
+  return fs.readFileSync(path.join(root, relativePath), "utf8");
+}
+
+const reportWizard = read("src/components/AnonymousReport.jsx");
+const smartReport = read("src/components/AISmartReport.jsx");
+const protocol = read("src/components/RecordAndReportView.jsx");
+const server = read("server.js");
 
 test("Meldungsentwurf startet ohne erfundene sensible Fakten", () => {
-  const initialForm = source.match(/function createInitialForm\(\) \{[\s\S]*?\n\}/)?.[0] || "";
+  const initialForm = reportWizard.match(/function createInitialForm\(\) \{[\s\S]*?\n\}/)?.[0] || "";
 
   for (const field of ["type", "repetition", "perspective", "danger", "stress", "recipient", "draftStyle"]) {
     assert.match(initialForm, new RegExp(`${field}:\\s*""`));
@@ -20,9 +28,32 @@ test("Meldungsentwurf startet ohne erfundene sensible Fakten", () => {
 });
 
 test("Meldungsentwurf verlangt bewusste Auswahl oder Nicht angegeben", () => {
-  assert.match(source, /Wähle bewusst eine Kategorie/);
-  assert.match(source, /Wähle bewusst eine Einschätzung zur aktuellen Gefahr/);
-  assert.match(source, /Nicht angegeben/);
-  assert.match(source, /valueOrNotProvided/);
-  assert.match(source, /formatStress/);
+  assert.match(reportWizard, /Wähle bewusst eine Kategorie/);
+  assert.match(reportWizard, /Wähle bewusst eine Einschätzung zur aktuellen Gefahr/);
+  assert.match(reportWizard, /Nicht angegeben/);
+  assert.match(reportWizard, /valueOrNotProvided/);
+  assert.match(reportWizard, /formatStress/);
+  assert.match(reportWizard, /urgency:\s*"noch nicht bewertet"/);
+});
+
+test("fehlende Vorfallszeit wird weder im KI-Fallback noch im Protokoll mit jetzt ersetzt", () => {
+  assert.match(smartReport, /date:\s*"Nicht angegeben"/);
+  assert.match(smartReport, /time:\s*"Nicht angegeben"/);
+  assert.doesNotMatch(smartReport, /dateFallback|timeFallback/);
+  assert.match(protocol, /date:\s*draft\.date \|\| "Nicht angegeben"/);
+  assert.match(protocol, /time:\s*draft\.time \|\| "Nicht angegeben"/);
+  assert.doesNotMatch(protocol, /draft\.date \|\| now\.toISOString/);
+});
+
+test("lokaler KI-Fallback klassifiziert unbekannte Fakten nicht automatisch", () => {
+  assert.match(smartReport, /category:\s*"Nicht angegeben"/);
+  assert.match(smartReport, /urgency:\s*"Nicht automatisch bewertet"/);
+  assert.match(smartReport, /location:\s*"Nicht angegeben"/);
+  assert.match(smartReport, /witnesses:\s*"Nicht angegeben"/);
+});
+
+test("ungültige KI-Dringlichkeit fällt serverseitig nicht auf mittel zurück", () => {
+  const normalizer = server.match(/function normalizeUrgency\(value\) \{[\s\S]*?\n\}/)?.[0] || "";
+  assert.match(normalizer, /"Nicht angegeben"/);
+  assert.doesNotMatch(normalizer, /:\s*"mittel"/);
 });
