@@ -9,15 +9,14 @@ import {
   Scale,
   Server,
   ShieldAlert,
-  ShieldCheck,
-  UserCheck,
   UsersRound,
   XCircle,
 } from "lucide-react";
 
 const implementedControls = [
   ["Prototyp-Hinweis", "Die Oberfläche weist sichtbar darauf hin, dass keine echten Personen- oder Falldaten eingegeben werden sollen.", BadgeCheck],
-  ["Temporäre Eingaben", "Chat, Stimmung und Protokolle werden im aktuellen MVP nicht dauerhaft serverseitig gespeichert.", EyeOff],
+  ["Temporäre Eingaben", "Chat, Stimmung und Protokolle werden im aktuellen MVP nicht dauerhaft in einer eigenen serverseitigen DB-Peace-Datenbank gespeichert.", EyeOff],
+  ["Externe KI-Verarbeitung", "Wenn ein Gemini-Schlüssel konfiguriert ist, werden Chat- und Meldeanalyse-Texte über den lokalen Node-Proxy an Google Gemini übertragen, damit eine Modellantwort erzeugt werden kann. Deshalb dürfen hier keine realen sensiblen Falldaten eingegeben werden.", Server],
   ["Lokaler Sichtschutz", "Die selbst gewählte PIN schützt die Ansicht im Browser, ist aber ausdrücklich keine Datenverschlüsselung.", LockKeyhole],
   ["Kein API-Cache", "Der Service Worker speichert keine Antworten aus /api/ im Offline-Cache.", Server],
   ["Menschliche Entscheidung", "KI-Ausgaben werden als Orientierung gekennzeichnet und ersetzen keine zuständige Prüfung.", UsersRound],
@@ -143,7 +142,7 @@ function AiBoundaries() {
   ];
 
   return (
-    <Section title="KI-Leitplanken" text="Technische und organisatorische Grenzen müssen gleichzeitig gelten.">
+    <Section title="KI-Leitplanken" text="Technische und organisatorische Grenzen müssen gleichzeitig gelten. Mit aktiviertem Gemini verlassen eingegebene Chat- und Meldeanalyse-Texte den Browser und werden über den lokalen Proxy an den externen KI-Dienst übertragen.">
       <div className="grid gap-6 lg:grid-cols-2">
         <BoundaryColumn title="Zulässige Unterstützung" items={allowed} allowed />
         <BoundaryColumn title="Nicht zulässig" items={forbidden} />
@@ -204,7 +203,7 @@ function FinalDisclaimer() {
           <h3 className="text-2xl font-black">Keine realen sensiblen Daten</h3>
           <p className="mt-3 max-w-4xl font-semibold leading-7 text-white/75">
             Bis Authentifizierung, sichere Datenhaltung, Rollen, Löschung, Auditierung sowie fachliche und rechtliche Freigaben umgesetzt sind,
-            darf DB Peace AI ausschließlich mit erfundenen Beispieldaten demonstriert werden.
+            darf DB Peace AI ausschließlich mit erfundenen Beispieldaten demonstriert werden. Ist Gemini aktiviert, werden Chat- und Meldeanalyse-Texte für die Modellverarbeitung an Google Gemini übertragen.
           </p>
         </div>
       </div>
