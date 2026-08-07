@@ -48,6 +48,10 @@ for (const relativePath of requiredFiles) {
   if (!fs.existsSync(path.join(root, relativePath))) failures.push(`Pflichtdatei fehlt: ${relativePath}`);
 }
 
+for (const removedPath of ["src/components/AzubiRightsCheck.jsx", "src/lib/utils.js"]) {
+  if (fs.existsSync(path.join(root, removedPath))) failures.push(`Entfernter Altcode darf nicht zurückkehren: ${removedPath}`);
+}
+
 for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
   if (entry.isDirectory() && entry.name.startsWith("backup-before-")) {
     failures.push(`Historisches Backup-Verzeichnis muss aus dem aktiven Repository entfernt werden: ${entry.name}`);
@@ -110,6 +114,7 @@ for (const ignoredPath of ["node_modules", "dist", ".env"]) {
 const readme = read("README.md");
 if (!readme.includes("keine offizielle Deutsche-Bahn-Anwendung")) failures.push("README muss den Prototyp-Status eindeutig nennen.");
 if (!readme.includes("docs/MANUAL-TEST-CHECKLIST.md")) failures.push("README muss die manuelle Abnahmecheckliste verlinken.");
+if (!readme.includes("docs/AUDIT-RESULTS.md")) failures.push("README muss die Audit-Ergebnisse verlinken.");
 if (!readme.includes("/api/report/extract")) failures.push("README muss die tatsächlich implementierte Report-Route dokumentieren.");
 
 const packageJson = parseJson("package.json");
@@ -123,7 +128,7 @@ verifyDependencyMap("dependencies", packageJson, packageLock);
 verifyDependencyMap("devDependencies", packageJson, packageLock);
 
 const server = read("server.js");
-for (const requiredServerControl of ["unsupported_media_type", "MAX_BODY_BYTES", "Retry-After", "normalizeBoolean", "server.requestTimeout", "Cross-Origin-Resource-Policy"]) {
+for (const requiredServerControl of ["unsupported_media_type", "MAX_BODY_BYTES", "AI_TIMEOUT_MS", "withTimeout", "upstream_timeout", "Retry-After", "normalizeBoolean", "server.requestTimeout", "Cross-Origin-Resource-Policy"]) {
   if (!server.includes(requiredServerControl)) failures.push(`server.js muss die Schutzmaßnahme ${requiredServerControl} enthalten.`);
 }
 
@@ -131,7 +136,11 @@ const reportRoute = "/api/report/extract";
 if (!server.includes(reportRoute)) failures.push("server.js muss die dokumentierte Report-Route bereitstellen.");
 if (!read("src/components/AISmartReport.jsx").includes(reportRoute)) failures.push("AISmartReport muss dieselbe Report-Route wie der Server verwenden.");
 if (!read("src/components/AISmartReport.jsx").includes("isMountedRef")) failures.push("AISmartReport muss State-Updates nach Unmount verhindern.");
+if (!read("src/App.jsx").includes("useReducedMotion")) failures.push("App muss reduzierte Bewegung für Seitenwechsel respektieren.");
 if (!read("src/components/DashboardHome.jsx").includes("useReducedMotion")) failures.push("DashboardHome muss reduzierte Bewegung respektieren.");
+
+const main = read("src/main.jsx");
+if (!main.includes("import.meta.env.DEV") || !main.includes("showTechnicalDetails")) failures.push("Produktionsfehler dürfen keine Rohdetails anzeigen.");
 
 const manifest = parseJson("public/manifest.json");
 if (manifest?.start_url !== "/" || manifest?.scope !== "/") failures.push("PWA-Manifest muss start_url und scope auf / setzen.");
@@ -140,6 +149,16 @@ if (!Array.isArray(manifest?.icons) || manifest.icons.length === 0) failures.pus
 const serviceWorker = read("public/sw.js");
 if (!serviceWorker.includes('request.method !== "GET"')) failures.push("Der Service Worker darf nur GET-Anfragen behandeln.");
 if (!serviceWorker.includes('url.pathname.startsWith("/api/")')) failures.push("Der Service Worker muss API-Antworten ausdrücklich vom Cache ausschließen.");
+if (!serviceWorker.includes('CACHE_PREFIX = "db-peace-ai-"') || !serviceWorker.includes("name.startsWith(CACHE_PREFIX)")) failures.push("Der Service Worker darf nur eigene alte Caches löschen.");
+
+const appLock = read("src/components/AppLock.jsx");
+if (!appLock.includes("THROTTLE_STORAGE_KEY") || !appLock.includes("readThrottle") || !appLock.includes("writeThrottle")) failures.push("PIN-Fehlversuche müssen Reloads überstehen.");
+if (/safeStorageRemove\("local",\s*LOCK_STORAGE_KEY\)/.test(appLock)) failures.push("Der Sperrbildschirm darf keinen direkten lokalen PIN-Reset enthalten.");
+
+const training = read("src/components/TrainingMode.jsx");
+if (!training.includes("Keine Punktzahl und keine Kompetenzbewertung")) failures.push("Training muss ausdrücklich ohne Punkt-/Kompetenzbewertung arbeiten.");
+if (/\bpoints\s*:|\bpercentage\b|Orientierungswert/.test(training)) failures.push("Training darf keine Punkte- oder Prozentbewertung enthalten.");
+if (/<main(?:\s|>)/.test(training)) failures.push("TrainingMode darf keine verschachtelte main-Landmarke erzeugen.");
 
 const contacts = read("src/components/ContactsView.jsx");
 for (const requiredNumber of ["110", "112", "116 123", "116 016", "0800 546 546 5"]) {
