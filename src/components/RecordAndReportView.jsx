@@ -31,6 +31,7 @@ export function RecordAndReportView() {
   const [showForm, setShowForm] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [error, setError] = useState("");
+  const [exportError, setExportError] = useState("");
 
   function updateDraft(field, value) {
     setDraft((current) => ({ ...current, [field]: value }));
@@ -88,54 +89,66 @@ export function RecordAndReportView() {
 
     setRecords((current) => [entry, ...current]);
     setSubTab("protocol");
+    setExportError("");
     setSelectedRecord(entry);
+  }
+
+  function selectRecord(record) {
+    setExportError("");
+    setSelectedRecord(record);
   }
 
   function deleteRecord(id) {
     setRecords((current) => current.filter((record) => record.id !== id));
     if (selectedRecord?.id === id) setSelectedRecord(null);
+    setExportError("");
   }
 
   function exportRecord(record) {
-    const doc = new jsPDF();
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.setTextColor(226, 0, 26);
-    doc.text("DB Peace – Gedächtnisprotokoll", 18, 20);
+    setExportError("");
+    try {
+      const doc = new jsPDF();
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(20);
+      doc.setTextColor(226, 0, 26);
+      doc.text("DB Peace – Gedächtnisprotokoll", 18, 20);
 
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.setTextColor(90, 90, 90);
-    doc.text("Lokaler Demonstrationsentwurf – nicht automatisch gespeichert oder übermittelt", 18, 30);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(90, 90, 90);
+      doc.text("Lokaler Demonstrationsentwurf – nicht automatisch gespeichert oder übermittelt", 18, 30);
 
-    const content = [
-      `Datum: ${record.date}`,
-      `Uhrzeit: ${record.time}`,
-      `Ort / Kontext: ${record.location}`,
-      `Mögliche Zeug:innen: ${record.witnesses}`,
-      `Quelle: ${record.source}`,
-      record.category ? `Kategorie: ${record.category}` : null,
-      record.urgency ? `Dringlichkeitsorientierung: ${record.urgency}` : null,
-      "",
-      "Sachverhalt:",
-      record.description,
-      "",
-      "Hinweis: Vor Verwendung auf Richtigkeit prüfen. Menschen entscheiden über weitere Schritte.",
-    ].filter(Boolean).join("\n");
+      const content = [
+        `Datum: ${record.date}`,
+        `Uhrzeit: ${record.time}`,
+        `Ort / Kontext: ${record.location}`,
+        `Mögliche Zeug:innen: ${record.witnesses}`,
+        `Quelle: ${record.source}`,
+        record.category ? `Kategorie: ${record.category}` : null,
+        record.urgency ? `Dringlichkeitsorientierung: ${record.urgency}` : null,
+        "",
+        "Sachverhalt:",
+        record.description,
+        "",
+        "Hinweis: Vor Verwendung auf Richtigkeit prüfen. Menschen entscheiden über weitere Schritte.",
+      ].filter(Boolean).join("\n");
 
-    const lines = doc.splitTextToSize(content, 174);
-    doc.setFontSize(11);
-    doc.setTextColor(30, 30, 30);
-    let y = 43;
-    for (const line of lines) {
-      if (y > 278) {
-        doc.addPage();
-        y = 20;
+      const lines = doc.splitTextToSize(content, 174);
+      doc.setFontSize(11);
+      doc.setTextColor(30, 30, 30);
+      let y = 43;
+      for (const line of lines) {
+        if (y > 278) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(line, 18, y);
+        y += 5.5;
       }
-      doc.text(line, 18, y);
-      y += 5.5;
+      doc.save(`DB-Peace-Protokoll-${record.date}-${record.id.slice(0, 8)}.pdf`);
+    } catch {
+      setExportError("Das Gedächtnisprotokoll konnte nicht als PDF erzeugt werden. Der Sitzungsentwurf wurde nicht verändert.");
     }
-    doc.save(`DB-Peace-Protokoll-${record.date}-${record.id.slice(0, 8)}.pdf`);
   }
 
   return (
@@ -154,6 +167,12 @@ export function RecordAndReportView() {
       <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold leading-6 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/25 dark:text-amber-200">
         Die Protokolle bleiben nur im Arbeitsspeicher dieser geöffneten App. Bei Neuladen oder Schließen können sie verloren gehen. Exportiere wichtige Entwürfe als PDF und speichere sie anschließend an einem geeigneten sicheren Ort.
       </div>
+
+      {exportError && (
+        <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-800 dark:border-red-900/50 dark:bg-red-950/25 dark:text-red-300">
+          {exportError}
+        </p>
+      )}
 
       {!subTab ? (
         <Selection onSelect={setSubTab} recordCount={records.length} />
@@ -174,7 +193,7 @@ export function RecordAndReportView() {
               onCancelForm={cancelForm}
               onUpdate={updateDraft}
               onSubmit={addRecord}
-              onSelect={setSelectedRecord}
+              onSelect={selectRecord}
               onDelete={deleteRecord}
               onExport={exportRecord}
             />
@@ -185,7 +204,16 @@ export function RecordAndReportView() {
       )}
 
       {selectedRecord && (
-        <RecordModal record={selectedRecord} onClose={() => setSelectedRecord(null)} onDelete={deleteRecord} onExport={exportRecord} />
+        <RecordModal
+          record={selectedRecord}
+          exportError={exportError}
+          onClose={() => {
+            setExportError("");
+            setSelectedRecord(null);
+          }}
+          onDelete={deleteRecord}
+          onExport={exportRecord}
+        />
       )}
     </div>
   );
@@ -310,7 +338,7 @@ function Input({ label, onChange, ...props }) {
   );
 }
 
-function RecordModal({ record, onClose, onDelete, onExport }) {
+function RecordModal({ record, exportError, onClose, onDelete, onExport }) {
   const dialogRef = useRef(null);
   const closeButtonRef = useRef(null);
   const rows = useMemo(() => [
@@ -349,6 +377,7 @@ function RecordModal({ record, onClose, onDelete, onExport }) {
           <p className="text-[10px] font-black uppercase tracking-wide text-db-red">Sachverhalt</p>
           <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6 text-db-dark dark:text-white">{record.description}</p>
         </div>
+        {exportError && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-800 dark:border-red-900/50 dark:bg-red-950/25 dark:text-red-300">{exportError}</p>}
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
           <button type="button" onClick={() => onDelete(record.id)} className="flex items-center justify-center gap-2 rounded-xl border border-red-200 px-4 py-3 text-sm font-black text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500/30 dark:border-red-900/50 dark:text-red-300"><Trash2 className="h-4 w-4" aria-hidden="true" />Löschen</button>
           <button type="button" onClick={() => onExport(record)} className="flex items-center justify-center gap-2 rounded-xl bg-db-dark px-4 py-3 text-sm font-black text-white focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:bg-white dark:text-db-dark"><Download className="h-4 w-4" aria-hidden="true" />PDF</button>
