@@ -36,6 +36,7 @@ const requiredFiles = [
   "CHANGELOG.md",
   "docs/ARCHITECTURE.md",
   "docs/SECURITY-MODEL.md",
+  "docs/AUDIT-RESULTS.md",
   "docs/MVP-STATUS.md",
   "docs/MANUAL-TEST-CHECKLIST.md",
   "docs/RELEASE-CHECKLIST.md",
