@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   EyeOff,
@@ -83,7 +83,7 @@ const contactDetails = {
   vertrauen: {
     title: "Vertrauensperson",
     role: "Intern",
-    description: "Vertraulicher Einstieg, Orientierung und Begleitung. Nutze nur die offiziell bestätigten Kontakte deines Standorts.",
+    description: "Möglicher Einstieg für Orientierung und Begleitung. Kläre vor sensiblen Angaben Zuständigkeit und Umgang mit Vertraulichkeit und nutze nur bestätigte Kontakte deines Standorts.",
     action: "prepare",
   },
   vertretung: {
@@ -129,21 +129,26 @@ const contactDetails = {
   seelsorge: {
     title: "TelefonSeelsorge",
     role: "Extern",
-    description: "Kostenfreie und vertrauliche Unterstützung rund um die Uhr.",
-    href: "tel:08001110111",
-    label: "0800 111 0 111 anrufen",
+    description: "Kostenfreie Unterstützung in Krisen und schwierigen Lebenslagen.",
+    href: "tel:116123",
+    label: "116 123 anrufen",
   },
 };
 
 export default function SupportPage({ onNavigate }) {
   const [selected, setSelected] = useState(null);
+  const detailHeadingRef = useRef(null);
+
+  useEffect(() => {
+    if (selected) window.requestAnimationFrame(() => detailHeadingRef.current?.focus());
+  }, [selected]);
 
   if (!selected) {
     return (
       <div className="mx-auto max-w-4xl space-y-7 py-4">
         <header className="text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600">
-            <PhoneCall className="h-6 w-6" />
+            <PhoneCall className="h-6 w-6" aria-hidden="true" />
           </div>
           <h1 className="mt-4 text-3xl font-black text-db-dark dark:text-white">Finde die richtige Unterstützung</h1>
           <p className="mx-auto mt-3 max-w-2xl text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
@@ -155,9 +160,9 @@ export default function SupportPage({ onNavigate }) {
           {situations.map((situation) => {
             const Icon = situation.icon;
             return (
-              <button key={situation.id} type="button" onClick={() => setSelected(situation)} className="group rounded-xl border border-db-dark/10 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-500 dark:border-white/10 dark:bg-db-dark/50">
+              <button key={situation.id} type="button" onClick={() => setSelected(situation)} className="group rounded-xl border border-db-dark/10 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-white/10 dark:bg-db-dark/50">
                 <div className="flex items-center gap-3">
-                  <Icon className="h-5 w-5 text-emerald-600" />
+                  <Icon className="h-5 w-5 text-emerald-600" aria-hidden="true" />
                   <span className="font-black text-db-dark group-hover:text-emerald-700 dark:text-white">{situation.title}</span>
                 </div>
                 <p className="mt-2 text-xs font-semibold leading-5 text-db-rail dark:text-white/60">{situation.explanation}</p>
@@ -169,17 +174,19 @@ export default function SupportPage({ onNavigate }) {
     );
   }
 
+  const SelectedIcon = selected.icon;
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <button type="button" onClick={() => setSelected(null)} className="flex items-center gap-2 text-sm font-bold text-db-rail hover:text-emerald-700 dark:text-white/60">
-        <ArrowLeft className="h-4 w-4" />
+      <button type="button" onClick={() => setSelected(null)} className="flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-bold text-db-rail hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:text-white/60">
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Andere Situation wählen
       </button>
 
       <section className="rounded-xl border border-emerald-200 bg-emerald-50 p-6 dark:border-emerald-900/60 dark:bg-emerald-950/25">
         <div className="flex items-center gap-4 border-b border-emerald-200/70 pb-4 dark:border-emerald-900/60">
-          <selected.icon className="h-8 w-8 text-emerald-700 dark:text-emerald-400" />
-          <h1 className="text-2xl font-black text-emerald-950 dark:text-emerald-200">{selected.title}</h1>
+          <SelectedIcon className="h-8 w-8 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
+          <h1 ref={detailHeadingRef} tabIndex={-1} className="text-2xl font-black text-emerald-950 outline-none dark:text-emerald-200">{selected.title}</h1>
         </div>
         <div className="mt-5 rounded-xl bg-white/70 p-4 text-sm font-semibold leading-6 text-emerald-950 dark:bg-black/20 dark:text-emerald-200">
           {selected.guidance}
@@ -203,11 +210,11 @@ export default function SupportPage({ onNavigate }) {
                   </div>
 
                   {contact.href ? (
-                    <a href={contact.href} className={`shrink-0 rounded-xl px-4 py-2.5 text-center text-xs font-black text-white ${contact.urgent ? "bg-red-600 hover:bg-red-700" : "bg-db-dark hover:bg-black"}`}>
+                    <a href={contact.href} className={`shrink-0 rounded-xl px-4 py-2.5 text-center text-xs font-black text-white focus:outline-none focus:ring-2 focus:ring-offset-2 ${contact.urgent ? "bg-red-600 hover:bg-red-700 focus:ring-red-500" : "bg-db-dark hover:bg-black focus:ring-db-red"}`}>
                       {contact.label}
                     </a>
                   ) : (
-                    <button type="button" onClick={() => onNavigate?.("record-report")} className="shrink-0 rounded-xl bg-db-dark px-4 py-2.5 text-xs font-black text-white hover:bg-black">
+                    <button type="button" onClick={() => onNavigate?.("record-report")} className="shrink-0 rounded-xl bg-db-dark px-4 py-2.5 text-xs font-black text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-db-red/30">
                       Entwurf vorbereiten
                     </button>
                   )}
