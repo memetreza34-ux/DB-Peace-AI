@@ -5,7 +5,6 @@ export function PanicButton() {
   function handleQuickExit() {
     try {
       sessionStorage.removeItem("db-peace-mood-session");
-      sessionStorage.removeItem("db-peace-unlocked");
     } catch {
       // Der Seitenwechsel funktioniert auch, wenn Session Storage blockiert ist.
     }
