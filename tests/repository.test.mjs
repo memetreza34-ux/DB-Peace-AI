@@ -46,6 +46,8 @@ test("dokumentierte API-Routen sind implementiert und verwendet", () => {
 
 test("API-Proxy enthält die erwarteten Schutzmaßnahmen", () => {
   const server = read("server.js");
+  const quiz = read("src/components/QuizWidget.jsx");
+
   assert.match(server, /unsupported_media_type/);
   assert.match(server, /MAX_BODY_BYTES/);
   assert.match(server, /AI_TIMEOUT_MS/);
@@ -56,6 +58,15 @@ test("API-Proxy enthält die erwarteten Schutzmaßnahmen", () => {
   assert.match(server, /normalizeBoolean/);
   assert.match(server, /server\.requestTimeout/);
   assert.match(server, /process\.once\("SIGTERM"/);
+  assert.match(server, /ALLOWED_BROWSER_ORIGINS/);
+  assert.match(server, /sec-fetch-site/);
+  assert.match(server, /cross_site_request_blocked/);
+  assert.match(server, /origin_not_allowed/);
+  assert.match(server, /\^application\\\/json/);
+  assert.match(server, /req\.method === "POST" && url\.pathname === "\/api\/quiz"/);
+  assert.match(quiz, /method:\s*"POST"/);
+  assert.match(quiz, /"Content-Type":\s*"application\/json"/);
+  assert.match(quiz, /body:\s*"\{\}"/);
 });
 
 test("KI-Status unterscheidet Konfiguration von erfolgreicher Verbindung", () => {
