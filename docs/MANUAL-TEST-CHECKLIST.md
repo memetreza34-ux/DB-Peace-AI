@@ -1,6 +1,6 @@
 # Manuelle Abnahmecheckliste — DB Peace AI
 
-Stand: 6. August 2026
+Stand: 7. August 2026
 
 Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdaten verwenden. Ein erfolgreicher Durchlauf bedeutet **präsentationsreif**, nicht pilot- oder produktionsreif.
 
@@ -13,7 +13,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Die API meldet den lokalen Port und das konfigurierte Modell.
 - [ ] Ein Port- oder Startfehler beendet beide Prozesse mit verständlicher Meldung.
 - [ ] Strg+C beendet API und Vite ohne hängen gebliebenen Prozess.
-- [ ] `npm run check` führt Repository-Prüfung und Production-Build aus.
+- [ ] `npm run check` führt Verifier, Node-Regressionstests und Production-Build nacheinander aus.
 
 ## 1. Start und lokale Sperre
 
@@ -23,7 +23,10 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] PIN wird beim Eingeben nicht im Klartext angezeigt.
 - [ ] Die Oberfläche erklärt, dass die PIN nur ein lokaler Sichtschutz ist.
 - [ ] Nach Schließen des Tabs wird die App erneut gesperrt.
-- [ ] Zurücksetzen der PIN funktioniert und löscht keine angeblich serverseitigen Daten.
+- [ ] Nach fünf Fehlversuchen wird die Eingabe kurz gesperrt.
+- [ ] Ein Neuladen während der Sperrzeit hebt die Fehlversuchs-Pause nicht auf.
+- [ ] Auf dem Sperrbildschirm existiert kein Knopf, der die eingerichtete PIN ohne Kenntnis der alten PIN löscht.
+- [ ] Bei vergessener PIN verweist die Oberfläche nur auf das manuelle Löschen der Website-Daten im Browser.
 
 ## 2. Navigation und Suche
 
@@ -32,12 +35,13 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Globale Suche lässt sich per Escape schließen.
 - [ ] Suchtreffer führen zum richtigen Bereich.
 - [ ] Suche behauptet keine offizielle Meldung, Übermittlung oder Kontaktaufnahme.
-- [ ] Fokus bleibt im geöffneten Suchdialog.
+- [ ] Fokus bleibt im geöffneten Suchdialog und kehrt nach Schließen zum Auslöser zurück.
 
 ## 3. Notfall und Kontakte
 
 - [ ] Notfallmodal zeigt 110 und 112 korrekt.
 - [ ] Vor einem Anruf erfolgt eine klare Bestätigung.
+- [ ] Notrufsteuerung ist auch per Tastatur bedienbar.
 - [ ] Oberfläche erklärt, dass kein Standort übertragen wird.
 - [ ] Kontaktseite enthält keine erfundene interne DB-Telefonnummer.
 - [ ] 116 123, 116 016 und 0800 546 546 5 werden korrekt angezeigt.
@@ -48,14 +52,18 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 
 ### Mit `GEMINI_API_KEY`
 
-- [ ] `/api/chat/status` meldet eine eingerichtete Verbindung.
+- [ ] `/api/chat/status` meldet nur `configured: true` und behauptet noch keine erfolgreiche Verbindung.
+- [ ] Chat zeigt zunächst sinngemäß „Gemini konfiguriert · Verbindung noch nicht geprüft“.
 - [ ] Chat sendet eine kurze synthetische Testnachricht erfolgreich.
+- [ ] Erst nach einer erfolgreichen Modellantwort zeigt der Chat sinngemäß „Gemini-Antwort erhalten“.
 - [ ] Antwort enthält keine angebliche offizielle DB-Entscheidung.
 - [ ] Chat fordert keine Personalnummer oder unnötige Klarnamen an.
 - [ ] Verlauf wird nach Neuladen nicht dauerhaft wiederhergestellt.
+- [ ] Ein künstlich nicht erreichbarer Upstream endet kontrolliert statt unbegrenzt zu warten.
 
 ### Ohne `GEMINI_API_KEY`
 
+- [ ] `/api/chat/status` meldet `configured: false`.
 - [ ] Chat bleibt bedienbar oder zeigt einen verständlichen lokalen Fallback.
 - [ ] Fallback wird sichtbar als lokal gekennzeichnet.
 - [ ] Keine Fehlermeldung behauptet eine erfolgreiche KI-Verbindung.
@@ -68,6 +76,8 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Lokale Dringlichkeit ist als Orientierung und nicht als Entscheidung gekennzeichnet.
 - [ ] KI-Strukturierung funktioniert mit Key.
 - [ ] Lokaler Fallback funktioniert ohne Key.
+- [ ] Gemini-Entwurf und lokaler Fallback sind im Protokoll korrekt unterscheidbar.
+- [ ] „Neu starten“ erzeugt eine neue Entwurfsnummer und einen neuen Erstellzeitpunkt.
 - [ ] Vorschau kann kopiert werden.
 - [ ] PDF wird erzeugt und ist als Entwurf gekennzeichnet.
 - [ ] Nirgends wird eine automatische Übermittlung behauptet.
@@ -78,43 +88,55 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Eintrag kann exportiert und gelöscht werden.
 - [ ] Nach Seitenneuladen ist der Sitzungsentwurf entfernt.
 - [ ] Stimmungseintrag kann hinzugefügt und gelöscht werden.
+- [ ] Blockierter Sitzungsspeicher lässt die Stimmungskomponente nicht abstürzen.
 - [ ] Oberfläche verspricht keine Verschlüsselung oder Cloud-Speicherung.
 
 ## 7. Rechte und Hilfeorientierung
 
-- [ ] Gesetzeslinks öffnen die vorgesehenen offiziellen Seiten.
+- [ ] Rechtsbereich enthält keine angeblichen internen DB-Richtlinien.
+- [ ] Jede Rechtskarte besitzt einen Link zu einer amtlichen Einzelnorm auf `gesetze-im-internet.de`.
+- [ ] Karten bezeichnen die dargestellte Kernaussage als Paraphrase und nicht als amtliches Vollzitat.
 - [ ] Inhalte enthalten Hinweise auf Ausnahmen und Einzelfallprüfung.
+- [ ] Keine bestimmte Sanktion wird als automatisch oder gesetzlich zwingend dargestellt.
+- [ ] Die App behauptet nicht, selbst eine AGG- oder andere offizielle Beschwerde einzureichen.
 - [ ] Keine absolute Vertraulichkeits- oder Rechtsgarantie wird angezeigt.
 - [ ] Berufsschule, Arbeitszeit und Ausbildungsaufgaben werden nicht pauschal oder falsch dargestellt.
 
 ## 8. Lernen, Quiz und Szenario-Übung
 
-- [ ] Kurskatalog ist sichtbar als ungeprüfter Demo-Datensatz gekennzeichnet.
+- [ ] Lernkatalog enthält genau die vorgesehenen kleinen fiktiven Demo-Kategorien.
+- [ ] Jeder Kataloganbieter ist sichtbar fiktiv; kein erfundener Kurs wird einer realen Organisation zugeordnet.
+- [ ] Präsenz-Demo-Kategorie zeigt ihre Einträge und ist nicht wegen eines falschen Datenschlüssels leer.
 - [ ] Details erzeugen kein offizielles Zertifikat.
 - [ ] PDF-Lernnotiz nennt sich nicht Teilnahmebescheinigung.
 - [ ] Freistellungsvorlage verlangt eine Prüfung von Anerkennung und Fristen.
 - [ ] Quiz lädt mit Key Fragen über `/api/quiz`.
+- [ ] KI-Quiz erzeugt nur allgemeine Sicherheits-/Orientierungsfragen und keine konkrete Rechtsauslegung.
 - [ ] Quiz nutzt ohne Key ein sichtbar gekennzeichnetes lokales Fragenset.
 - [ ] Szenario-Training nennt sich nicht KI-Training.
 - [ ] Szenario-Ergebnis erklärt die statische Bewertungslogik.
-- [ ] Es werden keine Punkte, Badges oder Zertifikate vergeben.
+- [ ] Es werden keine Punkte, Prozentwerte, Badges oder Zertifikate vergeben.
 
 ## 9. Demo-Bereiche
 
 - [ ] HR-Dashboard zeigt dauerhaft einen Mock-/Demo-Hinweis.
 - [ ] Demo-Zugang wird nicht als Azure- oder DB-SSO bezeichnet.
 - [ ] Postfach enthält nur erfundene Fälle.
-- [ ] Analytics bezeichnet alle Werte als fiktiv oder frei veränderbar.
+- [ ] Demo-Postfach lässt sich wirklich auf den ursprünglichen Beispieldatensatz zurücksetzen.
+- [ ] Analytics bezeichnet alle Werte als fiktive Szenarioannahmen oder frei veränderbar.
 - [ ] Projektideen werden nicht als veröffentlicht oder versendet dargestellt.
 - [ ] Eigene Projektidee verschwindet beim Neuladen.
 
 ## 10. PWA, Offline und Sicherheit
 
 - [ ] Manifest und App-Icon werden ohne 404 geladen.
-- [ ] Service Worker installiert sich ohne Fehler.
+- [ ] Service Worker installiert sich nur im Production-Build ohne Fehler.
 - [ ] Offline-Hinweis verspricht keine spätere Synchronisation.
 - [ ] Requests unter `/api/` werden nicht im Cache gespeichert.
+- [ ] Beim Aktivieren werden nur alte Caches mit Präfix `db-peace-ai-` gelöscht.
+- [ ] Entwicklungsmodus entfernt alte DB-Peace-Service-Worker-/Cache-Reste, ohne fremde Cache-Namen zu löschen.
 - [ ] Browser-Konsole enthält keine ungefangenen Fehler im Kernweg.
+- [ ] Produktionsfehleransicht zeigt keine rohe interne Exception; technische Details erscheinen nur im Entwicklungsmodus.
 - [ ] `.env` und API-Schlüssel sind nicht im Repository oder Build enthalten.
 
 ## 11. Responsive und barrierearme Bedienung
@@ -124,9 +146,11 @@ Mindestens prüfen bei 360 px, 768 px und 1280 px Breite:
 - [ ] keine horizontale Überlagerung im Kernweg
 - [ ] Buttons und Formularfelder bleiben erreichbar
 - [ ] Dialoge sind scrollbar und besitzen beschreibende Labels
+- [ ] Escape, Fokusfalle und Fokus-Rückgabe funktionieren in kritischen Dialogen
 - [ ] Tastaturfokus ist sichtbar
 - [ ] Texte bleiben bei 200 % Browser-Zoom nutzbar
 - [ ] Hell- und Dunkelmodus haben ausreichende Lesbarkeit
+- [ ] Mit aktivierter Betriebssystemoption „Bewegung reduzieren“ entfallen zentrale Seiten-/Chatbewegungen.
 
 ## 12. Abschlussprotokoll
 
@@ -137,6 +161,6 @@ Mindestens prüfen bei 360 px, 768 px und 1280 px Breite:
 - Testdatum: `[Datum]`
 - testende Person: `[Name/Rolle]`
 - `npm run check`: `[erfolgreich/fehlgeschlagen]`
-- GitHub Actions: `[erfolgreich/fehlgeschlagen/ausstehend]`
+- GitHub Actions: `[erfolgreich/fehlgeschlagen/ausstehend/externer Runner-Blocker]`
 - offene Blocker: `[Liste]`
 - Entscheidung: `[Draft behalten / bereit zur Prüfung / nicht zusammenführen]`
