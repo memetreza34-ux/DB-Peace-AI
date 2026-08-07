@@ -1,23 +1,25 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Delete, Lock, RotateCcw, ShieldCheck } from "lucide-react";
+import { Delete, Lock, ShieldCheck } from "lucide-react";
 
 const LOCK_STORAGE_KEY = "db-peace-lock-v2";
 const SESSION_UNLOCK_KEY = "db-peace-unlocked";
+const THROTTLE_STORAGE_KEY = "db-peace-lock-throttle";
 const PIN_LENGTH = 4;
 const MAX_FAILED_ATTEMPTS = 5;
 const RETRY_DELAY_MS = 10_000;
 
 export function AppLock({ onUnlock }) {
   const existingConfig = useMemo(() => readLockConfig(), []);
-  const [mode, setMode] = useState(existingConfig ? "unlock" : "setup");
+  const initialThrottle = useMemo(() => readThrottle(), []);
+  const [mode] = useState(existingConfig ? "unlock" : "setup");
   const [pin, setPin] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [phase, setPhase] = useState("pin");
   const [error, setError] = useState("");
   const [isWorking, setIsWorking] = useState(false);
-  const [failedAttempts, setFailedAttempts] = useState(0);
-  const [blockedUntil, setBlockedUntil] = useState(0);
+  const [failedAttempts, setFailedAttempts] = useState(initialThrottle.failedAttempts);
+  const [blockedUntil, setBlockedUntil] = useState(initialThrottle.blockedUntil);
   const [clock, setClock] = useState(Date.now());
 
   const retrySeconds = Math.max(0, Math.ceil((blockedUntil - clock) / 1_000));
@@ -29,13 +31,44 @@ export function AppLock({ onUnlock }) {
 
   useEffect(() => {
     if (!blockedUntil) return undefined;
-    const timer = window.setInterval(() => setClock(Date.now()), 250);
+
+    const updateClock = () => {
+      const now = Date.now();
+      setClock(now);
+      if (now >= blockedUntil) {
+        setBlockedUntil(0);
+        setFailedAttempts(0);
+        clearThrottle();
+      }
+    };
+
+    updateClock();
+    const timer = window.setInterval(updateClock, 250);
     return () => window.clearInterval(timer);
   }, [blockedUntil]);
 
   useEffect(() => {
     if (mode === "unlock" && pin.length === PIN_LENGTH && !isBlocked) void verifyPin();
   }, [pin, mode, isBlocked]);
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (isWorking || isBlocked) return;
+      if (/^[0-9]$/.test(event.key)) {
+        event.preventDefault();
+        pressDigit(event.key);
+      } else if (event.key === "Backspace") {
+        event.preventDefault();
+        deleteDigit();
+      } else if (event.key === "Enter" && mode === "setup" && pin.length === PIN_LENGTH) {
+        event.preventDefault();
+        void completeSetup();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isWorking, isBlocked, mode, pin, phase, confirmation]);
 
   async function verifyPin() {
     const config = readLockConfig();
@@ -47,8 +80,10 @@ export function AppLock({ onUnlock }) {
     try {
       const verifier = await createVerifier(pin, config.salt);
       if (verifier === config.verifier) {
-        safeStorageSet("session", SESSION_UNLOCK_KEY, "1");
+        clearThrottle();
         setFailedAttempts(0);
+        setBlockedUntil(0);
+        safeStorageSet("session", SESSION_UNLOCK_KEY, "1");
         onUnlock();
         return;
       }
@@ -59,9 +94,11 @@ export function AppLock({ onUnlock }) {
         setFailedAttempts(0);
         setBlockedUntil(nextBlockedUntil);
         setClock(Date.now());
+        writeThrottle(0, nextBlockedUntil);
         setError("Zu viele Fehlversuche. Die Eingabe ist kurz gesperrt.");
       } else {
         setFailedAttempts(nextAttempts);
+        writeThrottle(nextAttempts, 0);
         setError(`PIN falsch. Noch ${MAX_FAILED_ATTEMPTS - nextAttempts} Versuche bis zur kurzen Pause.`);
       }
       setPin("");
@@ -112,6 +149,7 @@ export function AppLock({ onUnlock }) {
         return;
       }
 
+      clearThrottle();
       safeStorageSet("session", SESSION_UNLOCK_KEY, "1");
       onUnlock();
     } catch {
@@ -131,24 +169,6 @@ export function AppLock({ onUnlock }) {
     if (isWorking || isBlocked) return;
     setPin((current) => current.slice(0, -1));
     setError("");
-  }
-
-  function resetLock() {
-    const confirmed = window.confirm(
-      "Lokale Sichtschutz-PIN wirklich zurücksetzen? Dadurch erhält jede Person mit Zugriff auf diesen Browser wieder Zugang zum Prototyp.",
-    );
-    if (!confirmed) return;
-
-    safeStorageRemove("local", LOCK_STORAGE_KEY);
-    safeStorageRemove("session", SESSION_UNLOCK_KEY);
-    setMode("setup");
-    setPin("");
-    setConfirmation("");
-    setPhase("pin");
-    setIsWorking(false);
-    setFailedAttempts(0);
-    setBlockedUntil(0);
-    setError("Lokale Sperre zurückgesetzt. Lege eine neue vierstellige PIN fest.");
   }
 
   const title = mode === "setup"
@@ -186,7 +206,7 @@ export function AppLock({ onUnlock }) {
 
         {isBlocked && (
           <p role="status" className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-center text-xs font-bold text-amber-100">
-            Neue Eingabe in {retrySeconds} Sekunden möglich.
+            Neue Eingabe in {retrySeconds} Sekunden möglich. Ein Neuladen setzt diese Pause nicht zurück.
           </p>
         )}
         {error && <p role="alert" className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-center text-xs font-bold text-red-200">{error}</p>}
@@ -211,15 +231,14 @@ export function AppLock({ onUnlock }) {
         )}
 
         {mode === "unlock" && (
-          <button type="button" disabled={isWorking} onClick={resetLock} className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg py-2 text-xs font-bold text-slate-500 hover:bg-white/5 hover:text-white focus:outline-none focus:ring-2 focus:ring-db-red disabled:opacity-40">
-            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-            Lokale PIN vergessen oder zurücksetzen
-          </button>
+          <p className="mt-6 rounded-xl border border-white/10 bg-white/5 p-3 text-center text-xs font-semibold leading-5 text-slate-400">
+            Es gibt bewusst keinen Umgehungs- oder Zurücksetzen-Knopf auf dem Sperrbildschirm. Wenn du die PIN vergessen hast, musst du die Website-Daten dieses Prototyps im Browser löschen und anschließend eine neue PIN einrichten.
+          </p>
         )}
 
         <div className="mt-7 flex items-start gap-2 rounded-xl bg-white/5 p-3 text-xs font-semibold leading-5 text-slate-400">
           <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" aria-hidden="true" />
-          Die PIN wird nicht im Klartext gespeichert. Die Sperre bleibt dennoch nur ein lokaler Sichtschutz für den Prototyp.
+          Die PIN wird nicht im Klartext gespeichert. Die Sperre bleibt dennoch nur ein lokaler Sichtschutz und kann keine echte Anmeldung oder Geräteverschlüsselung ersetzen.
         </div>
       </motion.main>
     </div>
@@ -229,10 +248,42 @@ export function AppLock({ onUnlock }) {
 function readLockConfig() {
   try {
     const parsed = JSON.parse(safeStorageGet("local", LOCK_STORAGE_KEY) || "null");
-    return parsed?.salt && parsed?.verifier && parsed?.version === 2 ? parsed : null;
+    return parsed?.salt
+      && parsed?.verifier
+      && parsed?.version === 2
+      && parsed?.pinLength === PIN_LENGTH
+      ? parsed
+      : null;
   } catch {
     return null;
   }
+}
+
+function readThrottle() {
+  try {
+    const parsed = JSON.parse(safeStorageGet("session", THROTTLE_STORAGE_KEY) || "null");
+    const failedAttempts = Number.isInteger(parsed?.failedAttempts)
+      ? Math.max(0, Math.min(MAX_FAILED_ATTEMPTS - 1, parsed.failedAttempts))
+      : 0;
+    const blockedUntil = Number.isFinite(parsed?.blockedUntil) && parsed.blockedUntil > Date.now()
+      ? parsed.blockedUntil
+      : 0;
+    return { failedAttempts: blockedUntil ? 0 : failedAttempts, blockedUntil };
+  } catch {
+    return { failedAttempts: 0, blockedUntil: 0 };
+  }
+}
+
+function writeThrottle(failedAttempts, blockedUntil) {
+  safeStorageSet(
+    "session",
+    THROTTLE_STORAGE_KEY,
+    JSON.stringify({ failedAttempts, blockedUntil }),
+  );
+}
+
+function clearThrottle() {
+  safeStorageRemove("session", THROTTLE_STORAGE_KEY);
 }
 
 async function createVerifier(pin, saltBase64) {
