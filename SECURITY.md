@@ -14,15 +14,30 @@ Ausschließlich erfundene Beispieldaten verwenden. Nicht eingeben oder hochladen
 - Fotos, Audioaufnahmen oder Anhänge mit Personenbezug
 - Zugangsdaten, API-Schlüssel oder interne Systeminformationen
 
+## Datenfluss bei aktivierter KI
+
+Ist `GEMINI_API_KEY` konfiguriert, werden Texte aus dem KI-Chat und der KI-gestützten Meldungsanalyse vom Browser an den lokalen Node.js-Proxy und von dort zur Modellverarbeitung an Google Gemini übertragen. Der Prototyp besitzt dafür keine eigene produktive Falldatenbank.
+
+Daraus folgt:
+
+- keine realen sensiblen Fall-, Gesundheits- oder Beschäftigtendaten eingeben
+- ein lokaler Proxy bedeutet nicht, dass der Inhalt den Rechner nicht verlässt
+- vor einem Pilotbetrieb müssen Anbieter, Vertrag, Rechtsgrundlage, Datenflüsse, Speicher-/Löschbedingungen und technische Schutzmaßnahmen geprüft werden
+- ein clientseitig abgebrochener SDK-Request garantiert nicht, dass eine bereits beim externen Dienst laufende Operation sofort beendet wird
+
 ## Aktuell umgesetzte Schutzmaßnahmen
 
 - API-Schlüssel verbleiben im lokalen Node.js-Proxy und werden nicht an das Frontend ausgeliefert.
 - Der API-Server bindet standardmäßig ausschließlich an `127.0.0.1`.
+- Fremde Browser-Origin- und `Sec-Fetch-Site: cross-site`-Anfragen an den lokalen Proxy werden abgewiesen.
+- POST-Endpunkte akzeptieren nur echtes `application/json`; das KI-Quiz ist kein einfacher GET-Endpunkt mehr.
 - Request-Größe, Nachrichtenlänge, Verlauf und Anfragerate sind begrenzt.
+- Gemini-Aufrufe besitzen ein lokales 20-Sekunden-Limit; der SDK-Request erhält beim Timeout ein `AbortSignal`.
 - API-Antworten erhalten `Cache-Control: no-store` und weitere Sicherheitsheader.
-- Der Service Worker schließt `/api/` ausdrücklich vom Cache aus.
+- Der Service Worker schließt `/api/` ausdrücklich vom Cache aus und nutzt statische Caches nur als Offline-Fallback.
 - Chatverläufe werden nicht dauerhaft im Browser gespeichert.
 - Meldungs-, Projekt-, Stimmungs- und Protokollentwürfe sind als temporär oder Demo gekennzeichnet.
+- Der Entsperrstatus der lokalen PIN wird nicht in Browser-Speicher persistiert; Reload oder neuer/duplizierter Tab sperren erneut.
 - Die lokale PIN wird nicht im Klartext gespeichert; sie bleibt dennoch nur ein Sichtschutz.
 - Notfallfunktionen übertragen keinen Standort und verwenden keine erfundenen internen Telefonnummern.
 - PDF-Ausgaben sind als Entwurf, Vorlage oder persönliche Lernnotiz gekennzeichnet.
@@ -58,6 +73,7 @@ Gemini-Ausgaben können falsch, unvollständig oder unangemessen sein. Deshalb g
 - lokale Fallbacks sichtbar kennzeichnen
 - bei Gewalt, akuter Gefahr oder Krise reale Hilfe priorisieren
 - vor einem Pilotbetrieb Prompt-Injection, Datenabfluss, Halluzinationen und Missbrauch testen
+- Anbieter- und Datenverarbeitungsbedingungen unabhängig vom Anwendungscode prüfen
 
 ## Schwachstellen melden
 
