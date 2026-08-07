@@ -10,6 +10,8 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] npm 10 oder 11 wird verwendet.
 - [ ] `npm ci` läuft ohne Fehler.
 - [ ] `npm run dev -- --host 127.0.0.1 --port 5173 --strictPort` startet API und Vite gemeinsam.
+- [ ] React Refresh funktioniert im lokalen Vite-Devserver ohne CSP-Blank-Screen.
+- [ ] `npm run preview` startet den Production-Build über Vites Preview-Port 4173, ohne dass der lokale API-Origin-Schutz legitime Requests blockiert.
 - [ ] Die API meldet den lokalen Port und das konfigurierte Modell.
 - [ ] Ein Port- oder Startfehler beendet beide Prozesse mit verständlicher Meldung.
 - [ ] Strg+C beendet API und Vite ohne hängen gebliebenen Prozess.
@@ -22,7 +24,9 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Eine falsche PIN zeigt eine verständliche Fehlermeldung.
 - [ ] PIN wird beim Eingeben nicht im Klartext angezeigt.
 - [ ] Die Oberfläche erklärt, dass die PIN nur ein lokaler Sichtschutz ist.
-- [ ] Nach Schließen des Tabs wird die App erneut gesperrt.
+- [ ] Nach einem Seitenneuladen wird die App erneut gesperrt.
+- [ ] Ein neu geöffneter oder duplizierter Tab übernimmt keinen gespeicherten Entsperrstatus.
+- [ ] Nach Schließen und erneutem Öffnen wird die App erneut gesperrt.
 - [ ] Nach fünf Fehlversuchen wird die Eingabe kurz gesperrt.
 - [ ] Ein Neuladen während der Sperrzeit hebt die Fehlversuchs-Pause nicht auf.
 - [ ] Auf dem Sperrbildschirm existiert kein Knopf, der die eingerichtete PIN ohne Kenntnis der alten PIN löscht.
@@ -43,6 +47,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Vor einem Anruf erfolgt eine klare Bestätigung.
 - [ ] Notrufsteuerung ist auch per Tastatur bedienbar.
 - [ ] Oberfläche erklärt, dass kein Standort übertragen wird.
+- [ ] „Schnell verlassen“ bleibt auch über geöffneten Dialogen sichtbar und per Zeiger anklickbar.
 - [ ] Kontaktseite enthält keine erfundene interne DB-Telefonnummer.
 - [ ] 116 123, 116 016 und 0800 546 546 5 werden korrekt angezeigt.
 - [ ] Links zu offiziellen externen Anbieterseiten öffnen in einem neuen Tab.
@@ -60,6 +65,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Chat fordert keine Personalnummer oder unnötige Klarnamen an.
 - [ ] Verlauf wird nach Neuladen nicht dauerhaft wiederhergestellt.
 - [ ] Ein künstlich nicht erreichbarer Upstream endet kontrolliert statt unbegrenzt zu warten.
+- [ ] Der lokale Gemini-SDK-Request erhält beim Timeout ein AbortSignal; ein Client-Abbruch wird als kontrollierter 504-Upstream-Timeout behandelt.
 
 ### Ohne `GEMINI_API_KEY`
 
@@ -75,6 +81,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Es werden keine echten Namen, Personalnummern oder Anhänge verlangt.
 - [ ] Lokale Dringlichkeit ist als Orientierung und nicht als Entscheidung gekennzeichnet.
 - [ ] KI-Strukturierung funktioniert mit Key.
+- [ ] KI-Strukturierung funktioniert im Vite-Entwicklungsmodus mit React StrictMode und bleibt nicht dauerhaft im Ladezustand hängen.
 - [ ] Lokaler Fallback funktioniert ohne Key.
 - [ ] Gemini-Entwurf und lokaler Fallback sind im Protokoll korrekt unterscheidbar.
 - [ ] „Neu starten“ erzeugt eine neue Entwurfsnummer und einen neuen Erstellzeitpunkt.
@@ -86,6 +93,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 
 - [ ] Synthetischer Protokolleintrag kann angelegt werden.
 - [ ] Eintrag kann exportiert und gelöscht werden.
+- [ ] Protokoll-Detaildialog hält den Tastaturfokus im Dialog und gibt ihn nach dem Schließen an den Auslöser zurück.
 - [ ] Nach Seitenneuladen ist der Sitzungsentwurf entfernt.
 - [ ] Stimmungseintrag kann hinzugefügt und gelöscht werden.
 - [ ] Blockierter Sitzungsspeicher lässt die Stimmungskomponente nicht abstürzen.
@@ -110,9 +118,10 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Details erzeugen kein offizielles Zertifikat.
 - [ ] PDF-Lernnotiz nennt sich nicht Teilnahmebescheinigung.
 - [ ] Freistellungsvorlage verlangt eine Prüfung von Anerkennung und Fristen.
-- [ ] Quiz lädt mit Key Fragen über `/api/quiz`.
+- [ ] Quiz lädt mit Key Fragen per `POST /api/quiz` mit `application/json`.
 - [ ] KI-Quiz erzeugt nur allgemeine Sicherheits-/Orientierungsfragen und keine konkrete Rechtsauslegung.
 - [ ] Quiz nutzt ohne Key ein sichtbar gekennzeichnetes lokales Fragenset.
+- [ ] Kursdetail-Umschalter werden als gedrückte Umschaltbuttons und nicht als unvollständiges ARIA-Tab-Widget angekündigt.
 - [ ] Szenario-Training nennt sich nicht KI-Training.
 - [ ] Szenario-Ergebnis erklärt die statische Bewertungslogik.
 - [ ] Es werden keine Punkte, Prozentwerte, Badges oder Zertifikate vergeben.
@@ -123,6 +132,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Demo-Zugang wird nicht als Azure- oder DB-SSO bezeichnet.
 - [ ] Postfach enthält nur erfundene Fälle.
 - [ ] Demo-Postfach lässt sich wirklich auf den ursprünglichen Beispieldatensatz zurücksetzen.
+- [ ] Profil- und HR-Ansichtsumschalter werden als Umschaltbuttons und nicht als unvollständige ARIA-Tabs angekündigt.
 - [ ] Analytics bezeichnet alle Werte als fiktive Szenarioannahmen oder frei veränderbar.
 - [ ] Projektideen werden nicht als veröffentlicht oder versendet dargestellt.
 - [ ] Eigene Projektidee verschwindet beim Neuladen.
@@ -134,7 +144,12 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Offline-Hinweis verspricht keine spätere Synchronisation.
 - [ ] Requests unter `/api/` werden nicht im Cache gespeichert.
 - [ ] Beim Aktivieren werden nur alte Caches mit Präfix `db-peace-ai-` gelöscht.
+- [ ] Mit Netzwerkverbindung liefert der Service Worker frische statische Assets sofort aus und nutzt den Cache nur als Offline-Fallback.
 - [ ] Entwicklungsmodus entfernt alte DB-Peace-Service-Worker-/Cache-Reste, ohne fremde Cache-Namen zu löschen.
+- [ ] Fremde Browser-Origin- oder `Sec-Fetch-Site: cross-site`-Anfragen an den lokalen API-Proxy werden mit 403 abgewiesen.
+- [ ] `POST /api/chat`, `/api/report/extract` und `/api/quiz` akzeptieren nur echtes `application/json`; z. B. `application/jsonp` wird abgewiesen.
+- [ ] Produktions-CSP erlaubt keine Inline-Skripte und keine ungenutzten Google-Font-Ursprünge.
+- [ ] Nur der lokale Vite-Serve-Modus lockert `script-src` für den React-Refresh-Preamble; der Production-Build bleibt streng.
 - [ ] Browser-Konsole enthält keine ungefangenen Fehler im Kernweg.
 - [ ] Produktionsfehleransicht zeigt keine rohe interne Exception; technische Details erscheinen nur im Entwicklungsmodus.
 - [ ] `.env` und API-Schlüssel sind nicht im Repository oder Build enthalten.
@@ -152,7 +167,14 @@ Mindestens prüfen bei 360 px, 768 px und 1280 px Breite:
 - [ ] Hell- und Dunkelmodus haben ausreichende Lesbarkeit
 - [ ] Mit aktivierter Betriebssystemoption „Bewegung reduzieren“ entfallen zentrale Seiten-/Chatbewegungen.
 
-## 12. Abschlussprotokoll
+## 12. CI- und Workflow-Prüfung
+
+- [ ] Workflow verwendet `actions/checkout@v7` mit `persist-credentials: false`.
+- [ ] Workflow verwendet `actions/setup-node@v7` und Node.js 22.
+- [ ] Workflow besitzt minimale `contents: read`-Berechtigung, Concurrency-Abbruch und ein 10-Minuten-Joblimit.
+- [ ] GitHub Actions startet tatsächlich einen Runner; ein Lauf mit `steps: []` und `runner_id: 0` zählt nicht als technischer Test.
+
+## 13. Abschlussprotokoll
 
 - getesteter Commit: `[SHA]`
 - Node/npm: `[Versionen]`
