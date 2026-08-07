@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
@@ -116,25 +116,21 @@ const quality = {
   excellent: {
     label: "Belastbare Option",
     className: "border-emerald-300 bg-emerald-50 text-emerald-900 dark:border-emerald-700/50 dark:bg-emerald-950/25 dark:text-emerald-100",
-    points: 3,
     icon: CheckCircle2,
   },
   good: {
     label: "Gute Grundlage",
     className: "border-blue-300 bg-blue-50 text-blue-900 dark:border-blue-700/50 dark:bg-blue-950/25 dark:text-blue-100",
-    points: 2,
     icon: CheckCircle2,
   },
   weak: {
     label: "Unvollständig",
     className: "border-amber-300 bg-amber-50 text-amber-950 dark:border-amber-700/50 dark:bg-amber-950/25 dark:text-amber-100",
-    points: 1,
     icon: AlertTriangle,
   },
   unsafe: {
     label: "Riskante Option",
     className: "border-red-300 bg-red-50 text-red-950 dark:border-red-700/50 dark:bg-red-950/25 dark:text-red-100",
-    points: 0,
     icon: XCircle,
   },
 };
@@ -145,22 +141,18 @@ function TrainingMode() {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [isComplete, setIsComplete] = useState(false);
+  const feedbackRef = useRef(null);
 
   const scenario = scenarios[scenarioIndex];
   const round = scenario.rounds[roundIndex];
   const selected = selectedIndex === null ? null : round.options[selectedIndex];
 
-  const result = useMemo(() => {
-    const earned = answers.reduce((sum, answer) => sum + quality[answer.quality].points, 0);
-    const maximum = scenario.rounds.length * 3;
-    return {
-      earned,
-      maximum,
-      percentage: maximum ? Math.round((earned / maximum) * 100) : 0,
-    };
-  }, [answers, scenario.rounds.length]);
+  useEffect(() => {
+    if (selected) window.requestAnimationFrame(() => feedbackRef.current?.focus());
+  }, [selected]);
 
   function selectScenario(index) {
+    if (!Number.isInteger(index) || index < 0 || index >= scenarios.length) return;
     setScenarioIndex(index);
     resetProgress();
   }
@@ -173,7 +165,7 @@ function TrainingMode() {
   }
 
   function selectAnswer(index) {
-    if (selectedIndex !== null) return;
+    if (selectedIndex !== null || !round.options[index]) return;
     const answer = round.options[index];
     setSelectedIndex(index);
     setAnswers((current) => [...current, answer]);
@@ -196,18 +188,17 @@ function TrainingMode() {
           <p className="text-sm font-black uppercase tracking-wider text-db-red">Lokale Übung</p>
           <h2 className="mt-2 text-3xl font-black text-db-dark dark:text-white sm:text-4xl">Szenarien mit fest hinterlegtem Regel-Feedback</h2>
           <p className="mt-3 max-w-3xl text-base font-medium leading-7 text-db-rail dark:text-white/65">
-            Die Übung verwendet keine KI. Antworten, Bewertungen und Rückmeldungen sind statisch im Code hinterlegt
-            und dienen nur der Reflexion.
+            Die Übung verwendet keine KI. Antworten, Bewertungen und Rückmeldungen sind statisch im Code hinterlegt und dienen nur der Reflexion.
           </p>
         </div>
         <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-950 dark:border-amber-800/50 dark:bg-amber-950/25 dark:text-amber-100">
           <Info className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
-          <p>Kein Zertifikat, keine Kompetenzmessung und keine Freigabe für reale Gefahrensituationen. Bei akuter Gefahr reale Hilfe nutzen.</p>
+          <p>Kein Zertifikat, keine Punkte und keine Kompetenzmessung. Bei akuter Gefahr reale Hilfe nutzen.</p>
         </div>
       </header>
 
       <div className="mt-7 grid gap-6 xl:grid-cols-[0.75fr_1.35fr]">
-        <aside className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5">
+        <aside className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5" aria-label="Trainingsszenarien">
           <div className="flex items-center gap-3">
             <GraduationCap className="h-6 w-6 text-db-red" aria-hidden="true" />
             <h3 className="text-xl font-black text-db-dark dark:text-white">Szenario auswählen</h3>
@@ -221,11 +212,8 @@ function TrainingMode() {
                   type="button"
                   key={item.id}
                   onClick={() => selectScenario(index)}
-                  className={`w-full rounded-xl border p-4 text-left transition ${
-                    active
-                      ? "border-db-red bg-red-50 dark:bg-db-red/10"
-                      : "border-db-dark/10 bg-db-soft hover:border-db-red dark:border-white/10 dark:bg-white/5"
-                  }`}
+                  aria-pressed={active}
+                  className={`w-full rounded-xl border p-4 text-left transition ${active ? "border-db-red bg-red-50 dark:bg-db-red/10" : "border-db-dark/10 bg-db-soft hover:border-db-red dark:border-white/10 dark:bg-white/5"}`}
                 >
                   <div className="flex items-start gap-3">
                     <Icon className={`mt-0.5 h-5 w-5 shrink-0 ${active ? "text-db-red" : "text-db-rail dark:text-white/55"}`} aria-hidden="true" />
@@ -240,7 +228,7 @@ function TrainingMode() {
           </div>
         </aside>
 
-        <main>
+        <div>
           {!isComplete ? (
             <div className="overflow-hidden rounded-xl border border-db-dark/10 bg-white shadow-sm dark:border-white/10 dark:bg-white/5">
               <div className="bg-db-dark p-5 text-white">
@@ -251,7 +239,7 @@ function TrainingMode() {
                   </div>
                   <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-black">statische Demo-Logik</span>
                 </div>
-                <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/15">
+                <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/15" aria-hidden="true">
                   <div className="h-full rounded-full bg-db-red transition-all" style={{ width: `${((roundIndex + (selected ? 1 : 0)) / scenario.rounds.length) * 100}%` }} />
                 </div>
               </div>
@@ -260,43 +248,49 @@ function TrainingMode() {
                 <p className="text-xs font-black uppercase tracking-wider text-db-red">Situation</p>
                 <h4 className="mt-2 text-xl font-black leading-8 text-db-dark dark:text-white">{round.situation}</h4>
 
-                <div className="mt-5 space-y-3">
-                  {round.options.map((answer, index) => (
-                    <button
-                      type="button"
-                      key={answer.text}
-                      disabled={selectedIndex !== null}
-                      onClick={() => selectAnswer(index)}
-                      className={`w-full rounded-xl border p-4 text-left text-sm font-semibold leading-6 transition disabled:cursor-default ${
-                        selectedIndex === index
-                          ? quality[answer.quality].className
-                          : "border-db-dark/10 bg-db-soft text-db-dark hover:border-db-red dark:border-white/10 dark:bg-white/5 dark:text-white"
-                      }`}
-                    >
-                      <span className="mr-2 font-black text-db-red">{String.fromCharCode(65 + index)}.</span>
-                      {answer.text}
-                    </button>
-                  ))}
+                <div className="mt-5 space-y-3" role="group" aria-label="Antwortmöglichkeiten">
+                  {round.options.map((answer, index) => {
+                    const locked = selectedIndex !== null;
+                    return (
+                      <button
+                        type="button"
+                        key={answer.text}
+                        aria-disabled={locked}
+                        onClick={() => selectAnswer(index)}
+                        className={`w-full rounded-xl border p-4 text-left text-sm font-semibold leading-6 transition ${selectedIndex === index ? quality[answer.quality].className : "border-db-dark/10 bg-db-soft text-db-dark hover:border-db-red dark:border-white/10 dark:bg-white/5 dark:text-white"} ${locked && selectedIndex !== index ? "cursor-default opacity-60" : ""}`}
+                      >
+                        <span className="mr-2 font-black text-db-red">{String.fromCharCode(65 + index)}.</span>
+                        {answer.text}
+                      </button>
+                    );
+                  })}
                 </div>
 
-                {selected && <Feedback answer={selected} onContinue={continueTraining} isLast={roundIndex === scenario.rounds.length - 1} />}
+                {selected && (
+                  <Feedback
+                    answer={selected}
+                    feedbackRef={feedbackRef}
+                    onContinue={continueTraining}
+                    isLast={roundIndex === scenario.rounds.length - 1}
+                  />
+                )}
               </div>
             </div>
           ) : (
-            <Result scenario={scenario} result={result} onReset={resetProgress} onNext={() => selectScenario((scenarioIndex + 1) % scenarios.length)} />
+            <Result scenario={scenario} answers={answers} onReset={resetProgress} onNext={() => selectScenario((scenarioIndex + 1) % scenarios.length)} />
           )}
-        </main>
+        </div>
       </div>
     </section>
   );
 }
 
-function Feedback({ answer, isLast, onContinue }) {
+function Feedback({ answer, feedbackRef, isLast, onContinue }) {
   const definition = quality[answer.quality];
   const Icon = definition.icon;
 
   return (
-    <div className={`mt-5 rounded-xl border p-5 ${definition.className}`}>
+    <div ref={feedbackRef} tabIndex={-1} role="status" className={`mt-5 rounded-xl border p-5 outline-none ${definition.className}`}>
       <div className="flex items-start gap-3">
         <Icon className="mt-0.5 h-6 w-6 shrink-0" aria-hidden="true" />
         <div>
@@ -304,24 +298,22 @@ function Feedback({ answer, isLast, onContinue }) {
           <p className="mt-2 text-sm font-semibold leading-6">{answer.feedback}</p>
         </div>
       </div>
-      <button
-        type="button"
-        onClick={onContinue}
-        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-db-dark px-5 py-3 text-sm font-black text-white hover:bg-slate-800 sm:w-auto"
-      >
-        {isLast ? "Lokale Auswertung öffnen" : "Nächste Runde"}
+      <button type="button" onClick={onContinue} className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-db-dark px-5 py-3 text-sm font-black text-white hover:bg-slate-800 sm:w-auto">
+        {isLast ? "Lernrückmeldung öffnen" : "Nächste Runde"}
         <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </button>
     </div>
   );
 }
 
-function Result({ onNext, onReset, result, scenario }) {
-  const message = result.percentage >= 80
-    ? "Du hast überwiegend Optionen gewählt, die Sicherheit, klare Grenzen und Unterstützung verbinden."
-    : result.percentage >= 50
-      ? "Mehrere Ansätze waren hilfreich. Prüfe besonders, wann Abstand und reale Unterstützung Vorrang haben."
-      : "Wiederhole das Szenario und priorisiere Eigenschutz, sachliche Grenzen und zuständige Hilfe.";
+function Result({ answers, onNext, onReset, scenario }) {
+  const unsafeCount = answers.filter((answer) => answer.quality === "unsafe").length;
+  const weakCount = answers.filter((answer) => answer.quality === "weak").length;
+  const message = unsafeCount === 0 && weakCount === 0
+    ? "Du hast in allen Runden Optionen gewählt, die Sicherheit, klare Grenzen oder passende Unterstützung in den Vordergrund stellen."
+    : unsafeCount === 0
+      ? "Deine Auswahl enthielt keine als riskant markierte Option. Einzelne Situationen lassen sich noch vollständiger lösen."
+      : "In mindestens einer Runde wurde eine riskante Option gewählt. Wiederhole das Szenario und prüfe besonders Eigenschutz, sachliche Grenzen und zuständige reale Hilfe.";
 
   return (
     <div className="rounded-xl border border-db-dark/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/5">
@@ -331,26 +323,18 @@ function Result({ onNext, onReset, result, scenario }) {
       <p className="mt-4 text-base font-semibold leading-7 text-db-rail dark:text-white/65">{message}</p>
 
       <div className="mt-6 rounded-xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-800/50 dark:bg-violet-950/25">
-        <p className="text-sm font-black text-violet-950 dark:text-violet-100">Orientierungswert: {result.percentage}%</p>
+        <p className="text-sm font-black text-violet-950 dark:text-violet-100">Keine Punktzahl und keine Kompetenzbewertung</p>
         <p className="mt-2 text-xs font-semibold leading-5 text-violet-900/75 dark:text-violet-100/70">
-          Der Wert entsteht ausschließlich aus der Zuordnung statischer Antwortoptionen. Er misst keine reale Kompetenz und wird nicht gespeichert.
+          Die Rückmeldung basiert ausschließlich auf fest hinterlegten Antwortkategorien. Sie wird nicht gespeichert und ist kein Trainingsnachweis.
         </p>
       </div>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-        <button
-          type="button"
-          onClick={onReset}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-db-dark/15 px-5 py-3 text-sm font-black text-db-dark hover:border-db-red hover:text-db-red dark:border-white/15 dark:text-white"
-        >
+        <button type="button" onClick={onReset} className="inline-flex items-center justify-center gap-2 rounded-xl border border-db-dark/15 px-5 py-3 text-sm font-black text-db-dark hover:border-db-red hover:text-db-red dark:border-white/15 dark:text-white">
           <RefreshCw className="h-4 w-4" aria-hidden="true" />
           Wiederholen
         </button>
-        <button
-          type="button"
-          onClick={onNext}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-db-red px-5 py-3 text-sm font-black text-white hover:bg-red-700"
-        >
+        <button type="button" onClick={onNext} className="inline-flex items-center justify-center gap-2 rounded-xl bg-db-red px-5 py-3 text-sm font-black text-white hover:bg-red-700">
           Nächstes Szenario
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>
