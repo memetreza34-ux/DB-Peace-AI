@@ -15,7 +15,7 @@ export function PanicButton() {
     <button
       type="button"
       onClick={handleQuickExit}
-      className="group fixed bottom-5 left-4 z-[100] flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-db-rail text-white/60 shadow-lg transition hover:bg-slate-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-db-red/30 sm:bottom-6 sm:left-6"
+      className="group fixed bottom-5 left-4 z-[140] flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-db-rail text-white/60 shadow-lg transition hover:bg-slate-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-db-red/30 sm:bottom-6 sm:left-6"
       title="App sofort verlassen und temporäre Sitzungseinträge löschen"
       aria-label="App schnell verlassen und temporäre Sitzungseinträge löschen"
     >
