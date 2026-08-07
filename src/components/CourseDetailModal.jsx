@@ -173,13 +173,13 @@ export function CourseDetailModal({ course, onClose }) {
           <p id="course-detail-description" className="mt-2 pr-12 text-xs font-semibold leading-5 text-white/60">Externe Kursangaben sind nicht verifiziert. Die In-App-Module sind eigenständige Demo-Inhalte.</p>
         </header>
 
-        <div className="flex shrink-0 overflow-x-auto border-b border-slate-200 bg-slate-50 px-4" role="tablist" aria-label="Kursdetails">
+        <div className="flex shrink-0 overflow-x-auto border-b border-slate-200 bg-slate-50 px-4" role="group" aria-label="Kursdetail-Bereich anzeigen">
           <TabButton active={activeTab === "overview"} onClick={() => setActiveTab("overview")} icon={BookOpen}>Übersicht</TabButton>
           <TabButton active={activeTab === "training"} onClick={() => setActiveTab("training")} icon={Play}>Demo-Training</TabButton>
           <TabButton active={activeTab === "note"} onClick={() => setActiveTab("note")} icon={FileText}>Lernnotiz</TabButton>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6" role="tabpanel">
+        <div className="flex-1 overflow-y-auto p-6">
           {activeTab === "overview" && (
             <div className="space-y-6">
               <Notice />
@@ -289,7 +289,7 @@ export function CourseDetailModal({ course, onClose }) {
 
 function TabButton({ active, children, icon: Icon, onClick }) {
   return (
-    <button type="button" role="tab" aria-selected={active} onClick={onClick} className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-black focus:outline-none focus:ring-2 focus:ring-inset focus:ring-db-red/30 ${active ? "border-db-red text-db-red" : "border-transparent text-slate-500 hover:text-slate-900"}`}>
+    <button type="button" aria-pressed={active} onClick={onClick} className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-black focus:outline-none focus:ring-2 focus:ring-inset focus:ring-db-red/30 ${active ? "border-db-red text-db-red" : "border-transparent text-slate-500 hover:text-slate-900"}`}>
       <Icon className="h-4 w-4" aria-hidden="true" />
       {children}
     </button>
