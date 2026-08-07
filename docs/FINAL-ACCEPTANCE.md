@@ -1,44 +1,45 @@
-# Technisches Abschlussprotokoll
+# Finale Abnahme — DB Peace AI
 
-## Prüfstand
+Status: **NICHT ABGENOMMEN**  
+Branch: `agent/mvp-stabilization`
 
-- Commit-SHA:
-- Datum:
-- Prüfer:in:
-- Betriebssystem:
-- Browser und Version:
-- Node-Version:
-- npm-Version:
+Dieses Dokument darf erst auf „abgenommen“ gesetzt werden, wenn die technische und manuelle Prüfung für exakt denselben finalen Commit erfolgreich dokumentiert wurde.
 
-## Automatische Prüfungen
+## Technische Prüfung
 
-- `npm ci`:
-- `npm run verify`:
-- `npm test`:
-- `npm run build`:
-- GitHub-Actions-Lauf:
+- final getesteter Commit: `[SHA]`
+- Node.js: `[Version]`
+- npm: `[Version]`
+- `npm ci`: `[nicht ausgeführt / erfolgreich / fehlgeschlagen]`
+- `npm run verify`: `[nicht ausgeführt / erfolgreich / fehlgeschlagen]`
+- `npm test`: `[nicht ausgeführt / erfolgreich / fehlgeschlagen]`
+- `npm run build`: `[nicht ausgeführt / erfolgreich / fehlgeschlagen]`
+- `npm run check`: `[nicht ausgeführt / erfolgreich / fehlgeschlagen]`
+- GitHub Actions: `[kein Runner / erfolgreich / fehlgeschlagen]`
+- Actions Run-ID: `[ID]`
 
 ## Manuelle Prüfung
 
-- Ergebnis der Kernwege:
-- Responsive Prüfung:
-- Tastatur und Fokus:
-- Offline-/Fallbackzustände:
-- PDF-/Kopierfunktionen:
+Checkliste: `docs/MANUAL-TEST-CHECKLIST.md`
 
-## Offene Punkte
+- Browser/Version: `[Angabe]`
+- Betriebssystem: `[Angabe]`
+- Bildschirmbreiten: `[Angabe]`
+- Tastaturprüfung: `[nicht ausgeführt / erfolgreich / mit Befunden]`
+- Reduced Motion: `[nicht ausgeführt / erfolgreich / mit Befunden]`
+- PDF-Exporte: `[nicht ausgeführt / erfolgreich / mit Befunden]`
+- Notruf-/Kontaktwege: `[nicht ausgeführt / erfolgreich / mit Befunden]`
+- Rechtslinks: `[nicht ausgeführt / erfolgreich / mit Befunden]`
+- fiktiver Lernkatalog: `[nicht ausgeführt / erfolgreich / mit Befunden]`
 
-- Kritisch:
-- Hoch:
-- Mittel:
-- Niedrig:
+## Offene Befunde
+
+- `[Liste]`
 
 ## Entscheidung
 
-- [ ] Nicht freigeben
-- [ ] Nur für lokale Demonstration mit synthetischen Daten freigeben
-- [ ] Für weiteren internen Pilot-Freigabeprozess übergeben
+- [x] Draft behalten, solange die oben genannten Nachweise fehlen.
+- [ ] Bereit zur Prüfung.
+- [ ] Zusammenführung fachlich und technisch freigegeben.
 
-Begründung:
-
-Dieses Protokoll ist kein Datenschutz-, Rechts- oder IT-Sicherheitsfreigabedokument.
+**Wichtig:** Eine technische Abnahme dieses Demonstrationsprototyps ist keine Freigabe für echte sensible Daten oder einen produktiven DB-Pilotbetrieb.
