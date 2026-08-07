@@ -38,10 +38,10 @@ export function FloatingChatWidget() {
     fetch("/api/chat/status", { signal: controller.signal, cache: "no-store" })
       .then((response) => response.ok ? response.json() : Promise.reject(new Error("status_failed")))
       .then((data) => {
-        if (active) setMode(data.connected ? "online" : "demo");
+        if (active) setMode(data.configured ? "configured" : "demo");
       })
-      .catch((error) => {
-        if (active && error?.name !== "AbortError") setMode("demo");
+      .catch(() => {
+        if (active) setMode("demo");
       })
       .finally(() => window.clearTimeout(timeout));
 
@@ -135,6 +135,14 @@ export function FloatingChatWidget() {
     else setIsOpen(true);
   }
 
+  const statusText = mode === "online"
+    ? "Gemini-Antwort erhalten"
+    : mode === "configured"
+      ? "Gemini konfiguriert · Verbindung noch nicht geprüft"
+      : mode === "demo"
+        ? "Lokale Orientierung"
+        : "KI-Konfiguration wird geprüft";
+
   return (
     <div className="fixed bottom-5 right-4 z-50 flex flex-col items-end sm:bottom-6 sm:right-6">
       <AnimatePresence>
@@ -157,7 +165,7 @@ export function FloatingChatWidget() {
                   <div>
                     <h2 id="chat-title" className="text-sm font-black">Azubi-Begleiter</h2>
                     <p className="text-[11px] font-semibold text-white/65" role="status" aria-live="polite">
-                      {mode === "online" ? "Gemini verbunden" : mode === "demo" ? "Lokale Orientierung" : "Verbindung wird geprüft"}
+                      {statusText}
                     </p>
                   </div>
                 </div>
@@ -182,7 +190,13 @@ export function FloatingChatWidget() {
             {mode === "demo" && (
               <div className="flex items-center gap-2 bg-slate-100 px-4 py-2 text-[11px] font-bold text-slate-600 dark:bg-white/5 dark:text-white/60">
                 <WifiOff className="h-3.5 w-3.5" aria-hidden="true" />
-                KI nicht erreichbar. Antworten sind einfache lokale Orientierungstexte.
+                KI nicht erreichbar oder nicht eingerichtet. Antworten sind einfache lokale Orientierungstexte.
+              </div>
+            )}
+
+            {mode === "configured" && (
+              <div className="border-b border-violet-200 bg-violet-50 px-4 py-2 text-[11px] font-bold text-violet-800 dark:border-violet-900/50 dark:bg-violet-950/25 dark:text-violet-200">
+                Ein API-Schlüssel ist konfiguriert. Erst eine erfolgreiche Antwort bestätigt, dass Gemini tatsächlich erreichbar ist.
               </div>
             )}
 
