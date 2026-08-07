@@ -5,12 +5,15 @@ import { GoogleGenAI } from "@google/genai";
 
 loadDotEnv();
 
-const PORT = Number(process.env.API_PORT || 8787);
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const PORT = parsePort(process.env.API_PORT, 8787);
+const MODEL = cleanEnvironmentValue(process.env.GEMINI_MODEL, "gemini-2.5-flash", 120);
 const MAX_BODY_BYTES = 64_000;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 30;
+const MAX_RATE_LIMIT_KEYS = 1_000;
 const rateLimitState = new Map();
+let requestsSincePrune = 0;
+let isShuttingDown = false;
 
 const systemInstructions = `
 Du bist "Azubi-Begleiter" in DB Peace AI, einem lokalen Innovationsprototyp.
@@ -55,31 +58,54 @@ function loadDotEnv() {
 function setSecurityHeaders(res) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
+  res.setHeader("Pragma", "no-cache");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "no-referrer");
   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
 }
 
-function sendJson(res, status, data) {
+function sendJson(res, status, data, extraHeaders = {}) {
+  if (res.writableEnded) return;
   setSecurityHeaders(res);
+  for (const [name, value] of Object.entries(extraHeaders)) res.setHeader(name, value);
   res.statusCode = status;
   res.end(JSON.stringify(data));
 }
 
+function requireJsonRequest(req) {
+  const contentType = String(req.headers["content-type"] || "").toLowerCase();
+  if (!contentType.startsWith("application/json")) {
+    const error = new Error("unsupported_media_type");
+    error.status = 415;
+    throw error;
+  }
+}
+
 async function readJson(req) {
-  let body = "";
+  const declaredLength = Number(req.headers["content-length"] || 0);
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_BODY_BYTES) {
+    const error = new Error("request_too_large");
+    error.status = 413;
+    throw error;
+  }
+
+  const chunks = [];
+  let totalBytes = 0;
   for await (const chunk of req) {
-    body += chunk;
-    if (Buffer.byteLength(body, "utf8") > MAX_BODY_BYTES) {
+    const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    totalBytes += buffer.length;
+    if (totalBytes > MAX_BODY_BYTES) {
       const error = new Error("request_too_large");
       error.status = 413;
       throw error;
     }
+    chunks.push(buffer);
   }
 
-  if (!body) return {};
+  if (!chunks.length) return {};
   try {
-    return JSON.parse(body);
+    return JSON.parse(Buffer.concat(chunks, totalBytes).toString("utf8"));
   } catch {
     const error = new Error("invalid_json");
     error.status = 400;
@@ -90,21 +116,29 @@ async function readJson(req) {
 function sanitizeMessages(messages) {
   if (!Array.isArray(messages)) return [];
 
-  return messages
+  const sanitized = messages
     .filter((message) => message && (message.role === "user" || message.role === "assistant"))
     .map((message) => ({
       role: message.role === "assistant" ? "model" : "user",
-      parts: [{ text: String(message.content || "").trim().slice(0, 1_200) }],
+      parts: [{ text: cleanString(message.content, 1_200, "") }],
     }))
     .filter((message) => message.parts[0].text)
     .slice(-10);
+
+  while (sanitized[0]?.role === "model") sanitized.shift();
+  return sanitized;
 }
 
 function isRateLimited(req) {
   const key = req.socket.remoteAddress || "local";
   const now = Date.now();
-  const current = rateLimitState.get(key);
+  requestsSincePrune += 1;
+  if (requestsSincePrune >= 100 || rateLimitState.size > MAX_RATE_LIMIT_KEYS) {
+    pruneRateLimitState(now);
+    requestsSincePrune = 0;
+  }
 
+  const current = rateLimitState.get(key);
   if (!current || now - current.startedAt >= RATE_LIMIT_WINDOW_MS) {
     rateLimitState.set(key, { count: 1, startedAt: now });
     return false;
@@ -114,8 +148,20 @@ function isRateLimited(req) {
   return current.count > RATE_LIMIT_MAX_REQUESTS;
 }
 
+function pruneRateLimitState(now) {
+  for (const [key, value] of rateLimitState) {
+    if (now - value.startedAt >= RATE_LIMIT_WINDOW_MS) rateLimitState.delete(key);
+  }
+
+  if (rateLimitState.size <= MAX_RATE_LIMIT_KEYS) return;
+  const oldest = [...rateLimitState.entries()]
+    .sort((left, right) => left[1].startedAt - right[1].startedAt)
+    .slice(0, rateLimitState.size - MAX_RATE_LIMIT_KEYS);
+  for (const [key] of oldest) rateLimitState.delete(key);
+}
+
 function createAi() {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = String(process.env.GEMINI_API_KEY || "").trim();
   return apiKey ? new GoogleGenAI({ apiKey }) : null;
 }
 
@@ -132,8 +178,8 @@ async function handleChat(req, res) {
 
   const payload = await readJson(req);
   const messages = sanitizeMessages(payload.messages);
-  if (messages.length === 0) {
-    sendJson(res, 400, { error: "missing_messages", reply: "" });
+  if (messages.length === 0 || messages.at(-1)?.role !== "user") {
+    sendJson(res, 400, { error: "missing_user_message", reply: "" });
     return;
   }
 
@@ -144,16 +190,14 @@ async function handleChat(req, res) {
     config: {
       systemInstruction: systemInstructions,
       temperature: 0.55,
+      maxOutputTokens: 500,
     },
     history,
   });
 
   const response = await chat.sendMessage({ message: lastMessage });
-  const reply = String(response.text || "").trim();
-  sendJson(res, 200, {
-    reply: reply || "Ich konnte gerade keine passende Antwort erzeugen.",
-    model: MODEL,
-  });
+  const reply = cleanString(response.text, 4_000, "Ich konnte gerade keine passende Antwort erzeugen.");
+  sendJson(res, 200, { reply, model: MODEL });
 }
 
 async function handleReportExtraction(req, res) {
@@ -164,7 +208,7 @@ async function handleReportExtraction(req, res) {
   }
 
   const payload = await readJson(req);
-  const sourceText = String(payload.text || "").trim().slice(0, 4_000);
+  const sourceText = cleanString(payload.text, 4_000, "");
   if (sourceText.length < 20) {
     sendJson(res, 400, { error: "text_too_short", report: null });
     return;
@@ -185,6 +229,7 @@ async function handleReportExtraction(req, res) {
         "Bei Drohung, Gewalt oder unmittelbarer Gefahr urgency auf hoch oder akut setzen.",
       ].join(" "),
       temperature: 0.2,
+      maxOutputTokens: 1_200,
     },
   });
 
@@ -229,6 +274,7 @@ async function handleQuiz(_req, res) {
         "Keine Markdown-Formatierung und keine erfundenen internen DB-Regeln.",
       ].join(" "),
       temperature: 0.8,
+      maxOutputTokens: 1_500,
     },
   });
 
@@ -236,19 +282,19 @@ async function handleQuiz(_req, res) {
   const parsed = parseJsonArray(response.text);
   const questions = parsed
     ? parsed.slice(0, 4).map((question, index) => ({
-        id: Number(question.id) || index + 1,
-        question: cleanString(question.question, 300, ""),
-        answer: Boolean(question.answer),
+        id: index + 1,
+        question: cleanString(question.id ? question.question : question.question, 300, ""),
+        answer: normalizeBoolean(question.answer),
         explanation: cleanString(question.explanation, 600, ""),
-      })).filter((question) => question.question && question.explanation)
+      })).filter((question) => question.question && question.explanation && question.answer !== null)
     : [];
 
-  if (!questions.length) {
+  if (questions.length !== 4) {
     sendJson(res, 502, { error: "invalid_model_response", questions: [] });
     return;
   }
 
-  sendJson(res, 200, { questions });
+  sendJson(res, 200, { questions, model: MODEL });
 }
 
 function parseJsonObject(value) {
@@ -277,8 +323,13 @@ function cleanJsonText(value) {
 }
 
 function cleanString(value, maxLength, fallback) {
-  const text = String(value || "").trim().slice(0, maxLength);
+  const text = String(value ?? "").trim().slice(0, maxLength);
   return text || fallback;
+}
+
+function cleanEnvironmentValue(value, fallback, maxLength) {
+  const text = String(value || "").trim().slice(0, maxLength);
+  return /^[a-zA-Z0-9._-]+$/.test(text) ? text : fallback;
 }
 
 function normalizeUrgency(value) {
@@ -286,23 +337,40 @@ function normalizeUrgency(value) {
   return ["niedrig", "mittel", "hoch", "akut"].includes(normalized) ? normalized : "mittel";
 }
 
+function normalizeBoolean(value) {
+  if (value === true || value === false) return value;
+  if (String(value).toLowerCase() === "true") return true;
+  if (String(value).toLowerCase() === "false") return false;
+  return null;
+}
+
+function parsePort(value, fallback) {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 1 && parsed <= 65_535 ? parsed : fallback;
+}
+
 const server = http.createServer(async (req, res) => {
   try {
+    if (isShuttingDown) {
+      sendJson(res, 503, { error: "server_shutting_down" }, { Connection: "close" });
+      return;
+    }
+
     if (isRateLimited(req)) {
-      sendJson(res, 429, { error: "rate_limited", reply: "" });
+      sendJson(res, 429, { error: "rate_limited", reply: "" }, { "Retry-After": "60" });
       return;
     }
 
     const url = new URL(req.url || "/", `http://${req.headers.host || "127.0.0.1"}`);
 
     if (req.method === "GET" && url.pathname === "/api/health") {
-      sendJson(res, 200, { status: "ok" });
+      sendJson(res, 200, { status: "ok", prototype: true });
       return;
     }
 
     if (req.method === "GET" && url.pathname === "/api/chat/status") {
       sendJson(res, 200, {
-        connected: Boolean(process.env.GEMINI_API_KEY),
+        connected: Boolean(String(process.env.GEMINI_API_KEY || "").trim()),
         model: MODEL,
         prototype: true,
       });
@@ -310,11 +378,13 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === "POST" && url.pathname === "/api/chat") {
+      requireJsonRequest(req);
       await handleChat(req, res);
       return;
     }
 
     if (req.method === "POST" && url.pathname === "/api/report/extract") {
+      requireJsonRequest(req);
       await handleReportExtraction(req, res);
       return;
     }
@@ -324,17 +394,51 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (["/api/chat", "/api/report/extract", "/api/quiz", "/api/health", "/api/chat/status"].includes(url.pathname)) {
+      sendJson(res, 405, { error: "method_not_allowed" }, { Allow: allowedMethods(url.pathname) });
+      return;
+    }
+
     sendJson(res, 404, { error: "not_found" });
   } catch (error) {
-    const status = Number(error.status) || 500;
+    const status = Number(error?.status) || 500;
     if (status >= 500) console.error("DB Peace AI API error:", error);
     sendJson(res, status, {
-      error: error.message || "server_error",
+      error: status >= 500 ? "server_error" : error.message || "request_failed",
       reply: "",
     });
   }
 });
 
+server.requestTimeout = 30_000;
+server.headersTimeout = 10_000;
+server.keepAliveTimeout = 5_000;
+server.maxRequestsPerSocket = 100;
+
 server.listen(PORT, "127.0.0.1", () => {
   console.log(`DB Peace AI API läuft auf http://127.0.0.1:${PORT} (${MODEL})`);
 });
+
+function allowedMethods(pathname) {
+  return pathname === "/api/chat" || pathname === "/api/report/extract" ? "POST" : "GET";
+}
+
+function shutdown(signal) {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  console.log(`DB Peace AI API wird beendet (${signal}).`);
+
+  const forceTimer = setTimeout(() => process.exit(1), 5_000);
+  forceTimer.unref();
+  server.close((error) => {
+    clearTimeout(forceTimer);
+    if (error) {
+      console.error("API-Server konnte nicht sauber beendet werden:", error);
+      process.exit(1);
+    }
+    process.exit(0);
+  });
+}
+
+process.once("SIGINT", () => shutdown("SIGINT"));
+process.once("SIGTERM", () => shutdown("SIGTERM"));
