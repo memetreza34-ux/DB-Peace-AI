@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { jsPDF } from "jspdf";
 import {
   ArrowLeft,
@@ -12,6 +12,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { useModalDialog } from "../hooks/useModalDialog.js";
 import { AISmartReport } from "./AISmartReport.jsx";
 import AnonymousReport from "./AnonymousReport.jsx";
 
@@ -310,6 +311,7 @@ function Input({ label, onChange, ...props }) {
 }
 
 function RecordModal({ record, onClose, onDelete, onExport }) {
+  const dialogRef = useRef(null);
   const closeButtonRef = useRef(null);
   const rows = useMemo(() => [
     ["Datum", record.date],
@@ -321,25 +323,16 @@ function RecordModal({ record, onClose, onDelete, onExport }) {
     ...(record.urgency ? [["Dringlichkeitsorientierung", record.urgency]] : []),
   ], [record]);
 
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeButtonRef.current?.focus();
-
-    function handleKeyDown(event) {
-      if (event.key === "Escape") onClose();
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [onClose]);
+  useModalDialog({
+    isOpen: true,
+    onClose,
+    dialogRef,
+    initialFocusRef: closeButtonRef,
+  });
 
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-2xl dark:bg-db-dark" role="dialog" aria-modal="true" aria-labelledby="record-modal-title">
+      <div ref={dialogRef} tabIndex={-1} className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-2xl outline-none dark:bg-db-dark" role="dialog" aria-modal="true" aria-labelledby="record-modal-title">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-black uppercase tracking-wide text-db-red">Sitzungsentwurf</p>
