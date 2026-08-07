@@ -66,8 +66,12 @@ export function QuizWidget() {
 
     try {
       const response = await fetch("/api/quiz", {
-        method: "GET",
-        headers: { Accept: "application/json" },
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: "{}",
         cache: "no-store",
         signal: controller.signal,
       });
