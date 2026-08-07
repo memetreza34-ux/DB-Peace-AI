@@ -8,6 +8,7 @@ loadDotEnv();
 const PORT = parsePort(process.env.API_PORT, 8787);
 const MODEL = cleanEnvironmentValue(process.env.GEMINI_MODEL, "gemini-2.5-flash", 120);
 const MAX_BODY_BYTES = 64_000;
+const AI_TIMEOUT_MS = 20_000;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 30;
 const MAX_RATE_LIMIT_KEYS = 1_000;
@@ -195,7 +196,7 @@ async function handleChat(req, res) {
     history,
   });
 
-  const response = await chat.sendMessage({ message: lastMessage });
+  const response = await withTimeout(chat.sendMessage({ message: lastMessage }), AI_TIMEOUT_MS);
   const reply = cleanString(response.text, 4_000, "Ich konnte gerade keine passende Antwort erzeugen.");
   sendJson(res, 200, { reply, model: MODEL });
 }
@@ -233,7 +234,7 @@ async function handleReportExtraction(req, res) {
     },
   });
 
-  const response = await chat.sendMessage({ message: sourceText });
+  const response = await withTimeout(chat.sendMessage({ message: sourceText }), AI_TIMEOUT_MS);
   const parsed = parseJsonObject(response.text);
   if (!parsed) {
     sendJson(res, 502, { error: "invalid_model_response", report: null });
@@ -278,12 +279,12 @@ async function handleQuiz(_req, res) {
     },
   });
 
-  const response = await chat.sendMessage({ message: "Erzeuge vier neue Fragen." });
+  const response = await withTimeout(chat.sendMessage({ message: "Erzeuge vier neue Fragen." }), AI_TIMEOUT_MS);
   const parsed = parseJsonArray(response.text);
   const questions = parsed
     ? parsed.slice(0, 4).map((question, index) => ({
         id: index + 1,
-        question: cleanString(question.id ? question.question : question.question, 300, ""),
+        question: cleanString(question.question, 300, ""),
         answer: normalizeBoolean(question.answer),
         explanation: cleanString(question.explanation, 600, ""),
       })).filter((question) => question.question && question.explanation && question.answer !== null)
@@ -295,6 +296,20 @@ async function handleQuiz(_req, res) {
   }
 
   sendJson(res, 200, { questions, model: MODEL });
+}
+
+function withTimeout(promise, timeoutMs) {
+  let timer;
+  const timeoutPromise = new Promise((_, reject) => {
+    timer = setTimeout(() => {
+      const error = new Error("upstream_timeout");
+      error.status = 504;
+      reject(error);
+    }, timeoutMs);
+    timer.unref?.();
+  });
+
+  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timer));
 }
 
 function parseJsonObject(value) {
@@ -402,9 +417,9 @@ const server = http.createServer(async (req, res) => {
     sendJson(res, 404, { error: "not_found" });
   } catch (error) {
     const status = Number(error?.status) || 500;
-    if (status >= 500) console.error("DB Peace AI API error:", error);
+    if (status >= 500 && status !== 504) console.error("DB Peace AI API error:", error);
     sendJson(res, status, {
-      error: status >= 500 ? "server_error" : error.message || "request_failed",
+      error: status === 504 ? "upstream_timeout" : status >= 500 ? "server_error" : error.message || "request_failed",
       reply: "",
     });
   }
