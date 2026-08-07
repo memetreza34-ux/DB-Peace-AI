@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CheckCircle2,
@@ -40,17 +40,70 @@ const exampleIdeas = [
 ];
 
 const categories = ["Workshop", "Austausch", "Information", "Sonstiges"];
+const emptyIdea = { title: "", description: "", category: "Workshop" };
 
 export default function ProjectOverview() {
   const [ideas, setIdeas] = useState(exampleIdeas);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newIdea, setNewIdea] = useState({ title: "", description: "", category: "Workshop" });
+  const [newIdea, setNewIdea] = useState(emptyIdea);
   const [markedIdeas, setMarkedIdeas] = useState([]);
+  const openButtonRef = useRef(null);
+  const dialogRef = useRef(null);
+  const titleInputRef = useRef(null);
+
+  useEffect(() => {
+    if (!isModalOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.requestAnimationFrame(() => titleInputRef.current?.focus());
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeModal();
+        return;
+      }
+
+      if (event.key !== "Tab" || !dialogRef.current) return;
+      const focusable = [...dialogRef.current.querySelectorAll(
+        'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [href], [tabindex]:not([tabindex="-1"])',
+      )].filter((element) => !element.hasAttribute("hidden") && element.getAttribute("aria-hidden") !== "true");
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isModalOpen]);
 
   function toggleInterest(id) {
     setMarkedIdeas((current) => (
       current.includes(id) ? current.filter((entry) => entry !== id) : [...current, id]
     ));
+  }
+
+  function openModal() {
+    setNewIdea(emptyIdea);
+    setIsModalOpen(true);
+  }
+
+  function closeModal() {
+    setIsModalOpen(false);
+    setNewIdea(emptyIdea);
+    window.requestAnimationFrame(() => openButtonRef.current?.focus());
   }
 
   function submitIdea(event) {
@@ -60,7 +113,7 @@ export default function ProjectOverview() {
     if (!title || !description) return;
 
     const idea = {
-      id: `session-${Date.now()}`,
+      id: createIdeaId(),
       title: title.slice(0, 120),
       description: description.slice(0, 800),
       category: categories.includes(newIdea.category) ? newIdea.category : "Sonstiges",
@@ -69,8 +122,7 @@ export default function ProjectOverview() {
     };
 
     setIdeas((current) => [idea, ...current]);
-    setNewIdea({ title: "", description: "", category: "Workshop" });
-    setIsModalOpen(false);
+    closeModal();
   }
 
   function removeIdea(id) {
@@ -81,7 +133,7 @@ export default function ProjectOverview() {
   function resetSession() {
     setIdeas(exampleIdeas);
     setMarkedIdeas([]);
-    setNewIdea({ title: "", description: "", category: "Workshop" });
+    setNewIdea(emptyIdea);
     setIsModalOpen(false);
   }
 
@@ -102,15 +154,16 @@ export default function ProjectOverview() {
             <button
               type="button"
               onClick={resetSession}
-              className="inline-flex items-center gap-2 rounded-xl border border-db-dark/10 bg-white px-4 py-3 text-sm font-black text-db-dark transition hover:border-db-red hover:text-db-red dark:border-white/10 dark:bg-white/5 dark:text-white"
+              className="inline-flex items-center gap-2 rounded-xl border border-db-dark/10 bg-white px-4 py-3 text-sm font-black text-db-dark transition hover:border-db-red hover:text-db-red focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:border-white/10 dark:bg-white/5 dark:text-white"
             >
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               Sitzung zurücksetzen
             </button>
             <button
+              ref={openButtonRef}
               type="button"
-              onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-2 rounded-xl bg-db-red px-5 py-3 text-sm font-black text-white transition hover:bg-red-700"
+              onClick={openModal}
+              className="inline-flex items-center gap-2 rounded-xl bg-db-red px-5 py-3 text-sm font-black text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-db-red/30"
             >
               <Plus className="h-5 w-5" aria-hidden="true" />
               Ideenentwurf hinzufügen
@@ -135,7 +188,7 @@ export default function ProjectOverview() {
               {ideas.length} Einträge · {ideas.filter((idea) => !idea.isExample).length} eigene Sitzungsentwürfe
             </p>
           </div>
-          <span className="rounded-full bg-db-soft px-3 py-1.5 text-xs font-black text-db-rail dark:bg-white/10 dark:text-white/55">
+          <span className="rounded-full bg-db-soft px-3 py-1.5 text-xs font-black text-db-rail dark:bg-white/10 dark:text-white/55" role="status" aria-live="polite">
             {markedIdeas.length} lokal gemerkt
           </span>
         </div>
@@ -171,7 +224,7 @@ export default function ProjectOverview() {
                         <button
                           type="button"
                           onClick={() => removeIdea(idea.id)}
-                          className="rounded-lg p-2 text-db-rail transition hover:bg-red-50 hover:text-red-700 dark:text-white/45 dark:hover:bg-red-950/30 dark:hover:text-red-300"
+                          className="rounded-lg p-2 text-db-rail transition hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/30 dark:text-white/45 dark:hover:bg-red-950/30 dark:hover:text-red-300"
                           aria-label={`Idee ${idea.title} löschen`}
                         >
                           <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -179,13 +232,14 @@ export default function ProjectOverview() {
                       )}
                     </div>
                     <h3 className="mt-4 text-xl font-black leading-tight text-db-dark dark:text-white">{idea.title}</h3>
-                    <p className="mt-3 text-sm font-medium leading-7 text-db-rail dark:text-white/65">{idea.description}</p>
+                    <p className="mt-3 break-words text-sm font-medium leading-7 text-db-rail dark:text-white/65">{idea.description}</p>
                   </div>
 
                   <button
                     type="button"
+                    aria-pressed={isMarked}
                     onClick={() => toggleInterest(idea.id)}
-                    className={`mt-6 flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm font-black transition ${
+                    className={`mt-6 flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm font-black transition focus:outline-none focus:ring-2 focus:ring-db-red/30 ${
                       isMarked
                         ? "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-700/50 dark:bg-emerald-950/25 dark:text-emerald-200"
                         : "border-db-dark/10 bg-db-soft text-db-dark hover:border-db-red hover:text-db-red dark:border-white/10 dark:bg-white/5 dark:text-white"
@@ -214,23 +268,25 @@ export default function ProjectOverview() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 h-full w-full cursor-default bg-db-dark/65 backdrop-blur-sm"
+              onClick={closeModal}
+              className="absolute inset-0 h-full w-full cursor-default bg-db-dark/65 backdrop-blur-sm focus:outline-none"
             />
 
             <motion.div
+              ref={dialogRef}
               role="dialog"
               aria-modal="true"
               aria-labelledby="idea-dialog-title"
+              aria-describedby="idea-dialog-description"
               initial={{ opacity: 0, scale: 0.96, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 16 }}
-              className="relative w-full max-w-lg rounded-2xl border border-db-dark/10 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-db-dark sm:p-8"
+              className="relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-db-dark/10 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-db-dark sm:p-8"
             >
               <button
                 type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="absolute right-4 top-4 rounded-full p-2 text-db-rail transition hover:bg-db-dark/5 hover:text-db-dark dark:text-white/45 dark:hover:bg-white/10 dark:hover:text-white"
+                onClick={closeModal}
+                className="absolute right-4 top-4 rounded-full p-2 text-db-rail transition hover:bg-db-dark/5 hover:text-db-dark focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:text-white/45 dark:hover:bg-white/10 dark:hover:text-white"
                 aria-label="Ideenformular schließen"
               >
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -245,10 +301,14 @@ export default function ProjectOverview() {
                   <h2 id="idea-dialog-title" className="text-2xl font-black text-db-dark dark:text-white">Ideenentwurf ergänzen</h2>
                 </div>
               </div>
+              <p id="idea-dialog-description" className="mt-3 text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
+                Der Eintrag bleibt nur bis zum Neuladen dieser Seite erhalten und wird nicht übertragen.
+              </p>
 
               <form onSubmit={submitIdea} className="mt-6 space-y-5">
                 <Field label="Titel">
                   <input
+                    ref={titleInputRef}
                     type="text"
                     required
                     maxLength={120}
@@ -276,21 +336,31 @@ export default function ProjectOverview() {
                     maxLength={800}
                     value={newIdea.description}
                     onChange={(event) => setNewIdea((current) => ({ ...current, description: event.target.value }))}
-                    placeholder="Ziel, mögliche Zielgruppe und offene Prüfpunkt beschreiben. Keine echten Namen oder Falldaten eingeben."
-                    className="w-full resize-none rounded-xl border border-db-dark/15 bg-white px-4 py-3 font-semibold text-db-dark outline-none focus:border-db-red focus:ring-2 focus:ring-db-red/15 dark:border-white/15 dark:bg-white/5 dark:text-white"
+                    placeholder="Ziel, mögliche Zielgruppe und offene Prüfpunkte beschreiben. Keine echten Namen oder Falldaten eingeben."
+                    className="w-full resize-y rounded-xl border border-db-dark/15 bg-white px-4 py-3 font-semibold text-db-dark outline-none focus:border-db-red focus:ring-2 focus:ring-db-red/15 dark:border-white/15 dark:bg-white/5 dark:text-white"
                   />
+                  <span className="mt-1 block text-right text-[10px] font-bold text-db-rail/60 dark:text-white/40">{newIdea.description.length}/800</span>
                 </Field>
 
-                <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs font-semibold leading-5 text-amber-950">
+                <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs font-semibold leading-5 text-amber-950 dark:border-amber-900/50 dark:bg-amber-950/25 dark:text-amber-200">
                   Der Entwurf wird nicht veröffentlicht oder gespeichert. Nach einem Neuladen ist er gelöscht.
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full rounded-xl bg-db-red py-3.5 text-sm font-black text-white transition hover:bg-red-700"
-                >
-                  Sitzungsentwurf hinzufügen
-                </button>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    className="rounded-xl border border-db-dark/15 py-3.5 text-sm font-black text-db-dark focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:border-white/15 dark:text-white"
+                  >
+                    Abbrechen
+                  </button>
+                  <button
+                    type="submit"
+                    className="rounded-xl bg-db-red py-3.5 text-sm font-black text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-db-red/30"
+                  >
+                    Sitzungsentwurf hinzufügen
+                  </button>
+                </div>
               </form>
             </motion.div>
           </div>
@@ -307,4 +377,8 @@ function Field({ children, label }) {
       {children}
     </label>
   );
+}
+
+function createIdeaId() {
+  return globalThis.crypto?.randomUUID?.() || `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
