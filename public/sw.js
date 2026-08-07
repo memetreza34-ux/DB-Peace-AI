@@ -1,4 +1,4 @@
-const CACHE_NAME = "db-peace-ai-v2";
+const CACHE_NAME = "db-peace-ai-v3";
 const APP_SHELL = ["/", "/index.html", "/manifest.json", "/icon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -29,34 +29,49 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (request.mode === "navigate") {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put("/index.html", copy));
-          return response;
-        })
-        .catch(() => caches.match("/index.html")),
-    );
+    event.respondWith(handleNavigation(request));
     return;
   }
 
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      const network = fetch(request)
-        .then((response) => {
-          if (response.ok && isStaticAsset(url.pathname)) {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
-          }
-          return response;
-        })
-        .catch(() => cached);
-
-      return cached || network;
-    }),
-  );
+  event.respondWith(handleStaticRequest(request, url));
 });
+
+async function handleNavigation(request) {
+  try {
+    const response = await fetch(request);
+    if (canCache(response)) {
+      const cache = await caches.open(CACHE_NAME);
+      await cache.put("/index.html", response.clone());
+    }
+    return response;
+  } catch {
+    return (await caches.match("/index.html")) || new Response(
+      "DB Peace AI ist offline und wurde auf diesem Gerät noch nicht vollständig geladen.",
+      { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } },
+    );
+  }
+}
+
+async function handleStaticRequest(request, url) {
+  const cached = await caches.match(request);
+
+  try {
+    const response = await fetch(request);
+    if (canCache(response) && isStaticAsset(url.pathname)) {
+      const cache = await caches.open(CACHE_NAME);
+      await cache.put(request, response.clone());
+    }
+    return cached || response;
+  } catch {
+    return cached || Response.error();
+  }
+}
+
+function canCache(response) {
+  if (!response?.ok || response.type === "error") return false;
+  const cacheControl = response.headers.get("Cache-Control") || "";
+  return !/no-store/i.test(cacheControl);
+}
 
 function isStaticAsset(pathname) {
   return /\.(?:js|css|svg|png|jpg|jpeg|webp|woff2?|json)$/.test(pathname);

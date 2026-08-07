@@ -83,16 +83,29 @@ if (!root) {
       <AppErrorBoundary>
         <App />
       </AppErrorBoundary>
-    </React.StrictMode>
+    </React.StrictMode>,
   );
 }
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').then((registration) => {
-      console.log('DB Peace AI ServiceWorker registered with scope:', registration.scope);
-    }).catch((error) => {
-      console.log('ServiceWorker registration failed:', error);
+if ("serviceWorker" in navigator) {
+  if (import.meta.env.PROD) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").then((registration) => {
+        console.info("DB Peace AI Service Worker registriert:", registration.scope);
+      }).catch((error) => {
+        console.warn("Service-Worker-Registrierung fehlgeschlagen:", error);
+      });
     });
-  });
+  } else {
+    // Alte Produktionsregistrierungen dürfen die lokale Vite-Entwicklung nicht mit veralteten Dateien überlagern.
+    void navigator.serviceWorker.getRegistrations()
+      .then((registrations) => Promise.all(registrations.map((registration) => registration.unregister())))
+      .catch(() => undefined);
+
+    if ("caches" in window) {
+      void caches.keys()
+        .then((names) => Promise.all(names.filter((name) => name.startsWith("db-peace-ai-")).map((name) => caches.delete(name))))
+        .catch(() => undefined);
+    }
+  }
 }

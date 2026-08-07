@@ -1,60 +1,88 @@
 import { spawn } from "node:child_process";
+import path from "node:path";
 
 const viteArgs = process.argv.slice(2);
+const viteEntry = path.resolve("node_modules", "vite", "bin", "vite.js");
 const commands = [
   [process.execPath, ["server.js"], "api"],
-  [process.platform === "win32" ? "npx.cmd" : "npx", ["vite", ...viteArgs], "vite"],
+  [process.execPath, [viteEntry, ...viteArgs], "vite"],
 ];
 
 let shuttingDown = false;
-let exitCode = 0;
-const children = [];
+let requestedExitCode = 0;
+let forceTimer = null;
+const children = new Map();
 
-for (const [command, args, name] of commands) {
+for (const [command, args, name] of commands) startProcess(command, args, name);
+
+function startProcess(command, args, name) {
   const child = spawn(command, args, {
     stdio: "inherit",
     shell: false,
     env: process.env,
   });
+  children.set(name, child);
 
   child.on("error", (error) => {
-    if (shuttingDown) return;
     console.error(`${name} konnte nicht gestartet werden:`, error.message);
-    shutdown(1);
+    children.delete(name);
+    if (!shuttingDown) shutdown(1);
+    finishIfStopped();
   });
 
   child.on("exit", (code, signal) => {
-    if (shuttingDown) return;
-    if (code === 0) {
-      console.log(`${name} wurde beendet.`);
-      shutdown(0);
-      return;
+    children.delete(name);
+    if (!shuttingDown) {
+      if (code === 0) console.log(`${name} wurde beendet.`);
+      else console.error(`${name} wurde unerwartet beendet (${signal || `Code ${code ?? 1}`}).`);
+      shutdown(code ?? (signal ? 1 : 0));
     }
-
-    console.error(`${name} wurde unerwartet beendet (${signal || `Code ${code ?? 1}`}).`);
-    shutdown(code ?? 1);
+    finishIfStopped();
   });
-
-  children.push(child);
 }
 
 function shutdown(code = 0) {
-  if (shuttingDown) return;
-  shuttingDown = true;
-  exitCode = Number.isInteger(code) ? code : 1;
-
-  for (const child of children) {
-    if (!child.killed && child.exitCode === null) child.kill("SIGTERM");
+  if (shuttingDown) {
+    requestedExitCode = Math.max(requestedExitCode, normalizeExitCode(code));
+    return;
   }
 
-  const forceTimer = setTimeout(() => {
-    for (const child of children) {
-      if (!child.killed && child.exitCode === null) child.kill("SIGKILL");
-    }
-  }, 2_000);
+  shuttingDown = true;
+  requestedExitCode = normalizeExitCode(code);
+
+  for (const child of children.values()) terminateChild(child, false);
+
+  forceTimer = setTimeout(() => {
+    for (const child of children.values()) terminateChild(child, true);
+    setTimeout(() => process.exit(requestedExitCode), 250).unref();
+  }, 2_500);
   forceTimer.unref();
 
-  setTimeout(() => process.exit(exitCode), 100).unref();
+  finishIfStopped();
+}
+
+function terminateChild(child, force) {
+  if (!child.pid || child.exitCode !== null || child.killed) return;
+
+  if (process.platform === "win32") {
+    const args = ["/PID", String(child.pid), "/T"];
+    if (force) args.push("/F");
+    const killer = spawn("taskkill", args, { stdio: "ignore", windowsHide: true });
+    killer.on("error", () => undefined);
+    return;
+  }
+
+  child.kill(force ? "SIGKILL" : "SIGTERM");
+}
+
+function finishIfStopped() {
+  if (!shuttingDown || children.size > 0) return;
+  if (forceTimer) clearTimeout(forceTimer);
+  process.exit(requestedExitCode);
+}
+
+function normalizeExitCode(code) {
+  return Number.isInteger(code) && code >= 0 ? code : 1;
 }
 
 process.on("SIGINT", () => shutdown(0));
