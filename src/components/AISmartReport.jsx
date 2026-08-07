@@ -89,7 +89,7 @@ export function AISmartReport({ onReportGenerated }) {
           </div>
           <div>
             <h2 className="font-black">KI-gestützter Meldungsentwurf</h2>
-            <p className="mt-1 text-xs font-semibold text-white/65">Extrahiert nur Angaben aus deinem Text und erfindet keine Fakten.</p>
+            <p className="mt-1 text-xs font-semibold text-white/65">Soll Angaben aus deinem Text strukturieren. Prüfe jedes Feld vor der Übernahme, weil KI-Ausgaben fehlerhaft sein können.</p>
           </div>
         </div>
       </header>
@@ -136,10 +136,15 @@ export function AISmartReport({ onReportGenerated }) {
               </span>
             </div>
 
-            {mode === "local" && (
+            {mode === "local" ? (
               <p className="mt-3 flex items-start gap-2 rounded-lg bg-amber-100/80 p-3 text-xs font-semibold leading-5 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-                Die KI war nicht erreichbar. Der Entwurf wurde nur mit einfacher lokaler Schlüsselwortlogik erstellt.
+                Die KI war nicht erreichbar. Der Entwurf wurde nur mit einfacher lokaler Schlüsselwortlogik erstellt; fehlende Fakten bleiben „Nicht angegeben“.
+              </p>
+            ) : (
+              <p className="mt-3 flex items-start gap-2 rounded-lg bg-amber-100/80 p-3 text-xs font-semibold leading-5 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                KI-Ausgaben können Angaben falsch zuordnen oder ergänzen. Vergleiche alle Felder mit deinem Originaltext, bevor du den Entwurf übernimmst.
               </p>
             )}
 
@@ -180,18 +185,14 @@ function ReportField({ label, value, wide = false }) {
 }
 
 function normalizeReport(report, sourceText) {
-  const now = new Date();
-  const dateFallback = now.toISOString().split("T")[0];
-  const timeFallback = now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
-
   return {
-    category: report.category || "Vorfall / Konflikt",
-    description: report.description || sourceText,
-    date: report.date === "Nicht angegeben" ? dateFallback : report.date || dateFallback,
-    time: report.time === "Nicht angegeben" ? timeFallback : report.time || timeFallback,
-    location: report.location || "Nicht angegeben",
-    witnesses: report.witnesses || "Nicht angegeben",
-    urgency: report.urgency || "mittel",
+    category: valueOrNotProvided(report.category, "Vorfall / Konflikt"),
+    description: valueOrNotProvided(report.description, sourceText),
+    date: valueOrNotProvided(report.date),
+    time: valueOrNotProvided(report.time),
+    location: valueOrNotProvided(report.location),
+    witnesses: valueOrNotProvided(report.witnesses),
+    urgency: valueOrNotProvided(report.urgency, "mittel"),
     missingFields: Array.isArray(report.missingFields) ? report.missingFields : [],
   };
 }
@@ -214,15 +215,19 @@ function createLocalDraft(sourceText) {
         ? "Mobbing / Ausgrenzung"
         : "Vorfall / Konflikt";
 
-  const now = new Date();
   return {
     category,
     description: sourceText,
-    date: now.toISOString().split("T")[0],
-    time: now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }),
-    location: lower.includes("bahnhof") ? "Bahnhof" : lower.includes("zug") ? "Zug" : "Nicht angegeben",
+    date: "Nicht angegeben",
+    time: "Nicht angegeben",
+    location: "Nicht angegeben",
     witnesses: "Nicht angegeben",
     urgency,
-    missingFields: ["Datum und Uhrzeit prüfen", "Ort prüfen", "mögliche Zeug:innen ergänzen"],
+    missingFields: ["Datum prüfen", "Uhrzeit prüfen", "Ort prüfen", "mögliche Zeug:innen ergänzen"],
   };
+}
+
+function valueOrNotProvided(value, fallback = "Nicht angegeben") {
+  const text = String(value ?? "").trim();
+  return text || fallback;
 }
