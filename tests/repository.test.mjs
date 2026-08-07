@@ -103,9 +103,15 @@ test("bewegte Hauptoberflächen respektieren reduzierte Bewegung", () => {
 
 test("Analytics ist als Szenario und nicht als reale Auswertung gekennzeichnet", () => {
   const analytics = read("src/components/DashboardAnalytics.jsx");
+  const misleadingPatterns = [
+    new RegExp(["anonymisierte", "Meldungen"].join("\\s+"), "i"),
+    new RegExp(["Live", "Daten"].join("-"), "i"),
+    /echte Fallzahl/i,
+  ];
+
   assert.match(analytics, /Szenario-Rechner/);
   assert.match(analytics, /Erfundene Annahmen/);
-  assert.doesNotMatch(analytics, /anonymisierte Meldungen|Live-Daten|echte Fallzahl/i);
+  for (const pattern of misleadingPatterns) assert.doesNotMatch(analytics, pattern);
 });
 
 test("PWA-Manifest verweist auf vorhandene lokale Ressourcen", () => {
