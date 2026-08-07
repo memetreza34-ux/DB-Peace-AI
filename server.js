@@ -268,18 +268,22 @@ async function handleQuiz(_req, res) {
     model: MODEL,
     config: {
       systemInstruction: [
-        "Generiere vier realistische Wissensfragen für Auszubildende.",
-        "Themen: Mobbing, Diskriminierung, Konflikte am Arbeitsplatz und Rechte in der Ausbildung.",
+        "Generiere vier einfache Wissensfragen für einen lokalen Demonstrationsprototyp für Auszubildende.",
+        "Themen ausschließlich: Eigenschutz bei Konflikten, sachliche Dokumentation, passende reale Hilfewege und Grenzen einer KI-Unterstützung.",
+        "Erzeuge keine Frage, deren richtige Antwort einen konkreten Rechtsanspruch, eine Frist, eine Paragraphenauslegung, eine medizinische Bewertung oder eine interne DB-Regel voraussetzt.",
         "Antworte ausschließlich mit einem JSON-Array.",
         "Jedes Objekt enthält exakt: id (Nummer), question (String), answer (Boolean), explanation (String).",
-        "Keine Markdown-Formatierung und keine erfundenen internen DB-Regeln.",
+        "Keine Markdown-Formatierung und keine erfundenen internen Prozesse oder Kontaktdaten.",
       ].join(" "),
-      temperature: 0.8,
+      temperature: 0.65,
       maxOutputTokens: 1_500,
     },
   });
 
-  const response = await withTimeout(chat.sendMessage({ message: "Erzeuge vier neue Fragen." }), AI_TIMEOUT_MS);
+  const response = await withTimeout(
+    chat.sendMessage({ message: "Erzeuge vier neue, eindeutig beantwortbare Sicherheits- und Orientierungsfragen." }),
+    AI_TIMEOUT_MS,
+  );
   const parsed = parseJsonArray(response.text);
   const questions = parsed
     ? parsed.slice(0, 4).map((question, index) => ({
@@ -385,7 +389,7 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "GET" && url.pathname === "/api/chat/status") {
       sendJson(res, 200, {
-        connected: Boolean(String(process.env.GEMINI_API_KEY || "").trim()),
+        configured: Boolean(String(process.env.GEMINI_API_KEY || "").trim()),
         model: MODEL,
         prototype: true,
       });
