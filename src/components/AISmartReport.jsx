@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { AlertTriangle, Bot, CheckCircle2, FileText, Loader2, Send, ShieldAlert } from "lucide-react";
 
 export function AISmartReport({ onReportGenerated }) {
@@ -7,6 +7,7 @@ export function AISmartReport({ onReportGenerated }) {
   const [generatedReport, setGeneratedReport] = useState(null);
   const [mode, setMode] = useState(null);
   const [error, setError] = useState("");
+  const activeControllerRef = useRef(null);
 
   async function handleGenerate(event) {
     event.preventDefault();
@@ -16,39 +17,54 @@ export function AISmartReport({ onReportGenerated }) {
       return;
     }
 
+    activeControllerRef.current?.abort();
+    const controller = new AbortController();
+    activeControllerRef.current = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 25_000);
+
     setIsLoading(true);
     setError("");
+    setGeneratedReport(null);
+    setMode(null);
 
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 25_000);
       const response = await fetch("/api/report/extract", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
         signal: controller.signal,
       });
-      clearTimeout(timeout);
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok || !data.report) throw new Error(data.error || "extract_failed");
+      if (controller.signal.aborted) return;
 
       setGeneratedReport(normalizeReport(data.report, text));
       setMode("ai");
-    } catch {
+    } catch (requestError) {
+      if (requestError?.name === "AbortError" && activeControllerRef.current !== controller) return;
       setGeneratedReport(createLocalDraft(text));
       setMode("local");
     } finally {
+      window.clearTimeout(timeout);
+      if (activeControllerRef.current === controller) activeControllerRef.current = null;
       setIsLoading(false);
     }
   }
 
   function acceptReport() {
-    if (!generatedReport) return;
-    onReportGenerated(generatedReport);
+    if (!generatedReport || !mode) return;
+    onReportGenerated({ ...generatedReport, sourceMode: mode });
     setGeneratedReport(null);
     setInput("");
     setMode(null);
+    setError("");
+  }
+
+  function editText() {
+    setGeneratedReport(null);
+    setMode(null);
+    setError("");
   }
 
   return (
@@ -56,7 +72,7 @@ export function AISmartReport({ onReportGenerated }) {
       <header className="bg-gradient-to-r from-db-dark to-db-rail p-5 text-white">
         <div className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
-            <Bot className="h-5 w-5 text-db-red" />
+            <Bot className="h-5 w-5 text-db-red" aria-hidden="true" />
           </div>
           <div>
             <h2 className="font-black">KI-gestützter Meldungsentwurf</h2>
@@ -67,7 +83,7 @@ export function AISmartReport({ onReportGenerated }) {
 
       <div className="space-y-5 p-5">
         <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/25 dark:text-amber-200">
-          <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
+          <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           Keine Klarnamen, Personalnummern, Telefonnummern oder vertraulichen Dokumentinhalte eingeben. Der Entwurf wird nicht automatisch versendet.
         </div>
 
@@ -79,14 +95,15 @@ export function AISmartReport({ onReportGenerated }) {
               onChange={(event) => setInput(event.target.value.slice(0, 4_000))}
               maxLength={4_000}
               rows={7}
+              disabled={isLoading}
               placeholder="Beispiel: Am Dienstag wurde ich während der Teambesprechung mehrfach vor anderen abgewertet. Zwei Kolleg:innen waren anwesend …"
-              className="mt-2 w-full resize-y rounded-xl border border-db-dark/15 bg-white p-4 text-sm font-medium leading-6 text-db-dark outline-none focus:border-db-red focus:ring-2 focus:ring-db-red/20 dark:border-white/15 dark:bg-db-dark/40 dark:text-white"
+              className="mt-2 w-full resize-y rounded-xl border border-db-dark/15 bg-white p-4 text-sm font-medium leading-6 text-db-dark outline-none focus:border-db-red focus:ring-2 focus:ring-db-red/20 disabled:cursor-wait disabled:opacity-70 dark:border-white/15 dark:bg-db-dark/40 dark:text-white"
             />
           </label>
           <div className="flex items-center justify-between gap-3">
             <span className="text-[11px] font-bold text-db-rail/60 dark:text-white/40">{input.length}/4000</span>
-            <button type="submit" disabled={input.trim().length < 20 || isLoading} className="inline-flex items-center gap-2 rounded-xl bg-db-red px-5 py-3 text-sm font-black text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40">
-              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            <button type="submit" disabled={input.trim().length < 20 || isLoading} className="inline-flex items-center gap-2 rounded-xl bg-db-red px-5 py-3 text-sm font-black text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-db-red/30 disabled:cursor-not-allowed disabled:opacity-40">
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Send className="h-4 w-4" aria-hidden="true" />}
               {isLoading ? "Strukturiert …" : "Entwurf erstellen"}
             </button>
           </div>
@@ -98,7 +115,7 @@ export function AISmartReport({ onReportGenerated }) {
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-900/50 dark:bg-emerald-950/25">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300">
-                <CheckCircle2 className="h-5 w-5" />
+                <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
                 <h3 className="font-black">Strukturierter Entwurf</h3>
               </div>
               <span className="rounded-full bg-white/70 px-2.5 py-1 text-[10px] font-black uppercase text-emerald-800 dark:bg-black/20 dark:text-emerald-300">
@@ -108,7 +125,7 @@ export function AISmartReport({ onReportGenerated }) {
 
             {mode === "local" && (
               <p className="mt-3 flex items-start gap-2 rounded-lg bg-amber-100/80 p-3 text-xs font-semibold leading-5 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                 Die KI war nicht erreichbar. Der Entwurf wurde nur mit einfacher lokaler Schlüsselwortlogik erstellt.
               </p>
             )}
@@ -125,11 +142,11 @@ export function AISmartReport({ onReportGenerated }) {
             </dl>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <button type="button" onClick={() => setGeneratedReport(null)} className="rounded-xl border border-emerald-300 px-4 py-3 text-sm font-black text-emerald-900 hover:bg-white/50 dark:border-emerald-800 dark:text-emerald-200">
+              <button type="button" onClick={editText} className="rounded-xl border border-emerald-300 px-4 py-3 text-sm font-black text-emerald-900 hover:bg-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-600/30 dark:border-emerald-800 dark:text-emerald-200">
                 Text weiter bearbeiten
               </button>
-              <button type="button" onClick={acceptReport} className="flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-black text-white hover:bg-emerald-800">
-                <FileText className="h-4 w-4" />
+              <button type="button" onClick={acceptReport} className="flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-black text-white hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-600/30">
+                <FileText className="h-4 w-4" aria-hidden="true" />
                 In Demo-Protokoll übernehmen
               </button>
             </div>
