@@ -19,6 +19,8 @@ const requiredFiles = [
   "src/components/PrivacyCompliance.jsx",
   "src/components/TrainingMode.jsx",
   "src/components/ProjectOverview.jsx",
+  "src/data/lawsData.json",
+  "src/data/coursesData.json",
   "public/manifest.json",
   "public/sw.js",
   "public/icon.svg",
@@ -48,7 +50,11 @@ for (const relativePath of requiredFiles) {
   if (!fs.existsSync(path.join(root, relativePath))) failures.push(`Pflichtdatei fehlt: ${relativePath}`);
 }
 
-for (const removedPath of ["src/components/AzubiRightsCheck.jsx", "src/lib/utils.js"]) {
+for (const removedPath of [
+  "src/components/AzubiRightsCheck.jsx",
+  "src/lib/utils.js",
+  "src/data/generate_laws.py",
+]) {
   if (fs.existsSync(path.join(root, removedPath))) failures.push(`Entfernter Altcode darf nicht zurückkehren: ${removedPath}`);
 }
 
@@ -101,6 +107,8 @@ for (const filePath of textFiles) {
 
 verifyLocalImports();
 verifyModalSurfaces();
+verifyLegalDataset();
+verifyCourseDataset();
 
 const envExample = read(".env.example");
 if (!envExample.includes("GEMINI_API_KEY")) failures.push(".env.example muss GEMINI_API_KEY dokumentieren.");
@@ -116,6 +124,7 @@ if (!readme.includes("keine offizielle Deutsche-Bahn-Anwendung")) failures.push(
 if (!readme.includes("docs/MANUAL-TEST-CHECKLIST.md")) failures.push("README muss die manuelle Abnahmecheckliste verlinken.");
 if (!readme.includes("docs/AUDIT-RESULTS.md")) failures.push("README muss die Audit-Ergebnisse verlinken.");
 if (!readme.includes("/api/report/extract")) failures.push("README muss die tatsächlich implementierte Report-Route dokumentieren.");
+if (!readme.includes("vollständig fiktiver Lernkatalog")) failures.push("README muss den Lernkatalog als vollständig fiktiv kennzeichnen.");
 
 const packageJson = parseJson("package.json");
 const packageLock = parseJson("package-lock.json");
@@ -128,8 +137,27 @@ verifyDependencyMap("dependencies", packageJson, packageLock);
 verifyDependencyMap("devDependencies", packageJson, packageLock);
 
 const server = read("server.js");
-for (const requiredServerControl of ["unsupported_media_type", "MAX_BODY_BYTES", "AI_TIMEOUT_MS", "withTimeout", "upstream_timeout", "Retry-After", "normalizeBoolean", "server.requestTimeout", "Cross-Origin-Resource-Policy"]) {
+for (const requiredServerControl of [
+  "unsupported_media_type",
+  "MAX_BODY_BYTES",
+  "AI_TIMEOUT_MS",
+  "withTimeout",
+  "upstream_timeout",
+  "Retry-After",
+  "normalizeBoolean",
+  "server.requestTimeout",
+  "Cross-Origin-Resource-Policy",
+]) {
   if (!server.includes(requiredServerControl)) failures.push(`server.js muss die Schutzmaßnahme ${requiredServerControl} enthalten.`);
+}
+if (!/configured:\s*Boolean/.test(server)) failures.push("KI-Status muss einen konfigurierten Schlüssel als configured kennzeichnen.");
+if (/connected:\s*Boolean/.test(server)) failures.push("KI-Status darf einen vorhandenen Schlüssel nicht als erfolgreiche Verbindung bezeichnen.");
+if (!server.includes("Themen ausschließlich: Eigenschutz bei Konflikten")) failures.push("KI-Quiz muss auf allgemeine Sicherheits- und Orientierungsfragen begrenzt sein.");
+if (!server.includes("keine Frage, deren richtige Antwort einen konkreten Rechtsanspruch")) failures.push("KI-Quiz muss konkrete Rechtsauslegungen ausdrücklich ausschließen.");
+
+const chat = read("src/components/FloatingChatWidget.jsx");
+if (!chat.includes("data.configured") || !chat.includes("Gemini-Antwort erhalten") || !chat.includes("Verbindung noch nicht geprüft")) {
+  failures.push("Chat muss Konfiguration von einer tatsächlich erfolgreichen Gemini-Antwort unterscheiden.");
 }
 
 const reportRoute = "/api/report/extract";
@@ -159,6 +187,10 @@ const training = read("src/components/TrainingMode.jsx");
 if (!training.includes("Keine Punktzahl und keine Kompetenzbewertung")) failures.push("Training muss ausdrücklich ohne Punkt-/Kompetenzbewertung arbeiten.");
 if (/\bpoints\s*:|\bpercentage\b|Orientierungswert/.test(training)) failures.push("Training darf keine Punkte- oder Prozentbewertung enthalten.");
 if (/<main(?:\s|>)/.test(training)) failures.push("TrainingMode darf keine verschachtelte main-Landmarke erzeugen.");
+
+const learningHub = read("src/components/LearningHubView.jsx");
+if (!learningHub.includes('id: "praesenz"')) failures.push("LearningHub muss die Präsenz-Demo-Kategorie des Datensatzes verwenden.");
+if (!learningHub.includes("Fiktiven Demo-Lernkatalog ausprobieren")) failures.push("LearningHub muss den Katalog eindeutig als fiktiv kennzeichnen.");
 
 const contacts = read("src/components/ContactsView.jsx");
 for (const requiredNumber of ["110", "112", "116 123", "116 016", "0800 546 546 5"]) {
@@ -191,6 +223,39 @@ function verifyDependencyMap(key, packageJson, packageLock) {
   const expected = packageJson?.[key] || {};
   const locked = packageLock?.packages?.[""]?.[key] || {};
   if (JSON.stringify(expected) !== JSON.stringify(locked)) failures.push(`${key} in package.json und package-lock.json müssen übereinstimmen.`);
+}
+
+function verifyLegalDataset() {
+  const laws = parseJson("src/data/lawsData.json");
+  if (!laws) return;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(laws.lastChecked || ""))) failures.push("Rechtsdatensatz muss ein lastChecked-Datum enthalten.");
+  if (Object.hasOwn(laws, "dbRichtlinien")) failures.push("Rechtsdatensatz darf keine erfundenen internen DB-Richtlinien enthalten.");
+  if (!Array.isArray(laws.bundesgesetze) || laws.bundesgesetze.length < 8 || laws.bundesgesetze.length > 20) {
+    failures.push("Rechtsdatensatz muss eine kleine kuratierte Sammlung enthalten.");
+    return;
+  }
+  for (const law of laws.bundesgesetze) {
+    if (!/^https:\/\/www\.gesetze-im-internet\.de\//.test(String(law?.sourceUrl || ""))) {
+      failures.push(`Rechtskarte ${law?.id || "ohne-id"} benötigt einen amtlichen Einzelnorm-Link.`);
+    }
+    for (const field of ["officialText", "translation", "actionTip"]) {
+      if (!String(law?.[field] || "").trim()) failures.push(`Rechtskarte ${law?.id || "ohne-id"}: ${field} fehlt.`);
+    }
+  }
+}
+
+function verifyCourseDataset() {
+  const courses = parseJson("src/data/coursesData.json");
+  if (!courses) return;
+  const keys = Object.keys(courses).sort();
+  if (JSON.stringify(keys) !== JSON.stringify(["online", "praesenz", "zertifikat"])) failures.push("Lernkatalog darf nur die drei definierten Demo-Kategorien enthalten.");
+  const entries = Object.values(courses).flat();
+  if (entries.length === 0 || entries.length > 12) failures.push("Lernkatalog muss klein und klar als Demo begrenzt bleiben.");
+  for (const course of entries) {
+    if (!/^Fiktiv/i.test(String(course?.provider || ""))) failures.push(`Kurseintrag ${course?.id || "ohne-id"} verwendet keinen fiktiven Anbieter.`);
+    if (!/Demo/i.test(String(course?.title || ""))) failures.push(`Kurseintrag ${course?.id || "ohne-id"} muss im Titel als Demo erkennbar sein.`);
+    if (course?.link && !/^https:\/\//.test(String(course.link))) failures.push(`Kurseintrag ${course?.id || "ohne-id"} enthält keinen sicheren HTTPS-Link.`);
+  }
 }
 
 function verifyModalSurfaces() {
@@ -233,7 +298,16 @@ function localImportSpecifiers(content) {
 function resolveImport(importer, specifier) {
   const clean = specifier.split(/[?#]/, 1)[0];
   const base = path.resolve(path.dirname(importer), clean);
-  return [base, `${base}.js`, `${base}.jsx`, `${base}.mjs`, `${base}.json`, path.join(base, "index.js"), path.join(base, "index.jsx"), path.join(base, "index.mjs")].some((candidate) => fs.existsSync(candidate));
+  return [
+    base,
+    `${base}.js`,
+    `${base}.jsx`,
+    `${base}.mjs`,
+    `${base}.json`,
+    path.join(base, "index.js"),
+    path.join(base, "index.jsx"),
+    path.join(base, "index.mjs"),
+  ].some((candidate) => fs.existsSync(candidate));
 }
 
 function walk(directory) {
