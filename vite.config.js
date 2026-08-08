@@ -1,16 +1,21 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig, loadEnv } from "vite";
 
-function allowReactRefreshPreambleInDevelopment() {
+function relaxCspForDevelopment() {
   return {
     name: "db-peace-dev-csp",
     apply: "serve",
     enforce: "pre",
     transformIndexHtml(html) {
-      return html.replace(
-        "script-src 'self';",
-        "script-src 'self' 'unsafe-inline';",
-      );
+      return html
+        .replace(
+          "script-src 'self';",
+          "script-src 'self' 'unsafe-inline';",
+        )
+        .replace(
+          "connect-src 'self';",
+          "connect-src 'self' ws://127.0.0.1:5173 ws://localhost:5173;",
+        );
     },
   };
 }
@@ -27,7 +32,7 @@ export default defineConfig(({ mode }) => {
   const proxy = { "/api": apiTarget };
 
   return {
-    plugins: [allowReactRefreshPreambleInDevelopment(), react()],
+    plugins: [relaxCspForDevelopment(), react()],
     server: {
       host: "127.0.0.1",
       port: 5173,
