@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Delete, Lock, ShieldCheck } from "lucide-react";
 
 const LOCK_STORAGE_KEY = "db-peace-lock-v2";
@@ -9,6 +9,7 @@ const MAX_FAILED_ATTEMPTS = 5;
 const RETRY_DELAY_MS = 10_000;
 
 export function AppLock({ onUnlock }) {
+  const reduceMotion = useReducedMotion();
   const existingConfig = useMemo(() => readLockConfig(), []);
   const initialThrottle = useMemo(() => readThrottle(), []);
   const [mode] = useState(existingConfig ? "unlock" : "setup");
@@ -23,6 +24,22 @@ export function AppLock({ onUnlock }) {
 
   const retrySeconds = Math.max(0, Math.ceil((blockedUntil - clock) / 1_000));
   const isBlocked = retrySeconds > 0;
+
+  useEffect(() => {
+    function syncThrottle() {
+      const next = readThrottle();
+      setFailedAttempts(next.failedAttempts);
+      setBlockedUntil(next.blockedUntil);
+      setClock(Date.now());
+    }
+
+    function handleStorage(event) {
+      if (event.key === THROTTLE_STORAGE_KEY) syncThrottle();
+    }
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
 
   useEffect(() => {
     if (!blockedUntil) return undefined;
@@ -43,8 +60,8 @@ export function AppLock({ onUnlock }) {
   }, [blockedUntil]);
 
   useEffect(() => {
-    if (mode === "unlock" && pin.length === PIN_LENGTH && !isBlocked) void verifyPin();
-  }, [pin, mode, isBlocked]);
+    if (mode === "unlock" && pin.length === PIN_LENGTH && !isBlocked && !isWorking) void verifyPin();
+  }, [pin, mode, isBlocked, isWorking]);
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -67,7 +84,17 @@ export function AppLock({ onUnlock }) {
 
   async function verifyPin() {
     const config = readLockConfig();
-    if (!config || isWorking || isBlocked) return;
+    if (!config || isWorking) return;
+
+    const latestThrottle = readThrottle();
+    if (latestThrottle.blockedUntil > Date.now()) {
+      setFailedAttempts(latestThrottle.failedAttempts);
+      setBlockedUntil(latestThrottle.blockedUntil);
+      setClock(Date.now());
+      setPin("");
+      setError("Zu viele Fehlversuche. Die Eingabe ist kurz gesperrt.");
+      return;
+    }
 
     setIsWorking(true);
     setError("");
@@ -82,7 +109,8 @@ export function AppLock({ onUnlock }) {
         return;
       }
 
-      const nextAttempts = failedAttempts + 1;
+      const currentThrottle = readThrottle();
+      const nextAttempts = currentThrottle.failedAttempts + 1;
       if (nextAttempts >= MAX_FAILED_ATTEMPTS) {
         const nextBlockedUntil = Date.now() + RETRY_DELAY_MS;
         setFailedAttempts(0);
@@ -171,8 +199,9 @@ export function AppLock({ onUnlock }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-950 p-6 text-white selection:bg-db-red">
       <motion.main
-        initial={{ opacity: 0, y: 18 }}
+        initial={reduceMotion ? false : { opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={reduceMotion ? { duration: 0 } : undefined}
         className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/90 p-6 shadow-2xl"
       >
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-db-red/15">
@@ -199,7 +228,7 @@ export function AppLock({ onUnlock }) {
 
         {isBlocked && (
           <p role="status" className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-center text-xs font-bold text-amber-100">
-            Neue Eingabe in {retrySeconds} Sekunden möglich. Ein Neuladen setzt diese Pause nicht zurück.
+            Neue Eingabe in {retrySeconds} Sekunden möglich. Neuladen oder ein weiterer Tab setzen diese Pause nicht zurück.
           </p>
         )}
         {error && <p role="alert" className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-center text-xs font-bold text-red-200">{error}</p>}
@@ -254,7 +283,7 @@ function readLockConfig() {
 
 function readThrottle() {
   try {
-    const parsed = JSON.parse(safeStorageGet("session", THROTTLE_STORAGE_KEY) || "null");
+    const parsed = JSON.parse(safeStorageGet("local", THROTTLE_STORAGE_KEY) || "null");
     const failedAttempts = Number.isInteger(parsed?.failedAttempts)
       ? Math.max(0, Math.min(MAX_FAILED_ATTEMPTS - 1, parsed.failedAttempts))
       : 0;
@@ -269,14 +298,14 @@ function readThrottle() {
 
 function writeThrottle(failedAttempts, blockedUntil) {
   safeStorageSet(
-    "session",
+    "local",
     THROTTLE_STORAGE_KEY,
     JSON.stringify({ failedAttempts, blockedUntil }),
   );
 }
 
 function clearThrottle() {
-  safeStorageRemove("session", THROTTLE_STORAGE_KEY);
+  safeStorageRemove("local", THROTTLE_STORAGE_KEY);
 }
 
 async function createVerifier(pin, saltBase64) {
