@@ -19,6 +19,24 @@ test("Entsperrstatus wird nicht in localStorage oder sessionStorage persistiert"
   assert.match(lock, /Nach Neuladen oder Öffnen in einem neuen Tab/);
 });
 
+test("PIN-Fehlversuche und Sperrzeit gelten tabübergreifend", () => {
+  const lock = read("src/components/AppLock.jsx");
+
+  assert.match(lock, /safeStorageGet\("local",\s*THROTTLE_STORAGE_KEY\)/);
+  assert.match(lock, /safeStorageSet\(\s*"local",\s*THROTTLE_STORAGE_KEY/);
+  assert.match(lock, /safeStorageRemove\("local",\s*THROTTLE_STORAGE_KEY\)/);
+  assert.match(lock, /window\.addEventListener\("storage",\s*handleStorage\)/);
+  assert.match(lock, /const latestThrottle = readThrottle\(\)/);
+  assert.match(lock, /Neuladen oder ein weiterer Tab setzen diese Pause nicht zurück/);
+});
+
+test("PIN-Sperrbildschirm respektiert reduzierte Bewegung", () => {
+  const lock = read("src/components/AppLock.jsx");
+
+  assert.match(lock, /useReducedMotion/);
+  assert.match(lock, /initial=\{reduceMotion \? false/);
+});
+
 test("Schnell-Verlassen bleibt über kritischen App-Dialogen anklickbar", () => {
   const panic = read("src/components/PanicButton.jsx");
   const emergency = read("src/components/EmergencyModal.jsx");
