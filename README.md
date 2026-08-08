@@ -22,19 +22,21 @@ Die in `package.json` festgelegten Engine-Bereiche dienen einer reproduzierbaren
 - Entsperrstatus wird nicht in Browser-Speicher geschrieben; Reload sowie ein neuer oder duplizierter Tab verlangen erneut die PIN
 - KI-Begleiter über einen lokalen Gemini-Proxy mit klar gekennzeichnetem lokalem Fallback
 - `/api/chat/status` zeigt nur, ob ein Gemini-Schlüssel konfiguriert ist; erst eine erfolgreiche Chatantwort bestätigt eine tatsächliche Verbindung
+- Chat-Leitplanken unterscheiden aktuelle Gefahr von klar historischen Erwähnungen; Begriffe wie Gewalt, Drohung, Selbstverletzung oder Suizid beweisen allein keine gegenwärtige Akutheit
 - das lokale Warten auf Gemini-Aufrufe wird nach 20 Sekunden begrenzt; der SDK-Request erhält dabei ein `AbortSignal`, ohne eine sofortige Beendigung bereits laufender externer Verarbeitung zu garantieren
 - KI-gestützte Strukturierung eines Meldungsentwurfs über `/api/report/extract`
 - validierter Meldungsentwurf mit Kopierfunktion und PDF-Export
 - Gedächtnisprotokolle bleiben während der laufenden App-Nutzung über interne Navigation hinweg im React-Arbeitsspeicher erhalten und werden nicht dauerhaft im Browser gespeichert
 - Stimmungseinträge verwenden nur den Browser-Sitzungsspeicher und werden nicht an eine Falldatenbank übertragen
-- „Schnell verlassen“ leert temporäre App-Inhalte, setzt veränderte Demo-Tickets zurück und sperrt die Oberfläche erneut, bevor die externe Tarnseite geöffnet wird; der Schutz steht auch im HR-Demo-Modus zur Verfügung
+- „Schnell verlassen“ leert temporäre App-Inhalte, setzt veränderte Demo-Tickets zurück und sperrt die Oberfläche erneut, bevor die externe Tarnseite geöffnet wird; die Bereinigung wird zusätzlich an andere offene DB-Peace-Tabs signalisiert und steht auch im HR-Demo-Modus zur Verfügung
 - Quiz über `POST /api/quiz` mit transparentem lokalem Fragenset als Fallback; KI-Fragen sind auf allgemeine Sicherheits- und Orientierungsinhalte begrenzt
 - lokale, statische Szenario-Übungen ohne KI, Punkte, Prozentwertung oder Zertifikat
 - kuratierte Rechteorientierung mit vorsichtigen Paraphrasen und Links zu amtlichen Einzelnormen
-- geprüfte externe Hilfsnummern und klare Wege zum Finden interner Kontakte
+- geprüfte externe Hilfsnummern und klare Wege zum Finden interner Kontakte; 110 wird nur für akute Bedrohung, Gewalt oder unmittelbar gefährliche Situationen beschrieben
 - vollständig fiktiver Lernkatalog mit erfundenen Anbietern und Angeboten ausschließlich für die UI-Demonstration
 - HR-, Projekt- und Analytics-Ansichten ausschließlich mit fiktiven Demonstrationsdaten beziehungsweise Szenarioannahmen
 - PWA-Grundstruktur; API-Antworten werden nicht offline gecacht, statische Assets werden online Network-first geladen und der Service Worker löscht nur eigene alte Caches
+- der Entwicklungsmodus entfernt nur die Root-Service-Worker-Registrierung der App und nicht pauschal fremde Registrierungen mit anderen Scopes derselben Origin
 - lokaler API-Proxy blockiert fremde Browser-Origin-/Cross-Site-Anfragen und akzeptiert auf POST-Routen nur echtes `application/json`
 - Produktions-CSP ohne Inline-Skripte oder Vite-HMR-WebSockets; nur der lokale Vite-Serve-Modus erhält die für React Refresh/HMR notwendigen eng begrenzten Ausnahmen, nicht `vite preview`
 
@@ -103,6 +105,7 @@ Der GitHub-Actions-Lauf muss für exakt denselben finalen Commit erfolgreich sei
 - ausschließlich erfundene Beispieldaten verwenden
 - `.env`, API-Schlüssel und interne Kontaktdaten niemals committen
 - Notfall-, Rechts- und Hilfeinhalte vor jeder echten Veröffentlichung fachlich prüfen
+- aktuelle Gefahr nicht allein aus einem Schlüsselwort ableiten; historische Schilderungen und gegenwärtige Akutheit auseinanderhalten
 - Rechtskarten immer gegen die verlinkte aktuelle amtliche Norm prüfen; die App enthält nur Paraphrasen
 - Demo-Funktionen sichtbar als Demo kennzeichnen
 - keine Anonymität, Vertraulichkeit, Verschlüsselung, Anerkennung oder offizielle Integration garantieren, solange sie nicht technisch und organisatorisch umgesetzt ist
