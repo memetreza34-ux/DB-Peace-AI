@@ -7,6 +7,7 @@ const THROTTLE_STORAGE_KEY = "db-peace-lock-throttle";
 const PIN_LENGTH = 4;
 const MAX_FAILED_ATTEMPTS = 5;
 const RETRY_DELAY_MS = 10_000;
+const ATTEMPT_WINDOW_MS = 5 * 60_000;
 
 export function AppLock({ onUnlock }) {
   const reduceMotion = useReducedMotion();
@@ -284,13 +285,21 @@ function readLockConfig() {
 function readThrottle() {
   try {
     const parsed = JSON.parse(safeStorageGet("local", THROTTLE_STORAGE_KEY) || "null");
-    const failedAttempts = Number.isInteger(parsed?.failedAttempts)
-      ? Math.max(0, Math.min(MAX_FAILED_ATTEMPTS - 1, parsed.failedAttempts))
-      : 0;
-    const blockedUntil = Number.isFinite(parsed?.blockedUntil) && parsed.blockedUntil > Date.now()
+    const now = Date.now();
+    const blockedUntil = Number.isFinite(parsed?.blockedUntil) && parsed.blockedUntil > now
       ? parsed.blockedUntil
       : 0;
-    return { failedAttempts: blockedUntil ? 0 : failedAttempts, blockedUntil };
+
+    if (blockedUntil) return { failedAttempts: 0, blockedUntil };
+
+    const attemptsExpireAt = Number.isFinite(parsed?.attemptsExpireAt) && parsed.attemptsExpireAt > now
+      ? parsed.attemptsExpireAt
+      : 0;
+    const failedAttempts = attemptsExpireAt && Number.isInteger(parsed?.failedAttempts)
+      ? Math.max(0, Math.min(MAX_FAILED_ATTEMPTS - 1, parsed.failedAttempts))
+      : 0;
+
+    return { failedAttempts, blockedUntil: 0 };
   } catch {
     return { failedAttempts: 0, blockedUntil: 0 };
   }
@@ -300,7 +309,11 @@ function writeThrottle(failedAttempts, blockedUntil) {
   safeStorageSet(
     "local",
     THROTTLE_STORAGE_KEY,
-    JSON.stringify({ failedAttempts, blockedUntil }),
+    JSON.stringify({
+      failedAttempts,
+      blockedUntil,
+      attemptsExpireAt: failedAttempts > 0 ? Date.now() + ATTEMPT_WINDOW_MS : 0,
+    }),
   );
 }
 
