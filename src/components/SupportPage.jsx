@@ -113,7 +113,7 @@ const contactDetails = {
   polizei: {
     title: "Polizei",
     role: "Notfall",
-    description: "Bei akuter Bedrohung, Gewalt oder einer Straftat.",
+    description: "Bei akuter Bedrohung, Gewalt oder einer unmittelbar gefährlichen Situation.",
     href: "tel:110",
     label: "110 anrufen",
     urgent: true,
