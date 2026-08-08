@@ -25,14 +25,17 @@ function parsePort(value, fallback) {
   return Number.isInteger(parsed) && parsed >= 1 && parsed <= 65_535 ? parsed : fallback;
 }
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, isPreview }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const apiPort = parsePort(process.env.API_PORT || env.API_PORT, 8787);
   const apiTarget = `http://127.0.0.1:${apiPort}`;
   const proxy = { "/api": apiTarget };
+  const plugins = [react()];
+
+  if (isPreview !== true) plugins.unshift(relaxCspForDevelopment());
 
   return {
-    plugins: [relaxCspForDevelopment(), react()],
+    plugins,
     server: {
       host: "127.0.0.1",
       port: 5173,
