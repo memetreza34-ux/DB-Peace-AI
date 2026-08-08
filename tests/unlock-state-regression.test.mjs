@@ -39,6 +39,26 @@ test("alte Teil-Fehlversuche verfallen statt unbegrenzt gespeichert zu bleiben",
   assert.match(lock, /failedAttempts > 0 \? Date\.now\(\) \+ ATTEMPT_WINDOW_MS : 0/);
 });
 
+test("bereits geöffneter Setup-Tab darf eine später eingerichtete PIN nicht überschreiben", () => {
+  const lock = read("src/components/AppLock.jsx");
+
+  assert.match(lock, /const \[mode, setMode\] = useState/);
+  assert.match(lock, /event\.key === LOCK_STORAGE_KEY/);
+  assert.match(lock, /function syncLockConfig\(\)/);
+  assert.match(lock, /if \(readLockConfig\(\)\) \{[\s\S]*?bereits eine lokale PIN eingerichtet/s);
+  assert.match(lock, /const verifier = await createVerifier\(pin, salt\);[\s\S]*?if \(readLockConfig\(\)\)/s);
+  assert.match(lock, /const storedConfig = readLockConfig\(\)/);
+  assert.match(lock, /storedConfig\.salt !== salt \|\| storedConfig\.verifier !== verifier/);
+});
+
+test("laufende PIN-Prüfung verwirft ein Ergebnis wenn die Konfiguration parallel geändert wurde", () => {
+  const lock = read("src/components/AppLock.jsx");
+
+  assert.match(lock, /const currentConfig = readLockConfig\(\)/);
+  assert.match(lock, /!sameLockConfig\(config, currentConfig\)/);
+  assert.match(lock, /function sameLockConfig\(left, right\)/);
+});
+
 test("PIN-Sperrbildschirm respektiert reduzierte Bewegung", () => {
   const lock = read("src/components/AppLock.jsx");
 
