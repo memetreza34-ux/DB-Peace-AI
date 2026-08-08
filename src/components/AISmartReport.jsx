@@ -186,7 +186,7 @@ function ReportField({ label, value, wide = false }) {
 
 function normalizeReport(report, sourceText) {
   return {
-    category: valueOrNotProvided(report.category, "Vorfall / Konflikt"),
+    category: valueOrNotProvided(report.category),
     description: valueOrNotProvided(report.description, sourceText),
     date: valueOrNotProvided(report.date),
     time: valueOrNotProvided(report.time),
