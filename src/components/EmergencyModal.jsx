@@ -59,7 +59,7 @@ export function EmergencyModal({ isOpen, onClose }) {
             <div className="mt-6 space-y-6">
               <section className="space-y-2">
                 <h3 className="text-sm font-black text-db-dark dark:text-white">Polizei bei akuter Bedrohung oder Gewalt</h3>
-                <p className="text-xs font-semibold text-db-rail dark:text-white/60">Wenn eine Straftat oder unmittelbare Gefahr besteht.</p>
+                <p className="text-xs font-semibold text-db-rail dark:text-white/60">Bei akuter Bedrohung, Gewalt oder einer unmittelbar gefährlichen Situation.</p>
                 <EmergencySlider phoneNumber="110" label="Wischen für Polizei 110" colorClass="bg-red-500" iconColor="text-red-600" />
               </section>
 
