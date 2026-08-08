@@ -24,9 +24,8 @@ const emptyEntry = {
   witnesses: "",
 };
 
-export function RecordAndReportView() {
+export function RecordAndReportView({ records, setRecords }) {
   const [subTab, setSubTab] = useState(null);
-  const [records, setRecords] = useState([]);
   const [draft, setDraft] = useState(emptyEntry);
   const [showForm, setShowForm] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
