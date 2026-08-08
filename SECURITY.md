@@ -35,6 +35,7 @@ Daraus folgt:
 - Das lokale Warten auf Gemini-Aufrufe ist auf 20 Sekunden begrenzt; der SDK-Request erhält beim Timeout ein `AbortSignal`, ohne eine sofortige Beendigung bereits laufender externer Verarbeitung zu garantieren.
 - API-Antworten erhalten `Cache-Control: no-store` und weitere Sicherheitsheader.
 - Der Service Worker schließt `/api/` ausdrücklich vom Cache aus und nutzt statische Caches nur als Offline-Fallback.
+- Im Entwicklungsmodus wird nur die Service-Worker-Registrierung des Root-Bereichs der App entfernt; fremde Registrierungen mit anderen Scopes derselben Origin werden nicht pauschal unregistriert. Cache-Bereinigung bleibt auf `db-peace-ai-*` begrenzt.
 - Chatverläufe werden nicht dauerhaft im Browser gespeichert.
 - Gedächtnisprotokolle bleiben während der laufenden App-Nutzung über interne Navigation hinweg im React-Arbeitsspeicher erhalten, werden aber nicht in `localStorage`, `sessionStorage` oder IndexedDB gespeichert.
 - Meldungs-, Projekt-, Stimmungs- und sonstige Entwürfe sind als temporär oder Demo gekennzeichnet; Stimmungseinträge verwenden nur den Browser-Sitzungsspeicher.
@@ -44,6 +45,9 @@ Daraus folgt:
 - Eine laufende PIN-Prüfung verwirft ihr Ergebnis, wenn sich die gespeicherte PIN-Konfiguration während der Berechnung geändert hat.
 - Die lokale PIN wird nicht im Klartext gespeichert; sie bleibt dennoch nur ein Sichtschutz.
 - „Schnell verlassen“ entfernt den Stimmungs-Sitzungsspeicher, leert Protokolle, setzt das Demo-Postfach zurück, schließt offene App-Zustände und sperrt die Oberfläche erneut, bevor die externe Tarnseite geöffnet wird. Dieser Schutz gilt auch im HR-Demo-Modus und verlässt sich nicht ausschließlich auf einen Browser-Unload.
+- „Schnell verlassen“ wird zusätzlich tabübergreifend signalisiert. Andere offene DB-Peace-Tabs löschen ihren eigenen Sitzungsspeicher, verwerfen ihren React-Zustand und sperren sich ebenfalls; BroadcastChannel und ein kurzlebiges `storage`-Signal dienen als gegenseitige Fallbacks.
+- Notrufhinweise für 110 sind auf akute Bedrohung, Gewalt oder unmittelbar gefährliche Situationen begrenzt und stellen nicht jede beliebige Straftat als Notrufgrund dar.
+- Lokaler Chat-Fallback und Gemini-Systemprompt unterscheiden aktuelle Gefahr von historischen Erwähnungen. Vergangene Drohung, Gewalt, Selbstverletzung oder Suizid werden nicht allein wegen eines Schlüsselworts automatisch als aktueller akuter Notfall dargestellt.
 - Notfallfunktionen übertragen keinen Standort und verwenden keine erfundenen internen Telefonnummern.
 - PDF-Ausgaben sind als Entwurf, Vorlage oder persönliche Lernnotiz gekennzeichnet.
 - Kritische Platzhalter und irreführende Produktbehauptungen werden durch `npm run verify` blockiert.
@@ -76,7 +80,8 @@ Gemini-Ausgaben können falsch, unvollständig oder unangemessen sein. Deshalb g
 - keine unnötigen Identifikationsdaten an den KI-Endpunkt senden
 - strukturierte Antworten validieren und begrenzen
 - lokale Fallbacks sichtbar kennzeichnen
-- bei Gewalt, akuter Gefahr oder Krise reale Hilfe priorisieren
+- aktuelle Gefahr und historische Schilderungen zeitlich auseinanderhalten; Schlüsselwörter allein dürfen keine Akutheit beweisen
+- bei tatsächlich gegenwärtiger Gewalt, unmittelbarer Gefahr oder akuter Krise reale Hilfe priorisieren
 - vor einem Pilotbetrieb Prompt-Injection, Datenabfluss, Halluzinationen und Missbrauch testen
 - Anbieter- und Datenverarbeitungsbedingungen unabhängig vom Anwendungscode prüfen
 
