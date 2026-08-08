@@ -1,14 +1,21 @@
 import React from "react";
 import { LogOut } from "lucide-react";
 
-export function PanicButton() {
+export function PanicButton({ onBeforeExit }) {
   function handleQuickExit() {
     try {
       sessionStorage.removeItem("db-peace-mood-session");
     } catch {
       // Der Seitenwechsel funktioniert auch, wenn Session Storage blockiert ist.
     }
-    window.location.replace("https://www.google.de/search?q=wetter");
+
+    onBeforeExit?.();
+
+    // Einen Task warten, damit React den gesperrten/geleerten Zustand auch dann committen kann,
+    // wenn eine installierte PWA die externe Seite nur als Out-of-scope-Browser überlagert.
+    window.setTimeout(() => {
+      window.location.replace("https://www.google.de/search?q=wetter");
+    }, 0);
   }
 
   return (
