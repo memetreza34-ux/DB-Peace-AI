@@ -59,6 +59,13 @@ test("fehlende KI-Kategorie bleibt server- und clientseitig Nicht angegeben", ()
   assert.doesNotMatch(smartReport, /category:\s*valueOrNotProvided\(report\.category,\s*"Vorfall \/ Konflikt"\)/);
 });
 
+test("KI darf akut nur bei eindeutig aktueller unmittelbarer Gefahr verwenden", () => {
+  assert.match(server, /Setze urgency nur dann auf akut, wenn der Text eindeutig eine gegenwärtige und unmittelbare Gefahr beschreibt/);
+  assert.match(server, /Vergangene Drohungen oder Gewalt ohne klar aktuelle unmittelbare Gefahr dürfen höchstens hoch sein/);
+  assert.match(server, /Wenn der zeitliche Gefahrenstatus unklar ist, verwende nicht akut/);
+  assert.doesNotMatch(server, /Bei Drohung, Gewalt oder unmittelbarer Gefahr urgency auf hoch oder akut setzen/);
+});
+
 test("ungültige KI-Dringlichkeit fällt serverseitig nicht auf mittel zurück", () => {
   const normalizer = server.match(/function normalizeUrgency\(value\) \{[\s\S]*?\n\}/)?.[0] || "";
   assert.match(normalizer, /"Nicht angegeben"/);
