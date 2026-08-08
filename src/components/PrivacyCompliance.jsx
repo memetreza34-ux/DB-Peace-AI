@@ -15,7 +15,7 @@ import {
 
 const implementedControls = [
   ["Prototyp-Hinweis", "Die Oberfläche weist sichtbar darauf hin, dass keine echten Personen- oder Falldaten eingegeben werden sollen.", BadgeCheck],
-  ["Temporäre Eingaben", "Chat, Stimmung und Protokolle werden im aktuellen MVP nicht dauerhaft in einer eigenen serverseitigen DB-Peace-Datenbank gespeichert.", EyeOff],
+  ["Temporäre Eingaben", "Chat und Gedächtnisprotokolle liegen nur im React-Arbeitsspeicher der laufenden App; Protokolle überstehen interne Navigation. Stimmungseinträge verwenden ausschließlich sessionStorage. Keiner dieser Inhalte wird in einer eigenen serverseitigen DB-Peace-Falldatenbank gespeichert.", EyeOff],
   ["Externe KI-Verarbeitung", "Wenn ein Gemini-Schlüssel konfiguriert ist, werden Chat- und Meldeanalyse-Texte über den lokalen Node-Proxy an Google Gemini übertragen, damit eine Modellantwort erzeugt werden kann. Deshalb dürfen hier keine realen sensiblen Falldaten eingegeben werden.", Server],
   ["Lokaler Sichtschutz", "Die selbst gewählte PIN schützt die Ansicht im Browser, ist aber ausdrücklich keine Datenverschlüsselung.", LockKeyhole],
   ["Kein API-Cache", "Der Service Worker speichert keine Antworten aus /api/ im Offline-Cache.", Server],
@@ -167,7 +167,7 @@ function BoundaryColumn({ allowed = false, items, title }) {
           </p>
         ))}
       </div>
-    </div>
+    </Section>
   );
 }
 
@@ -175,7 +175,7 @@ function PlanningChecklist({ checked, toggle }) {
   return (
     <Section
       title="Interaktive Planungscheckliste"
-      text="Die Häkchen gelten nur in dieser Browser-Sitzung und sind kein Nachweis einer erfolgten Freigabe. Standardmäßig ist deshalb nichts als erledigt markiert."
+      text="Die Häkchen existieren nur im React-Zustand dieser geöffneten Datenschutzansicht. Ein Bereichswechsel oder Neuladen setzt sie zurück; sie sind kein Nachweis einer erfolgten Freigabe. Standardmäßig ist deshalb nichts als erledigt markiert."
     >
       <div className="grid gap-3 md:grid-cols-2">
         {checklistItems.map((item) => (
