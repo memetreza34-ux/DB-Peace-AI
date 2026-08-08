@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, FlaskConical, WifiOff } from "lucide-react";
 import { AppLock } from "./components/AppLock.jsx";
@@ -22,6 +22,9 @@ import { SSOLoginModal } from "./components/SSOLoginModal.jsx";
 import SupportPage from "./components/SupportPage.jsx";
 import { resetTickets } from "./data/mockTickets.js";
 
+const QUICK_EXIT_CHANNEL = "db-peace-quick-exit";
+const QUICK_EXIT_STORAGE_KEY = "db-peace-quick-exit-signal";
+
 const pageVariants = {
   initial: { opacity: 0, y: 12 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.25, ease: "easeOut" } },
@@ -30,6 +33,7 @@ const pageVariants = {
 
 export default function App() {
   const reduceMotion = useReducedMotion();
+  const quickExitChannelRef = useRef(null);
   const [activeTab, setActiveTab] = useState("home");
   const [isEmergencyOpen, setIsEmergencyOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -50,7 +54,35 @@ export default function App() {
     };
   }, []);
 
-  function prepareQuickExit() {
+  useEffect(() => {
+    const channel = typeof BroadcastChannel === "function" ? new BroadcastChannel(QUICK_EXIT_CHANNEL) : null;
+    quickExitChannelRef.current = channel;
+
+    function handleChannelMessage(event) {
+      if (event.data?.type === "quick-exit") performQuickExitCleanup();
+    }
+
+    function handleStorage(event) {
+      if (event.key === QUICK_EXIT_STORAGE_KEY && event.newValue) performQuickExitCleanup();
+    }
+
+    channel?.addEventListener("message", handleChannelMessage);
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      channel?.removeEventListener("message", handleChannelMessage);
+      channel?.close();
+      if (quickExitChannelRef.current === channel) quickExitChannelRef.current = null;
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
+
+  function performQuickExitCleanup() {
+    try {
+      sessionStorage.removeItem("db-peace-mood-session");
+    } catch {
+      // Die übrige Zustandsbereinigung funktioniert auch bei blockiertem Sitzungsspeicher.
+    }
     setRecords([]);
     resetTickets();
     setIsEmergencyOpen(false);
@@ -59,6 +91,24 @@ export default function App() {
     setIsHRMode(false);
     setActiveTab("home");
     setIsLocked(true);
+  }
+
+  function prepareQuickExit() {
+    performQuickExitCleanup();
+
+    try {
+      quickExitChannelRef.current?.postMessage({ type: "quick-exit" });
+    } catch {
+      // localStorage-Signal bleibt als Fallback verfügbar.
+    }
+
+    try {
+      const signal = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      localStorage.setItem(QUICK_EXIT_STORAGE_KEY, signal);
+      localStorage.removeItem(QUICK_EXIT_STORAGE_KEY);
+    } catch {
+      // Der aktuelle Tab wurde bereits bereinigt; andere Tabs können bei blockiertem Speicher ggf. nur BroadcastChannel empfangen.
+    }
   }
 
   if (isLocked) return <AppLock onUnlock={() => setIsLocked(false)} />;
