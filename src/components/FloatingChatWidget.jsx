@@ -262,7 +262,7 @@ function createLocalOrientation(text) {
   const value = text.toLowerCase();
 
   if (["suizid", "selbstmord", "umbringen", "selbst verletzen", "nicht mehr leben"].some((word) => value.includes(word))) {
-    return "Das klingt nach einer akuten Krise. Bitte bleib nicht allein und wende dich jetzt an eine anwesende Vertrauensperson oder reale Notfallhilfe. Bei unmittelbarer Gefahr rufe 112 an. Dieser Chat kann keine Krisenhilfe ersetzen.";
+    return "Wenn es um dich oder jemand anderen aktuell geht und Selbstverletzung oder Suizid eine Rolle spielt, hole jetzt reale Unterstützung und bleib damit nicht allein. Bei unmittelbarer Gefahr rufe 112. Wenn du über einen vergangenen Vorfall sprichst, bedeutet die Erwähnung allein nicht automatisch eine aktuelle Krise; beschreibe ohne Klarnamen, ob gerade Gefahr besteht. Dieser Chat ersetzt keine Krisenhilfe.";
   }
 
   if (["gewalt", "bedroht", "drohung", "schlagen", "messer", "waffe"].some((word) => value.includes(word))) {
