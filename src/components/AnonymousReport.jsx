@@ -166,7 +166,7 @@ export default function AnonymousReport() {
           <SafetyCard analysis={analysis} />
           <div className="rounded-xl border border-db-dark/10 bg-white p-4 text-xs font-semibold leading-5 text-db-rail shadow-sm dark:border-white/10 dark:bg-db-dark/50 dark:text-white/60">
             <strong className="block text-db-dark dark:text-white">Wichtig</strong>
-            Die Einstufung ist nur lokale Schlüsselwort- und Auswahl-Logik. Menschen müssen den Sachverhalt prüfen.
+            Die Einstufung ist nur lokale Auswahl- und Hinweislogik. Die ausdrückliche Angabe zur aktuellen Gefahr hat Vorrang; Menschen müssen den Sachverhalt prüfen.
           </div>
         </aside>
 
@@ -425,9 +425,15 @@ function createLocalAnalysis(form) {
   }
 
   const text = `${form.context} ${form.description}`.toLowerCase();
-  const acute = form.danger === "Direkte Gefahr" || ["waffe", "messer", "schuss", "akute gefahr"].some((word) => text.includes(word));
-  const high = form.danger === "Eskalation möglich" || ["drohung", "bedroht", "gewalt", "schlagen", "angst"].some((word) => text.includes(word));
-  const medium = form.danger === "Unsicher" || Number(form.stress) >= 4 || form.repetition === "Regelmäßig" || form.repetition === "Schon länger" || ["mobbing", "diskrimin", "rassistisch", "ausgeschlossen"].some((word) => text.includes(word));
+  const explicitNoAcuteDanger = form.danger === "Keine akute Gefahr";
+  const acute = form.danger === "Direkte Gefahr";
+  const high = form.danger === "Eskalation möglich"
+    || (!explicitNoAcuteDanger && ["waffe", "messer", "schuss", "akute gefahr", "drohung", "bedroht", "gewalt", "schlagen"].some((word) => text.includes(word)));
+  const medium = form.danger === "Unsicher"
+    || Number(form.stress) >= 4
+    || form.repetition === "Regelmäßig"
+    || form.repetition === "Schon länger"
+    || ["mobbing", "diskrimin", "rassistisch", "ausgeschlossen", "angst"].some((word) => text.includes(word));
   const urgency = acute ? "akut" : high ? "hoch" : medium ? "mittel" : "niedrig";
   const nextStep = urgency === "akut"
     ? "Sicherheit zuerst: Verlasse wenn möglich die Gefahrenzone und hole sofort reale Hilfe über 110 oder 112. Erstelle den Entwurf erst, wenn du sicher bist."
