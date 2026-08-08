@@ -21,15 +21,20 @@ Dieses Dokument fasst den technischen Langzeit-Audit des aktuellen Stabilisierun
 - KI-Status korrigiert: vorhandener API-Key bedeutet nur „konfiguriert“, erst eine erfolgreiche Antwort bestätigt die tatsächliche Erreichbarkeit
 - KI-Quiz auf allgemeine Sicherheits-, Dokumentations- und Orientierungsfragen begrenzt; konkrete generierte Rechtsauslegungen sind ausgeschlossen
 - Produktions-Error-Boundary zeigt keine rohe interne Exception mehr
-- Produktions-CSP erlaubt keine Inline-Skripte und keine ungenutzten Google-Font-Ursprünge; nur der lokale Vite-Serve-Modus erhält für React Refresh eine eng begrenzte Inline-Script-Ausnahme
+- Produktions-CSP erlaubt keine Inline-Skripte, Vite-HMR-WebSockets oder ungenutzten Google-Font-Ursprünge; nur der lokale Vite-Serve-Modus erhält die eng begrenzten React-Refresh-/HMR-Ausnahmen, nicht `vite preview`
 - lokale Gefahreneinschätzung korrigiert: `akut` entsteht nur durch die bewusste Auswahl `Direkte Gefahr`; historische Begriffe überschreiben `Keine akute Gefahr` nicht mehr
+- fehlende KI-Kategorie bleibt `Nicht angegeben`; der KI-Report darf `akut` nur bei eindeutig gegenwärtiger unmittelbarer Gefahr verwenden
 
 ### PIN und Sitzungszustand
 
 - direkten PIN-Zurücksetzen-Knopf auf dem Sperrbildschirm entfernt, weil er den Sichtschutz ohne alte PIN umgehen konnte
 - Fehlversuchs-Drosselung tabübergreifend in `localStorage` gehalten und per `storage`-Ereignis synchronisiert; ein Reload oder neuer Tab setzt die kurze Sperre nicht zurück
 - aktueller Drosselungszustand wird vor der PIN-Prüfung erneut gelesen, damit ein anderer Tab eine aktive Sperre nicht leicht umgehen kann
+- alte Teil-Fehlversuche verfallen nach einem begrenzten Fünf-Minuten-Fenster statt unbegrenzt im lokalen Speicher zu verbleiben
 - Entsperrstatus vollständig aus Browser-Speicher entfernt; Reload oder neuer/duplizierter Tab erfordern erneut die PIN
+- ein bereits vor der ersten PIN-Einrichtung geöffneter zweiter Tab beobachtet Änderungen der PIN-Konfiguration und wechselt bei paralleler Einrichtung aus dem Setup- in den Entsperrmodus
+- die PIN-Ersteinrichtung prüft vor und nach der PBKDF2-Berechnung sowie nach dem Speichern erneut die aktuelle Konfiguration, damit ein veralteter Setup-Tab eine inzwischen eingerichtete PIN nicht normal überschreibt
+- laufende PIN-Prüfungen vergleichen die vor und nach PBKDF2 gelesene Konfiguration und verwerfen das Ergebnis, wenn sich Salt oder Verifier parallel geändert haben
 - PIN-Sperrbildschirm respektiert reduzierte Bewegung
 - Chat-, Quiz- und Report-Requests gegen veraltete Antworten nach Löschen, Schließen oder Unmount abgesichert
 - React-StrictMode-Lifecycle der KI-Meldungsanalyse korrigiert: `isMountedRef` wird bei jedem Effect-Setup erneut aktiviert und kann im Entwicklungsmodus nicht dauerhaft auf `false` hängen bleiben
@@ -60,7 +65,9 @@ Dieses Dokument fasst den technischen Langzeit-Audit des aktuellen Stabilisierun
 - unvollständige ARIA-Tab-Widgets in Profil, HR-Demo und Kursdetail durch korrekt angekündigte Umschaltbuttons ersetzt
 - Notrufsteuerung per Tastatur bedienbar gemacht
 - Schnell-Verlassen-Schaltfläche über die Dialogebene gehoben, damit sie auch bei geöffneten Overlays per Zeiger erreichbar bleibt
-- reduzierte Bewegung auf Startseite, Chat, App-Seitenwechsel und PIN-Sperrbildschirm ausgeweitet
+- Schnell-Verlassen ist auch im HR-Demo-Modus verfügbar und leert Protokolle, Stimmung, veränderte Demo-Tickets und offene App-Zustände, bevor die Oberfläche erneut gesperrt und die externe Tarnseite geöffnet wird
+- Schnellausstieg verlässt sich nicht mehr ausschließlich auf einen vollständigen Browser-Unload; damit bleibt der temporäre Zustand auch dann nicht offen sichtbar, wenn eine installierte PWA eine externe Out-of-scope-Seite separat darstellt
+- globale Framer-Motion-Konfiguration, CSS-Regeln und gezielte Komponenten berücksichtigen die Betriebssystemoption für reduzierte Bewegung
 - Fokusmarkierungen und Statusmeldungen ergänzt
 - lange PDF-Ausgaben paginiert und Exportfehler in den gehärteten Exportpfaden sichtbar behandelt
 
@@ -70,6 +77,7 @@ Dieses Dokument fasst den technischen Langzeit-Audit des aktuellen Stabilisierun
 - bestätigten unreferenzierten JavaScript-Altcode entfernt
 - Importgraph-Test ergänzt: jede JavaScript-Laufzeitdatei unter `src/` muss vom Einstiegspunkt `src/main.jsx` erreichbar sein
 - Repository-Verifier und Node-Regressionstests um PIN-, PWA-, KI-, StrictMode-, CSP-, Rechts-, Kurs-, Dialog-, CI-, Gefahren-, Navigationszustands- und Datenwahrheitsregeln erweitert
+- zusätzliche Regressionstests sichern die tabübergreifende PIN-Konfiguration, das Verwerfen parallel veralteter PIN-Prüfungen sowie das Leeren und erneute Sperren vor dem PWA-Schnellausstieg
 - GitHub-Actions-Workflow in getrennte Schritte für Installation, Verifier, Tests und Production-Build aufgeteilt
 - Workflow verwendet aktuelle `actions/checkout@v7`- und `actions/setup-node@v7`-Majors; Checkout-Credentials werden nicht persistent gespeichert
 - Workflow arbeitet mit minimaler `contents: read`-Berechtigung, Concurrency-Abbruch und 10-Minuten-Joblimit
@@ -94,10 +102,10 @@ Die Node-Tests prüfen unter anderem:
 - PWA-Manifest, Cache-Namensraum und Network-first-Auslieferung
 - Produktions-CSP und die ausschließlich lokale Vite-Dev-Ausnahme
 - Dialogsteuerung, Umschalter-Semantik und Request-Abbruch
-- PIN-Bypass, nicht persistierten Entsperrstatus, tabübergreifende Fehlversuchs-Drosselung und reduzierte Bewegung
+- PIN-Bypass, nicht persistierten Entsperrstatus, tabübergreifende Fehlversuchs-Drosselung, veraltete Setup-Tabs, parallel geänderte PIN-Konfiguration und reduzierte Bewegung
 - kuratierten Rechtsdatensatz und amtliche Quellen-URLs
 - ausschließlich fiktiven Lernkatalog
-- Gefahreneinstufung, Demo-Antwort-Fallwechsel, Protokollzustand über interne Navigation, Demo-Reset, Schnell-Verlassen-Layering, CI-Konfiguration und Prozess-Shutdown
+- Gefahreneinstufung, Demo-Antwort-Fallwechsel, Protokollzustand über interne Navigation, Demo-Reset, Quick-Exit-Zustandsbereinigung, Schnell-Verlassen-Layering, CI-Konfiguration und Prozess-Shutdown
 
 ## Noch nicht nachgewiesen
 
