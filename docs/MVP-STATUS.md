@@ -1,6 +1,6 @@
 # DB Peace AI — MVP-Status
 
-Stand: 7. August 2026  
+Stand: 8. August 2026  
 Branch: `agent/mvp-stabilization`  
 Integration: Draft Pull Request #1  
 Pilot-Roadmap: GitHub Issue #2  
@@ -17,15 +17,16 @@ Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. 
 - React-19-Frontend mit Vite und Tailwind CSS
 - responsive Navigation, globale Suche und Dark Mode
 - reduzierte Bewegung wird in zentralen animierten Oberflächen berücksichtigt
-- lokale vierstellige Sichtschutz-PIN mit PBKDF2-Prüfwert; kein In-App-Bypass, Fehlversuche werden innerhalb der Browser-Sitzung gedrosselt
+- lokale vierstellige Sichtschutz-PIN mit PBKDF2-Prüfwert; kein In-App-Bypass, Fehlversuche und kurze Sperrzeiten werden tabübergreifend gedrosselt
 - Node.js-API-Proxy auf `127.0.0.1`
 - Gemini-Chat mit klar gekennzeichnetem lokalem Fallback
 - KI-Status unterscheidet einen konfigurierten Schlüssel von einer tatsächlich erfolgreichen Gemini-Antwort
-- externe Gemini-Aufrufe besitzen ein serverseitiges 20-Sekunden-Limit
+- lokales Warten auf Gemini-Aufrufe wird nach 20 Sekunden begrenzt; ein SDK-Abort garantiert keine sofortige Beendigung externer Verarbeitung
 - Gemini-Endpunkt zur Strukturierung eines Meldungsentwurfs
 - KI-Quiz mit validierter Ausgabe, begrenztem Themenumfang und lokalem Fragenset als Fallback
 - Meldungsentwurf mit Formularvalidierung, Kopierfunktion und PDF-Export
-- Gedächtnisprotokolle und Stimmungseinträge nur für die aktuelle Sitzung
+- Gedächtnisprotokolle bleiben während der laufenden App-Nutzung über interne Navigation hinweg im React-Arbeitsspeicher erhalten und werden nicht dauerhaft im Browser gespeichert
+- Stimmungseinträge bleiben im Browser-Sitzungsspeicher
 - statische Szenario-Übung ohne KI, Punktzahl, Prozentwert oder Zertifikat
 - kuratierte Rechteorientierung mit vorsichtigen Paraphrasen und amtlichen Einzelnorm-Links
 - geprüfte externe Hilfsnummern und interne Suchhinweise
@@ -40,7 +41,7 @@ Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. 
 
 - HR-Dashboard und Postfach enthalten ausschließlich fiktive Fälle
 - Analytics und Kostenrechner verwenden erfundene beziehungsweise frei veränderbare Szenarioannahmen
-- Projektideen sind Beispiele oder Sitzungsentwürfe und werden nicht veröffentlicht
+- Projektideen sind Beispiele oder lokale Bereichsentwürfe und werden nicht veröffentlicht
 - der Lernkatalog enthält ausschließlich fiktive Anbieter und fiktive Angebote
 - In-App-Training ist kein externer Kurs und erzeugt nur eine persönliche Lernnotiz
 - Bildungszeit-Funktion erstellt nur eine neutrale Prüfanfrage
@@ -51,7 +52,10 @@ Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. 
 
 - historischer Backup-Code und unreferenzierte Quellaltlasten
 - direkter PIN-Zurücksetzen-Knopf auf dem Sperrbildschirm
-- reload-umgehbare Fehlversuchspause der PIN
+- reload- und tab-umgehbare Fehlversuchspause der PIN
+- Antwortentwürfe im Demo-Postfach, die beim Fallwechsel dem falschen Fall zugeordnet werden konnten
+- Gedächtnisprotokolle, die bereits bei normaler interner Navigation verloren gingen
+- lokale Gefahrenlogik, die historische Gefahrbegriffe trotz ausdrücklicher Auswahl „Keine akute Gefahr“ als akut einstufen konnte
 - Prozent-/Punktbewertung im statischen Training
 - Service-Worker-Bereinigung fremder Origin-Caches
 - ungeprüfter Rechtsdatensatz mit absoluten oder falschen Handlungs- und Sanktionsbehauptungen
