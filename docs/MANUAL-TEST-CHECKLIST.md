@@ -31,6 +31,9 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Ein Neuladen während der Sperrzeit hebt die Fehlversuchs-Pause nicht auf.
 - [ ] Während einer aktiven Fehlversuchs-Pause zeigt auch ein weiterer Tab derselben App die Sperre; ein neuer Tab setzt Versuchszähler oder Sperrzeit nicht zurück.
 - [ ] Fehlversuche in zwei parallel geöffneten Tabs werden auf denselben tabübergreifenden Drosselungszustand angerechnet.
+- [ ] Zwei Tabs öffnen, bevor überhaupt eine PIN existiert. In Tab A eine PIN fertig einrichten: Tab B wechselt anschließend aus dem Einrichtungsmodus in den Entsperrmodus und kann die PIN aus Tab A nicht durch eine eigene Einrichtung überschreiben.
+- [ ] In Tab B bereits die erste PIN-Eingabe/Bestätigung beginnen, während Tab A die Ersteinrichtung abschließt: Tab B verwirft seinen veralteten Einrichtungszustand und verlangt die aktuell gespeicherte PIN.
+- [ ] Eine während einer laufenden PIN-Prüfung in einem zweiten Tab geänderte PIN-Konfiguration führt nicht dazu, dass das Ergebnis der alten Prüfung zum Entsperren verwendet wird.
 - [ ] Mit aktivierter Betriebssystemoption „Bewegung reduzieren“ erscheint der PIN-Sperrbildschirm ohne Einblend-/Verschiebungsanimation.
 - [ ] Auf dem Sperrbildschirm existiert kein Knopf, der die eingerichtete PIN ohne Kenntnis der alten PIN löscht.
 - [ ] Bei vergessener PIN verweist die Oberfläche nur auf das manuelle Löschen der Website-Daten im Browser.
@@ -51,6 +54,9 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Notrufsteuerung ist auch per Tastatur bedienbar.
 - [ ] Oberfläche erklärt, dass kein Standort übertragen wird.
 - [ ] „Schnell verlassen“ bleibt auch über geöffneten Dialogen sichtbar und per Zeiger anklickbar.
+- [ ] „Schnell verlassen“ ist auch innerhalb der HR-Demo verfügbar.
+- [ ] Vor „Schnell verlassen“ einen synthetischen Protokolleintrag, einen Stimmungseintrag und eine veränderte Demo-Postfachantwort anlegen. Nach Rückkehr zur App ist sie erneut gesperrt; Protokoll und Stimmung sind entfernt und das Demo-Postfach ist auf die Ausgangsdaten zurückgesetzt.
+- [ ] Falls die App als PWA installiert ist: denselben Schnellausstieg aus dem Standalone-Fenster testen. Auch wenn die externe Tarnseite nur in einem Out-of-scope-/In-App-Browser erscheint, bleibt die dahinterliegende App gesperrt und der temporäre Zustand ist geleert.
 - [ ] Kontaktseite enthält keine erfundene interne DB-Telefonnummer.
 - [ ] 116 123, 116 016 und 0800 546 546 5 werden korrekt angezeigt.
 - [ ] Links zu offiziellen externen Anbieterseiten öffnen in einem neuen Tab.
