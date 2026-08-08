@@ -1,6 +1,6 @@
 # DB Peace AI — Audit-Ergebnisse
 
-Stand: 7. August 2026  
+Stand: 8. August 2026  
 Branch: `agent/mvp-stabilization`  
 Integration: Draft Pull Request #1
 
@@ -15,21 +15,27 @@ Dieses Dokument fasst den technischen Langzeit-Audit des aktuellen Stabilisierun
 - lokaler Gemini-Proxy mit Größenlimits, strenger Content-Type-Prüfung, Sicherheitsheadern, Rate Limiting und kontrolliertem Shutdown gehärtet
 - fremde Browser-Origin- und Cross-Site-Anfragen an den lokalen API-Proxy werden abgewiesen
 - kostenträchtiges KI-Quiz von einfachem GET auf `POST /api/quiz` mit JSON umgestellt
-- externe KI-Aufrufe durch ein serverseitiges 20-Sekunden-Limit begrenzt; beim Timeout wird zusätzlich der lokale SDK-Request per `AbortSignal` abgebrochen und kontrolliert als 504 behandelt
+- lokales Warten auf externe KI-Aufrufe auf 20 Sekunden begrenzt; beim Timeout wird zusätzlich der lokale SDK-Request per `AbortSignal` abgebrochen und kontrolliert als 504 behandelt
+- dokumentiert, dass der SDK-Abbruch keine Garantie für eine sofortige Beendigung bereits laufender externer Verarbeitung oder möglicher Nutzungskosten ist
 - der Abort-Pfad erhält Systemanweisung, Temperatur und Tokenlimit explizit bei, statt die Chat-Konfiguration versehentlich zu verlieren
 - KI-Status korrigiert: vorhandener API-Key bedeutet nur „konfiguriert“, erst eine erfolgreiche Antwort bestätigt die tatsächliche Erreichbarkeit
 - KI-Quiz auf allgemeine Sicherheits-, Dokumentations- und Orientierungsfragen begrenzt; konkrete generierte Rechtsauslegungen sind ausgeschlossen
 - Produktions-Error-Boundary zeigt keine rohe interne Exception mehr
 - Produktions-CSP erlaubt keine Inline-Skripte und keine ungenutzten Google-Font-Ursprünge; nur der lokale Vite-Serve-Modus erhält für React Refresh eine eng begrenzte Inline-Script-Ausnahme
+- lokale Gefahreneinschätzung korrigiert: `akut` entsteht nur durch die bewusste Auswahl `Direkte Gefahr`; historische Begriffe überschreiben `Keine akute Gefahr` nicht mehr
 
 ### PIN und Sitzungszustand
 
 - direkten PIN-Zurücksetzen-Knopf auf dem Sperrbildschirm entfernt, weil er den Sichtschutz ohne alte PIN umgehen konnte
-- Fehlversuchs-Drosselung in der Browser-Sitzung gespeichert, sodass ein Reload die kurze Sperrzeit nicht aufhebt
+- Fehlversuchs-Drosselung tabübergreifend in `localStorage` gehalten und per `storage`-Ereignis synchronisiert; ein Reload oder neuer Tab setzt die kurze Sperre nicht zurück
+- aktueller Drosselungszustand wird vor der PIN-Prüfung erneut gelesen, damit ein anderer Tab eine aktive Sperre nicht leicht umgehen kann
 - Entsperrstatus vollständig aus Browser-Speicher entfernt; Reload oder neuer/duplizierter Tab erfordern erneut die PIN
+- PIN-Sperrbildschirm respektiert reduzierte Bewegung
 - Chat-, Quiz- und Report-Requests gegen veraltete Antworten nach Löschen, Schließen oder Unmount abgesichert
 - React-StrictMode-Lifecycle der KI-Meldungsanalyse korrigiert: `isMountedRef` wird bei jedem Effect-Setup erneut aktiviert und kann im Entwicklungsmodus nicht dauerhaft auf `false` hängen bleiben
-- Meldungsassistent, Gedächtnisprotokolle, Demo-Postfach, Kursfortschritt, Freistellungsanfrage und Ideenbereich zuverlässig zurücksetzbar gemacht
+- Gedächtnisprotokolle auf App-Ebene gehoben: Sie überstehen interne Navigation im React-Arbeitsspeicher, werden aber nicht dauerhaft in Browser-Speicher geschrieben
+- Demo-Postfach löscht einen angefangenen Antworttext beim Wechsel des ausgewählten Falls und verhindert damit eine versehentliche Zuordnung zum falschen Demofall
+- Meldungsassistent, Demo-Postfach, Kursfortschritt, Freistellungsanfrage und Ideenbereich zuverlässig zurücksetzbar gemacht
 - stabilere Sitzungs- und Nachrichten-IDs eingeführt
 
 ### Rechts- und Lerninhalte
@@ -49,12 +55,12 @@ Dieses Dokument fasst den technischen Langzeit-Audit des aktuellen Stabilisierun
 
 - Service Worker auf Produktionsbetrieb begrenzt; `/api/` wird nicht gecacht
 - Service Worker löscht beim Aktivieren nur eigene alte Caches mit Präfix `db-peace-ai-`
-- statische Assets werden bei vorhandener Verbindung jetzt wirklich Network-first ausgeliefert; der Cache ist nur Offline-Fallback und keine absichtlich veraltete erste Antwort mehr
+- statische Assets werden bei vorhandener Verbindung Network-first ausgeliefert; der Cache ist nur Offline-Fallback
 - kritische Dialoge mit Escape, Fokusfalle, Fokus-Rückgabe und Scroll-Sperre ausgestattet; auch das Gedächtnisprotokoll-Detailfenster nutzt die gemeinsame Dialogsteuerung
 - unvollständige ARIA-Tab-Widgets in Profil, HR-Demo und Kursdetail durch korrekt angekündigte Umschaltbuttons ersetzt
 - Notrufsteuerung per Tastatur bedienbar gemacht
 - Schnell-Verlassen-Schaltfläche über die Dialogebene gehoben, damit sie auch bei geöffneten Overlays per Zeiger erreichbar bleibt
-- reduzierte Bewegung auf Startseite, Chat und App-Seitenwechsel ausgeweitet
+- reduzierte Bewegung auf Startseite, Chat, App-Seitenwechsel und PIN-Sperrbildschirm ausgeweitet
 - Fokusmarkierungen und Statusmeldungen ergänzt
 - lange PDF-Ausgaben paginiert und Exportfehler in den gehärteten Exportpfaden sichtbar behandelt
 
@@ -63,7 +69,7 @@ Dieses Dokument fasst den technischen Langzeit-Audit des aktuellen Stabilisierun
 - historische Backup-Verzeichnisse entfernt
 - bestätigten unreferenzierten JavaScript-Altcode entfernt
 - Importgraph-Test ergänzt: jede JavaScript-Laufzeitdatei unter `src/` muss vom Einstiegspunkt `src/main.jsx` erreichbar sein
-- Repository-Verifier und Node-Regressionstests um PIN-, PWA-, KI-, StrictMode-, CSP-, Rechts-, Kurs-, Dialog-, CI- und Datenwahrheitsregeln erweitert
+- Repository-Verifier und Node-Regressionstests um PIN-, PWA-, KI-, StrictMode-, CSP-, Rechts-, Kurs-, Dialog-, CI-, Gefahren-, Navigationszustands- und Datenwahrheitsregeln erweitert
 - GitHub-Actions-Workflow in getrennte Schritte für Installation, Verifier, Tests und Production-Build aufgeteilt
 - Workflow verwendet aktuelle `actions/checkout@v7`- und `actions/setup-node@v7`-Majors; Checkout-Credentials werden nicht persistent gespeichert
 - Workflow arbeitet mit minimaler `contents: read`-Berechtigung, Concurrency-Abbruch und 10-Minuten-Joblimit
@@ -88,10 +94,10 @@ Die Node-Tests prüfen unter anderem:
 - PWA-Manifest, Cache-Namensraum und Network-first-Auslieferung
 - Produktions-CSP und die ausschließlich lokale Vite-Dev-Ausnahme
 - Dialogsteuerung, Umschalter-Semantik und Request-Abbruch
-- PIN-Bypass, nicht persistierten Entsperrstatus und Fehlversuchs-Drosselung
+- PIN-Bypass, nicht persistierten Entsperrstatus, tabübergreifende Fehlversuchs-Drosselung und reduzierte Bewegung
 - kuratierten Rechtsdatensatz und amtliche Quellen-URLs
 - ausschließlich fiktiven Lernkatalog
-- Demo-Reset, Schnell-Verlassen-Layering, CI-Konfiguration und Prozess-Shutdown
+- Gefahreneinstufung, Demo-Antwort-Fallwechsel, Protokollzustand über interne Navigation, Demo-Reset, Schnell-Verlassen-Layering, CI-Konfiguration und Prozess-Shutdown
 
 ## Noch nicht nachgewiesen
 
@@ -103,11 +109,11 @@ Die Node-Tests prüfen unter anderem:
 
 ## GitHub-Actions-Status
 
-Bei im Audit geprüften Branch-Ständen wurden GitHub-Actions-Läufe erzeugt, deren Jobs keinen Runner starteten: Es gab keine ausgeführten Steps und `runner_id` blieb `0`. Damit wurden weder Checkout noch `npm ci`, Verifier, Tests oder Build ausgeführt.
+Bei den im Audit geprüften Branch-Ständen wurden GitHub-Actions-Läufe erzeugt, deren Jobs keinen Runner starteten: Es gab keine ausgeführten Steps und `runner_id` blieb `0`. Damit wurden weder Checkout noch `npm ci`, Verifier, Tests oder Build ausgeführt. Die Check-Annotations nannten ausdrücklich fehlgeschlagene Kontozahlungen beziehungsweise ein zu niedriges Spending-Limit als Ursache.
 
-Für den zuletzt vor dieser Dokumentationsaktualisierung geprüften Head `e5cac95957c40fb8869ad13db3f48cb706960214` lief Actions Run `31207792315`; auch dort blieb `steps: []` und `runner_id: 0`. Frühere Check-Annotations nannten ausdrücklich fehlgeschlagene Kontozahlungen beziehungsweise ein zu niedriges Spending-Limit als Ursache.
+Dieses Dokument nennt bewusst keine „finale“ Commit-SHA: Jede Aktualisierung dieser Datei erzeugt selbst einen neuen Commit. Der exakte aktuelle Head und sein zugehöriger Actions-Lauf werden deshalb in Draft PR #1 dokumentiert und müssen unmittelbar vor einer Freigabe erneut geprüft werden.
 
-Ein solcher Lauf ist kein bestandener Test, aber auch kein nachgewiesener Code- oder Buildfehler. Nach Abschluss aller Änderungen muss der Actions-Status für den **dann exakten finalen Head** erneut geprüft werden.
+Ein vor Runner-Start blockierter Lauf ist kein bestandener Test, aber auch kein nachgewiesener Code- oder Buildfehler.
 
 ## Bewusst offen
 
