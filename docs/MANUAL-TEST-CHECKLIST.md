@@ -50,12 +50,15 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 ## 3. Notfall und Kontakte
 
 - [ ] Notfallmodal zeigt 110 und 112 korrekt.
+- [ ] 110 wird nur für akute Bedrohung, Gewalt oder unmittelbar gefährliche Situationen beschrieben; eine vergangene oder nicht dringende Straftat wird nicht pauschal als Grund für den Notruf dargestellt.
 - [ ] Vor einem Anruf erfolgt eine klare Bestätigung.
 - [ ] Notrufsteuerung ist auch per Tastatur bedienbar.
 - [ ] Oberfläche erklärt, dass kein Standort übertragen wird.
 - [ ] „Schnell verlassen“ bleibt auch über geöffneten Dialogen sichtbar und per Zeiger anklickbar.
 - [ ] „Schnell verlassen“ ist auch innerhalb der HR-Demo verfügbar.
 - [ ] Vor „Schnell verlassen“ einen synthetischen Protokolleintrag, einen Stimmungseintrag und eine veränderte Demo-Postfachantwort anlegen. Nach Rückkehr zur App ist sie erneut gesperrt; Protokoll und Stimmung sind entfernt und das Demo-Postfach ist auf die Ausgangsdaten zurückgesetzt.
+- [ ] Zwei bereits entsperrte Tabs gleichzeitig öffnen und in beiden temporären Zustand anlegen. „Schnell verlassen“ in Tab A auslösen: Tab B sperrt sich ebenfalls, verwirft seinen React-Zustand und entfernt seinen eigenen Stimmungseintrag aus `sessionStorage`.
+- [ ] Falls BroadcastChannel nicht verfügbar ist, denselben Zwei-Tab-Test mit funktionierendem `localStorage` wiederholen; das kurzlebige Storage-Signal löst die Bereinigung im zweiten Tab aus.
 - [ ] Falls die App als PWA installiert ist: denselben Schnellausstieg aus dem Standalone-Fenster testen. Auch wenn die externe Tarnseite nur in einem Out-of-scope-/In-App-Browser erscheint, bleibt die dahinterliegende App gesperrt und der temporäre Zustand ist geleert.
 - [ ] Kontaktseite enthält keine erfundene interne DB-Telefonnummer.
 - [ ] 116 123, 116 016 und 0800 546 546 5 werden korrekt angezeigt.
@@ -72,6 +75,8 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Erst nach einer erfolgreichen Modellantwort zeigt der Chat sinngemäß „Gemini-Antwort erhalten“.
 - [ ] Antwort enthält keine angebliche offizielle DB-Entscheidung.
 - [ ] Chat fordert keine Personalnummer oder unnötige Klarnamen an.
+- [ ] Eine klar vergangene synthetische Schilderung mit Begriffen wie „Suizid“, „Selbstverletzung“, „Drohung“ oder „Gewalt“ wird nicht allein wegen des Schlüsselworts automatisch als gegenwärtiger akuter Notfall bezeichnet.
+- [ ] Bei unklarem Zeitbezug zu möglicher Selbstverletzungs-, Suizid- oder Gewaltgefahr fragt beziehungsweise formuliert der Chat vorsichtig nach aktueller Gefahr, statt sie ungeprüft zu behaupten.
 - [ ] Verlauf wird nach Neuladen nicht dauerhaft wiederhergestellt.
 - [ ] Ein künstlich nicht erreichbarer Upstream endet kontrolliert statt unbegrenzt zu warten.
 - [ ] Der lokale Gemini-SDK-Request erhält beim Timeout ein AbortSignal; ein Client-Abbruch wird als kontrollierter 504-Upstream-Timeout behandelt.
@@ -82,6 +87,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] `/api/chat/status` meldet `configured: false`.
 - [ ] Chat bleibt bedienbar oder zeigt einen verständlichen lokalen Fallback.
 - [ ] Fallback wird sichtbar als lokal gekennzeichnet.
+- [ ] Eine klar historische synthetische Erwähnung von Suizid oder Selbstverletzung erzeugt im lokalen Fallback nicht pauschal „Das klingt nach einer akuten Krise“, sondern macht aktuelle Hilfe von gegenwärtiger Gefahr abhängig.
 - [ ] Keine Fehlermeldung behauptet eine erfolgreiche KI-Verbindung.
 
 ## 5. Meldungsentwurf
@@ -160,7 +166,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Requests unter `/api/` werden nicht im Cache gespeichert.
 - [ ] Beim Aktivieren werden nur alte Caches mit Präfix `db-peace-ai-` gelöscht.
 - [ ] Mit Netzwerkverbindung liefert der Service Worker frische statische Assets sofort aus und nutzt den Cache nur als Offline-Fallback.
-- [ ] Entwicklungsmodus entfernt alte DB-Peace-Service-Worker-/Cache-Reste, ohne fremde Cache-Namen zu löschen.
+- [ ] Entwicklungsmodus entfernt die Root-Service-Worker-Registrierung der App und `db-peace-ai-*`-Caches, ohne eine testweise fremde Service-Worker-Registrierung unter einem anderen Scope derselben Origin zu unregistrieren.
 - [ ] Fremde Browser-Origin- oder `Sec-Fetch-Site: cross-site`-Anfragen an den lokalen API-Proxy werden mit 403 abgewiesen.
 - [ ] `POST /api/chat`, `/api/report/extract` und `/api/quiz` akzeptieren nur echtes `application/json`; z. B. `application/jsonp` wird abgewiesen.
 - [ ] Produktions-CSP erlaubt keine Inline-Skripte und keine ungenutzten Google-Font-Ursprünge.
