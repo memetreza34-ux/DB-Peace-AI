@@ -23,3 +23,9 @@ test("Vite lockert Script- und WebSocket-CSP nur für den lokalen Devserver", ()
   assert.match(viteConfig, /connect-src 'self' ws:\/\/127\.0\.0\.1:5173 ws:\/\/localhost:5173/);
   assert.match(viteConfig, /relaxCspForDevelopment/);
 });
+
+test("Vite-Preview lädt den Dev-CSP-Relaxer ausdrücklich nicht", () => {
+  assert.match(viteConfig, /defineConfig\(\(\{ mode, isPreview \}\) =>/);
+  assert.match(viteConfig, /if \(isPreview !== true\) plugins\.unshift\(relaxCspForDevelopment\(\)\)/);
+  assert.match(viteConfig, /preview:\s*\{[\s\S]*?port:\s*4173/);
+});
