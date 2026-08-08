@@ -14,16 +14,19 @@ Alle wesentlichen Änderungen werden in dieser Datei dokumentiert.
 - Meldungsentwurf, Quiz-Fallback und Sitzungsdaten klar abgegrenzt
 - React-StrictMode-Lifecycle der KI-Meldungsanalyse korrigiert
 - lokalen PIN-Sichtschutz ohne In-App-Reset umgesetzt, Fehlversuchs-Drosselung gegen Reload- und Tab-Umgehung abgesichert und Entsperrstatus aus Browser-Speicher entfernt
+- bereits geöffnete PIN-Einrichtungs-Tabs synchronisieren eine parallel eingerichtete PIN und können eine neu gespeicherte Konfiguration nicht mehr mit veraltetem Setup-Zustand normal überschreiben
+- laufende PIN-Prüfungen verwerfen ihr Ergebnis, wenn sich die gespeicherte PIN-Konfiguration während der PBKDF2-Berechnung geändert hat
 - PIN-Sperrbildschirm an die Betriebssystemoption für reduzierte Bewegung angepasst
 - lokale Gefahreneinschätzung korrigiert: historische Gefahrbegriffe können eine ausdrückliche Auswahl „Keine akute Gefahr“ nicht mehr zu „akut“ hochstufen
 - Gedächtnisprotokolle auf App-Ebene gehoben, damit sie während interner Navigation im Arbeitsspeicher erhalten bleiben, ohne Browser-Persistenz einzuführen
 - Demo-Postfach löscht einen angefangenen Antworttext beim Wechsel des ausgewählten Falls
+- „Schnell verlassen“ leert Protokolle und Stimmung, setzt Demo-Postfach und App-Zustand zurück und sperrt die Oberfläche vor der externen Navigation; der Schutz bleibt auch im HR-Demo-Modus verfügbar und ist nicht von einem vollständigen Browser-Unload abhängig
 - Notfall-, Kontakt-, Lern-, HR-, Projekt- und Analytics-Bereiche als Prototyp abgesichert
 - Rechtsdaten vollständig auf kuratierte Paraphrasen mit amtlichen Einzelnorm-Links umgestellt; problematischen Generator entfernt
 - großen synthetischen Kurskatalog durch neun vollständig fiktive Demo-Einträge ersetzt
 - statisches Training von Punkt-/Prozentwertung bereinigt
 - Service-Worker-Cachebereinigung auf eigene `db-peace-ai-*`-Caches begrenzt und statische Assets auf echtes Network-first mit Offline-Fallback umgestellt
-- Produktions-CSP verschärft; Inline-Skripte bleiben nur im lokalen Vite-Serve-Modus für React Refresh erlaubt
+- Produktions-CSP verschärft; Inline-Skripte und Vite-HMR-WebSockets bleiben nur im lokalen Vite-Serve-Modus erlaubt, nicht im Production-Build oder Preview-Modus
 - reduzierte Bewegung, Dialogfokus, Umschalter-Semantik und Produktionsfehleranzeige gehärtet
 - Schnell-Verlassen-Schaltfläche über die Dialogebene gehoben
 - Protokoll-PDF-Export gegen Fehler abgesichert und Fehler sichtbar gemacht
