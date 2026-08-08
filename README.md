@@ -17,14 +17,15 @@ Die in `package.json` festgelegten Engine-Bereiche dienen einer reproduzierbaren
 ## Was der aktuelle MVP tatsächlich kann
 
 - responsive React-Oberfläche mit Navigation, Suche und Dark Mode
-- lokale vierstellige Sichtschutz-PIN ohne Speicherung des Klartext-PINs; Fehlversuche werden innerhalb der Browser-Sitzung gedrosselt
+- lokale vierstellige Sichtschutz-PIN ohne Speicherung des Klartext-PINs; Fehlversuche und kurze Sperrzeiten werden tabübergreifend im lokalen Browser-Speicher gedrosselt
 - Entsperrstatus wird nicht in Browser-Speicher geschrieben; Reload sowie ein neuer oder duplizierter Tab verlangen erneut die PIN
 - KI-Begleiter über einen lokalen Gemini-Proxy mit klar gekennzeichnetem lokalem Fallback
 - `/api/chat/status` zeigt nur, ob ein Gemini-Schlüssel konfiguriert ist; erst eine erfolgreiche Chatantwort bestätigt eine tatsächliche Verbindung
-- KI-Aufrufe werden serverseitig nach 20 Sekunden kontrolliert beendet; der lokale SDK-Request erhält dabei ein AbortSignal
+- das lokale Warten auf Gemini-Aufrufe wird nach 20 Sekunden begrenzt; der SDK-Request erhält dabei ein `AbortSignal`, ohne eine sofortige Beendigung bereits laufender externer Verarbeitung zu garantieren
 - KI-gestützte Strukturierung eines Meldungsentwurfs über `/api/report/extract`
 - validierter Meldungsentwurf mit Kopierfunktion und PDF-Export
-- Gedächtnisprotokolle und Stimmungseinträge nur im Zustand der aktuellen Sitzung
+- Gedächtnisprotokolle bleiben während der laufenden App-Nutzung über interne Navigation hinweg im React-Arbeitsspeicher erhalten und werden nicht dauerhaft im Browser gespeichert
+- Stimmungseinträge verwenden nur den Browser-Sitzungsspeicher und werden nicht an eine Falldatenbank übertragen
 - Quiz über `POST /api/quiz` mit transparentem lokalem Fragenset als Fallback; KI-Fragen sind auf allgemeine Sicherheits- und Orientierungsinhalte begrenzt
 - lokale, statische Szenario-Übungen ohne KI, Punkte, Prozentwertung oder Zertifikat
 - kuratierte Rechteorientierung mit vorsichtigen Paraphrasen und Links zu amtlichen Einzelnormen
