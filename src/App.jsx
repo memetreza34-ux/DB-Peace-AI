@@ -35,6 +35,7 @@ export default function App() {
   const [isHRMode, setIsHRMode] = useState(false);
   const [isLocked, setIsLocked] = useState(true);
   const [isSSOOpen, setIsSSOOpen] = useState(false);
+  const [records, setRecords] = useState([]);
   const [isOffline, setIsOffline] = useState(() => typeof navigator !== "undefined" && !navigator.onLine);
 
   useEffect(() => {
@@ -57,6 +58,8 @@ export default function App() {
       activeTab={activeTab}
       onNavigate={setActiveTab}
       onOpenEmergency={() => setIsEmergencyOpen(true)}
+      records={records}
+      setRecords={setRecords}
     />
   );
 
@@ -122,10 +125,10 @@ export default function App() {
   );
 }
 
-function ActiveView({ activeTab, onNavigate, onOpenEmergency }) {
+function ActiveView({ activeTab, onNavigate, onOpenEmergency, records, setRecords }) {
   switch (activeTab) {
     case "record-report":
-      return <RecordAndReportView />;
+      return <RecordAndReportView records={records} setRecords={setRecords} />;
     case "learning":
       return <LearningHubView />;
     case "rights":
