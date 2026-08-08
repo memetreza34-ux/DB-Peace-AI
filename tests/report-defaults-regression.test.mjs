@@ -52,6 +52,13 @@ test("lokaler KI-Fallback klassifiziert unbekannte Fakten nicht automatisch", ()
   assert.match(smartReport, /witnesses:\s*"Nicht angegeben"/);
 });
 
+test("fehlende KI-Kategorie bleibt server- und clientseitig Nicht angegeben", () => {
+  assert.match(server, /category:\s*cleanString\(parsed\.category,\s*120,\s*"Nicht angegeben"\)/);
+  assert.match(smartReport, /category:\s*valueOrNotProvided\(report\.category\)/);
+  assert.doesNotMatch(server, /category:\s*cleanString\(parsed\.category,\s*120,\s*"Vorfall \/ Konflikt"\)/);
+  assert.doesNotMatch(smartReport, /category:\s*valueOrNotProvided\(report\.category,\s*"Vorfall \/ Konflikt"\)/);
+});
+
 test("ungültige KI-Dringlichkeit fällt serverseitig nicht auf mittel zurück", () => {
   const normalizer = server.match(/function normalizeUrgency\(value\) \{[\s\S]*?\n\}/)?.[0] || "";
   assert.match(normalizer, /"Nicht angegeben"/);
