@@ -59,6 +59,30 @@ test("laufende PIN-Prüfung verwirft ein Ergebnis wenn die Konfiguration paralle
   assert.match(lock, /function sameLockConfig\(left, right\)/);
 });
 
+test("Schnell-Verlassen leert und sperrt den App-Zustand vor externer Navigation", () => {
+  const app = read("src/App.jsx");
+  const panic = read("src/components/PanicButton.jsx");
+
+  assert.match(app, /function prepareQuickExit\(\)/);
+  assert.match(app, /setRecords\(\[\]\)/);
+  assert.match(app, /resetTickets\(\)/);
+  assert.match(app, /setIsEmergencyOpen\(false\)/);
+  assert.match(app, /setIsSearchOpen\(false\)/);
+  assert.match(app, /setIsSSOOpen\(false\)/);
+  assert.match(app, /setIsHRMode\(false\)/);
+  assert.match(app, /setIsLocked\(true\)/);
+  assert.match(app, /<PanicButton onBeforeExit=\{prepareQuickExit\} \/>/);
+  assert.match(panic, /onBeforeExit\?\.\(\)/);
+  assert.match(panic, /window\.setTimeout\(\(\) => \{[\s\S]*?window\.location\.replace/s);
+  assert.match(panic, /sessionStorage\.removeItem\("db-peace-mood-session"\)/);
+});
+
+test("Schnell-Verlassen bleibt auch im HR-Demo-Modus verfügbar", () => {
+  const app = read("src/App.jsx");
+
+  assert.match(app, /if \(isHRMode\) \{[\s\S]*?<HRDashboard[\s\S]*?<PanicButton onBeforeExit=\{prepareQuickExit\}/s);
+});
+
 test("PIN-Sperrbildschirm respektiert reduzierte Bewegung", () => {
   const lock = read("src/components/AppLock.jsx");
 
