@@ -16,8 +16,9 @@ Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. 
 
 - React-19-Frontend mit Vite und Tailwind CSS
 - responsive Navigation, globale Suche und Dark Mode
-- reduzierte Bewegung wird in zentralen animierten Oberflächen berücksichtigt
+- reduzierte Bewegung wird global für Framer Motion und zusätzlich über CSS/gezielte Komponenten berücksichtigt
 - lokale vierstellige Sichtschutz-PIN mit PBKDF2-Prüfwert; kein In-App-Bypass, Fehlversuche und kurze Sperrzeiten werden tabübergreifend gedrosselt
+- PIN-Konfigurationsänderungen werden zwischen Tabs beobachtet; veraltete Setup-Tabs und parallel veraltete PIN-Prüfungen werden verworfen statt eine neuere Konfiguration normal zu überschreiben oder mit einem alten Ergebnis zu entsperren
 - Node.js-API-Proxy auf `127.0.0.1`
 - Gemini-Chat mit klar gekennzeichnetem lokalem Fallback
 - KI-Status unterscheidet einen konfigurierten Schlüssel von einer tatsächlich erfolgreichen Gemini-Antwort
@@ -27,11 +28,13 @@ Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. 
 - Meldungsentwurf mit Formularvalidierung, Kopierfunktion und PDF-Export
 - Gedächtnisprotokolle bleiben während der laufenden App-Nutzung über interne Navigation hinweg im React-Arbeitsspeicher erhalten und werden nicht dauerhaft im Browser gespeichert
 - Stimmungseinträge bleiben im Browser-Sitzungsspeicher
+- Schnell-Verlassen leert temporäre App-Inhalte, setzt veränderte Demo-Tickets zurück und sperrt die Oberfläche vor der externen Navigation; die Funktion ist auch im HR-Demo-Modus verfügbar
 - statische Szenario-Übung ohne KI, Punktzahl, Prozentwert oder Zertifikat
 - kuratierte Rechteorientierung mit vorsichtigen Paraphrasen und amtlichen Einzelnorm-Links
 - geprüfte externe Hilfsnummern und interne Suchhinweise
 - vollständig fiktiver Lernkatalog ohne Zuordnung erfundener Angebote zu realen Organisationen
 - Service Worker ohne Caching von `/api/`-Antworten und mit auf `db-peace-ai-*` begrenzter Cache-Bereinigung
+- Production-CSP ohne Inline-Skripte oder Vite-HMR-WebSockets; eng begrenzte React-Refresh-/HMR-Ausnahmen gelten nur im lokalen Vite-Serve-Modus und nicht in `vite preview`
 - Repository-Verifikation, Node-Regressionstests und GitHub-Actions-Workflow
 - Importgraph-Test gegen unreferenzierten JavaScript-Altcode
 - manuelle Abnahmecheckliste unter `docs/MANUAL-TEST-CHECKLIST.md`
@@ -53,8 +56,11 @@ Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. 
 - historischer Backup-Code und unreferenzierte Quellaltlasten
 - direkter PIN-Zurücksetzen-Knopf auf dem Sperrbildschirm
 - reload- und tab-umgehbare Fehlversuchspause der PIN
+- veralteter PIN-Setup-Zustand in parallel geöffneten Tabs, der eine inzwischen eingerichtete PIN normal überschreiben konnte
+- Verwendung eines veralteten PIN-Prüfergebnisses, wenn sich die Konfiguration während der Berechnung geändert hatte
 - Antwortentwürfe im Demo-Postfach, die beim Fallwechsel dem falschen Fall zugeordnet werden konnten
 - Gedächtnisprotokolle, die bereits bei normaler interner Navigation verloren gingen
+- Schnellausstieg, der temporären React-Zustand nur durch erwartetes Verlassen der Seite verlor und deshalb bei PWA-Out-of-scope-Navigation nicht ausreichend robust war
 - lokale Gefahrenlogik, die historische Gefahrbegriffe trotz ausdrücklicher Auswahl „Keine akute Gefahr“ als akut einstufen konnte
 - Prozent-/Punktbewertung im statischen Training
 - Service-Worker-Bereinigung fremder Origin-Caches
