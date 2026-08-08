@@ -13,7 +13,7 @@ export function AppLock({ onUnlock }) {
   const reduceMotion = useReducedMotion();
   const existingConfig = useMemo(() => readLockConfig(), []);
   const initialThrottle = useMemo(() => readThrottle(), []);
-  const [mode] = useState(existingConfig ? "unlock" : "setup");
+  const [mode, setMode] = useState(existingConfig ? "unlock" : "setup");
   const [pin, setPin] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [phase, setPhase] = useState("pin");
@@ -34,8 +34,20 @@ export function AppLock({ onUnlock }) {
       setClock(Date.now());
     }
 
+    function syncLockConfig() {
+      const config = readLockConfig();
+      setMode(config ? "unlock" : "setup");
+      setPin("");
+      setConfirmation("");
+      setPhase("pin");
+      setError(config
+        ? "In einem anderen Tab wurde eine lokale PIN eingerichtet. Gib diese PIN zum Entsperren ein."
+        : "Die lokale PIN-Konfiguration wurde außerhalb dieses Tabs entfernt. Richte bei Bedarf eine neue PIN ein.");
+    }
+
     function handleStorage(event) {
       if (event.key === THROTTLE_STORAGE_KEY) syncThrottle();
+      if (event.key === LOCK_STORAGE_KEY) syncLockConfig();
     }
 
     window.addEventListener("storage", handleStorage);
@@ -85,7 +97,11 @@ export function AppLock({ onUnlock }) {
 
   async function verifyPin() {
     const config = readLockConfig();
-    if (!config || isWorking) return;
+    if (!config) {
+      switchToCurrentLockMode("Die lokale PIN-Konfiguration wurde entfernt. Richte bei Bedarf eine neue PIN ein.");
+      return;
+    }
+    if (isWorking) return;
 
     const latestThrottle = readThrottle();
     if (latestThrottle.blockedUntil > Date.now()) {
@@ -102,6 +118,12 @@ export function AppLock({ onUnlock }) {
 
     try {
       const verifier = await createVerifier(pin, config.salt);
+      const currentConfig = readLockConfig();
+      if (!sameLockConfig(config, currentConfig)) {
+        switchToCurrentLockMode("Die lokale PIN-Konfiguration wurde in einem anderen Tab geändert. Gib die aktuelle PIN erneut ein.");
+        return;
+      }
+
       if (verifier === config.verifier) {
         clearThrottle();
         setFailedAttempts(0);
@@ -134,6 +156,11 @@ export function AppLock({ onUnlock }) {
   }
 
   async function completeSetup() {
+    if (readLockConfig()) {
+      switchToCurrentLockMode("In einem anderen Tab wurde bereits eine lokale PIN eingerichtet. Gib diese PIN zum Entsperren ein.");
+      return;
+    }
+
     if (pin.length !== PIN_LENGTH || isWorking) {
       setError("Die PIN muss genau vier Ziffern haben.");
       return;
@@ -161,6 +188,12 @@ export function AppLock({ onUnlock }) {
     try {
       const salt = randomBase64(16);
       const verifier = await createVerifier(pin, salt);
+
+      if (readLockConfig()) {
+        switchToCurrentLockMode("Während der Einrichtung wurde in einem anderen Tab bereits eine lokale PIN gespeichert. Gib diese PIN zum Entsperren ein.");
+        return;
+      }
+
       const stored = safeStorageSet(
         "local",
         LOCK_STORAGE_KEY,
@@ -172,6 +205,12 @@ export function AppLock({ onUnlock }) {
         return;
       }
 
+      const storedConfig = readLockConfig();
+      if (!storedConfig || storedConfig.salt !== salt || storedConfig.verifier !== verifier) {
+        switchToCurrentLockMode("Die lokale PIN-Konfiguration wurde gleichzeitig in einem anderen Tab geändert. Gib die aktuell gespeicherte PIN ein.");
+        return;
+      }
+
       clearThrottle();
       onUnlock();
     } catch {
@@ -179,6 +218,14 @@ export function AppLock({ onUnlock }) {
     } finally {
       setIsWorking(false);
     }
+  }
+
+  function switchToCurrentLockMode(message) {
+    setMode(readLockConfig() ? "unlock" : "setup");
+    setPin("");
+    setConfirmation("");
+    setPhase("pin");
+    setError(message);
   }
 
   function pressDigit(digit) {
@@ -280,6 +327,14 @@ function readLockConfig() {
   } catch {
     return null;
   }
+}
+
+function sameLockConfig(left, right) {
+  return Boolean(left && right
+    && left.version === right.version
+    && left.pinLength === right.pinLength
+    && left.salt === right.salt
+    && left.verifier === right.verifier);
 }
 
 function readThrottle() {
