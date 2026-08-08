@@ -63,7 +63,9 @@ test("Schnell-Verlassen leert und sperrt den App-Zustand vor externer Navigation
   const app = read("src/App.jsx");
   const panic = read("src/components/PanicButton.jsx");
 
+  assert.match(app, /function performQuickExitCleanup\(\)/);
   assert.match(app, /function prepareQuickExit\(\)/);
+  assert.match(app, /sessionStorage\.removeItem\("db-peace-mood-session"\)/);
   assert.match(app, /setRecords\(\[\]\)/);
   assert.match(app, /resetTickets\(\)/);
   assert.match(app, /setIsEmergencyOpen\(false\)/);
@@ -75,6 +77,20 @@ test("Schnell-Verlassen leert und sperrt den App-Zustand vor externer Navigation
   assert.match(panic, /onBeforeExit\?\.\(\)/);
   assert.match(panic, /window\.setTimeout\(\(\) => \{[\s\S]*?window\.location\.replace/s);
   assert.match(panic, /sessionStorage\.removeItem\("db-peace-mood-session"\)/);
+});
+
+test("Schnell-Verlassen signalisiert andere offene Tabs und sperrt sie ebenfalls", () => {
+  const app = read("src/App.jsx");
+
+  assert.match(app, /QUICK_EXIT_CHANNEL\s*=\s*"db-peace-quick-exit"/);
+  assert.match(app, /QUICK_EXIT_STORAGE_KEY\s*=\s*"db-peace-quick-exit-signal"/);
+  assert.match(app, /new BroadcastChannel\(QUICK_EXIT_CHANNEL\)/);
+  assert.match(app, /event\.data\?\.type === "quick-exit"/);
+  assert.match(app, /event\.key === QUICK_EXIT_STORAGE_KEY && event\.newValue/);
+  assert.match(app, /window\.addEventListener\("storage",\s*handleStorage\)/);
+  assert.match(app, /postMessage\(\{ type: "quick-exit" \}\)/);
+  assert.match(app, /localStorage\.setItem\(QUICK_EXIT_STORAGE_KEY, signal\)/);
+  assert.match(app, /localStorage\.removeItem\(QUICK_EXIT_STORAGE_KEY\)/);
 });
 
 test("Schnell-Verlassen bleibt auch im HR-Demo-Modus verfügbar", () => {
