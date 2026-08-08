@@ -24,6 +24,9 @@ Dieses Dokument fasst den technischen Langzeit-Audit des aktuellen Stabilisierun
 - Produktions-CSP erlaubt keine Inline-Skripte, Vite-HMR-WebSockets oder ungenutzten Google-Font-Ursprünge; nur der lokale Vite-Serve-Modus erhält die eng begrenzten React-Refresh-/HMR-Ausnahmen, nicht `vite preview`
 - lokale Gefahreneinschätzung korrigiert: `akut` entsteht nur durch die bewusste Auswahl `Direkte Gefahr`; historische Begriffe überschreiben `Keine akute Gefahr` nicht mehr
 - fehlende KI-Kategorie bleibt `Nicht angegeben`; der KI-Report darf `akut` nur bei eindeutig gegenwärtiger unmittelbarer Gefahr verwenden
+- Notruftexte für 110 korrigiert: Support-Seite und Notfallmodal nennen nur akute Bedrohung, Gewalt oder unmittelbar gefährliche Situationen und nicht pauschal jede Straftat
+- lokaler Chat-Fallback behandelt eine historische Erwähnung von Suizid oder Selbstverletzung nicht mehr automatisch als aktuelle akute Krise
+- Gemini-Systemprompt trennt gegenwärtige Gefahr, laufende Gewalt und aktuelle Selbstverletzungs-/Suizidgefahr ausdrücklich von vergangenen Schilderungen; bei unklarem Zeitbezug soll aktuelle Gefahr geklärt werden
 
 ### PIN und Sitzungszustand
 
@@ -61,12 +64,14 @@ Dieses Dokument fasst den technischen Langzeit-Audit des aktuellen Stabilisierun
 - Service Worker auf Produktionsbetrieb begrenzt; `/api/` wird nicht gecacht
 - Service Worker löscht beim Aktivieren nur eigene alte Caches mit Präfix `db-peace-ai-`
 - statische Assets werden bei vorhandener Verbindung Network-first ausgeliefert; der Cache ist nur Offline-Fallback
+- Entwicklungsmodus unregistriert nur die Root-Service-Worker-Registrierung der App statt pauschal alle Registrierungen derselben Origin; fremde Sub-Scope-Registrierungen bleiben unangetastet
 - kritische Dialoge mit Escape, Fokusfalle, Fokus-Rückgabe und Scroll-Sperre ausgestattet; auch das Gedächtnisprotokoll-Detailfenster nutzt die gemeinsame Dialogsteuerung
 - unvollständige ARIA-Tab-Widgets in Profil, HR-Demo und Kursdetail durch korrekt angekündigte Umschaltbuttons ersetzt
 - Notrufsteuerung per Tastatur bedienbar gemacht
 - Schnell-Verlassen-Schaltfläche über die Dialogebene gehoben, damit sie auch bei geöffneten Overlays per Zeiger erreichbar bleibt
 - Schnell-Verlassen ist auch im HR-Demo-Modus verfügbar und leert Protokolle, Stimmung, veränderte Demo-Tickets und offene App-Zustände, bevor die Oberfläche erneut gesperrt und die externe Tarnseite geöffnet wird
 - Schnellausstieg verlässt sich nicht mehr ausschließlich auf einen vollständigen Browser-Unload; damit bleibt der temporäre Zustand auch dann nicht offen sichtbar, wenn eine installierte PWA eine externe Out-of-scope-Seite separat darstellt
+- Schnellausstieg wird über BroadcastChannel plus kurzlebiges `localStorage`-Signal an andere offene DB-Peace-Tabs weitergegeben; empfangende Tabs entfernen ihren eigenen Stimmungsspeicher, verwerfen React-Zustand und sperren sich ebenfalls
 - globale Framer-Motion-Konfiguration, CSS-Regeln und gezielte Komponenten berücksichtigen die Betriebssystemoption für reduzierte Bewegung
 - Fokusmarkierungen und Statusmeldungen ergänzt
 - lange PDF-Ausgaben paginiert und Exportfehler in den gehärteten Exportpfaden sichtbar behandelt
@@ -78,6 +83,9 @@ Dieses Dokument fasst den technischen Langzeit-Audit des aktuellen Stabilisierun
 - Importgraph-Test ergänzt: jede JavaScript-Laufzeitdatei unter `src/` muss vom Einstiegspunkt `src/main.jsx` erreichbar sein
 - Repository-Verifier und Node-Regressionstests um PIN-, PWA-, KI-, StrictMode-, CSP-, Rechts-, Kurs-, Dialog-, CI-, Gefahren-, Navigationszustands- und Datenwahrheitsregeln erweitert
 - zusätzliche Regressionstests sichern die tabübergreifende PIN-Konfiguration, das Verwerfen parallel veralteter PIN-Prüfungen sowie das Leeren und erneute Sperren vor dem PWA-Schnellausstieg
+- neuer Notfall-/Krisen-Regressionstest sichert die enge 110-Formulierung sowie die zeitbewusste lokale und Gemini-gestützte Krisenorientierung
+- Quick-Exit-Regressionstest sichert BroadcastChannel, Storage-Fallback und die Zustandsbereinigung anderer offener Tabs
+- Service-Worker-Regressionstest verhindert, dass der Entwicklungsmodus wieder alle Registrierungen derselben Origin pauschal unregistriert
 - GitHub-Actions-Workflow in getrennte Schritte für Installation, Verifier, Tests und Production-Build aufgeteilt
 - Workflow verwendet aktuelle `actions/checkout@v7`- und `actions/setup-node@v7`-Majors; Checkout-Credentials werden nicht persistent gespeichert
 - Workflow arbeitet mit minimaler `contents: read`-Berechtigung, Concurrency-Abbruch und 10-Minuten-Joblimit
@@ -99,13 +107,14 @@ Die Node-Tests prüfen unter anderem:
 - KI-Status und begrenzten Quiz-Themenraum
 - lokale Importauflösung und Erreichbarkeit des Runtime-Importgraphs
 - React-StrictMode-Lifecycle der Meldungsanalyse
-- PWA-Manifest, Cache-Namensraum und Network-first-Auslieferung
+- PWA-Manifest, Cache-Namensraum, Network-first-Auslieferung und begrenzte Dev-Unregistrierung
 - Produktions-CSP und die ausschließlich lokale Vite-Dev-Ausnahme
 - Dialogsteuerung, Umschalter-Semantik und Request-Abbruch
 - PIN-Bypass, nicht persistierten Entsperrstatus, tabübergreifende Fehlversuchs-Drosselung, veraltete Setup-Tabs, parallel geänderte PIN-Konfiguration und reduzierte Bewegung
 - kuratierten Rechtsdatensatz und amtliche Quellen-URLs
 - ausschließlich fiktiven Lernkatalog
-- Gefahreneinstufung, Demo-Antwort-Fallwechsel, Protokollzustand über interne Navigation, Demo-Reset, Quick-Exit-Zustandsbereinigung, Schnell-Verlassen-Layering, CI-Konfiguration und Prozess-Shutdown
+- enge 110-Notfallhinweise und zeitbewusste Krisenorientierung in lokalem sowie Gemini-Chat
+- Gefahreneinstufung, Demo-Antwort-Fallwechsel, Protokollzustand über interne Navigation, Demo-Reset, tabübergreifende Quick-Exit-Zustandsbereinigung, Schnell-Verlassen-Layering, CI-Konfiguration und Prozess-Shutdown
 
 ## Noch nicht nachgewiesen
 
@@ -113,7 +122,7 @@ Die Node-Tests prüfen unter anderem:
 - erfolgreicher `npm run verify`-Lauf für den finalen Head
 - erfolgreicher `npm test`-Lauf für den finalen Head
 - erfolgreicher Vite-Produktionsbuild für den finalen Head
-- vollständige manuelle Browser-, Mobil-, PDF- und Tastaturabnahme
+- vollständige manuelle Browser-, Mobil-, PWA-, PDF- und Tastaturabnahme
 
 ## GitHub-Actions-Status
 
