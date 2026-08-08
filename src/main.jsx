@@ -101,9 +101,10 @@ if ("serviceWorker" in navigator) {
       });
     });
   } else {
-    // Alte Produktionsregistrierungen dürfen die lokale Vite-Entwicklung nicht mit veralteten Dateien überlagern.
-    void navigator.serviceWorker.getRegistrations()
-      .then((registrations) => Promise.all(registrations.map((registration) => registration.unregister())))
+    // Nur die Registrierung entfernen, die den Root-Bereich dieser App kontrolliert.
+    // Fremde Service Worker mit anderen Scopes derselben localhost-Origin bleiben unangetastet.
+    void navigator.serviceWorker.getRegistration("/")
+      .then((registration) => registration?.unregister())
       .catch(() => undefined);
 
     if ("caches" in window) {
