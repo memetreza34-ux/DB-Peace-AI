@@ -32,12 +32,14 @@ Daraus folgt:
 - Fremde Browser-Origin- und `Sec-Fetch-Site: cross-site`-Anfragen an den lokalen Proxy werden abgewiesen.
 - POST-Endpunkte akzeptieren nur echtes `application/json`; das KI-Quiz ist kein einfacher GET-Endpunkt mehr.
 - Request-Größe, Nachrichtenlänge, Verlauf und Anfragerate sind begrenzt.
-- Gemini-Aufrufe besitzen ein lokales 20-Sekunden-Limit; der SDK-Request erhält beim Timeout ein `AbortSignal`.
+- Das lokale Warten auf Gemini-Aufrufe ist auf 20 Sekunden begrenzt; der SDK-Request erhält beim Timeout ein `AbortSignal`, ohne eine sofortige Beendigung bereits laufender externer Verarbeitung zu garantieren.
 - API-Antworten erhalten `Cache-Control: no-store` und weitere Sicherheitsheader.
 - Der Service Worker schließt `/api/` ausdrücklich vom Cache aus und nutzt statische Caches nur als Offline-Fallback.
 - Chatverläufe werden nicht dauerhaft im Browser gespeichert.
-- Meldungs-, Projekt-, Stimmungs- und Protokollentwürfe sind als temporär oder Demo gekennzeichnet.
+- Gedächtnisprotokolle bleiben während der laufenden App-Nutzung über interne Navigation hinweg im React-Arbeitsspeicher erhalten, werden aber nicht in `localStorage`, `sessionStorage` oder IndexedDB gespeichert.
+- Meldungs-, Projekt-, Stimmungs- und sonstige Entwürfe sind als temporär oder Demo gekennzeichnet; Stimmungseinträge verwenden nur den Browser-Sitzungsspeicher.
 - Der Entsperrstatus der lokalen PIN wird nicht in Browser-Speicher persistiert; Reload oder neuer/duplizierter Tab sperren erneut.
+- PIN-Fehlversuche und kurze Sperrzeiten werden tabübergreifend im lokalen Browser-Speicher gehalten und vor einer Prüfung erneut gelesen, damit ein weiterer Tab die Drosselung nicht zurücksetzt.
 - Die lokale PIN wird nicht im Klartext gespeichert; sie bleibt dennoch nur ein Sichtschutz.
 - Notfallfunktionen übertragen keinen Standort und verwenden keine erfundenen internen Telefonnummern.
 - PDF-Ausgaben sind als Entwurf, Vorlage oder persönliche Lernnotiz gekennzeichnet.
