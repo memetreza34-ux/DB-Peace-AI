@@ -258,7 +258,7 @@ async function handleReportExtraction(req, res) {
   }
 
   const report = {
-    category: cleanString(parsed.category, 120, "Vorfall / Konflikt"),
+    category: cleanString(parsed.category, 120, "Nicht angegeben"),
     description: cleanString(parsed.description, 2_500, sourceText),
     date: cleanString(parsed.date, 80, "Nicht angegeben"),
     time: cleanString(parsed.time, 80, "Nicht angegeben"),
