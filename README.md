@@ -18,6 +18,7 @@ Die in `package.json` festgelegten Engine-Bereiche dienen einer reproduzierbaren
 
 - responsive React-Oberfläche mit Navigation, Suche und Dark Mode
 - lokale vierstellige Sichtschutz-PIN ohne Speicherung des Klartext-PINs; Fehlversuche und kurze Sperrzeiten werden tabübergreifend im lokalen Browser-Speicher gedrosselt
+- die PIN-Konfiguration wird zwischen Tabs synchronisiert; ein bereits geöffneter veralteter Einrichtungs-Tab kann eine inzwischen gespeicherte PIN nicht mehr normal überschreiben, und parallel veraltete PIN-Prüfungen werden verworfen
 - Entsperrstatus wird nicht in Browser-Speicher geschrieben; Reload sowie ein neuer oder duplizierter Tab verlangen erneut die PIN
 - KI-Begleiter über einen lokalen Gemini-Proxy mit klar gekennzeichnetem lokalem Fallback
 - `/api/chat/status` zeigt nur, ob ein Gemini-Schlüssel konfiguriert ist; erst eine erfolgreiche Chatantwort bestätigt eine tatsächliche Verbindung
@@ -26,6 +27,7 @@ Die in `package.json` festgelegten Engine-Bereiche dienen einer reproduzierbaren
 - validierter Meldungsentwurf mit Kopierfunktion und PDF-Export
 - Gedächtnisprotokolle bleiben während der laufenden App-Nutzung über interne Navigation hinweg im React-Arbeitsspeicher erhalten und werden nicht dauerhaft im Browser gespeichert
 - Stimmungseinträge verwenden nur den Browser-Sitzungsspeicher und werden nicht an eine Falldatenbank übertragen
+- „Schnell verlassen“ leert temporäre App-Inhalte, setzt veränderte Demo-Tickets zurück und sperrt die Oberfläche erneut, bevor die externe Tarnseite geöffnet wird; der Schutz steht auch im HR-Demo-Modus zur Verfügung
 - Quiz über `POST /api/quiz` mit transparentem lokalem Fragenset als Fallback; KI-Fragen sind auf allgemeine Sicherheits- und Orientierungsinhalte begrenzt
 - lokale, statische Szenario-Übungen ohne KI, Punkte, Prozentwertung oder Zertifikat
 - kuratierte Rechteorientierung mit vorsichtigen Paraphrasen und Links zu amtlichen Einzelnormen
@@ -34,7 +36,7 @@ Die in `package.json` festgelegten Engine-Bereiche dienen einer reproduzierbaren
 - HR-, Projekt- und Analytics-Ansichten ausschließlich mit fiktiven Demonstrationsdaten beziehungsweise Szenarioannahmen
 - PWA-Grundstruktur; API-Antworten werden nicht offline gecacht, statische Assets werden online Network-first geladen und der Service Worker löscht nur eigene alte Caches
 - lokaler API-Proxy blockiert fremde Browser-Origin-/Cross-Site-Anfragen und akzeptiert auf POST-Routen nur echtes `application/json`
-- Produktions-CSP ohne Inline-Skripte; nur der lokale Vite-Serve-Modus erhält die für React Refresh notwendige eng begrenzte Ausnahme
+- Produktions-CSP ohne Inline-Skripte oder Vite-HMR-WebSockets; nur der lokale Vite-Serve-Modus erhält die für React Refresh/HMR notwendigen eng begrenzten Ausnahmen, nicht `vite preview`
 
 ## Was der MVP ausdrücklich nicht kann
 
