@@ -1,6 +1,6 @@
 # Manuelle Abnahmecheckliste — DB Peace AI
 
-Stand: 7. August 2026
+Stand: 8. August 2026
 
 Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdaten verwenden. Ein erfolgreicher Durchlauf bedeutet **präsentationsreif**, nicht pilot- oder produktionsreif.
 
@@ -29,6 +29,9 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Nach Schließen und erneutem Öffnen wird die App erneut gesperrt.
 - [ ] Nach fünf Fehlversuchen wird die Eingabe kurz gesperrt.
 - [ ] Ein Neuladen während der Sperrzeit hebt die Fehlversuchs-Pause nicht auf.
+- [ ] Während einer aktiven Fehlversuchs-Pause zeigt auch ein weiterer Tab derselben App die Sperre; ein neuer Tab setzt Versuchszähler oder Sperrzeit nicht zurück.
+- [ ] Fehlversuche in zwei parallel geöffneten Tabs werden auf denselben tabübergreifenden Drosselungszustand angerechnet.
+- [ ] Mit aktivierter Betriebssystemoption „Bewegung reduzieren“ erscheint der PIN-Sperrbildschirm ohne Einblend-/Verschiebungsanimation.
 - [ ] Auf dem Sperrbildschirm existiert kein Knopf, der die eingerichtete PIN ohne Kenntnis der alten PIN löscht.
 - [ ] Bei vergessener PIN verweist die Oberfläche nur auf das manuelle Löschen der Website-Daten im Browser.
 
@@ -66,6 +69,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Verlauf wird nach Neuladen nicht dauerhaft wiederhergestellt.
 - [ ] Ein künstlich nicht erreichbarer Upstream endet kontrolliert statt unbegrenzt zu warten.
 - [ ] Der lokale Gemini-SDK-Request erhält beim Timeout ein AbortSignal; ein Client-Abbruch wird als kontrollierter 504-Upstream-Timeout behandelt.
+- [ ] Oberfläche und Dokumentation behaupten nicht, dass der lokale Abort eine bereits laufende Verarbeitung beim externen Dienst garantiert beendet.
 
 ### Ohne `GEMINI_API_KEY`
 
@@ -80,6 +84,8 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] Pflichtfelder verhindern einen leeren Abschluss.
 - [ ] Es werden keine echten Namen, Personalnummern oder Anhänge verlangt.
 - [ ] Lokale Dringlichkeit ist als Orientierung und nicht als Entscheidung gekennzeichnet.
+- [ ] Bei bewusst ausgewählter „Keine akute Gefahr“ führt ein historischer Begriff wie „Messer“ oder „Gewalt“ im Sachverhalt nicht zu „akut“.
+- [ ] Nur die bewusste Auswahl „Direkte Gefahr“ erzeugt die akute Orientierung mit sofortigem Hilfehinweis.
 - [ ] KI-Strukturierung funktioniert mit Key.
 - [ ] KI-Strukturierung funktioniert im Vite-Entwicklungsmodus mit React StrictMode und bleibt nicht dauerhaft im Ladezustand hängen.
 - [ ] Lokaler Fallback funktioniert ohne Key.
@@ -92,9 +98,11 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 ## 6. Protokolle und Stimmung
 
 - [ ] Synthetischer Protokolleintrag kann angelegt werden.
+- [ ] Nach dem Anlegen zu Startseite, Sammlung oder einem anderen App-Bereich wechseln und anschließend zurückkehren: Der Protokolleintrag ist weiterhin vorhanden.
 - [ ] Eintrag kann exportiert und gelöscht werden.
 - [ ] Protokoll-Detaildialog hält den Tastaturfokus im Dialog und gibt ihn nach dem Schließen an den Auslöser zurück.
 - [ ] Nach Seitenneuladen ist der Sitzungsentwurf entfernt.
+- [ ] Protokolle werden nicht in `localStorage`, `sessionStorage` oder IndexedDB wiederhergestellt.
 - [ ] Stimmungseintrag kann hinzugefügt und gelöscht werden.
 - [ ] Blockierter Sitzungsspeicher lässt die Stimmungskomponente nicht abstürzen.
 - [ ] Oberfläche verspricht keine Verschlüsselung oder Cloud-Speicherung.
@@ -131,6 +139,7 @@ Diese Checkliste ergänzt `npm run check`. Ausschließlich synthetische Testdate
 - [ ] HR-Dashboard zeigt dauerhaft einen Mock-/Demo-Hinweis.
 - [ ] Demo-Zugang wird nicht als Azure- oder DB-SSO bezeichnet.
 - [ ] Postfach enthält nur erfundene Fälle.
+- [ ] Im Profil-Demo-Postfach einen Antworttext für Fall A beginnen und vor dem Senden zu Fall B wechseln: Das Eingabefeld wird geleert und der Text kann nicht versehentlich Fall B zugeordnet werden.
 - [ ] Demo-Postfach lässt sich wirklich auf den ursprünglichen Beispieldatensatz zurücksetzen.
 - [ ] Profil- und HR-Ansichtsumschalter werden als Umschaltbuttons und nicht als unvollständige ARIA-Tabs angekündigt.
 - [ ] Analytics bezeichnet alle Werte als fiktive Szenarioannahmen oder frei veränderbar.
@@ -165,7 +174,7 @@ Mindestens prüfen bei 360 px, 768 px und 1280 px Breite:
 - [ ] Tastaturfokus ist sichtbar
 - [ ] Texte bleiben bei 200 % Browser-Zoom nutzbar
 - [ ] Hell- und Dunkelmodus haben ausreichende Lesbarkeit
-- [ ] Mit aktivierter Betriebssystemoption „Bewegung reduzieren“ entfallen zentrale Seiten-/Chatbewegungen.
+- [ ] Mit aktivierter Betriebssystemoption „Bewegung reduzieren“ entfallen zentrale Seiten-/Chat-/PIN-Bewegungen.
 
 ## 12. CI- und Workflow-Prüfung
 
