@@ -12,3 +12,15 @@ test("Datenschutzansicht nennt den externen Gemini-Datenfluss ausdrücklich", ()
   assert.match(source, /keine realen sensiblen Falldaten/);
   assert.doesNotMatch(source, /Gemini[^\n]*speichert keine/i);
 });
+
+test("Datenschutzansicht unterscheidet React-Arbeitsspeicher und sessionStorage", () => {
+  assert.match(source, /Chat und Gedächtnisprotokolle liegen nur im React-Arbeitsspeicher/);
+  assert.match(source, /Protokolle überstehen interne Navigation/);
+  assert.match(source, /Stimmungseinträge verwenden ausschließlich sessionStorage/);
+  assert.match(source, /keiner dieser Inhalte wird in einer eigenen serverseitigen DB-Peace-Falldatenbank gespeichert/i);
+});
+
+test("Planungscheckliste verspricht keine browserweite Sitzungs-Persistenz", () => {
+  assert.match(source, /React-Zustand dieser geöffneten Datenschutzansicht/);
+  assert.match(source, /Ein Bereichswechsel oder Neuladen setzt sie zurück/);
+});
