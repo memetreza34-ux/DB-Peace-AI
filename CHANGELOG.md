@@ -18,14 +18,18 @@ Alle wesentlichen Änderungen werden in dieser Datei dokumentiert.
 - laufende PIN-Prüfungen verwerfen ihr Ergebnis, wenn sich die gespeicherte PIN-Konfiguration während der PBKDF2-Berechnung geändert hat
 - PIN-Sperrbildschirm an die Betriebssystemoption für reduzierte Bewegung angepasst
 - lokale Gefahreneinschätzung korrigiert: historische Gefahrbegriffe können eine ausdrückliche Auswahl „Keine akute Gefahr“ nicht mehr zu „akut“ hochstufen
+- Notrufhinweise für 110 auf akute Bedrohung, Gewalt oder unmittelbar gefährliche Situationen begrenzt statt jede Straftat pauschal als Notrufgrund darzustellen
+- lokaler Chat-Fallback und Gemini-Systemprompt unterscheiden aktuelle Gefahr von historischen Erwähnungen von Gewalt, Drohung, Selbstverletzung oder Suizid
 - Gedächtnisprotokolle auf App-Ebene gehoben, damit sie während interner Navigation im Arbeitsspeicher erhalten bleiben, ohne Browser-Persistenz einzuführen
 - Demo-Postfach löscht einen angefangenen Antworttext beim Wechsel des ausgewählten Falls
 - „Schnell verlassen“ leert Protokolle und Stimmung, setzt Demo-Postfach und App-Zustand zurück und sperrt die Oberfläche vor der externen Navigation; der Schutz bleibt auch im HR-Demo-Modus verfügbar und ist nicht von einem vollständigen Browser-Unload abhängig
+- „Schnell verlassen“ wird über BroadcastChannel und ein kurzlebiges Storage-Signal an andere offene DB-Peace-Tabs weitergegeben; diese löschen ihren eigenen Sitzungsspeicher und sperren sich ebenfalls
 - Notfall-, Kontakt-, Lern-, HR-, Projekt- und Analytics-Bereiche als Prototyp abgesichert
 - Rechtsdaten vollständig auf kuratierte Paraphrasen mit amtlichen Einzelnorm-Links umgestellt; problematischen Generator entfernt
 - großen synthetischen Kurskatalog durch neun vollständig fiktive Demo-Einträge ersetzt
 - statisches Training von Punkt-/Prozentwertung bereinigt
 - Service-Worker-Cachebereinigung auf eigene `db-peace-ai-*`-Caches begrenzt und statische Assets auf echtes Network-first mit Offline-Fallback umgestellt
+- Entwicklungsmodus entfernt nur die Root-Service-Worker-Registrierung der App statt pauschal alle Registrierungen derselben Origin
 - Produktions-CSP verschärft; Inline-Skripte und Vite-HMR-WebSockets bleiben nur im lokalen Vite-Serve-Modus erlaubt, nicht im Production-Build oder Preview-Modus
 - reduzierte Bewegung, Dialogfokus, Umschalter-Semantik und Produktionsfehleranzeige gehärtet
 - Schnell-Verlassen-Schaltfläche über die Dialogebene gehoben
@@ -38,6 +42,6 @@ Alle wesentlichen Änderungen werden in dieser Datei dokumentiert.
 ### Weiterhin offen
 
 - erfolgreicher CI- oder gleichwertiger lokaler `npm ci && npm run check`-Lauf für exakt denselben finalen Head
-- manuelle Browser-, Mobil-, PDF- und Barrierefreiheitsabnahme
+- manuelle Browser-, Mobil-, PWA-, PDF- und Barrierefreiheitsabnahme
 - reproduzierbare Bereinigung möglicherweise ungenutzter npm-Abhängigkeiten mit anschließend neu erzeugtem Lockfile
 - produktive Authentifizierung, Autorisierung, Datenhaltung und organisatorische Freigaben
