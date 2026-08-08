@@ -40,7 +40,10 @@ Daraus folgt:
 - Meldungs-, Projekt-, Stimmungs- und sonstige Entwürfe sind als temporär oder Demo gekennzeichnet; Stimmungseinträge verwenden nur den Browser-Sitzungsspeicher.
 - Der Entsperrstatus der lokalen PIN wird nicht in Browser-Speicher persistiert; Reload oder neuer/duplizierter Tab sperren erneut.
 - PIN-Fehlversuche und kurze Sperrzeiten werden tabübergreifend im lokalen Browser-Speicher gehalten und vor einer Prüfung erneut gelesen, damit ein weiterer Tab die Drosselung nicht zurücksetzt.
+- Die PIN-Konfiguration wird zwischen Tabs beobachtet. Ein bereits geöffneter Einrichtungs-Tab wechselt auf Entsperren, sobald ein anderer Tab eine PIN speichert; die Einrichtung prüft vor und nach der PBKDF2-Berechnung erneut, ob bereits eine Konfiguration existiert.
+- Eine laufende PIN-Prüfung verwirft ihr Ergebnis, wenn sich die gespeicherte PIN-Konfiguration während der Berechnung geändert hat.
 - Die lokale PIN wird nicht im Klartext gespeichert; sie bleibt dennoch nur ein Sichtschutz.
+- „Schnell verlassen“ entfernt den Stimmungs-Sitzungsspeicher, leert Protokolle, setzt das Demo-Postfach zurück, schließt offene App-Zustände und sperrt die Oberfläche erneut, bevor die externe Tarnseite geöffnet wird. Dieser Schutz gilt auch im HR-Demo-Modus und verlässt sich nicht ausschließlich auf einen Browser-Unload.
 - Notfallfunktionen übertragen keinen Standort und verwenden keine erfundenen internen Telefonnummern.
 - PDF-Ausgaben sind als Entwurf, Vorlage oder persönliche Lernnotiz gekennzeichnet.
 - Kritische Platzhalter und irreführende Produktbehauptungen werden durch `npm run verify` blockiert.
