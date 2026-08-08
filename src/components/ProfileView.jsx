@@ -26,10 +26,20 @@ export function ProfileView() {
   useEffect(() => {
     if (tickets.length === 0) {
       setSelectedTicketId(null);
+      setReplyText("");
       return;
     }
-    if (!tickets.some((ticket) => ticket.id === selectedTicketId)) setSelectedTicketId(tickets[0].id);
+    if (!tickets.some((ticket) => ticket.id === selectedTicketId)) {
+      setSelectedTicketId(tickets[0].id);
+      setReplyText("");
+    }
   }, [tickets, selectedTicketId]);
+
+  function selectTicket(id) {
+    if (id === selectedTicketId) return;
+    setSelectedTicketId(id);
+    setReplyText("");
+  }
 
   function sendDemoReply(event) {
     event.preventDefault();
@@ -94,7 +104,7 @@ export function ProfileView() {
               <div className="border-b border-db-dark/10 bg-db-soft p-4 text-xs font-black uppercase tracking-wide text-db-rail dark:border-white/10 dark:bg-white/5 dark:text-white/60">Erfundene Fälle</div>
               <div className="divide-y divide-db-dark/5 dark:divide-white/5">
                 {tickets.map((ticket) => (
-                  <button key={ticket.id} type="button" onClick={() => setSelectedTicketId(ticket.id)} aria-pressed={selectedTicketId === ticket.id} className={`w-full p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-600/40 ${selectedTicketId === ticket.id ? "border-l-4 border-violet-600 bg-violet-50/70 dark:bg-violet-950/20" : "border-l-4 border-transparent hover:bg-db-soft dark:hover:bg-white/5"}`}>
+                  <button key={ticket.id} type="button" onClick={() => selectTicket(ticket.id)} aria-pressed={selectedTicketId === ticket.id} className={`w-full p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-600/40 ${selectedTicketId === ticket.id ? "border-l-4 border-violet-600 bg-violet-50/70 dark:bg-violet-950/20" : "border-l-4 border-transparent hover:bg-db-soft dark:hover:bg-white/5"}`}>
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="text-xs font-black text-db-dark dark:text-white">{ticket.id}</p>
