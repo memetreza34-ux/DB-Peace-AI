@@ -37,7 +37,9 @@ Ein Timeout bricht den lokalen SDK-Request per `AbortSignal` ab. Das ist keine G
 - Sicherheitsheader und `Cache-Control: no-store` für API-Antworten
 - Service Worker schließt `/api/` vom Cache aus und liefert statische Assets Network-first
 - Entsperrstatus der lokalen PIN nicht in Browser-Speicher persistiert
-- Sitzungsdaten statt dauerhafter Fallspeicherung
+- PIN-Fehlversuche und kurze Sperrzeiten werden ohne Klartext-PIN tabübergreifend in `localStorage` gehalten, damit ein neuer Tab die Drosselung nicht zurücksetzt
+- Gedächtnisprotokolle bleiben nur im React-Arbeitsspeicher der laufenden App, überstehen dort aber interne Navigation; sie werden nicht in `localStorage`, `sessionStorage` oder IndexedDB geschrieben
+- Stimmungseinträge verwenden nur `sessionStorage`; keine dauerhafte Falldatenbank
 - keine Dateiübertragung, Standortübertragung oder echte SSO-Anmeldung
 - sichtbare Prototyp-, Datenfluss- und Datenwarnungen
 - statischer Repository-Verifier gegen bekannte irreführende Aussagen
@@ -56,6 +58,12 @@ Folge: unnötige Nutzung eines lokal konfigurierten API-Schlüssels oder Ressour
 
 Kontrolle: API bindet nur an Loopback, fremde Browser-Origin-/Cross-Site-Anfragen werden abgewiesen und KI-POST-Routen verlangen echtes JSON. Das Quiz wurde von GET auf POST umgestellt.
 
+### PIN-Drosselung wird durch einen neuen Tab umgangen
+
+Folge: Ein rein tablokaler Versuchszähler würde für dieselbe lokale PIN neue Fehlversuche ermöglichen.
+
+Kontrolle: Fehlversuche und die kurze Sperrfrist liegen in einem origin-lokalen `localStorage`-Eintrag und werden über das `storage`-Ereignis zwischen Tabs synchronisiert. Vor jeder PIN-Prüfung wird der aktuelle Drosselungszustand erneut gelesen. Die PIN selbst wird weiterhin nicht im Klartext gespeichert und die Sperre bleibt nur ein Sichtschutz.
+
 ### Ein Demo-Ablauf wird als offizielle Meldung verstanden
 
 Folge: Betroffene verlassen sich auf eine Übertragung, die nicht stattfindet.
@@ -66,7 +74,13 @@ Kontrolle: Entwurf-, Export- und Demo-Bezeichnungen; keine Erfolgsbestätigung o
 
 Folge: Ein Entwurf enthält Aussagen, die die Person nie ausgewählt oder angegeben hat.
 
-Kontrolle: sensible Meldungsfelder starten leer; Kategorie, Gefahr, Perspektive, Häufigkeit, Belastung und gewünschte Form müssen bewusst ausgewählt oder als „Nicht angegeben“ erfasst werden.
+Kontrolle: sensible Meldungsfelder starten leer; Kategorie, Gefahr, Perspektive, Häufigkeit, Belastung und gewünschte Form müssen bewusst ausgewählt oder als „Nicht angegeben“ erfasst werden. Die lokale Einstufung `akut` entsteht nur noch durch die bewusste Auswahl `Direkte Gefahr`; historische Gefahrbegriffe überschreiben eine ausdrückliche Auswahl `Keine akute Gefahr` nicht.
+
+### Sitzungsprotokolle gehen bei normaler interner Navigation verloren
+
+Folge: Nutzende könnten einen bereits angelegten, noch nicht exportierten Entwurf unbeabsichtigt verlieren.
+
+Kontrolle: Die Liste der Gedächtnisprotokolle liegt auf App-Ebene im React-Arbeitsspeicher und übersteht Wechsel zwischen den App-Bereichen. Reload, Schließen oder echtes Verlassen der App löschen diesen Zustand weiterhin.
 
 ### Veraltete Hilfe- oder Rechtsinformation
 
