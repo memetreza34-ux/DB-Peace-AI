@@ -30,6 +30,15 @@ test("PIN-Fehlversuche und Sperrzeit gelten tabübergreifend", () => {
   assert.match(lock, /Neuladen oder ein weiterer Tab setzen diese Pause nicht zurück/);
 });
 
+test("alte Teil-Fehlversuche verfallen statt unbegrenzt gespeichert zu bleiben", () => {
+  const lock = read("src/components/AppLock.jsx");
+
+  assert.match(lock, /ATTEMPT_WINDOW_MS\s*=\s*5 \* 60_000/);
+  assert.match(lock, /attemptsExpireAt/);
+  assert.match(lock, /parsed\.attemptsExpireAt > now/);
+  assert.match(lock, /failedAttempts > 0 \? Date\.now\(\) \+ ATTEMPT_WINDOW_MS : 0/);
+});
+
 test("PIN-Sperrbildschirm respektiert reduzierte Bewegung", () => {
   const lock = read("src/components/AppLock.jsx");
 
