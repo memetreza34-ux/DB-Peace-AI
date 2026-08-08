@@ -22,18 +22,20 @@ Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. 
 - Node.js-API-Proxy auf `127.0.0.1`
 - Gemini-Chat mit klar gekennzeichnetem lokalem Fallback
 - KI-Status unterscheidet einen konfigurierten Schlüssel von einer tatsächlich erfolgreichen Gemini-Antwort
+- Chat-Leitplanken unterscheiden gegenwärtige Gefahr von historischen Erwähnungen; Gewalt-, Drohungs-, Selbstverletzungs- oder Suizidbegriffe allein beweisen keine aktuelle Akutheit
 - lokales Warten auf Gemini-Aufrufe wird nach 20 Sekunden begrenzt; ein SDK-Abort garantiert keine sofortige Beendigung externer Verarbeitung
 - Gemini-Endpunkt zur Strukturierung eines Meldungsentwurfs
 - KI-Quiz mit validierter Ausgabe, begrenztem Themenumfang und lokalem Fragenset als Fallback
 - Meldungsentwurf mit Formularvalidierung, Kopierfunktion und PDF-Export
 - Gedächtnisprotokolle bleiben während der laufenden App-Nutzung über interne Navigation hinweg im React-Arbeitsspeicher erhalten und werden nicht dauerhaft im Browser gespeichert
 - Stimmungseinträge bleiben im Browser-Sitzungsspeicher
-- Schnell-Verlassen leert temporäre App-Inhalte, setzt veränderte Demo-Tickets zurück und sperrt die Oberfläche vor der externen Navigation; die Funktion ist auch im HR-Demo-Modus verfügbar
+- Schnell-Verlassen leert temporäre App-Inhalte, setzt veränderte Demo-Tickets zurück und sperrt die Oberfläche vor der externen Navigation; die Bereinigung wird an weitere offene DB-Peace-Tabs signalisiert und die Funktion ist auch im HR-Demo-Modus verfügbar
 - statische Szenario-Übung ohne KI, Punktzahl, Prozentwert oder Zertifikat
 - kuratierte Rechteorientierung mit vorsichtigen Paraphrasen und amtlichen Einzelnorm-Links
-- geprüfte externe Hilfsnummern und interne Suchhinweise
+- geprüfte externe Hilfsnummern und interne Suchhinweise; 110 wird auf akute Bedrohung, Gewalt oder unmittelbar gefährliche Situationen begrenzt
 - vollständig fiktiver Lernkatalog ohne Zuordnung erfundener Angebote zu realen Organisationen
 - Service Worker ohne Caching von `/api/`-Antworten und mit auf `db-peace-ai-*` begrenzter Cache-Bereinigung
+- Entwicklungsmodus entfernt nur die Root-Service-Worker-Registrierung der App statt alle Registrierungen derselben Origin
 - Production-CSP ohne Inline-Skripte oder Vite-HMR-WebSockets; eng begrenzte React-Refresh-/HMR-Ausnahmen gelten nur im lokalen Vite-Serve-Modus und nicht in `vite preview`
 - Repository-Verifikation, Node-Regressionstests und GitHub-Actions-Workflow
 - Importgraph-Test gegen unreferenzierten JavaScript-Altcode
@@ -61,7 +63,11 @@ Der MVP soll einen glaubwürdigen und vorführbaren Innovationsprototyp zeigen. 
 - Antwortentwürfe im Demo-Postfach, die beim Fallwechsel dem falschen Fall zugeordnet werden konnten
 - Gedächtnisprotokolle, die bereits bei normaler interner Navigation verloren gingen
 - Schnellausstieg, der temporären React-Zustand nur durch erwartetes Verlassen der Seite verlor und deshalb bei PWA-Out-of-scope-Navigation nicht ausreichend robust war
+- Schnellausstieg, der zuvor nur den auslösenden Tab bereinigte und weitere bereits geöffnete DB-Peace-Tabs entsperrt lassen konnte
+- pauschale 110-Beschreibung für jede Straftat statt Beschränkung auf akute Gefahrenlagen
+- lokale und modellgestützte Krisentexte, die historische Schlüsselwörter zu Suizid, Selbstverletzung, Drohung oder Gewalt zu schnell als aktuelle Akutsituation behandeln konnten
 - lokale Gefahrenlogik, die historische Gefahrbegriffe trotz ausdrücklicher Auswahl „Keine akute Gefahr“ als akut einstufen konnte
+- Entwicklungsbereinigung, die pauschal alle Service-Worker-Registrierungen derselben Origin unregistrieren konnte
 - Prozent-/Punktbewertung im statischen Training
 - Service-Worker-Bereinigung fremder Origin-Caches
 - ungeprüfter Rechtsdatensatz mit absoluten oder falschen Handlungs- und Sanktionsbehauptungen
@@ -92,6 +98,7 @@ Solange die jeweilige Technik oder Freigabe fehlt, darf die App nicht behaupten:
 - eine Meldung sei anonym oder offiziell übermittelt worden
 - eine Anmeldung sei über DB Azure AD oder ein anderes SSO erfolgt
 - ein konfigurierter API-Key beweise eine funktionierende Gemini-Verbindung
+- ein Schlüsselwort allein beweise eine aktuelle Krise, Gefahr oder Notfallsituation
 - GPS oder Standort seien versendet worden
 - Offline-Eingaben würden später synchronisiert
 - statische Daten seien live synchronisiert
@@ -109,7 +116,7 @@ Noch nicht nachgewiesen:
 - erfolgreicher `npm ci`-Lauf
 - erfolgreicher `npm run check`-Lauf
 - erfolgreicher Vite-Produktionsbuild für den finalen Head
-- vollständige manuelle Browser-, Mobil-, PDF- und Tastaturabnahme
+- vollständige manuelle Browser-, Mobil-, PWA-, PDF- und Tastaturabnahme
 
 Bisher beobachtete GitHub-Actions-Läufe erreichten keinen Runner und enthielten keine ausgeführten Steps. Deshalb liegt weder ein bestandener Check noch ein nachgewiesener Code-/Buildfehler aus diesen Läufen vor. Für den finalen Head muss erneut geprüft werden.
 
