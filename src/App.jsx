@@ -20,6 +20,7 @@ import { RecordAndReportView } from "./components/RecordAndReportView.jsx";
 import { RightsAndLawsView } from "./components/RightsAndLawsView.jsx";
 import { SSOLoginModal } from "./components/SSOLoginModal.jsx";
 import SupportPage from "./components/SupportPage.jsx";
+import { resetTickets } from "./data/mockTickets.js";
 
 const pageVariants = {
   initial: { opacity: 0, y: 12 },
@@ -49,9 +50,27 @@ export default function App() {
     };
   }, []);
 
+  function prepareQuickExit() {
+    setRecords([]);
+    resetTickets();
+    setIsEmergencyOpen(false);
+    setIsSearchOpen(false);
+    setIsSSOOpen(false);
+    setIsHRMode(false);
+    setActiveTab("home");
+    setIsLocked(true);
+  }
+
   if (isLocked) return <AppLock onUnlock={() => setIsLocked(false)} />;
 
-  if (isHRMode) return <HRDashboard onExit={() => setIsHRMode(false)} />;
+  if (isHRMode) {
+    return (
+      <>
+        <HRDashboard onExit={() => setIsHRMode(false)} />
+        <PanicButton onBeforeExit={prepareQuickExit} />
+      </>
+    );
+  }
 
   const view = (
     <ActiveView
@@ -110,7 +129,7 @@ export default function App() {
       />
 
       <FloatingChatWidget />
-      <PanicButton />
+      <PanicButton onBeforeExit={prepareQuickExit} />
       <EmergencyModal isOpen={isEmergencyOpen} onClose={() => setIsEmergencyOpen(false)} />
 
       {isOffline && (
