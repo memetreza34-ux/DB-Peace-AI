@@ -1,6 +1,34 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Bot, Send, X, MessageSquareText } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { erkenneKrise } from "../lib/crisis";
+
+// Erkennt Notrufnummern (110, 112) und Servicenummern (0800…, 116…) im Fließtext
+// und macht sie antippbar. In einer Krise soll niemand eine Nummer abtippen müssen.
+const RUFNUMMER_MUSTER = "\\b(?:0800\\s?\\d{3}\\s?\\d\\s?\\d{3}|116\\s?\\d{3})\\b|(?<![\\d,.])\\b11[02]\\b(?![\\d,.])";
+const RUFNUMMER_SPLIT = new RegExp(`(${RUFNUMMER_MUSTER})`, "g");
+const IST_RUFNUMMER = new RegExp(`^(?:${RUFNUMMER_MUSTER})$`);
+
+function TextMitRufnummern({ text }) {
+  const teile = text.split(RUFNUMMER_SPLIT).filter((t) => t !== undefined);
+  return (
+    <>
+      {teile.map((teil, i) =>
+        IST_RUFNUMMER.test(teil) ? (
+          <a
+            key={i}
+            href={`tel:${teil.replace(/\s/g, "")}`}
+            className="font-black underline decoration-2 underline-offset-2 hover:text-db-red"
+          >
+            {teil}
+          </a>
+        ) : (
+          <React.Fragment key={i}>{teil}</React.Fragment>
+        )
+      )}
+    </>
+  );
+}
 
 export function FloatingChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,6 +77,18 @@ export function FloatingChatWidget() {
     setMessages(newMessages);
     setInput("");
     setIsTyping(true);
+
+    // Krisensignale gehen nie an ein Sprachmodell: Die Antwort muss auch ohne
+    // API-Key, bei Netzfehlern und unabhängig von Modellausgaben korrekt sein.
+    const krise = erkenneKrise(userText);
+    if (krise) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", text: krise.text, kritisch: true }
+      ]);
+      setIsTyping(false);
+      return;
+    }
 
     try {
       // Map messages to API format { role, content }
@@ -158,13 +198,15 @@ export function FloatingChatWidget() {
                   className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`relative max-w-[85%] rounded-md px-4 py-3 text-sm leading-relaxed ${
+                    className={`relative max-w-[85%] whitespace-pre-line rounded-md px-4 py-3 text-sm leading-relaxed ${
                       m.role === "user"
                         ? "bg-db-red text-white rounded-br-sm shadow-md shadow-db-red/20"
+                        : m.kritisch
+                        ? "bg-red-50 dark:bg-red-950/40 text-db-dark dark:text-white rounded-bl-sm border-2 border-db-red shadow-sm"
                         : "bg-white dark:bg-db-rail text-db-dark dark:text-white rounded-bl-sm border border-db-dark/5 dark:border-white/10 shadow-sm"
                     }`}
                   >
-                    {m.text}
+                    {m.role === "assistant" ? <TextMitRufnummern text={m.text} /> : m.text}
                   </div>
                 </motion.div>
               ))}

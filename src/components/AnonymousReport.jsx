@@ -418,7 +418,7 @@ function DescriptionStep({ form, togglePerspective, update }) {
             <Upload className="w-5 h-5 text-db-dark/60 dark:text-white/60 group-hover:text-db-red" />
           </div>
           <p className="font-bold text-sm text-db-dark dark:text-white">Screenshots, Chat-Verläufe oder Bilder</p>
-          <p className="text-xs text-db-rail dark:text-white/60 font-medium mt-1">Sicher & verschlüsselt anhängen (max. 50 MB)</p>
+          <p className="text-xs text-db-rail dark:text-white/60 font-medium mt-1">Bleibt auf diesem Gerät (max. 50 MB)</p>
         </div>
       </div>
 

@@ -27,7 +27,7 @@ const courseCategories = [
     id: "zertifikat",
     title: "Zertifikatslehrgänge",
     icon: Award,
-    desc: "Offizielle Kurse mit anerkanntem Abschluss.",
+    desc: "Noch nicht hinterlegt – im Pilotbetrieb mit der DB abzustimmen.",
     color: "red",
     textColor: "text-red-500"
   },
@@ -118,20 +118,22 @@ export function LearningHubView() {
             </div>
           )}
         </div>
-        <div className="shrink-0 pt-2 sm:pt-0 flex flex-col gap-2">
-          <button
-            onClick={() => setSelectedCourseDetail(course)}
-            className="inline-flex items-center gap-2 rounded-lg bg-db-dark px-4 py-2 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-sm w-full sm:w-auto justify-center"
-          >
-            Zum Kurs <ExternalLink className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => setSelectedCourseForLeave(course)}
-            className="inline-flex items-center gap-2 rounded-lg bg-teal-50 px-4 py-2 text-sm font-extrabold text-teal-700 hover:bg-teal-100 border border-teal-200 transition shadow-sm w-full sm:w-auto justify-center"
-          >
-            <TentTree className="h-4 w-4" /> Bildungsurlaub
-          </button>
-        </div>
+        {course.link !== "" && (
+          <div className="shrink-0 pt-2 sm:pt-0 flex flex-col gap-2">
+            <button
+              onClick={() => setSelectedCourseDetail(course)}
+              className="inline-flex items-center gap-2 rounded-lg bg-db-dark px-4 py-2 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-sm w-full sm:w-auto justify-center"
+            >
+              Details ansehen <ExternalLink className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setSelectedCourseForLeave(course)}
+              className="inline-flex items-center gap-2 rounded-lg bg-teal-50 px-4 py-2 text-sm font-extrabold text-teal-700 hover:bg-teal-100 border border-teal-200 transition shadow-sm w-full sm:w-auto justify-center"
+            >
+              <TentTree className="h-4 w-4" /> Bildungsurlaub
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

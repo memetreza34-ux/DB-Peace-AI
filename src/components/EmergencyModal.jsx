@@ -54,12 +54,12 @@ export function EmergencyModal({ isOpen, onClose }) {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-bold text-db-dark dark:text-white">2. DB Sicherheit</h3>
-              <EmergencySlider 
-                phoneNumber="0800 1234567" // Placeholder
-                label="Wischen für DB Sicherheit" 
-                colorClass="bg-db-dark" 
-                iconColor="text-db-dark" 
+              <h3 className="text-sm font-bold text-db-dark dark:text-white">2. Rettungsdienst (Verletzung, medizinischer Notfall)</h3>
+              <EmergencySlider
+                phoneNumber="112"
+                label="Wischen für 112"
+                colorClass="bg-db-dark"
+                iconColor="text-db-dark"
               />
             </div>
 
@@ -69,7 +69,17 @@ export function EmergencyModal({ isOpen, onClose }) {
                <a href="tel:08001110111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-db-dark/5 dark:border-white/5 hover:border-db-dark/20 dark:hover:border-white/20 transition">
                   <div>
                     <div className="font-bold text-sm text-db-dark dark:text-white">Telefonseelsorge (24/7)</div>
-                    <div className="text-xs font-medium text-db-rail dark:text-white/60">0800 111 0 111 (Kostenfrei)</div>
+                    <div className="text-xs font-medium text-db-rail dark:text-white/60">0800 111 0 111 (Kostenfrei, anonym)</div>
+                  </div>
+                  <div className="rounded-full bg-white dark:bg-db-dark/80 p-2 shadow-sm border dark:border-white/10">
+                    <PhoneCall className="h-4 w-4 text-db-dark dark:text-white" />
+                  </div>
+               </a>
+
+               <a href="tel:116111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-db-dark/5 dark:border-white/5 hover:border-db-dark/20 dark:hover:border-white/20 transition">
+                  <div>
+                    <div className="font-bold text-sm text-db-dark dark:text-white">Nummer gegen Kummer</div>
+                    <div className="text-xs font-medium text-db-rail dark:text-white/60">116 111 (Kostenfrei, bis 25 Jahre)</div>
                   </div>
                   <div className="rounded-full bg-white dark:bg-db-dark/80 p-2 shadow-sm border dark:border-white/10">
                     <PhoneCall className="h-4 w-4 text-db-dark dark:text-white" />

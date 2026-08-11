@@ -1,41 +1,124 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Lock, ShieldCheck, ArrowRight, Delete } from "lucide-react";
+import { Lock, ShieldCheck, Delete } from "lucide-react";
+import { pinEingerichtet, pinEinrichten, pinPruefen, sperreRestMs } from "../lib/lock";
 
 export function AppLock({ onUnlock }) {
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
-  const CORRECT_PIN = "1234"; // For prototype purposes
+  const [meldung, setMeldung] = useState("");
+  const [einrichten, setEinrichten] = useState(() => !pinEingerichtet());
+  const [ersteEingabe, setErsteEingabe] = useState("");
+  const [gesperrtBis, setGesperrtBis] = useState(() => sperreRestMs());
+
+  // Countdown während einer Sperre nach zu vielen Fehlversuchen
+  useEffect(() => {
+    if (gesperrtBis <= 0) return;
+    const t = setInterval(() => {
+      const rest = sperreRestMs();
+      setGesperrtBis(rest);
+      if (rest <= 0) setMeldung("");
+    }, 1000);
+    return () => clearInterval(t);
+  }, [gesperrtBis]);
+
+  const fehlerZeigen = useCallback((text) => {
+    setError(true);
+    setMeldung(text);
+    setTimeout(() => {
+      setPin("");
+      setError(false);
+    }, 600);
+  }, []);
 
   useEffect(() => {
-    if (pin.length === 4) {
-      if (pin === CORRECT_PIN) {
-        onUnlock();
-      } else {
-        setError(true);
-        setTimeout(() => {
+    if (pin.length !== 4) return;
+
+    let abgebrochen = false;
+
+    (async () => {
+      // Ersteinrichtung: PIN zweimal eingeben
+      if (einrichten) {
+        if (!ersteEingabe) {
+          setErsteEingabe(pin);
           setPin("");
-          setError(false);
-        }, 500);
+          setMeldung("");
+          return;
+        }
+        if (ersteEingabe !== pin) {
+          setErsteEingabe("");
+          fehlerZeigen("Die PINs stimmen nicht überein. Bitte neu anfangen.");
+          return;
+        }
+        await pinEinrichten(pin);
+        if (!abgebrochen) onUnlock();
+        return;
       }
-    }
-  }, [pin, onUnlock]);
+
+      const ergebnis = await pinPruefen(pin);
+      if (abgebrochen) return;
+
+      if (ergebnis.ok) {
+        onUnlock();
+      } else if (ergebnis.grund === "gesperrt") {
+        setGesperrtBis(ergebnis.restMs);
+        fehlerZeigen("Zu viele Fehlversuche.");
+      } else {
+        fehlerZeigen(
+          ergebnis.verbleibend > 0
+            ? `Falsche PIN — noch ${ergebnis.verbleibend} Versuch${ergebnis.verbleibend === 1 ? "" : "e"}.`
+            : "Falsche PIN."
+        );
+      }
+    })();
+
+    return () => {
+      abgebrochen = true;
+    };
+  }, [pin, einrichten, ersteEingabe, onUnlock, fehlerZeigen]);
+
+  const gesperrt = gesperrtBis > 0;
 
   const handleKeyPress = (num) => {
+    if (gesperrt) return;
     if (pin.length < 4) {
-      setPin(prev => prev + num);
+      setPin((prev) => prev + num);
       setError(false);
     }
   };
 
   const handleDelete = () => {
-    setPin(prev => prev.slice(0, -1));
+    if (gesperrt) return;
+    setPin((prev) => prev.slice(0, -1));
     setError(false);
   };
 
+  // Tastatureingabe zulassen — am Rechner tippt niemand gern auf Bildschirmtasten
+  useEffect(() => {
+    const onKey = (e) => {
+      if (gesperrt) return;
+      if (/^[0-9]$/.test(e.key)) handleKeyPress(e.key);
+      else if (e.key === "Backspace") handleDelete();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  const titel = einrichten
+    ? ersteEingabe
+      ? "PIN bestätigen"
+      : "PIN festlegen"
+    : "DB Peace";
+
+  const untertitel = einrichten
+    ? ersteEingabe
+      ? "Gib dieselbe vierstellige PIN noch einmal ein."
+      : "Lege eine vierstellige PIN fest, mit der du diese App auf deinem Gerät öffnest."
+    : "Dein geschützter Bereich. Bitte gib deine PIN ein.";
+
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-white selection:bg-db-red">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-sm flex flex-col items-center"
@@ -43,29 +126,44 @@ export function AppLock({ onUnlock }) {
         <div className="bg-db-red/20 p-4 rounded-full mb-6">
           <Lock className="w-12 h-12 text-db-red" />
         </div>
-        
-        <h1 className="text-2xl font-black mb-2 tracking-tight">DB Peace</h1>
-        <p className="text-slate-400 font-medium text-sm mb-8 text-center">
-          Dein sicherer Raum. Bitte gib deine PIN ein, um die App zu entsperren.
-        </p>
+
+        <h1 className="text-2xl font-black mb-2 tracking-tight">{titel}</h1>
+        <p className="text-slate-400 font-medium text-sm mb-8 text-center max-w-xs">{untertitel}</p>
 
         {/* PIN Indicators */}
-        <motion.div 
+        <motion.div
           animate={error ? { x: [-10, 10, -10, 10, 0] } : {}}
           transition={{ duration: 0.4 }}
-          className="flex gap-4 mb-12"
+          className="flex gap-4 mb-4"
+          role="status"
+          aria-label={`${pin.length} von 4 Ziffern eingegeben`}
         >
           {[0, 1, 2, 3].map((i) => (
-            <div 
+            <div
               key={i}
               className={`w-4 h-4 rounded-full border-2 transition-colors duration-300 ${
-                pin.length > i 
-                  ? error ? 'bg-red-500 border-red-500' : 'bg-db-red border-db-red'
-                  : 'border-slate-600'
+                pin.length > i
+                  ? error
+                    ? "bg-red-500 border-red-500"
+                    : "bg-db-red border-db-red"
+                  : "border-slate-600"
               }`}
             />
           ))}
         </motion.div>
+
+        {/* Meldungsbereich — feste Höhe, damit das Layout nicht springt */}
+        <div className="h-10 mb-4 flex items-center justify-center px-4" aria-live="polite">
+          {gesperrt ? (
+            <p className="text-sm font-bold text-red-400 text-center">
+              Gesperrt — noch {Math.ceil(gesperrtBis / 1000)} Sekunden
+            </p>
+          ) : meldung ? (
+            <p className={`text-sm font-medium text-center ${error ? "text-red-400" : "text-slate-300"}`}>
+              {meldung}
+            </p>
+          ) : null}
+        </div>
 
         {/* Numpad */}
         <div className="grid grid-cols-3 gap-4 sm:gap-6 w-full max-w-xs">
@@ -73,7 +171,8 @@ export function AppLock({ onUnlock }) {
             <button
               key={num}
               onClick={() => handleKeyPress(num.toString())}
-              className="h-16 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-2xl font-bold transition flex items-center justify-center"
+              disabled={gesperrt}
+              className="h-16 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-2xl font-bold transition flex items-center justify-center disabled:opacity-40 disabled:hover:bg-slate-800"
             >
               {num}
             </button>
@@ -81,21 +180,27 @@ export function AppLock({ onUnlock }) {
           <div className="h-16"></div>
           <button
             onClick={() => handleKeyPress("0")}
-            className="h-16 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-2xl font-bold transition flex items-center justify-center"
+            disabled={gesperrt}
+            className="h-16 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-2xl font-bold transition flex items-center justify-center disabled:opacity-40 disabled:hover:bg-slate-800"
           >
             0
           </button>
           <button
             onClick={handleDelete}
-            className="h-16 rounded-full hover:bg-slate-800 active:bg-slate-700 text-slate-400 transition flex items-center justify-center"
+            disabled={gesperrt}
+            aria-label="Letzte Ziffer löschen"
+            className="h-16 rounded-full hover:bg-slate-800 active:bg-slate-700 text-slate-400 transition flex items-center justify-center disabled:opacity-40"
           >
             <Delete className="w-6 h-6" />
           </button>
         </div>
 
-        <div className="mt-12 flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
-          <ShieldCheck className="w-4 h-4 text-emerald-500" />
-          Lokale Verschlüsselung aktiv
+        <div className="mt-10 flex items-start gap-2 text-xs font-medium text-slate-500 max-w-xs text-center">
+          <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+          <span className="text-left">
+            Deine Eingaben bleiben auf diesem Gerät. Die PIN wird nur als Prüfsumme gespeichert,
+            nicht im Klartext.
+          </span>
         </div>
       </motion.div>
     </div>

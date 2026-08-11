@@ -29,17 +29,29 @@ export function ContactsView() {
           </div>
           
           <div className="space-y-4 flex-grow">
-            <ContactCard 
-              name="Polizei / Notruf"
+            <ContactCard
+              name="Polizei"
               number="110"
               desc="Bei akuter Bedrohung, Gewalt oder Gefahr im Verzug."
               urgent
             />
-            <ContactCard 
-              name="DB Sicherheit"
-              number="0800 123 4567" // Placeholder
-              desc="Für Sicherheitsvorfälle an Bahnhöfen und in Zügen."
+            <ContactCard
+              name="Rettungsdienst / Notruf"
+              number="112"
+              desc="Bei Verletzungen, medizinischen Notfällen oder wenn du dir selbst etwas antun möchtest."
               urgent
+            />
+            <ContactCard
+              name="Telefonseelsorge"
+              number="0800 111 0 111"
+              desc="Rund um die Uhr, kostenlos und anonym — auch wenn du einfach nur reden musst."
+              urgent
+            />
+            <ContactCard
+              name="DB Sicherheit"
+              desc="Für Sicherheitsvorfälle an Bahnhöfen und in Zügen. Die interne Rufnummer wird im Pilotbetrieb hinterlegt — bis dahin bei akuter Gefahr bitte 110 wählen."
+              action="Noch nicht hinterlegt"
+              icon={<ArrowRight className="w-4 h-4" />}
             />
           </div>
         </motion.div>

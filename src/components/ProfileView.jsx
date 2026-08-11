@@ -187,7 +187,7 @@ export function ProfileView() {
           <div className="space-y-4">
             <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Meine Gedächtnisprotokolle</h3>
             <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-6">
-              Diese Einträge sind lokal verschlüsselt und nur für dich sichtbar.
+              Diese Einträge bleiben auf diesem Gerät und werden nirgendwo hochgeladen.
             </p>
             {savedRecords.map(record => (
               <div key={record.id} className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm hover:shadow-md transition">

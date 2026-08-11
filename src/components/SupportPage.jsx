@@ -4,6 +4,7 @@ import {
   HeartPulse,
   HelpCircle,
   Scale,
+  ShieldAlert,
   Siren,
   UsersRound,
   HandHeart,
