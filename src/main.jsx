@@ -1,5 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { MotionConfig } from "framer-motion";
 import App from "./App.jsx";
 import "./styles.css";
 
@@ -78,10 +79,15 @@ if (!root) {
   document.body.innerHTML =
     '<div style="padding:32px;font-family:sans-serif;color:#1f2328"><h1 style="color:#e2001a">DB Peace AI</h1><p>Root-Element fehlt. Bitte index.html prüfen.</p></div>';
 } else {
+  // reducedMotion="user" respektiert die Systemeinstellung. Das CSS in styles.css
+  // greift nur bei CSS-Animationen — Framer Motion animiert per JavaScript und
+  // muss separat darauf hingewiesen werden.
   createRoot(root).render(
     <React.StrictMode>
       <AppErrorBoundary>
-        <App />
+        <MotionConfig reducedMotion="user">
+          <App />
+        </MotionConfig>
       </AppErrorBoundary>
     </React.StrictMode>
   );
