@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { X, ExternalLink, BookOpen, Info, Download } from "lucide-react";
 import { jsPDF } from "jspdf";
+import { useDialog } from "../lib/useDialog";
 
 /**
  * Zeigt die Eckdaten eines Bildungsangebots und führt zum echten Anbieter.
@@ -10,44 +11,7 @@ import { jsPDF } from "jspdf";
  * ist eine persönliche Merknotiz — klar als solche gekennzeichnet.
  */
 export function CourseDetailModal({ course, onClose }) {
-  const dialogRef = useRef(null);
-  const zuvorFokussiert = useRef(null);
-
-  // Fokus einfangen und beim Schließen zurückgeben
-  useEffect(() => {
-    zuvorFokussiert.current = document.activeElement;
-    dialogRef.current?.focus();
-
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") {
-        e.stopPropagation();
-        onClose();
-        return;
-      }
-      if (e.key !== "Tab") return;
-
-      const fokussierbar = dialogRef.current?.querySelectorAll(
-        'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      if (!fokussierbar?.length) return;
-      const erster = fokussierbar[0];
-      const letzter = fokussierbar[fokussierbar.length - 1];
-
-      if (e.shiftKey && document.activeElement === erster) {
-        e.preventDefault();
-        letzter.focus();
-      } else if (!e.shiftKey && document.activeElement === letzter) {
-        e.preventDefault();
-        erster.focus();
-      }
-    };
-
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      zuvorFokussiert.current?.focus?.();
-    };
-  }, [onClose]);
+  const dialogRef = useDialog(Boolean(course), onClose);
 
   if (!course) return null;
 

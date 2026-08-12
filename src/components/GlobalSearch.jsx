@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Search, X, ArrowRight, ShieldAlert, GraduationCap, Users, FileText, PhoneCall, LayoutDashboard } from "lucide-react";
 
 // The Search Index
@@ -115,9 +115,11 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
     onClose();
   };
 
+  // Ohne AnimatePresence: Das Overlay blieb sonst nach dem Schließen unsichtbar
+  // im DOM liegen und fing weiterhin Klicks über der ganzen Seite ab.
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 sm:px-6">
         {/* Backdrop */}
         <motion.div 
@@ -200,7 +202,5 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           </div>
         </motion.div>
         </div>
-      )}
-    </AnimatePresence>
   );
 }

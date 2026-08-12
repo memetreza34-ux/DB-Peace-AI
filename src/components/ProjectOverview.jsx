@@ -185,9 +185,9 @@ export default function ProjectOverview() {
         </AnimatePresence>
       </div>
 
-      {/* New Idea Modal */}
-      <AnimatePresence>
-        {isModalOpen && (
+      {/* New Idea Modal — bewusst ohne AnimatePresence, sonst bleibt das Overlay
+          nach dem Schließen unsichtbar im DOM liegen und fängt weiter Klicks ab. */}
+      {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div 
               initial={{ opacity: 0 }}
@@ -270,8 +270,7 @@ export default function ProjectOverview() {
               </form>
             </motion.div>
           </div>
-        )}
-      </AnimatePresence>
+      )}
     </div>
   );
 }

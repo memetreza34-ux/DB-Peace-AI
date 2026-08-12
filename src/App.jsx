@@ -86,7 +86,8 @@ export default function App() {
         {/* Back Button if in any view other than home */}
         <AnimatePresence>
           {activeTab !== "home" && (
-            <motion.div 
+            <motion.div
+              key="zurueck-leiste"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}

@@ -3,7 +3,8 @@ import { HeartHandshake, BarChart3, Info, ShieldCheck } from "lucide-react";
 
 export function Footer({ onNavigate, onToggleHR }) {
   return (
-    <footer className="mt-16 border-t border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark py-8 text-xs font-semibold text-db-rail dark:text-white/60">
+    // pb-28 hält den Fußbereich frei von den schwebenden Schaltflächen (Quick Exit, Chat)
+    <footer className="mt-16 border-t border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark pt-8 pb-28 sm:pb-8 text-xs font-semibold text-db-rail dark:text-white/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           {/* Left: Brand & Disclaimer */}

@@ -1,23 +1,35 @@
 import React from "react";
 import { X, ShieldAlert, HeartHandshake, PhoneCall } from "lucide-react";
 import { EmergencySlider } from "./EmergencySlider.jsx";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { useDialog } from "../lib/useDialog";
 
 export function EmergencyModal({ isOpen, onClose }) {
+  const dialogRef = useDialog(isOpen, onClose);
+
+  // Bewusst ohne AnimatePresence: Das Overlay blieb damit nach dem Schließen
+  // unsichtbar im DOM liegen (opacity 0, pointer-events auto) und fing weiter
+  // Klicks über der ganzen Seite ab. Ein Notfall-Dialog muss zuverlässig
+  // verschwinden — das wiegt schwerer als eine Ausblend-Animation.
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md"
-        >
-        <motion.div 
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      onClick={onClose}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md"
+    >
+        <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="notfall-titel"
+          tabIndex={-1}
+          onClick={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="w-full max-w-md rounded-lg bg-white dark:bg-db-dark p-6 shadow-lg border border-db-dark/10 dark:border-white/10"
+          className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-lg bg-white dark:bg-db-dark p-6 shadow-lg border border-db-dark/10 dark:border-white/10 outline-none"
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-db-dark/10 dark:border-white/10">
@@ -26,7 +38,7 @@ export function EmergencyModal({ isOpen, onClose }) {
                 <ShieldAlert className="h-7 w-7 animate-pulse" />
               </div>
               <div>
-                <h2 className="text-xl font-black text-db-dark dark:text-white">Akuter Notfall</h2>
+                <h2 id="notfall-titel" className="text-xl font-black text-db-dark dark:text-white">Akuter Notfall</h2>
                 <p className="text-xs font-semibold text-db-rail dark:text-white/60">
                   Schnelle Hilfe, ohne Versehen auszulösen.
                 </p>
@@ -34,6 +46,7 @@ export function EmergencyModal({ isOpen, onClose }) {
             </div>
             <button
               onClick={onClose}
+              aria-label="Notfall-Dialog schließen"
               className="rounded-full p-2 bg-db-warm/50 dark:bg-white/10 text-db-dark dark:text-white hover:bg-db-dark dark:hover:bg-white hover:text-white dark:hover:text-db-dark transition"
             >
               <X className="h-5 w-5" />
@@ -88,9 +101,7 @@ export function EmergencyModal({ isOpen, onClose }) {
             </div>
 
           </div>
-        </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+      </motion.div>
+    </motion.div>
   );
 }
