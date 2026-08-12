@@ -62,7 +62,7 @@ export function LearningHubView() {
             Kurs- & Seminar-Katalog
           </h1>
           <p className="text-sm font-medium text-white/80 leading-relaxed">
-            Über 150 offizielle Weiterbildungsangebote, Zertifikatslehrgänge und lokale Präsenz-Seminare.
+            Geprüfte Angebote von Bundeszentrale, Gewerkschaften und Fachstellen — mit Direktlink zum jeweiligen Anbieter.
           </p>
         </div>
 

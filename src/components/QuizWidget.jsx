@@ -132,13 +132,13 @@ export function QuizWidget() {
         {currentQ.question}
       </h3>
 
-      <AnimatePresence mode="wait">
-        {!showResult ? (
+      {/* Ohne AnimatePresence mode="wait" — sonst blockiert eine nicht beendete
+          Exit-Animation den Wechsel zur Auswertung. */}
+      {!showResult ? (
           <motion.div 
             key="question"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
             className="flex gap-3 mt-6"
           >
             <button 
@@ -188,7 +188,6 @@ export function QuizWidget() {
             </button>
           </motion.div>
         )}
-      </AnimatePresence>
     </div>
   );
 }

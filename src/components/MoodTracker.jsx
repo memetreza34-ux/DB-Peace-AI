@@ -42,13 +42,13 @@ export function MoodTracker() {
       animate={{ opacity: 1, y: 0 }}
       className="w-full rounded-lg bg-white/70 dark:bg-db-dark/80 backdrop-blur-md border border-db-dark/10 dark:border-white/10 p-6 shadow-md shadow-db-dark/5 dark:shadow-black/50"
     >
-      <AnimatePresence mode="wait">
-        {!submitted ? (
+      {/* Ohne AnimatePresence mode="wait": Das wartet auf die Exit-Animation des
+          alten Zustands. Läuft die nicht zu Ende, erscheint die Bestätigung nie. */}
+      {!submitted ? (
           <motion.div
             key="form"
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 10 }}
             className="flex flex-col gap-4"
           >
             <div>
@@ -140,7 +140,6 @@ export function MoodTracker() {
             key="success"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
             className="flex flex-col items-center justify-center py-6 text-center"
           >
             <div className="rounded-full bg-emerald-100 dark:bg-emerald-500/20 p-4 text-emerald-600 dark:text-emerald-400 mb-3">
@@ -152,7 +151,6 @@ export function MoodTracker() {
             </p>
           </motion.div>
         )}
-      </AnimatePresence>
     </motion.div>
   );
 }

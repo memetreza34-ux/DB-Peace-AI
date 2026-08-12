@@ -107,67 +107,68 @@ export default function App() {
 
         {/* Main Content Area */}
         <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8 pb-24">
-          <AnimatePresence mode="wait">
+          {/* Bewusst ohne AnimatePresence mode="wait": Das wartet auf die Exit-
+              Animation der alten Ansicht. Läuft die nicht zu Ende, erscheint die
+              neue Ansicht nie und die Navigation hängt. */}
             {activeTab === "home" && (
-              <motion.div key="home" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <motion.div key="home" variants={pageVariants} initial="initial" animate="animate">
                 <DashboardHome onNavigate={setActiveTab} onOpenEmergency={() => setIsEmergencyOpen(true)} />
               </motion.div>
             )}
             
             {activeTab === "record-report" && (
-              <motion.div key="record-report" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <motion.div key="record-report" variants={pageVariants} initial="initial" animate="animate">
                 <RecordAndReportView />
               </motion.div>
             )}
             
             {activeTab === "learning" && (
-              <motion.div key="learning" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <motion.div key="learning" variants={pageVariants} initial="initial" animate="animate">
                 <LearningHubView />
               </motion.div>
             )}
 
             {activeTab === "rights" && (
-              <motion.div key="rights" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <motion.div key="rights" variants={pageVariants} initial="initial" animate="animate">
                 <RightsAndLawsView onBack={() => setActiveTab("home")} />
               </motion.div>
             )}
 
             {activeTab === "project" && (
-              <motion.div key="project" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <motion.div key="project" variants={pageVariants} initial="initial" animate="animate">
                 <ProjectOverview />
               </motion.div>
             )}
 
             {activeTab === "profile" && (
-              <motion.div key="profile" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <motion.div key="profile" variants={pageVariants} initial="initial" animate="animate">
                 <ProfileView />
               </motion.div>
             )}
 
             {activeTab === "contacts" && (
-              <motion.div key="contacts" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <motion.div key="contacts" variants={pageVariants} initial="initial" animate="animate">
                 <ContactsView />
               </motion.div>
             )}
 
             {activeTab === "privacy" && (
-              <motion.div key="privacy" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <motion.div key="privacy" variants={pageVariants} initial="initial" animate="animate">
                 <PrivacyCompliance />
               </motion.div>
             )}
             
             {activeTab === "support" && (
-              <motion.div key="support" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <motion.div key="support" variants={pageVariants} initial="initial" animate="animate">
                 <SupportPage onNavigate={setActiveTab} />
               </motion.div>
             )}
 
             {activeTab === "analytics" && (
-              <motion.div key="analytics" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              <motion.div key="analytics" variants={pageVariants} initial="initial" animate="animate">
                 <DashboardAnalytics />
               </motion.div>
             )}
-          </AnimatePresence>
         </main>
       </div>
 
