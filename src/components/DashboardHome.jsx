@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import {
   FileText,
+  HelpCircle,
   PhoneCall,
   GraduationCap,
   Lightbulb,
@@ -30,6 +31,18 @@ const itemVariants = {
 
 export function DashboardHome({ onNavigate, onOpenEmergency }) {
   const dashboardItems = [
+    {
+      // Steht bewusst an erster Stelle: Wer die App im Ernstfall öffnet, weiss
+      // meist noch nicht, was er braucht — sondern nur, dass etwas passiert ist.
+      id: "support",
+      title: "Was ist gerade los?",
+      description: "Beschreib die Situation – die App zeigt dir, was du jetzt tun kannst.",
+      icon: HelpCircle,
+      color: "text-db-red",
+      bgColor: "bg-db-red/10 dark:bg-db-red/20",
+      borderColor: "hover:border-db-red hover:shadow-db-red/10",
+      action: () => onNavigate("support")
+    },
     {
       id: "record-report",
       title: "Festhalten & Melden",
