@@ -1,3 +1,14 @@
+"""
+NICHT MEHR AUSFÜHREN, OHNE DAS ERGEBNIS ZU PRÜFEN.
+
+Dieses Skript hat src/data/lawsData.json einmalig erzeugt. Die dortigen Texte
+sind Rechtsinhalte, die Azubis als Orientierung dienen — sie gehören juristisch
+gegengelesen (siehe docs/Pilot-Checkliste.md). Ein erneuter Lauf würde geprüfte
+Inhalte überschreiben.
+
+Liegt hier nur zur Nachvollziehbarkeit, ist kein Teil der Anwendung.
+"""
+
 import json
 
 def generate_unique_laws():

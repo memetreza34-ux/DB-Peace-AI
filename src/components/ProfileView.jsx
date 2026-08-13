@@ -199,19 +199,28 @@ export function ProfileView() {
                 </div>
                 <h4 className="font-black text-db-dark dark:text-white text-lg mb-1">{record.category}</h4>
                 <p className="text-sm text-db-dark/80 dark:text-white/80">{record.description}</p>
-                <div className="mt-4 flex gap-2">
-                  <button 
-                    onClick={() => alert("Funktion 'Bearbeiten' ist in der aktuellen Demo-Version noch nicht verfügbar.")}
-                    className="text-xs font-bold bg-db-dark/5 dark:bg-white/5 hover:bg-db-dark/10 dark:hover:bg-white/10 px-3 py-1.5 rounded-lg text-db-dark dark:text-white transition"
+                {/* Beide Funktionen sind im Prototyp nicht angebunden. Sichtbar
+                    deaktiviert statt mit einem Hinweisfenster beim Klick. */}
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    disabled
+                    title="Im Prototyp noch nicht verfügbar"
+                    className="text-xs font-bold bg-db-dark/5 dark:bg-white/5 px-3 py-1.5 rounded-lg text-db-dark/40 dark:text-white/40 cursor-not-allowed"
                   >
                     Bearbeiten
                   </button>
-                  <button 
-                    onClick={() => alert("Funktion 'Meldung erstellen' ist in der aktuellen Demo-Version noch nicht verfügbar.")}
-                    className="text-xs font-bold bg-db-red/10 hover:bg-db-red/20 text-db-red px-3 py-1.5 rounded-lg transition"
+                  <button
+                    type="button"
+                    disabled
+                    title="Im Prototyp noch nicht verfügbar"
+                    className="text-xs font-bold bg-db-red/5 px-3 py-1.5 rounded-lg text-db-red/40 cursor-not-allowed"
                   >
                     Meldung daraus erstellen
                   </button>
+                  <span className="text-[11px] font-semibold text-db-rail/70 dark:text-white/40">
+                    im Prototyp noch nicht angebunden
+                  </span>
                 </div>
               </div>
             ))}
