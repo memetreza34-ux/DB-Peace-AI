@@ -1,5 +1,6 @@
 import { useMemo, useState, useRef } from "react";
 import { jsPDF } from "jspdf";
+import { MeldewegeKarte } from "./MeldewegeKarte.jsx";
 import {
   AlertTriangle,
   ArrowRight,
@@ -192,24 +193,38 @@ function AnonymousReport() {
               />
             )}
 
-            {previewVisible && analysis && <ReportPreview draft={draft} />}
+            {previewVisible && analysis && (
+              <>
+                <ReportPreview draft={draft} />
+                <MeldewegeKarte entwurf={draft} />
+              </>
+            )}
           </div>
 
           <aside className="space-y-5">
-            <button
-              onClick={() => alert("Wechsel zum KI-Konflikthelfer: Diese Funktion öffnet bald den KI-Chat.")}
-              className="flex w-full items-center justify-between rounded-lg bg-db-dark p-5 font-black text-white shadow-panel transition hover:bg-db-red"
+            <div className="rounded-lg bg-db-dark p-5 text-white shadow-panel">
+              <MessageSquareText size={24} className="text-red-200" aria-hidden="true" />
+              <h3 className="mt-3 text-lg font-black">Lieber erst reden?</h3>
+              <p className="mt-2 text-sm font-semibold leading-6 text-white/80">
+                Der Peace-Assistent unten rechts hört zu und hilft dir beim Sortieren – ohne dass
+                daraus eine Meldung wird.
+              </p>
+            </div>
+
+            <a
+              href="https://www.bkms-system.net/deutschebahn"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-between rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 font-black text-db-dark dark:text-white shadow-sm transition hover:border-db-red hover:text-db-red"
             >
-              Zum KI-Konflikthelfer wechseln
-              <ArrowRight size={20} aria-hidden="true" />
-            </button>
-            <button
-              onClick={() => alert("Datenschutzrichtlinien werden in einer zukünftigen Version angezeigt.")}
-              className="flex w-full items-center justify-between rounded-lg border border-db-dark/10 bg-white p-5 font-black text-db-dark shadow-sm transition hover:border-db-red hover:text-db-red"
-            >
-              Datenschutz öffnen
-              <ArrowRight size={20} aria-hidden="true" />
-            </button>
+              <span>
+                Direkt zum DB-Hinweisgebersystem
+                <span className="mt-1 block text-xs font-semibold text-db-rail dark:text-white/60">
+                  Anonym, in zwölf Sprachen
+                </span>
+              </span>
+              <ArrowRight size={20} aria-hidden="true" className="shrink-0" />
+            </a>
           </aside>
         </div>
       </div>
@@ -844,7 +859,6 @@ function createDraftReport(form, analysis, improved) {
   }).format(new Date());
 
   return [
-    { label: "Demo-Fallnummer", value: "DBPA-2026-001" },
     { label: "Datum", value: date },
     { label: "Kategorie", value: form.type },
     { label: "Risiko", value: riskStyles[effectiveAnalysis.risk].label },

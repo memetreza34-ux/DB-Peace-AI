@@ -79,17 +79,67 @@ const situations = [
   }
 ];
 
+// `ziel` verlinkt echte, belegte Kontaktwege (siehe src/config/kontakte.js).
+// Wo kein Ziel steht, ist die Stelle standortabhängig — dann sagt die App das,
+// statt eine Adresse zu erfinden.
 const contactDetails = {
-  "Vertrauensperson": { desc: "Erster vertraulicher Einstieg, Orientierung, emotionale Entlastung.", role: "Intern" },
-  "JAV / Betriebsrat": { desc: "Interessenvertretung, Schutz, Begleitung im Arbeits- und Ausbildungskontext.", role: "Intern" },
-  "Ausbilder/in": { desc: "Wenn der Vorfall Ausbildung, Anleitung oder Teamalltag betrifft.", role: "Intern" },
-  "Sicherheitsstelle / Notruf 110": { desc: "Akute Sicherheitslage, Gewalt, direkte Bedrohung.", role: "Notfall", isUrgent: true },
-  "Führungskraft": { desc: "Zur direkten Deeskalation und Einsatzkoordination.", role: "Intern" },
-  "Compliance / Meldestelle": { desc: "Schwere Verstöße, Diskriminierung, Hassrede.", role: "Intern" },
-  "Mitarbeitenden-Unterstützung": { desc: "Psychische Belastung, Beratung, Stabilisierung.", role: "Intern" },
-  "Telefonseelsorge (0800 111 0 111)": { desc: "Anonyme, kostenfreie Beratung rund um die Uhr in Krisen.", role: "Extern" },
-  "Kolleg/in": { desc: "Direkte Unterstützung in der akuten Situation.", role: "Intern" },
-  "Vertrauensperson (gemeinsam)": { desc: "Begleite die betroffene Person zur Vertrauensperson.", role: "Intern" }
+  "Vertrauensperson": {
+    desc: "Erster vertraulicher Einstieg, Orientierung, emotionale Entlastung.",
+    role: "Intern",
+    hinweis: "Ansprechpartner an deinem Standort – Aushang oder Ausbildungsleitung."
+  },
+  "JAV / Betriebsrat": {
+    desc: "Interessenvertretung, Schutz, Begleitung im Arbeits- und Ausbildungskontext.",
+    role: "Intern",
+    hinweis: "Wer das an deinem Standort ist, hängt am Schwarzen Brett oder steht im DB-Intranet."
+  },
+  "Ausbilder/in": {
+    desc: "Wenn der Vorfall Ausbildung, Anleitung oder Teamalltag betrifft.",
+    role: "Intern",
+    hinweis: "Direkt in deinem Ausbildungsbereich."
+  },
+  "Sicherheitsstelle / Notruf 110": {
+    desc: "Akute Sicherheitslage, Gewalt, direkte Bedrohung.",
+    role: "Notfall",
+    isUrgent: true,
+    ziel: { href: "tel:110", label: "110 anrufen" }
+  },
+  "Führungskraft": {
+    desc: "Zur direkten Deeskalation und Einsatzkoordination.",
+    role: "Intern",
+    hinweis: "Deine direkte Führungskraft im Betrieb."
+  },
+  "Compliance / Meldestelle": {
+    desc: "Schwere Verstöße, Diskriminierung, Hassrede.",
+    role: "Intern",
+    ziel: {
+      href: "https://www.bkms-system.net/deutschebahn",
+      label: "Hinweisgebersystem öffnen",
+      extern: true
+    },
+    hinweis: "Offizielles Meldesystem der DB – anonym nutzbar, in zwölf Sprachen."
+  },
+  "Mitarbeitenden-Unterstützung": {
+    desc: "Psychische Belastung, Beratung, Stabilisierung.",
+    role: "Intern",
+    ziel: { href: "https://www.lyra-mut.de", label: "Zum MUT-Angebot", extern: true },
+    hinweis: "Anonyme Beratung für alle DB-Beschäftigten, auch für Azubis."
+  },
+  "Telefonseelsorge (0800 111 0 111)": {
+    desc: "Anonyme, kostenfreie Beratung rund um die Uhr in Krisen.",
+    role: "Extern",
+    ziel: { href: "tel:08001110111", label: "0800 111 0 111 anrufen" }
+  },
+  "Kolleg/in": {
+    desc: "Direkte Unterstützung in der akuten Situation.",
+    role: "Intern",
+    hinweis: "Jemand, dem du vertraust und der gerade in der Nähe ist."
+  },
+  "Vertrauensperson (gemeinsam)": {
+    desc: "Begleite die betroffene Person zur Vertrauensperson.",
+    role: "Intern",
+    hinweis: "Ansprechpartner an deinem Standort – Aushang oder Ausbildungsleitung."
+  }
 };
 
 export default function SupportPage({ onNavigate }) {
@@ -178,12 +228,27 @@ export default function SupportPage({ onNavigate }) {
                              </span>
                           </div>
                           <p className="text-xs font-semibold text-db-rail dark:text-white/60 mt-1">{details?.desc}</p>
+                          {!details?.ziel && details?.hinweis && (
+                            <p className="text-[11px] font-semibold text-db-rail/80 dark:text-white/50 mt-1.5">
+                              {details.hinweis}
+                            </p>
+                          )}
                         </div>
-                        <button 
-                          onClick={() => window.location.href = 'mailto:hilfe@db-peace.de?subject=Anfrage%20aus%20Support-Bereich'}
-                          className={`shrink-0 rounded-lg px-4 py-2 text-xs font-black transition ${details?.isUrgent ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-db-dark text-white hover:bg-black'}`}>
-                           Kontaktieren
-                        </button>
+                        {details?.ziel ? (
+                          <a
+                            href={details.ziel.href}
+                            {...(details.ziel.extern
+                              ? { target: "_blank", rel: "noopener noreferrer" }
+                              : {})}
+                            className={`shrink-0 rounded-lg px-4 py-2 text-xs font-black transition text-center ${details?.isUrgent ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-db-dark text-white hover:bg-black'}`}
+                          >
+                            {details.ziel.label}
+                          </a>
+                        ) : (
+                          <span className="shrink-0 rounded-lg border border-db-dark/15 dark:border-white/15 px-4 py-2 text-xs font-bold text-db-rail dark:text-white/60 text-center">
+                            Vor Ort erfragen
+                          </span>
+                        )}
                      </div>
                    );
                  })}

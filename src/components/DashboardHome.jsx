@@ -41,14 +41,14 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
       action: () => onNavigate("record-report")
     },
     {
-      id: "support",
-      title: "Ansprechpartner",
-      description: "Kontakte zu JAV, Betriebsrat, Vertrauenspersonen & externer Hilfe.",
+      id: "contacts",
+      title: "Ansprechpartner & Meldewege",
+      description: "Offizielle Meldestellen der DB, Beratung und externe Hilfe – mit echten Kontaktdaten.",
       icon: PhoneCall,
       color: "text-emerald-600 dark:text-emerald-400",
       bgColor: "bg-emerald-500/10 dark:bg-emerald-500/20",
       borderColor: "hover:border-emerald-500 hover:shadow-emerald-500/10 dark:hover:border-emerald-400",
-      action: () => onNavigate("support")
+      action: () => onNavigate("contacts")
     },
     {
       id: "learning",
