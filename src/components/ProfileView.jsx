@@ -60,7 +60,9 @@ export function ProfileView() {
     setReplyText("");
   };
 
-  // Mock Data for the Profile Collections
+  // Beispielinhalte, damit die Ansicht im Prototyp nicht leer wirkt. Sie sind
+  // erfunden — im Betrieb stehen hier ausschliesslich eigene Einträge. Die
+  // Ansicht weist unten sichtbar darauf hin.
   const savedRecords = [
     {
       id: 1,
@@ -301,7 +303,11 @@ export function ProfileView() {
         </div>
         <div className="relative z-10 text-white flex-1">
           <h1 className="text-3xl font-black mb-1">Mein DB Peace</h1>
-          <p className="text-white/70 font-medium mb-4">Dein sicherer, privater Raum.</p>
+          <p className="text-white/70 font-medium mb-2">Dein sicherer, privater Raum.</p>
+          <p className="text-white/60 text-xs font-semibold mb-4 max-w-xl leading-relaxed">
+            Im Prototyp sind hier Beispieleinträge hinterlegt, damit die Ansicht nicht leer ist.
+            Sie stammen nicht von dir.
+          </p>
           <div className="flex gap-4">
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 flex items-center gap-3">
               <div className="bg-amber-400/20 p-2 rounded-lg text-amber-400">

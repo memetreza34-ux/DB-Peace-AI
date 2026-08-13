@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { 
   Search, ShieldCheck, Clock, UserX, Send, 
   LayoutDashboard, Inbox, BarChart3, 
-  LogOut, AlertTriangle, CheckCircle2, TrendingUp
+  LogOut, AlertTriangle, CheckCircle2, TrendingUp, Info
 } from "lucide-react";
 import { mockTicketsData, subscribeToTickets, updateTickets } from "../data/mockTickets";
 
@@ -114,12 +114,23 @@ export function HRDashboard({ onExit }) {
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+            <span className="flex items-center gap-1.5 text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
               <ShieldCheck className="w-3.5 h-3.5" />
-              HSMS Verschlüsselt
+              Beispieldaten
             </span>
           </div>
         </header>
+
+        {/* Diese Ansicht zeigt ausschliesslich erfundene Fälle. Ohne diesen Hinweis
+            wirkt sie wie ein echtes Meldungssystem mit echten Betroffenen. */}
+        <div className="bg-amber-50 border-b border-amber-200 px-6 py-2.5 flex items-start gap-2 shrink-0">
+          <Info className="w-4 h-4 text-amber-600 shrink-0 mt-px" />
+          <p className="text-xs font-semibold text-amber-900 leading-relaxed">
+            Vorschau der HR-Sicht mit frei erfundenen Beispielfällen. Es sind keine echten
+            Meldungen, keine echten Personen und keine Verbindung zu DB-Systemen. Daten bestehen
+            nur, solange dieser Browser-Tab geöffnet ist.
+          </p>
+        </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* 2. Tremor-style KPI Metric Cards */}
@@ -218,7 +229,7 @@ export function HRDashboard({ onExit }) {
                             {selectedTicket.category}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-500 mt-0.5">Anonymer Hinweisgeber (Verschlüsselt)</p>
+                        <p className="text-xs text-slate-500 mt-0.5">Anonymer Hinweisgeber (Beispielfall)</p>
                       </div>
                       <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold">
                         <UserX className="w-4 h-4 text-slate-400" />
