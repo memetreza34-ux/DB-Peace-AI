@@ -58,10 +58,10 @@ export function Footer({ onNavigate, onToggleHR }) {
                   type="button"
                   onClick={onToggleHR}
                   className="flex items-center gap-1.5 text-purple-600 hover:text-purple-800 transition"
-                  title="Simuliert die HR-Ansicht"
+                  title="Vorschau: So könnte eine Meldung bei HR ankommen"
                 >
                   <ShieldCheck className="h-3.5 w-3.5" />
-                  <span>HR-Dashboard Simulation</span>
+                  <span>HR-Sicht ansehen</span>
                 </button>
               </>
             )}

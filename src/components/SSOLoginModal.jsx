@@ -1,78 +1,77 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Lock, ArrowRight, Server, X } from "lucide-react";
+import React from "react";
+import { motion } from "framer-motion";
+import { Eye, X, ArrowRight, Info } from "lucide-react";
+import { useDialog } from "../lib/useDialog";
 
+/**
+ * Einstieg in die HR-Vorschau.
+ *
+ * Hier stand vorher eine nachgebaute Azure-AD-Anmeldung ("DB Enterprise
+ * Authentication", "Überprüfe Berechtigungen (Role: HR_ADMIN)"), die nach
+ * anderthalb Sekunden jeden durchgelassen hat. Das täuschte eine Anbindung an
+ * DB-Systeme vor, die es nicht gibt — in einer Vorführung vor der DB wäre das
+ * der falsche Eindruck. Jetzt ist es das, was es ist: ein Perspektivwechsel.
+ */
 export function SSOLoginModal({ isOpen, onClose, onLoginSuccess }) {
-  const [loading, setLoading] = useState(false);
+  const dialogRef = useDialog(isOpen, onClose);
 
   if (!isOpen) return null;
 
-  const handleLogin = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      onLoginSuccess();
-    }, 1500);
-  };
-
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-white rounded-md shadow-lg w-full max-w-md overflow-hidden relative"
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="hr-vorschau-titel"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-white dark:bg-db-dark rounded-md shadow-lg w-full max-w-md overflow-hidden relative outline-none border border-db-dark/10 dark:border-white/10"
+      >
+        <button
+          onClick={onClose}
+          aria-label="Schließen"
+          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white p-1"
         >
-          {/* Close button (only if not loading) */}
-          {!loading && (
-            <button 
-              onClick={onClose}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
+          <X className="w-5 h-5" />
+        </button>
 
-          {/* Microsoft / Azure AD Header Simulation */}
-          <div className="bg-slate-50 border-b border-slate-100 p-6 flex flex-col items-center">
-            <div className="bg-blue-600 text-white p-3 rounded-xl mb-4 shadow-sm">
-              <Server className="w-8 h-8" />
-            </div>
-            <h2 className="text-xl font-bold text-slate-800">Single Sign-On (SSO)</h2>
-            <p className="text-sm text-slate-500 mt-1">DB Enterprise Authentication</p>
+        <div className="bg-db-soft dark:bg-white/5 border-b border-db-dark/10 dark:border-white/10 p-6 flex flex-col items-center text-center">
+          <div className="bg-db-dark dark:bg-white text-white dark:text-db-dark p-3 rounded-xl mb-4 shadow-sm">
+            <Eye className="w-8 h-8" />
+          </div>
+          <h2 id="hr-vorschau-titel" className="text-xl font-black text-db-dark dark:text-white">
+            Die andere Seite ansehen
+          </h2>
+          <p className="text-sm font-medium text-db-rail dark:text-white/60 mt-1">
+            So könnte eine Meldung bei HR oder JAV ankommen
+          </p>
+        </div>
+
+        <div className="p-6 flex flex-col gap-5">
+          <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 p-4 rounded-xl flex gap-3">
+            <Info className="w-5 h-5 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
+            <p className="text-sm font-medium text-amber-900 dark:text-amber-200 leading-relaxed">
+              Eine Vorschau mit erfundenen Beispielfällen — keine Anmeldung, keine Verbindung zu
+              DB-Systemen, keine echten Meldungen. Sie zeigt, wie eine Meldung aussieht, wenn sie
+              ankommt.
+            </p>
           </div>
 
-          <div className="p-8 flex flex-col gap-6">
-            {!loading ? (
-              <>
-                <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl flex gap-3 text-sm text-blue-800">
-                  <ShieldCheck className="w-5 h-5 shrink-0 text-blue-600 mt-0.5" />
-                  <p>
-                    Dieser Bereich ist für <strong>HR & Compliance Officer</strong> reserviert. 
-                    Bitte loggen Sie sich über das gesicherte Firmennetzwerk ein.
-                  </p>
-                </div>
-
-                <button
-                  onClick={handleLogin}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition shadow-md hover:shadow-lg"
-                >
-                  <Lock className="w-4 h-4" />
-                  Mit DB Azure AD anmelden
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </button>
-              </>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-8">
-                <div className="w-12 h-12 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
-                <p className="text-slate-600 font-medium">Authentifizierung läuft...</p>
-                <p className="text-xs text-slate-400 mt-1">Überprüfe Berechtigungen (Role: HR_ADMIN)</p>
-              </div>
-            )}
-          </div>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+          <button
+            onClick={onLoginSuccess}
+            className="w-full bg-db-dark dark:bg-db-red hover:opacity-90 text-white font-black py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition shadow-md"
+          >
+            Vorschau öffnen
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      </motion.div>
+    </div>
   );
 }

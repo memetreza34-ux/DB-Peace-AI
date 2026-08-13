@@ -92,15 +92,6 @@ export function ProfileView() {
     }
   ];
 
-  const badges = [
-    {
-      title: "DB Peace Guardian",
-      description: "Hat alle Quiz-Fragen richtig beantwortet.",
-      icon: ShieldCheck,
-      color: "text-amber-500",
-      bg: "bg-amber-500/20"
-    }
-  ];
 
   const renderContent = () => {
     switch (activeTab) {
@@ -268,28 +259,6 @@ export function ProfileView() {
             </div>
           </div>
         );
-      case "abzeichen":
-        return (
-          <div className="space-y-4">
-            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Meine Erfolge</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {badges.map((badge, idx) => {
-                const Icon = badge.icon;
-                return (
-                  <div key={idx} className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm flex items-start gap-4">
-                    <div className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${badge.bg}`}>
-                      <Icon className={`w-8 h-8 ${badge.color}`} />
-                    </div>
-                    <div>
-                      <h4 className="font-black text-db-dark dark:text-white text-lg">{badge.title}</h4>
-                      <p className="text-sm font-medium text-db-dark/70 dark:text-white/70 mt-1">{badge.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
       default:
         return null;
     }
@@ -317,14 +286,21 @@ export function ProfileView() {
             Im Prototyp sind hier Beispieleinträge hinterlegt, damit die Ansicht nicht leer ist.
             Sie stammen nicht von dir.
           </p>
+          {/* Bewusst keine Punkte, Level oder Ranglisten: Wer diese App öffnet,
+              weil er gemobbt wird, sammelt keine Abzeichen. Belohnungslogik wäre
+              hier zynisch — und die Zahlen wären ohnehin erfunden. */}
           <div className="flex gap-4">
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 flex items-center gap-3">
-              <div className="bg-amber-400/20 p-2 rounded-lg text-amber-400">
-                <Star className="w-5 h-5 fill-amber-400" />
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 flex items-center gap-3 max-w-md">
+              <div className="bg-white/10 p-2 rounded-lg text-white/80">
+                <Lock className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xs font-bold text-white/60 uppercase tracking-wider">Level 3 • Zivilcourage Experte</div>
-                <div className="font-black text-xl">850 DB Peace Points</div>
+                <div className="text-xs font-bold text-white/60 uppercase tracking-wider">
+                  Nur auf diesem Gerät
+                </div>
+                <div className="text-sm font-semibold text-white/90">
+                  Niemand bei der DB sieht, was hier steht – auch nicht, dass du die App nutzt.
+                </div>
               </div>
             </div>
           </div>
@@ -382,17 +358,7 @@ export function ProfileView() {
           >
             <Bookmark className="w-5 h-5" /> Gemerkte Kurse
           </button>
-          
-          <button 
-            onClick={() => setActiveTab("abzeichen")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
-              activeTab === "abzeichen" 
-                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-md" 
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
-            }`}
-          >
-            <Award className="w-5 h-5" /> Erfolge & Abzeichen
-          </button>
+
         </div>
 
         {/* Main Content Area */}
