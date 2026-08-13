@@ -53,38 +53,44 @@ Im Zentrum steht der **KI-Azubi-Begleiter**: ein einfacher Chat, dem man schreib
 Leitet über konkrete Situationen (*beleidigt, gemobbt, bedroht, diskriminiert*) in Sekunden zum nächsten Schritt – mit dauerhaft sichtbaren **echten Notfallnummern**.
 
 **📞 Echte Anlaufstellen (der entscheidende Unterschied)**
-Die App erfindet keine Hilfe, sondern **führt zu den echten Stellen** – alle als antippbare Telefonnummern:
-- **Notruf 112 / Polizei 110** bei akuter Gefahr
-- **MUT-Team der DB** (0800 100 99 66, anonym), **Compliance-Meldestelle**, **JAV / Vertrauensperson**
+Die App erfindet keine Hilfe, sondern **führt zu den echten Stellen** – jede Angabe an der Quelle geprüft und im Code mit Quellenverweis hinterlegt:
+- **Polizei 110 / Rettungsdienst 112** bei akuter Gefahr
+- **Hinweisgebersystem der DB (BKMS)** – anonym, in zwölf Sprachen
+- **Meldestelle Beschäftigungsbedingungen** – der DB-Kanal für Mobbing, Diskriminierung und Belästigung
+- **Compliance Hinweismanagement** – 030 297 62710, Mo–Fr 10–15 Uhr
+- **MUT – Mitarbeitendenunterstützung**, anonym, auch für Azubis
 - **Telefonseelsorge** (0800 111 0 111), **Nummer gegen Kummer** (116 111)
+
+Was standortabhängig ist – JAV, Betriebsrat, Ausbildungsleitung –, zeigt die App ehrlich als „im Pilotbetrieb zu hinterlegen" an, statt eine Nummer zu erfinden.
 
 **📝 Festhalten – Vorfälle sachlich dokumentieren**
 Strukturierte Einträge (Datum, Uhrzeit, Ort, Verlauf) – **ohne echte Namen.** **Als PDF speichern** → ausdrucken oder abgeben. Aus einer Notiz wird ein echtes, datiertes Dokument.
 
 **📣 Melden – „Wohin mit deiner Meldung?"**
-Geführter Entwurf (anonym / persönlich / Entwurf), als PDF exportierbar – und ein klarer Schritt **„Wohin damit?"**, der direkt die echten DB-Meldewege zeigt. **Es wird nichts automatisch versendet.**
+Geführter Entwurf in fünf Schritten, als PDF exportierbar – und der Schritt, der sonst fehlt: **„Wohin damit?"** Die App öffnet das DB-Hinweisgebersystem oder eine E-Mail an die echte Meldestelle, **vorbefüllt mit dem Entwurf**. Abgeschickt wird nur, was der Mensch abschickt. **Es wird nichts automatisch versendet.**
 
 **🤖 KI-Azubi-Begleiter (das Herzstück)**
-Erkennt die Situation automatisch (Mobbing, Diskriminierung, Gefahr, Krise, Stress…) und reagiert passend. Bei akuter Gefahr/Krise tritt er bewusst zurück und nennt **konkrete Notnummern**. Gibt keine Rechts- oder Finanzberatung – verweist auf die richtige Stelle. **Funktioniert auch ohne KI-Anbindung im Demo-Modus** – sofort vorführbar.
+Hört zu, ordnet ein und schlägt den nächsten Schritt vor. Entscheidend ist, was er *nicht* der KI überlässt: Äußert jemand Suizidgedanken, Selbstverletzung oder akute Gewalt, greift eine **feste Krisenerkennung, die vor jedem KI-Aufruf läuft** – die Antwort mit Telefonseelsorge und Notruf kommt also auch ohne Internet, ohne API-Schlüssel und unabhängig davon, was ein Sprachmodell gerade generiert. Abgesichert durch automatische Tests. Der Begleiter gibt keine Rechts- oder Medizinberatung. **Sofort vorführbar, auch ganz ohne KI-Anbindung.**
 
-**🎓 Lernen – echte Präventionskurse**
-**10 echte Bildungs- und Präventionsangebote** mit Direktlinks: EVG-Jugend (EVA Akademie), DGB-Bildungswerk, Bundeszentrale für politische Bildung, Antidiskriminierungsstelle des Bundes, Amadeu Antonio Stiftung, Gesicht Zeigen!, HateAid, Weisser Ring – plus DB Lernwelt und der Wettbewerb selbst.
+**🎓 Lernen – geprüfte Präventionsangebote**
+Angebote von Bundeszentrale für politische Bildung, klicksafe, HateAid, Amadeu Antonio Stiftung, Schule ohne Rassismus, Antidiskriminierungsstelle des Bundes, DGB-Bildungswerk, EVA Akademie, Gesicht Zeigen! und WEISSER RING – **jeder Link vor der Aufnahme abgerufen und geprüft.** Zertifikatslehrgänge führt der Prototyp bewusst nicht auf, solange sie nicht mit der DB abgestimmt sind.
 
 **⚖️ Regeln & deine Rechte**
-DB-Konzernbetriebsvereinbarung & Verhaltenskodex, verständlich zusammengefasst – plus deine **gesetzlichen Rechte** mit direkten Links zum Gesetzestext: § 13 AGG (Beschwerderecht), § 12 AGG (Schutzpflicht der DB), **§ 16 AGG (kein Nachteil fürs Beschweren)**, § 4 ArbSchG, § 75 BetrVG, JArbSchG (Schutz unter 18).
+Zitate aus dem **Verhaltenskodex des DB-Konzerns – mit Quellenangabe und Link**, darunter der Satz, der beim Melden am meisten zählt: *„Wir dulden keine Repressalien gegen Personen, die solche Verstöße melden."* Dazu deine **gesetzlichen Rechte** mit Links zum Gesetzestext: § 13 AGG (Beschwerderecht), § 12 AGG (Schutzpflicht der DB), **§ 16 AGG (kein Nachteil fürs Beschweren)**, § 4 ArbSchG, § 75 BetrVG, JArbSchG (Schutz unter 18).
 
 **🔒 Datenschutz & Verantwortung**
-Daten bleiben lokal auf dem Gerät, anonyme Nutzung, keine Tracker, nichts wird automatisch gesendet. Impressum, Datenschutz, Barrierefreiheit angelegt.
+Alle Eingaben bleiben auf dem Gerät – es gibt keine Datenbank, kein Konto, keine Übertragung an die DB. Die App sperrt sich mit einer selbst gesetzten PIN, die nur als Prüfsumme gespeichert wird. Und sie verspricht bewusst nicht mehr, als sie hält: Sie nennt sich an keiner Stelle „verschlüsselt", weil sie Inhalte nicht verschlüsselt. Demo-Bereiche wie die HR-Ansicht sind sichtbar als Beispieldaten gekennzeichnet.
 
 ---
 
 ## 5. Was DB Peace AI besonders macht
 
-- **Brücke statt Konkurrenz:** Die DB hat bereits Anlaufstellen (MUT, Compliance, JAV). Das Problem ist nicht fehlende Hilfe – sondern dass Azubis sie **nicht kennen oder sich nicht trauen.** Diese App ist der einfachste erste Schritt dorthin.
+- **Brücke statt Konkurrenz:** Die DB hat bereits Anlaufstellen (MUT, Compliance, Hinweisgebersystem, JAV). Das Problem ist nicht fehlende Hilfe – sondern dass Azubis sie **nicht kennen oder sich nicht trauen.** Diese App ist der einfachste erste Schritt dorthin und führt in die bestehenden Strukturen hinein, nicht daran vorbei.
 - **Niedrigschwellig & im richtigen Moment:** 24/7 auf dem Handy, genau dann, wenn es passiert.
-- **Anonym & verantwortungsvoll:** *KI unterstützt, Menschen entscheiden.* Spielt sich nie als Therapeut oder Anwalt auf.
+- **Sicherheit hängt nicht an der KI:** Die Krisenerkennung läuft fest im Programm, vor jedem KI-Aufruf. Sie funktioniert auch offline, ohne API-Schlüssel und selbst dann, wenn ein Sprachmodell etwas Falsches antworten würde. Das ist eine bewusste Architekturentscheidung – bei diesem Thema darf die Hilfe nicht davon abhängen, ob gerade ein Dienst erreichbar ist.
+- **Ehrlich in beide Richtungen:** Die App sagt, was sie kann – und was nicht. Keine erfundenen Rufnummern, keine Zertifikate ohne Teilnahme, kein „verschlüsselt", wo nichts verschlüsselt wird. Was standortabhängig ist, steht als offener Punkt drin. Genau diese Ehrlichkeit ist die Voraussetzung dafür, dass ein Unternehmen so etwas einsetzen kann.
 - **Aus Azubi-Sicht gebaut:** in der richtigen Sprache, von jemandem, der die Perspektive kennt.
-- **Sofort erlebbar:** kein Setup nötig, läuft im Demo-Modus.
+- **Sofort erlebbar:** kein Setup nötig, läuft ohne KI-Anbindung.
 
 ---
 
@@ -164,11 +170,27 @@ Gebt DB Peace AI die Chance auf einen **Pilot.** Lasst uns gemeinsam testen, ob 
 ---
 
 ### Anhang / To-dos vor dem Einreichen
+
+**Nur du kannst das ergänzen:**
+- [ ] **Standort** im Header eintragen
+- [ ] **Kontakt** (E-Mail / Telefon) im Header eintragen
+- [ ] **Einreichungstermin und -weg klären** – zeitkritisch. Über die Ausbildung oder die
+      [DB-Wettbewerbsseite](https://www.deutschebahn.com/de/nachhaltigkeit/verantwortung_gesellschaft/BAgHG).
+      Teilnahmeberechtigt sind Azubis im 1. und 2. Lehrjahr.
+- [ ] **Screenshots** einfügen: Startseite, Krisenchat mit sichtbaren Notfallnummern,
+      „Wohin mit deiner Meldung?", Regeln & Rechte mit Quellenangabe, Ansicht auf dem Handy
+- [ ] **1–2 belegbare Zahlen** zu Mobbing in der Ausbildung mit Quelle (Abschnitt 2)
+- [ ] **Business-Case-Annahmen** mit Quelle hinterlegen (Abschnitt 7) – die Zahlen sind bisher
+      geschätzt und als solche gekennzeichnet; ohne Beleg vor einer Jury angreifbar
+- [ ] **Format wählen:** PDF / Präsentation / Onepager
+
+**Bereits erledigt:**
 - [x] Name, Ausbildungsberuf, Lehrjahr, persönlicher Grund eingetragen
-- [ ] **Standort** ergänzen (Header)
-- [ ] **Kontakt** (E-Mail / Telefon) ergänzen
-- [ ] 1–2 belegbare Zahlen zu Mobbing/Ausbildung mit Quelle (Abschnitt 2)
-- [ ] Business-Case-Annahmen kurz mit Quelle hinterlegen (Abschnitt 7)
-- [ ] Screenshots einfügen (Start, Hilfe, Festhalten+PDF, Melden, KI-Chat, Regeln & Rechte)
-- [ ] Format final wählen: PDF / Präsentation (PPTX) / Onepager
-- [ ] Einreichungstermin & -weg prüfen (DB-Wettbewerbsseite „Bahn-Azubis gegen Hass und Gewalt")
+- [x] Alle Anlaufstellen in der App auf geprüfte Quellen umgestellt, erfundene Rufnummern entfernt
+- [x] Krisenerkennung eingebaut, die unabhängig von der KI funktioniert – mit Tests abgesichert
+- [x] DB-Zitate mit Quellenangabe belegt, unbelegte Regelwerks-Texte entfernt
+- [x] Bildungsangebote auf geprüfte Organisationen reduziert, jeder Link abgerufen
+- [x] Demo-Inhalte (HR-Ansicht, Analytics, Sammlung) sichtbar gekennzeichnet
+
+**Wenn die Jury nachfragt:** [docs/Pilot-Checkliste.md](Pilot-Checkliste.md) beantwortet, was vor
+einem echten Pilotbetrieb zu klären ist – Datenschutz, KI-Hosting, standortabhängige Kontakte.
