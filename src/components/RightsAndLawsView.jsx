@@ -101,6 +101,23 @@ export function RightsAndLawsView({ onBack }) {
                   <BookOpen className="h-3.5 w-3.5" /> Offizieller Text
                 </p>
                 <p className="text-sm font-medium text-db-dark dark:text-white italic">"{law.officialText}"</p>
+                {law.quelle && (
+                  <p className="mt-2 text-[11px] font-semibold text-db-rail dark:text-white/50">
+                    Quelle:{" "}
+                    {law.quelleUrl ? (
+                      <a
+                        href={law.quelleUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-db-red"
+                      >
+                        {law.quelle}
+                      </a>
+                    ) : (
+                      law.quelle
+                    )}
+                  </p>
+                )}
               </div>
 
               {/* Translation */}
@@ -146,10 +163,12 @@ export function RightsAndLawsView({ onBack }) {
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
             Deine Rechte & Gesetze
           </h1>
+          {/* Kein Live-Abgleich: Die Texte liegen statisch in src/data/lawsData.json.
+              Ein "Live Sync API"-Siegel hätte Aktualität vorgetäuscht, die es nicht gibt. */}
           <div className="flex items-center gap-2 mb-2">
-            <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
-              <Activity className="w-3 h-3 animate-pulse" />
-              Live Sync API (Stand: Heute)
+            <span className="flex items-center gap-1.5 text-xs font-bold text-white/70 bg-white/10 px-2 py-0.5 rounded border border-white/20">
+              <Activity className="w-3 h-3" />
+              Orientierung, keine Rechtsberatung
             </span>
           </div>
           <p className="text-sm font-medium text-white/80 leading-relaxed">

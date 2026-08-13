@@ -256,70 +256,56 @@
   ],
   "dbRichtlinien": [
     {
-      "id": "kbv_1",
-      "title": "Konzernbetriebsvereinbarung (KBV)",
-      "subtitle": "Null Toleranz bei Mobbing",
+      "id": "kodex_diskriminierung",
+      "title": "Verhaltenskodex des DB-Konzerns",
+      "subtitle": "Diskriminierung und Belästigung sind verboten",
       "icon": "BookText",
-      "color": "amber",
-      "paragraph": "DB Grundsatz",
-      "officialText": "Mobbing, sexuelle Belästigung und Diskriminierung werden im DB Konzern nicht toleriert. Führungskräfte sind verpflichtet, jedem Hinweis unverzüglich nachzugehen. Zuwiderhandlungen stellen eine Verletzung arbeitsvertraglicher Pflichten dar.",
-      "translation": "Die Deutsche Bahn hat sich selbst knallharte Regeln auferlegt. Wer mobbt oder diskriminiert, verstößt gegen seinen Arbeitsvertrag. Dein Chef macht sich selbst strafbar, wenn er deine Meldung ignoriert.",
-      "actionTip": "Nutze das anonyme Meldewesen der App, wenn dein direkter Chef nichts unternimmt."
-    },
-    {
-      "id": "coc_1",
-      "title": "DB Verhaltenskodex (Code of Conduct)",
-      "subtitle": "So gehen wir miteinander um",
-      "icon": "CheckCircle2",
-      "color": "amber",
-      "paragraph": "Präambel / Grundsätze",
-      "officialText": "Wir begegnen einander mit Respekt, Vertrauen und Fairness. Wir schätzen Vielfalt und setzen uns für ein offenes, tolerantes Arbeitsumfeld ein. Jede Form von Benachteiligung, Belästigung oder Ausgrenzung lehnen wir strikt ab.",
-      "translation": "Das ist kein Werbetext, das ist die offizielle Regel für alle 300.000 Mitarbeiter der DB. Wer sich rassistisch verhält oder andere ausgrenzt, passt nicht ins Unternehmen.",
-      "actionTip": "Berufe dich in Feedback-Gesprächen aktiv auf den Code of Conduct, wenn der Umgangston nicht stimmt."
-    },
-    {
-      "id": "charta_1",
-      "title": "Charta der Vielfalt",
-      "subtitle": "Öffentliches Commitment der Bahn",
-      "icon": "Scale",
-      "color": "blue",
-      "paragraph": "Unternehmensurkunde",
-      "officialText": "Mit der Unterzeichnung verpflichten wir uns, ein Arbeitsumfeld zu schaffen, das frei von Vorurteilen ist. Alle Beschäftigten erfahren Wertschätzung – unabhängig von Geschlecht und geschlechtlicher Identität, Nationalität, ethnischer Herkunft, Religion oder Weltanschauung, Behinderung, Alter, sexueller Orientierung.",
-      "translation": "Die DB hat diese offizielle Urkunde der Bundesregierung unterschrieben. Damit ist es hochoffiziell: Rassismus, Homophobie und Sexismus haben im Konzern keinen Platz.",
-      "actionTip": "Argumentiere mit der Charta, wenn Vorgesetzte 'Sprüche' als 'harmlosen Spaß' abtun."
-    },
-    {
-      "id": "hr_leitfaden",
-      "title": "DB HR Handlungsleitfaden",
-      "subtitle": "Der Prozess nach einer Meldung",
-      "icon": "AlertCircle",
       "color": "red",
-      "paragraph": "Eskalationsprozess",
-      "officialText": "Bei Verdacht auf Mobbing oder sexuelle Belästigung greift ein standardisierter Eskalationsprozess. Dieser sieht die sofortige Anhörung beider Parteien unter Einbeziehung des Betriebsrats sowie die Einleitung disziplinarischer Maßnahmen bis hin zur fristlosen Kündigung vor.",
-      "translation": "Die Personalabteilung (HR) hat eine exakte Checkliste, was sie tun muss, wenn du Mobbing meldest. Sie MÜSSEN den Fall prüfen, Zeugen befragen und den Täter anhören. Sie können den Fall nicht einfach ignorieren.",
-      "actionTip": "Hab keine Angst, HR einzuschalten. Die haben einen festen Leitfaden, an den sie sich halten müssen, um dich zu schützen."
+      "paragraph": "Verhaltenskodex, Abschnitt 02",
+      "officialText": "Wir dulden keine sexuelle Belästigung oder Diskriminierung von Personen, insbesondere aufgrund nationaler, ethnischer oder sozialer Herkunft, Hautfarbe, Gesundheitsstatus, Behinderung, sexueller Orientierung, Geschlecht, Alter, politischer Meinung, Religion oder Weltanschauung, oder Mitgliedschaft in einer Gewerkschaft.",
+      "translation": "Das ist kein frommer Wunsch, sondern eine Regel, die für alle im Konzern gilt – auch für deine Vorgesetzten. Wer dich wegen deiner Herkunft, deines Glaubens, deines Geschlechts oder deiner sexuellen Orientierung schlecht behandelt, verstößt dagegen.",
+      "actionTip": "Wenn du so etwas erlebst: aufschreiben, was passiert ist – und über einen der offiziellen Meldewege melden.",
+      "quelle": "Konzerngrundsätze – Ethik – Verhaltenskodex, deutschebahn.com",
+      "quelleUrl": "https://www.deutschebahn.com/de/konzern/konzernprofil/compliance/geschaeftspartner/verhaltenskodex-6878730"
     },
     {
-      "id": "it_richtlinie",
-      "title": "DB Richtlinie zur IT-Nutzung",
-      "subtitle": "Cybermobbing & Chat-Regeln",
-      "icon": "AlertCircle",
+      "id": "kodex_hinweisgeber",
+      "title": "Verhaltenskodex des DB-Konzerns",
+      "subtitle": "Melden darf dir nicht schaden",
+      "icon": "ShieldCheck",
+      "color": "emerald",
+      "paragraph": "Verhaltenskodex – Schutz des Hinweisgebers",
+      "officialText": "Schutz des Hinweisgebers: Wir dulden keine Repressalien gegen Personen, die solche Verstöße melden, sowie weitere vom Hinweisgeberschutz umfasste Personen.",
+      "translation": "Die größte Angst beim Melden ist meistens: „Schadet mir das?“ Der Konzern sagt hier selbst Nein – und § 16 AGG sagt es dir zusätzlich per Gesetz.",
+      "actionTip": "Falls dir nach einer Meldung doch Nachteile entstehen, ist genau das ein eigener Verstoß, den du melden kannst.",
+      "quelle": "Konzerngrundsätze – Ethik – Verhaltenskodex, deutschebahn.com",
+      "quelleUrl": "https://www.deutschebahn.com/de/konzern/konzernprofil/compliance/geschaeftspartner/verhaltenskodex-6878730"
+    },
+    {
+      "id": "meldewege_db",
+      "title": "Meldewege im DB-Konzern",
+      "subtitle": "Wohin du dich wenden kannst",
+      "icon": "Scale",
+      "color": "red",
+      "paragraph": "Hinweisgebersystem (BKMS)",
+      "officialText": "Der DB-Konzern betreibt ein elektronisches Hinweisgebersystem, über das Hinweise anonym und in zwölf Sprachen abgegeben werden können. Ergänzend bestehen themenbezogene Meldestellen sowie eine telefonische Erreichbarkeit des Compliance Hinweismanagements.",
+      "translation": "Du musst niemandem im Betrieb gegenübertreten, um etwas zu melden. Über das Hinweisgebersystem geht es anonym – und du kannst trotzdem auf Rückfragen antworten.",
+      "actionTip": "Die konkreten Adressen und Nummern findest du in dieser App unter „Ansprechpartner & Meldewege“.",
+      "quelle": "Compliance – Hinweise geben, deutschebahn.com",
+      "quelleUrl": "https://www.deutschebahn.com/de/konzern/konzernprofil/compliance/hinweise_geben-6878688"
+    },
+    {
+      "id": "uebernahme",
+      "title": "Übernahme nach der Ausbildung",
+      "subtitle": "Was die DB öffentlich zusagt",
+      "icon": "Award",
       "color": "amber",
-      "paragraph": "Kommunikationsrichtlinie",
-      "officialText": "Die Nutzung der IT-Systeme und sozialen Netzwerke im dienstlichen Kontext muss stets den Grundsätzen eines fairen und respektvollen Miteinanders entsprechen. Cybermobbing, diffamierende Äußerungen oder das Teilen von unangebrachten Inhalten wird arbeitsrechtlich geahndet.",
-      "translation": "WhatsApp-Gruppen der Abteilung oder Teams-Chats sind kein rechtsfreier Raum. Wer hier Kollegen ausschließt, heimlich veralbert oder beleidigt, riskiert eine sofortige Abmahnung durch die DB.",
-      "actionTip": "Cybermobbing hinterlässt digitale Spuren. Melde solche Vorfälle direkt mit Screenshots."
-    },
-    {
-      "id": "uebernahme_vertrag",
-      "title": "DB Tarifvertrag / Übernahme",
-      "subtitle": "Deine Jobsicherheit nach der Ausbildung",
-      "icon": "BookOpen",
-      "color": "teal",
-      "paragraph": "Übernahmegarantie",
-      "officialText": "Auszubildende, die ihre Abschlussprüfung erfolgreich bestehen, werden in der Regel unbefristet in ein Arbeitsverhältnis übernommen, sofern personenbedingte oder verhaltensbedingte Gründe nicht entgegenstehen.",
-      "translation": "Die Bahn garantiert dir bei guten Leistungen und bestandenem Abschluss im Normalfall einen festen Job. Das nimmt dir den extremen Druck und die Existenzangst im dritten Lehrjahr.",
-      "actionTip": "Lass dich nicht unterkriegen. Ein guter Abschluss bei der DB ist eine Eintrittskarte für einen sicheren Job!"
+      "paragraph": "Übernahmezusage",
+      "officialText": "Die Deutsche Bahn sagt Nachwuchskräften öffentlich zu, ihnen nach erfolgreichem Abschluss der Ausbildung ein Übernahmeangebot im Konzern zu machen.",
+      "translation": "Sinngemäße Zusammenfassung öffentlicher Aussagen der DB, kein wörtliches Zitat aus deinem Vertrag. Was für dich persönlich gilt, steht in deinem Ausbildungsvertrag.",
+      "actionTip": "Wenn dir jemand mit der Übernahme droht, um dich vom Melden abzuhalten: Genau davor schützen § 16 AGG und der Hinweisgeberschutz.",
+      "quelle": "öffentliche Angaben der DB zur Ausbildung (db.jobs, Pressemitteilungen)",
+      "quelleUrl": "https://db.jobs/de-de/dein-einstieg/ausbildung"
     }
   ]
 }

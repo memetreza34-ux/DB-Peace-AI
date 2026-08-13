@@ -197,7 +197,8 @@ export default function App() {
       {isOffline && (
         <div className="bg-db-red text-white text-xs font-bold py-1.5 px-4 flex items-center justify-center gap-2 z-50">
           <WifiOff className="w-3 h-3" />
-          Offline-Modus aktiv. Eingaben werden lokal gespeichert und später synchronisiert.
+          Keine Internetverbindung. Deine Eingaben bleiben ohnehin auf diesem Gerät – nur der
+          KI-Assistent antwortet solange eingeschränkt.
         </div>
       )}
 
