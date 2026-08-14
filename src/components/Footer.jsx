@@ -20,7 +20,9 @@ export function Footer({ onNavigate, onToggleHR }) {
 
           {/* Core Safety Statement */}
           <div className="rounded-xl bg-db-warm dark:bg-db-dark/50 px-4 py-2 text-center text-xs font-bold text-db-dark dark:text-white border border-db-dark/5 dark:border-white/5">
-            🛡️ <span className="text-db-red font-black">„Menschen entscheiden, nicht die KI.“</span> — Keine Rechts- oder Medizinberatung.
+            {/* redInk statt db-red: kleiner Text auf hellgrauem Grund erreicht mit
+                der reinen Markenfarbe den Mindestkontrast nicht. */}
+            🛡️ <span className="text-db-redInk dark:text-red-400 font-black">„Menschen entscheiden, nicht die KI.“</span> — Keine Rechts- oder Medizinberatung.
           </div>
 
           {/* Quick Access Links */}

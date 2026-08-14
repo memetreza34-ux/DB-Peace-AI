@@ -9,13 +9,15 @@ import {
   Mail,
   ExternalLink,
   Info,
-  MapPin
+  MapPin,
+  ShieldPlus
 } from "lucide-react";
 import {
   DB_MELDEWEGE,
   DB_BERATUNG,
   EXTERNE_HILFE,
   OFFEN_FUER_PILOT,
+  UNTER_18,
   GEPRUEFT_AM,
   telLink
 } from "../config/kontakte";
@@ -156,6 +158,32 @@ export function ContactsView() {
                   <span>{s.hinweis}</span>
                 </p>
               )}
+            </div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Viele Azubis im ersten Lehrjahr sind noch keine 18 — für sie gelten
+          zusätzliche Rechte, die kaum jemand kennt. */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.35 }}
+        className="mt-6 rounded-lg border-2 border-amber-200 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20 p-6"
+      >
+        <div className="flex items-center gap-3 mb-2">
+          <ShieldPlus className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+          <h2 className="text-lg font-black text-db-dark dark:text-white">
+            Noch keine 18? Dann gilt für dich mehr
+          </h2>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-3 mt-4">
+          {UNTER_18.map((h) => (
+            <div key={h.id}>
+              <h3 className="font-black text-sm text-db-dark dark:text-white mb-1">{h.titel}</h3>
+              <p className="text-xs font-medium text-db-rail dark:text-white/70 leading-relaxed">
+                {h.text}
+              </p>
             </div>
           ))}
         </div>

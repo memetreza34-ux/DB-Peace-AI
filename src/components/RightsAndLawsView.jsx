@@ -158,7 +158,7 @@ export function RightsAndLawsView({ onBack }) {
           
           <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm backdrop-blur-md">
             <Scale className="h-3.5 w-3.5 text-amber-400" />
-            <span>Säule 4: Transparenz & Rechte</span>
+            <span>Deine Rechte</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
             Deine Rechte & Gesetze

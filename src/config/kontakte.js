@@ -157,6 +157,31 @@ export const EXTERNE_HILFE = [
 ];
 
 /**
+ * Hinweise für Auszubildende unter 18.
+ *
+ * Ein großer Teil der Azubis im ersten Lehrjahr ist minderjährig. Für sie gelten
+ * zusätzliche Schutzrechte, und sie dürfen Erwachsene ihres Vertrauens einbeziehen
+ * — das ist kein Zeichen von Schwäche, sondern ihr gutes Recht.
+ */
+export const UNTER_18 = [
+  {
+    id: "jarbschg",
+    titel: "Du bist zusätzlich geschützt",
+    text: "Das Jugendarbeitsschutzgesetz gilt nur für dich: bei Arbeitszeit, Pausen, Nachtruhe und beim Schutz vor sexueller Belästigung (§ 22 JArbSchG)."
+  },
+  {
+    id: "eltern",
+    titel: "Deine Eltern dürfen mitkommen",
+    text: "Zu einem Gespräch mit Ausbildungsleitung, JAV oder Betriebsrat darfst du eine erwachsene Vertrauensperson mitnehmen — auch deine Eltern oder Erziehungsberechtigten."
+  },
+  {
+    id: "kummer",
+    titel: "Beratung speziell für junge Menschen",
+    text: "Die Nummer gegen Kummer (116 111) berät kostenfrei und anonym bis 25 Jahre — auch, wenn es um Ausbildung und Arbeit geht."
+  }
+];
+
+/**
  * Was ein Pilotbetrieb ergänzen muss. Diese Stellen sind standort- oder
  * bereichsabhängig und lassen sich nicht zentral recherchieren.
  *

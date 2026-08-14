@@ -95,7 +95,7 @@ export function RecordAndReportView() {
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm backdrop-blur-md">
               <NotebookPen className="h-3.5 w-3.5 text-amber-400" />
-              <span>Säule 2: Festhalten & Melden</span>
+              <span>Festhalten &amp; Melden</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
               Gedächtnisprotokoll & Vorfall-Meldung

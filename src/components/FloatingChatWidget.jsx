@@ -255,11 +255,17 @@ export function FloatingChatWidget() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? "Peace-Assistent schließen" : "Peace-Assistent öffnen – schreib, was los ist"}
+        aria-expanded={isOpen}
         className={`flex h-14 w-14 items-center justify-center rounded-full shadow-md transition-colors ${
           isOpen ? 'bg-db-dark text-white' : 'bg-db-red text-white'
         }`}
       >
-        {isOpen ? <X className="h-6 w-6" /> : <MessageSquareText className="h-6 w-6" />}
+        {isOpen ? (
+          <X className="h-6 w-6" aria-hidden="true" />
+        ) : (
+          <MessageSquareText className="h-6 w-6" aria-hidden="true" />
+        )}
       </motion.button>
       
     </div>

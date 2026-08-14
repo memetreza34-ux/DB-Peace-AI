@@ -56,7 +56,7 @@ export function LearningHubView() {
         <div className="space-y-2 max-w-2xl">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm backdrop-blur-md">
             <GraduationCap className="h-3.5 w-3.5 text-amber-400" />
-            <span>Säule 3: Wissen & Prävention</span>
+            <span>Wissen &amp; Vorbeugen</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
             Kurs- & Seminar-Katalog

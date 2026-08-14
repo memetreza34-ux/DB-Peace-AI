@@ -183,6 +183,12 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
       </motion.div>
 
       {/* Grid Menu */}
+      {/* Eigene Überschrift statt Sprung von h1 direkt auf h3 — hilft beim
+          Vorlesen mit Screenreader und gibt der Kartenwand einen Sinn. */}
+      <h2 className="text-xl font-black text-db-dark dark:text-white mt-2">
+        Was brauchst du gerade?
+      </h2>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 relative z-20">
         {dashboardItems.map((item) => {
           const Icon = item.icon;

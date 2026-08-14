@@ -258,7 +258,7 @@ export default function SupportPage({ onNavigate }) {
           
           <div className="rounded-xl border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-db-dark/50 p-5 text-center">
              <p className="text-xs font-semibold text-db-rail dark:text-white/60">
-               Nicht sicher, was du tun sollst? Nutze unser anonymes <strong className="text-db-dark dark:text-white cursor-pointer underline" onClick={() => onNavigate && onNavigate("record-report")}>Gedächtnisprotokoll</strong> (Säule 2), um den Vorfall zunächst privat für dich festzuhalten.
+               Noch unsicher, was du tun sollst? Du kannst den Vorfall erst mal nur für dich <strong className="text-db-dark dark:text-white cursor-pointer underline" onClick={() => onNavigate && onNavigate("record-report")}>aufschreiben</strong> – ohne dass jemand davon erfährt. Später entscheidest du, ob etwas daraus wird.
              </p>
           </div>
         </div>

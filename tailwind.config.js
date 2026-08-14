@@ -6,7 +6,8 @@ export default {
     extend: {
       colors: {
         db: {
-          red: "#E2001A", // Official DB Red
+          red: "#E2001A", // Official DB Red — für Flächen und Text ab 18px
+          redInk: "#A40013", // abgedunkelt für kleinen Text auf hellem Grund (Kontrast)
           dark: "#282D37", // DB Cool Gray Dark (Text)
           rail: "#646973", // DB Cool Gray Mid
           soft: "#F0F3F5", // DB Cool Gray Light (Background)
