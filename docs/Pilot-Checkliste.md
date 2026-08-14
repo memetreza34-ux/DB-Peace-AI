@@ -80,8 +80,13 @@ eigene Konfiguration ausgeliefert?
 - [ ] **Quick Exit.** Verlässt die App schnell. Zu prüfen, ob dabei alle sichtbaren
       Spuren verschwinden sollen.
 - [ ] **Hosting** der Anwendung selbst (heute nur lokal lauffähig).
-- [ ] **Barrierefreiheit** nach BITV prüfen — Tastaturbedienung und Kontraste sind
-      angelegt, aber nicht geprüft.
+- [ ] **Barrierefreiheit nach BITV fachlich prüfen lassen.** Selbst geprüft und in
+      Ordnung: alle Bedienelemente per Tabulator erreichbar und beschriftet,
+      Überschriften ohne Ebenensprünge, `lang="de"`, Landmarks (header/nav/main/footer),
+      sichtbarer Fokusrahmen, Tippziele ab 44 px, Dialoge mit Escape und Fokusfalle,
+      Bewegungsreduzierung wird beachtet. **Nicht geprüft:** Test mit echtem Screenreader
+      (NVDA/VoiceOver), vollständige Kontrastmessung mit Fachwerkzeug, Bedienung durch
+      Menschen mit Behinderung. Eine automatisierte Messung ersetzt das nicht.
 
 ---
 

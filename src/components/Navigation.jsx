@@ -39,7 +39,7 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
           <button
             type="button"
             onClick={onOpenSearch}
-            className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10 hover:text-db-dark dark:hover:text-white transition-all bg-db-dark/5 dark:bg-white/5"
+            className="flex items-center justify-center w-11 h-11 sm:w-10 sm:h-10 rounded-xl text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10 hover:text-db-dark dark:hover:text-white transition-all bg-db-dark/5 dark:bg-white/5"
             title="Suchen (Cmd+K)"
             aria-label="Suchen"
           >
@@ -50,7 +50,7 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
             type="button"
             onClick={() => setActiveTab("home")}
             aria-label="Startseite"
-            className={`flex items-center gap-2 rounded-xl px-2.5 sm:px-4 py-2 text-sm font-bold transition-all ${
+            className={`flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-2.5 sm:px-4 py-2 text-sm font-bold transition-all ${
               activeTab === "home"
                 ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-sm"
                 : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10 hover:text-db-dark dark:hover:text-white"
@@ -64,7 +64,7 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
             type="button"
             onClick={() => setActiveTab("profile")}
             aria-label="Sammlung"
-            className={`flex items-center gap-2 rounded-xl px-2.5 sm:px-4 py-2 text-sm font-bold transition-all ${
+            className={`flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-2.5 sm:px-4 py-2 text-sm font-bold transition-all ${
               activeTab === "profile"
                 ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-sm"
                 : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10 hover:text-db-dark dark:hover:text-white"
@@ -81,7 +81,7 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
             type="button"
             onClick={onOpenEmergency}
             aria-label="Notfall und Kontakte"
-            className={`flex items-center gap-2 rounded-xl px-2.5 sm:px-3.5 py-2 text-xs sm:text-sm font-extrabold transition shadow-sm ${
+            className={`flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-2.5 sm:px-3.5 py-2 text-xs sm:text-sm font-extrabold transition shadow-sm ${
               activeTab === "contacts"
                 ? "bg-red-800 text-white dark:bg-red-900"
                 : "bg-red-600 dark:bg-db-red text-white hover:bg-red-700 dark:hover:bg-red-600"
