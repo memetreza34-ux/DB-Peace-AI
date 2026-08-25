@@ -156,7 +156,7 @@ export function AISmartReport({ onReportGenerated }) {
               <ReportField label="Ort / Kontext" value={generatedReport.location} />
               <ReportField label="Zeug:innen" value={generatedReport.witnesses} />
               <ReportField label="Sachliche Beschreibung" value={generatedReport.description} wide />
-              <ReportField label="Noch zu ergänzen" value={generatedReport.missingFields.length ? generatedReport.missingFields.join(", ") : "Keine offensichtlichen Lücken erkannt"} wide />
+              <ReportField label="Noch zu ergänzen" value={generatedReport.missingFields.length ? generatedReport.missingFields.join(", ") : "Keine Lücke von der KI gemeldet – bitte selbst prüfen"} wide />
             </dl>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
