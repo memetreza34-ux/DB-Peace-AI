@@ -52,6 +52,11 @@ test("lokaler KI-Fallback klassifiziert unbekannte Fakten nicht automatisch", ()
   assert.match(smartReport, /witnesses:\s*"Nicht angegeben"/);
 });
 
+test("leere KI-Lückenliste wird nicht als Vollständigkeitsprüfung dargestellt", () => {
+  assert.match(smartReport, /Keine Lücke von der KI gemeldet – bitte selbst prüfen/);
+  assert.doesNotMatch(smartReport, /Keine offensichtlichen Lücken erkannt/);
+});
+
 test("fehlende KI-Kategorie bleibt server- und clientseitig Nicht angegeben", () => {
   assert.match(server, /category:\s*cleanString\(parsed\.category,\s*120,\s*"Nicht angegeben"\)/);
   assert.match(smartReport, /category:\s*valueOrNotProvided\(report\.category\)/);
