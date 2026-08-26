@@ -19,6 +19,13 @@ test("110 wird in Hilfeoberflächen auf akute Gefahrenlagen begrenzt", () => {
   assert.doesNotMatch(emergency, /Wenn eine Straftat oder unmittelbare Gefahr besteht\./);
 });
 
+test("Startseite beschreibt die Anrufbestätigung nur für 110 und 112", () => {
+  const home = read("src/components/DashboardHome.jsx");
+
+  assert.match(home, /110 und 112 mit klarer Anrufbestätigung; TelefonSeelsorge als direkter Telefon-App-Link\./);
+  assert.doesNotMatch(home, /110, 112 und TelefonSeelsorge mit klarer Anrufbestätigung/);
+});
+
 test("lokaler Chat macht aus historischer Suizid-Erwähnung nicht automatisch eine akute Krise", () => {
   const chat = read("src/components/FloatingChatWidget.jsx");
 

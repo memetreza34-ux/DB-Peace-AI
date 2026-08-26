@@ -147,7 +147,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
       <motion.div variants={activeItemVariants} className="grid gap-4 sm:grid-cols-2">
         <button type="button" onClick={onOpenEmergency} className="flex items-center gap-4 rounded-xl border border-red-200 bg-red-50 p-5 text-left transition hover:border-red-400 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500/30 dark:border-red-900/50 dark:bg-red-950/25">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-300"><Siren className="h-6 w-6" aria-hidden="true" /></div>
-          <div><h2 className="font-black text-red-950 dark:text-red-200">Akute Hilfe</h2><p className="mt-1 text-xs font-semibold text-red-800/75 dark:text-red-300/70">110, 112 und TelefonSeelsorge mit klarer Anrufbestätigung.</p></div>
+          <div><h2 className="font-black text-red-950 dark:text-red-200">Akute Hilfe</h2><p className="mt-1 text-xs font-semibold text-red-800/75 dark:text-red-300/70">110 und 112 mit klarer Anrufbestätigung; TelefonSeelsorge als direkter Telefon-App-Link.</p></div>
         </button>
 
         <button type="button" onClick={() => onNavigate("privacy")} className="flex items-center gap-4 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-left transition hover:border-emerald-400 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-emerald-900/50 dark:bg-emerald-950/25">
