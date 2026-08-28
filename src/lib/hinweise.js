@@ -30,6 +30,18 @@ export function hinweiseFuer(rolleId, fall) {
     });
   }
 
+  if (rolleId === "jav") {
+    hinweise.push({
+      id: "jav-weg",
+      titel: "Die JAV wirkt über den Betriebsrat",
+      text:
+        "Die JAV kann Maßnahmen nicht selbst gegenüber dem Arbeitgeber durchsetzen. Sie nimmt " +
+        "Anregungen entgegen und beantragt Maßnahmen beim Betriebsrat — begleiten, beraten und " +
+        "beim Gespräch dabei sein kann sie dagegen sofort.",
+      grundlage: "§ 70 Abs. 1 Nr. 1 BetrVG",
+    });
+  }
+
   if (rolleId === "betriebsrat") {
     hinweise.push({
       id: "br-beschwerde",

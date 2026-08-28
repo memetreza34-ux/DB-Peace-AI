@@ -91,6 +91,15 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
 
   const aktionAusfuehren = (aktion) => {
     if (!gewaehlt) return;
+
+    // Was eine andere Stelle einbezieht, geht nicht ohne die betroffene Person.
+    if (aktion.brauchtZustimmung) {
+      const bestaetigt = window.confirm(
+        `${aktion.beschreibung}\n\nHat die meldende Person dem zugestimmt? ` +
+          "Ohne ihre Zustimmung darf der Fall nicht weitergegeben werden."
+      );
+      if (!bestaetigt) return;
+    }
     const vermerk = {
       id: Date.now(),
       von: "system",
@@ -314,6 +323,11 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                         >
                           <UserCheck className="h-4 w-4" />
                           {aktion.label}
+                          {aktion.grundlage && (
+                            <span className="font-bold text-db-rail/70 dark:text-white/40">
+                              {aktion.grundlage}
+                            </span>
+                          )}
                         </button>
                       ))}
                     </div>

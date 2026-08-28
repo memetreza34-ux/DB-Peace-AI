@@ -141,11 +141,18 @@ Grundpostfach. Was eine Rolle kann, steht in `src/config/aktionen.js`.
 
 | Rolle | Eigene Funktionen |
 |---|---|
-| JAV | Sprechstunde anbieten, Begleitung zum Gespräch anbieten |
+| JAV | Sprechstunde anbieten, Begleitung anbieten, beim Betriebsrat einbringen |
 | AFK | Vier-Augen-Gespräch vorschlagen, Bezug zum Ausbildungsplan |
 | HR | Eingang bestätigen, Maßnahme vermerken |
 | Compliance | Eingang bestätigen, anonyme Rückfrage |
 | Vertrauensleute | **bewusst keine** — wer nur reden will, löst keinen Vorgang aus |
+
+**Zur JAV im Besonderen:** Sie kann gegenüber dem Arbeitgeber nichts selbst
+durchsetzen, sondern beantragt Maßnahmen beim Betriebsrat (§ 70 Abs. 1 Nr. 1
+BetrVG). Ohne diesen Weg sähe die App so aus, als hätte die JAV Rechte, die sie
+nicht hat — das fällt jedem JAV-Mitglied sofort auf. Die Aktion „Beim
+Betriebsrat einbringen" braucht die Zustimmung der betroffenen Person, und ein
+Hinweis im Postfach erklärt den Weg.
 
 Dazu quer über alle Rollen:
 

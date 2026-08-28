@@ -81,20 +81,6 @@ export function AppLock({ onUnlock }) {
     };
   }, [pin, einrichten, ersteEingabe, onUnlock, fehlerZeigen]);
 
-  if (modusOffen) {
-    return (
-      <Geraetewahl
-        onWahl={(modus) => {
-          geraetemodusSetzen(modus);
-          setModusOffen(false);
-          // Auf einem geteilten Gerät bleibt nichts zurück, also gibt es auch
-          // nichts zu sperren. Eine PIN wäre hier nur eine Hürde ohne Schutz.
-          if (modus === GETEILT) onUnlock();
-        }}
-      />
-    );
-  }
-
   const gesperrt = gesperrtBis > 0;
 
   const handleKeyPress = (num) => {
@@ -121,6 +107,23 @@ export function AppLock({ onUnlock }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
+
+  // Steht bewusst hinter allen Hooks: Ein früher Return davor würde beim
+  // Wechsel von der Gerätewahl zur PIN die Zahl der Hooks ändern, und React
+  // bricht dann mit „Rendered more hooks than during the previous render" ab.
+  if (modusOffen) {
+    return (
+      <Geraetewahl
+        onWahl={(modus) => {
+          geraetemodusSetzen(modus);
+          setModusOffen(false);
+          // Auf einem geteilten Gerät bleibt nichts zurück, also gibt es auch
+          // nichts zu sperren. Eine PIN wäre hier nur eine Hürde ohne Schutz.
+          if (modus === GETEILT) onUnlock();
+        }}
+      />
+    );
+  }
 
   const titel = einrichten
     ? ersteEingabe

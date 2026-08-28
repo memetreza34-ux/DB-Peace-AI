@@ -6,6 +6,11 @@
  * formal. Umgekehrt bekommen die Vertrauensleute absichtlich keine Aktionen —
  * wer nur reden will, soll keinen Vorgang auslösen.
  *
+ * Wichtig bei der JAV: Sie kann gegenüber dem Arbeitgeber nichts selbst
+ * durchsetzen. Was sie erreichen will, beantragt sie beim Betriebsrat
+ * (§ 70 Abs. 1 Nr. 1 BetrVG). Ohne diesen Weg sähe die App so aus, als hätte
+ * die JAV Rechte, die sie nicht hat — das fällt jedem JAV-Mitglied sofort auf.
+ *
  * Jede Aktion schreibt einen Vermerk in den Verlauf, den beide Seiten sehen.
  * Versendet wird nichts; die Vorschau sagt das an jeder Stelle dazu.
  */
@@ -23,6 +28,16 @@ export const AKTIONEN = {
     beschreibung:
       "Anbieten, zum Gespräch mit Ausbildung oder Führungskraft mitzukommen. Niemand muss allein hingehen.",
     vermerk: "Begleitung zum Gespräch angeboten.",
+  },
+  br_einbringen: {
+    id: "br_einbringen",
+    label: "Beim Betriebsrat einbringen",
+    beschreibung:
+      "Die JAV kann Maßnahmen nicht selbst gegenüber dem Arbeitgeber durchsetzen — sie beantragt sie beim Betriebsrat. Das ist kein Umweg, sondern der vorgesehene Weg.",
+    vermerk:
+      "Zur Beratung beim Betriebsrat eingebracht. Die JAV bleibt beteiligt und begleitet weiter.",
+    grundlage: "§ 70 Abs. 1 Nr. 1 BetrVG",
+    brauchtZustimmung: true,
   },
   vier_augen: {
     id: "vier_augen",
@@ -61,7 +76,7 @@ export const AKTIONEN = {
 
 /** Welche Aktionen hat welche Rolle? Rollen ohne Eintrag behalten das Grundpostfach. */
 export const ROLLEN_AKTIONEN = {
-  jav: ["sprechstunde", "begleitung"],
+  jav: ["sprechstunde", "begleitung", "br_einbringen"],
   afk: ["vier_augen", "ausbildungsplan"],
   hr: ["eingang_bestaetigen", "massnahme"],
   compliance: ["eingang_bestaetigen", "anonyme_rueckfrage"],

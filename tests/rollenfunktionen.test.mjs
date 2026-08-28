@@ -158,3 +158,22 @@ test("aggregierte Zahlen folgen derselben Schwelle", async () => {
   assert.equal(ausweisbar(0), false);
   assert.equal(ausweisbar(undefined), false);
 });
+
+test("die JAV hat den Weg über den Betriebsrat — und weiß, dass sie ihn braucht", () => {
+  // Die JAV kann gegenüber dem Arbeitgeber nichts selbst durchsetzen
+  // (§ 70 BetrVG). Fehlte dieser Weg, sähe die App so aus, als hätte sie
+  // Rechte, die sie nicht hat.
+  const aktion = aktionenFuer("jav").find((eintrag) => eintrag.id === "br_einbringen");
+  assert.ok(aktion, "die JAV braucht den Weg zum Betriebsrat");
+  assert.equal(aktion.brauchtZustimmung, true, "nicht ohne Zustimmung der betroffenen Person");
+  assert.match(aktion.grundlage, /BetrVG/);
+
+  const hinweis = hinweiseFuer("jav", { merkmale: [] }).find((eintrag) => eintrag.id === "jav-weg");
+  assert.ok(hinweis, "der Hinweis auf den Weg über den Betriebsrat fehlt");
+
+  // Umgekehrt: Der Betriebsrat braucht diesen Weg nicht, er ist das Ziel.
+  assert.equal(
+    aktionenFuer("betriebsrat").some((eintrag) => eintrag.id === "br_einbringen"),
+    false
+  );
+});
