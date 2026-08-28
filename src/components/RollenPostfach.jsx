@@ -146,7 +146,10 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 py-6">
+      {/* pb-28 hält den unteren Rand frei von den schwebenden Schaltflächen
+          (Quick Exit). Auf dem Handy verdeckte der Knopf sonst den letzten
+          Absatz — und Dienstgeräte sind genau der Fall, für den das zählt. */}
+      <div className="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 py-6 pb-28 sm:pb-8">
         {/* Ohne diesen Hinweis wirkt die Ansicht wie ein echtes Meldesystem. */}
         <div className="flex items-start gap-3 rounded-xl border border-amber-300 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/20 p-4">
           <Info className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
