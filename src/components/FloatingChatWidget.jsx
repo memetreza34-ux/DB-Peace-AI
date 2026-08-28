@@ -1,224 +1,277 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Bot, Send, X, MessageSquareText } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import { Bot, MessageSquareText, Send, ShieldAlert, Trash2, WifiOff, X } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+
+const INITIAL_MESSAGE = {
+  id: "welcome",
+  role: "assistant",
+  text: "Hallo. Ich bin der Azubi-Begleiter im DB-Peace-Prototyp. Ich gebe Orientierung, ersetze aber keine reale Vertrauensperson, Fachberatung oder Notfallhilfe.",
+};
 
 export function FloatingChatWidget() {
+  const reduceMotion = useReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
-  
-  const INITIAL_MESSAGES = [
-    {
-      role: "assistant",
-      text: "Hallo! Ich bin dein vertraulicher KI-Begleiter. Wie kann ich dir heute helfen?"
-    }
-  ];
-
-  const [messages, setMessages] = useState(() => {
-    const saved = localStorage.getItem("db-peace-chat");
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        return INITIAL_MESSAGES;
-      }
-    }
-    return INITIAL_MESSAGES;
-  });
-
-  useEffect(() => {
-    localStorage.setItem("db-peace-chat", JSON.stringify(messages));
-  }, [messages]);
-
+  const [messages, setMessages] = useState(() => [INITIAL_MESSAGE]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [mode, setMode] = useState("checking");
   const scrollRef = useRef(null);
+  const inputRef = useRef(null);
+  const toggleButtonRef = useRef(null);
+  const activeRequestRef = useRef(null);
+  const requestGenerationRef = useRef(0);
 
-  // Auto-scroll to bottom when messages change
+  useEffect(() => () => {
+    requestGenerationRef.current += 1;
+    activeRequestRef.current?.abort();
+    activeRequestRef.current = null;
+  }, []);
+
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (!isOpen) return undefined;
+    let active = true;
+    setMode("checking");
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 4_000);
+    const focusFrame = window.requestAnimationFrame(() => inputRef.current?.focus());
+
+    fetch("/api/chat/status", { signal: controller.signal, cache: "no-store" })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("status_failed")))
+      .then((data) => {
+        if (active) setMode(data.configured ? "configured" : "demo");
+      })
+      .catch(() => {
+        if (active) setMode("demo");
+      })
+      .finally(() => window.clearTimeout(timeout));
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") closeChat();
     }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      active = false;
+      window.cancelAnimationFrame(focusFrame);
+      window.clearTimeout(timeout);
+      window.removeEventListener("keydown", handleKeyDown);
+      controller.abort();
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, isTyping]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || isTyping) return;
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const userText = input.trim().slice(0, 1_200);
+    if (!userText || isTyping) return;
 
-    const userText = input.trim();
-    // Add user message
-    const newMessages = [...messages, { role: "user", text: userText }];
-    setMessages(newMessages);
+    abortActiveRequest();
+    const generation = requestGenerationRef.current;
+    const userMessage = { id: createMessageId(), role: "user", text: userText };
+    const nextMessages = [...messages, userMessage];
+    setMessages(nextMessages);
     setInput("");
     setIsTyping(true);
 
-    try {
-      // Map messages to API format { role, content }
-      const apiMessages = newMessages.map(m => ({
-        role: m.role,
-        content: m.text
-      }));
+    const controller = new AbortController();
+    activeRequestRef.current = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 20_000);
 
+    try {
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: apiMessages }),
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          messages: nextMessages.map((message) => ({ role: message.role, content: message.text })),
+        }),
+        signal: controller.signal,
       });
 
-      const data = await response.json();
-      
-      if (response.ok && data.reply) {
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", text: data.reply }
-        ]);
-        setIsTyping(false);
-        return; // Success, exit here
-      } else {
-        throw new Error(data.error || "Fehler bei der Antwort");
-      }
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.reply) throw new Error(data.error || "chat_failed");
+      if (generation !== requestGenerationRef.current || controller.signal.aborted) return;
+
+      setMode("online");
+      setMessages((current) => [...current, { id: createMessageId(), role: "assistant", text: String(data.reply).slice(0, 4_000) }]);
     } catch (error) {
-      console.warn("API Server not available or missing key, falling back to mock:", error);
-      
-      // Fallback Mock Logic
-      setTimeout(() => {
-        const lowerInput = userText.toLowerCase();
-        let aiText = "Ich verstehe. Möchtest du mir mehr darüber erzählen, was genau passiert ist?";
-        
-        const lastBotMessage = messages.length > 0 ? messages[messages.length - 1].text : "";
-
-        if (lowerInput.includes("hallo") || lowerInput.includes("hi ") || lowerInput === "hi") {
-          aiText = "Hallo! Schön, dass du dich meldest. Wie kann ich dich heute unterstützen?";
-        } else if (lowerInput.includes("wie geht es") || lowerInput.includes("wie gehts")) {
-          aiText = "Danke der Nachfrage, mir geht es gut! Mein Ziel ist es, dir bei Fragen rund um ein faires Miteinander zu helfen. Was beschäftigt dich?";
-        } else if (lowerInput.includes("mobbing") || lowerInput.includes("beleidigt") || lowerInput.includes("schlecht behandelt")) {
-          aiText = "Das klingt belastend. Es tut mir leid, dass du das erlebst. Wenn du dich unwohl fühlst, kannst du jederzeit unter 'Notfall & Kontakte' vertrauliche Hilfe finden. Sollen wir die Situation gemeinsam einordnen?";
-        } else if (lowerInput.includes("danke")) {
-          aiText = "Sehr gerne! Wenn du noch etwas auf dem Herzen hast, bin ich hier.";
-        } else if ((lowerInput === "ja" || lowerInput.includes("gerne")) && lastBotMessage.includes("gemeinsam einordnen")) {
-          aiText = "Alles klar. Lass uns Schritt für Schritt vorgehen: Ist der Vorfall heute passiert, oder handelt es sich um etwas, das schon länger andauert?";
-        } else if (lowerInput.includes("heute") || lowerInput.includes("gerade eben") || lowerInput.includes("länger")) {
-          aiText = "Danke für die Offenheit. Manchmal hilft es, solche Vorfälle offiziell zu dokumentieren. Möchtest du, dass ich dich zum Formular 'Vorfall melden' weiterleite, oder brauchst du erst mal jemanden zum Reden (siehe 'Kontakte')?";
-        } else if (lowerInput.includes("melden") || lowerInput.includes("formular")) {
-          aiText = "Gut. Du findest das Formular im Hauptmenü unter 'Vorfall protokollieren'. Deine Angaben dort sind sicher und du entscheidest selbst, wer sie sieht.";
-        } else if (lowerInput.includes("1 plus 1")) {
-          aiText = "Das ist einfach: 1 plus 1 ist 2! Aber eigentlich bin ich Experte für Zwischenmenschliches. Wobei kann ich noch helfen?";
-        }
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            text: aiText
-          }
-        ]);
-        setIsTyping(false);
-      }, 1000);
+      if (generation !== requestGenerationRef.current || controller.signal.aborted || error?.name === "AbortError") return;
+      setMode("demo");
+      setMessages((current) => [
+        ...current,
+        { id: createMessageId(), role: "assistant", text: createLocalOrientation(userText) },
+      ]);
+    } finally {
+      window.clearTimeout(timeout);
+      if (activeRequestRef.current === controller) activeRequestRef.current = null;
+      if (generation === requestGenerationRef.current) setIsTyping(false);
     }
-  };
+  }
+
+  function abortActiveRequest() {
+    requestGenerationRef.current += 1;
+    activeRequestRef.current?.abort();
+    activeRequestRef.current = null;
+    setIsTyping(false);
+  }
+
+  function clearChat() {
+    abortActiveRequest();
+    setMessages([INITIAL_MESSAGE]);
+    setInput("");
+    window.requestAnimationFrame(() => inputRef.current?.focus());
+  }
+
+  function closeChat() {
+    abortActiveRequest();
+    setIsOpen(false);
+    window.requestAnimationFrame(() => toggleButtonRef.current?.focus());
+  }
+
+  function toggleChat() {
+    if (isOpen) closeChat();
+    else setIsOpen(true);
+  }
+
+  const statusText = mode === "online"
+    ? "Gemini-Antwort erhalten"
+    : mode === "configured"
+      ? "Gemini konfiguriert · Verbindung noch nicht geprüft"
+      : mode === "demo"
+        ? "Lokale Orientierung"
+        : "KI-Konfiguration wird geprüft";
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      
-      {/* Chat Window */}
+    <div className="fixed bottom-5 right-4 z-50 flex flex-col items-end sm:bottom-6 sm:right-6">
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          <motion.section
+            initial={reduceMotion ? false : { opacity: 0, y: 20, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="absolute bottom-20 right-0 w-[360px] h-[540px] max-h-[80vh] rounded-lg bg-white/90 dark:bg-db-dark/95 backdrop-blur-xl border border-db-dark/10 dark:border-white/10 shadow-lg flex flex-col overflow-hidden transition-colors"
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 20, scale: 0.96 }}
+            className="absolute bottom-20 right-0 flex h-[min(560px,78vh)] w-[min(370px,calc(100vw-2rem))] flex-col overflow-hidden rounded-xl border border-db-dark/10 bg-white shadow-2xl dark:border-white/10 dark:bg-db-dark"
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby="chat-title"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between bg-db-dark dark:bg-black/50 px-5 py-4 text-white">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
-                  <Bot className="h-6 w-6 text-db-red" />
+            <header className="bg-db-dark px-4 py-4 text-white dark:bg-black/40">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
+                    <Bot className="h-5 w-5 text-db-red" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <h2 id="chat-title" className="text-sm font-black">Azubi-Begleiter</h2>
+                    <p className="text-[11px] font-semibold text-white/65" role="status" aria-live="polite">
+                      {statusText}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-sm font-black tracking-wide">Dein Peace-Assistent</h3>
-                  <p className="text-[11px] font-medium text-white/70">Sicher & vertraulich</p>
+                <div className="flex items-center gap-1">
+                  <button type="button" onClick={clearChat} className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white" aria-label="Chatverlauf löschen">
+                    <Trash2 className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                  <button type="button" onClick={closeChat} className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white" aria-label="Chat schließen">
+                    <X className="h-5 w-5" aria-hidden="true" />
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="rounded-full p-2 hover:bg-white/10 transition"
-              >
-                <X className="h-5 w-5" />
-              </button>
+            </header>
+
+            <div className="border-b border-amber-200 bg-amber-50 px-4 py-2.5 text-[11px] font-semibold leading-5 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200">
+              <span className="flex items-start gap-2">
+                <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                Keine Klarnamen, Personalnummern oder vertraulichen Dokumente eingeben. Der Verlauf wird nur im aktuellen React-Zustand gehalten und nicht dauerhaft gespeichert.
+              </span>
             </div>
 
-            {/* Chat Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-db-soft/50 dark:bg-transparent" ref={scrollRef}>
-              {messages.map((m, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`relative max-w-[85%] rounded-md px-4 py-3 text-sm leading-relaxed ${
-                      m.role === "user"
-                        ? "bg-db-red text-white rounded-br-sm shadow-md shadow-db-red/20"
-                        : "bg-white dark:bg-db-rail text-db-dark dark:text-white rounded-bl-sm border border-db-dark/5 dark:border-white/10 shadow-sm"
-                    }`}
-                  >
-                    {m.text}
+            {mode === "demo" && (
+              <div className="flex items-center gap-2 bg-slate-100 px-4 py-2 text-[11px] font-bold text-slate-600 dark:bg-white/5 dark:text-white/60">
+                <WifiOff className="h-3.5 w-3.5" aria-hidden="true" />
+                KI nicht erreichbar oder nicht eingerichtet. Antworten sind einfache lokale Orientierungstexte.
+              </div>
+            )}
+
+            {mode === "configured" && (
+              <div className="border-b border-violet-200 bg-violet-50 px-4 py-2 text-[11px] font-bold text-violet-800 dark:border-violet-900/50 dark:bg-violet-950/25 dark:text-violet-200">
+                Ein API-Schlüssel ist konfiguriert. Erst eine erfolgreiche Antwort bestätigt, dass Gemini tatsächlich erreichbar ist.
+              </div>
+            )}
+
+            <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto bg-db-soft/50 p-4 dark:bg-transparent" role="log" aria-live="polite" aria-busy={isTyping} aria-relevant="additions">
+              {messages.map((message) => (
+                <motion.div key={message.id} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-[86%] break-words rounded-xl px-4 py-3 text-sm font-medium leading-6 ${message.role === "user" ? "rounded-br-sm bg-db-red text-white" : "rounded-bl-sm border border-db-dark/5 bg-white text-db-dark shadow-sm dark:border-white/10 dark:bg-db-rail dark:text-white"}`}>
+                    {message.text}
                   </div>
                 </motion.div>
               ))}
 
               {isTyping && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex justify-start"
-                >
-                  <div className="bg-white dark:bg-db-rail border border-db-dark/5 dark:border-white/10 rounded-md rounded-bl-sm px-4 py-3 flex gap-1 items-center shadow-sm">
-                    <span className="w-2 h-2 rounded-full bg-db-dark/30 dark:bg-white/30 animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <span className="w-2 h-2 rounded-full bg-db-dark/30 dark:bg-white/30 animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <span className="w-2 h-2 rounded-full bg-db-dark/30 dark:bg-white/30 animate-bounce" style={{ animationDelay: '300ms' }} />
-                  </div>
-                </motion.div>
+                <div className="flex justify-start" role="status">
+                  <div className="rounded-xl rounded-bl-sm border border-db-dark/5 bg-white px-4 py-3 text-xs font-bold text-db-rail dark:border-white/10 dark:bg-db-rail dark:text-white/60">Antwort wird erstellt …</div>
+                </div>
               )}
             </div>
 
-            {/* Input Area */}
-            <form onSubmit={handleSubmit} className="border-t border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark p-4 transition-colors">
+            <form onSubmit={handleSubmit} className="border-t border-db-dark/10 bg-white p-4 dark:border-white/10 dark:bg-db-dark">
+              <label className="sr-only" htmlFor="chat-message-input">Nachricht an den Azubi-Begleiter</label>
               <div className="flex gap-2">
                 <input
-                  type="text"
+                  ref={inputRef}
+                  id="chat-message-input"
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Schreibe eine Nachricht..."
-                  className="flex-1 rounded-xl border border-db-dark/15 dark:border-white/15 bg-db-warm/50 dark:bg-db-rail/50 dark:text-white px-4 py-2.5 text-sm outline-none transition placeholder:text-db-rail/70 dark:placeholder:text-white/50 focus:border-db-red focus:bg-white dark:focus:bg-db-dark focus:ring-2 focus:ring-db-red/20"
+                  onChange={(event) => setInput(event.target.value.slice(0, 1_200))}
+                  maxLength={1_200}
+                  placeholder="Situation ohne Klarnamen beschreiben …"
+                  className="min-w-0 flex-1 rounded-xl border border-db-dark/15 bg-db-warm/50 px-4 py-2.5 text-sm text-db-dark outline-none focus:border-db-red focus:ring-2 focus:ring-db-red/20 dark:border-white/15 dark:bg-db-rail/50 dark:text-white"
                 />
-                <button
-                  type="submit"
-                  disabled={!input.trim() || isTyping}
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-db-dark dark:bg-db-red text-white transition hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:hover:scale-100 dark:hover:bg-red-500"
-                >
-                  <Send className="h-4 w-4" />
+                <button type="submit" disabled={!input.trim() || isTyping} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-db-red text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-db-red/30 disabled:cursor-not-allowed disabled:opacity-40" aria-label="Nachricht senden">
+                  <Send className="h-4 w-4" aria-hidden="true" />
                 </button>
               </div>
+              <p className="mt-2 text-right text-[10px] font-bold text-db-rail/60 dark:text-white/40">{input.length}/1200</p>
             </form>
-          </motion.div>
+          </motion.section>
         )}
       </AnimatePresence>
 
-      {/* Floating Action Button */}
       <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(!isOpen)}
-        className={`flex h-14 w-14 items-center justify-center rounded-full shadow-md transition-colors ${
-          isOpen ? 'bg-db-dark text-white' : 'bg-db-red text-white'
-        }`}
+        ref={toggleButtonRef}
+        type="button"
+        whileHover={reduceMotion ? undefined : { scale: 1.05 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.95 }}
+        onClick={toggleChat}
+        className={`flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg focus:outline-none focus:ring-4 focus:ring-db-red/25 ${isOpen ? "bg-db-dark" : "bg-db-red"}`}
+        aria-label={isOpen ? "Chat schließen" : "Azubi-Begleiter öffnen"}
+        aria-expanded={isOpen}
       >
-        {isOpen ? <X className="h-6 w-6" /> : <MessageSquareText className="h-6 w-6" />}
+        {isOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <MessageSquareText className="h-6 w-6" aria-hidden="true" />}
       </motion.button>
-      
     </div>
   );
+}
+
+function createMessageId() {
+  return globalThis.crypto?.randomUUID?.() || `message-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function createLocalOrientation(text) {
+  const value = text.toLowerCase();
+
+  if (["suizid", "selbstmord", "umbringen", "selbst verletzen", "nicht mehr leben"].some((word) => value.includes(word))) {
+    return "Wenn es um dich oder jemand anderen aktuell geht und Selbstverletzung oder Suizid eine Rolle spielt, hole jetzt reale Unterstützung und bleib damit nicht allein. Bei unmittelbarer Gefahr rufe 112. Wenn du über einen vergangenen Vorfall sprichst, bedeutet die Erwähnung allein nicht automatisch eine aktuelle Krise; beschreibe ohne Klarnamen, ob gerade Gefahr besteht. Dieser Chat ersetzt keine Krisenhilfe.";
+  }
+
+  if (["gewalt", "bedroht", "drohung", "schlagen", "messer", "waffe"].some((word) => value.includes(word))) {
+    return "Sicherheit zuerst: Geh auf Abstand, suche einen sicheren Ort und hole reale Hilfe. Konfrontiere die Person nicht allein. Bei akuter Gefahr rufe 110 oder 112 an. Dokumentiere den Vorfall erst, wenn du sicher bist.";
+  }
+
+  if (["mobbing", "diskrimin", "beleidigt", "ausgeschlossen", "rassistisch"].some((word) => value.includes(word))) {
+    return "Nimm das ernst. Notiere Datum, Ort, möglichst genauen Wortlaut, Beteiligte und mögliche Zeug:innen. Sprich anschließend mit einer vertrauenswürdigen Person, etwa JAV, Betriebsrat oder Ausbildungsbetreuung. Menschen müssen den Fall prüfen.";
+  }
+
+  return "Ich kann die Situation lokal nur grob einordnen. Beschreibe sachlich, was passiert ist, wann es passiert ist und ob gerade Gefahr besteht. Vermeide Klarnamen. Bei Unsicherheit ist eine reale Vertrauensperson der bessere nächste Schritt.";
 }

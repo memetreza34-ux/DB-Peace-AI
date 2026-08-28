@@ -1,176 +1,175 @@
-import React, { useState, useEffect } from "react";
-import { Navigation } from "./components/Navigation.jsx";
-import { DashboardHome } from "./components/DashboardHome.jsx";
-import SupportPage from "./components/SupportPage.jsx";
-import { RecordAndReportView } from "./components/RecordAndReportView.jsx";
-import { LearningHubView } from "./components/LearningHubView.jsx";
-import { EmergencyModal } from "./components/EmergencyModal.jsx";
-import { Footer } from "./components/Footer.jsx";
-import { FloatingChatWidget } from "./components/FloatingChatWidget.jsx";
-import { ProfileView } from "./components/ProfileView.jsx";
-import { ContactsView } from "./components/ContactsView.jsx";
-import { GlobalSearch } from "./components/GlobalSearch.jsx";
-import { RightsAndLawsView } from "./components/RightsAndLawsView.jsx";
-import { HRDashboard } from "./components/HRDashboard.jsx";
+import React, { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowLeft, FlaskConical, WifiOff } from "lucide-react";
 import { AppLock } from "./components/AppLock.jsx";
-import { PanicButton } from "./components/PanicButton.jsx";
-import { SSOLoginModal } from "./components/SSOLoginModal.jsx";
-
+import { ContactsView } from "./components/ContactsView.jsx";
 import DashboardAnalytics from "./components/DashboardAnalytics.jsx";
-import ProjectOverview from "./components/ProjectOverview.jsx";
+import { DashboardHome } from "./components/DashboardHome.jsx";
+import { EmergencyModal } from "./components/EmergencyModal.jsx";
+import { FloatingChatWidget } from "./components/FloatingChatWidget.jsx";
+import { Footer } from "./components/Footer.jsx";
+import { GlobalSearch } from "./components/GlobalSearch.jsx";
+import { HRDashboard } from "./components/HRDashboard.jsx";
+import { LearningHubView } from "./components/LearningHubView.jsx";
+import { Navigation } from "./components/Navigation.jsx";
+import { PanicButton } from "./components/PanicButton.jsx";
 import PrivacyCompliance from "./components/PrivacyCompliance.jsx";
-import { ArrowLeft, WifiOff } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { ProfileView } from "./components/ProfileView.jsx";
+import ProjectOverview from "./components/ProjectOverview.jsx";
+import { RecordAndReportView } from "./components/RecordAndReportView.jsx";
+import { RightsAndLawsView } from "./components/RightsAndLawsView.jsx";
+import { SSOLoginModal } from "./components/SSOLoginModal.jsx";
+import SupportPage from "./components/SupportPage.jsx";
+import { resetTickets } from "./data/mockTickets.js";
+
+const QUICK_EXIT_CHANNEL = "db-peace-quick-exit";
+const QUICK_EXIT_STORAGE_KEY = "db-peace-quick-exit-signal";
 
 const pageVariants = {
-  initial: { opacity: 0, y: 15, filter: "blur(4px)" },
-  animate: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.3, ease: "easeOut" } },
-  exit: { opacity: 0, y: -15, filter: "blur(4px)", transition: { duration: 0.2, ease: "easeIn" } }
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.25, ease: "easeOut" } },
+  exit: { opacity: 0, y: -10, transition: { duration: 0.15, ease: "easeIn" } },
 };
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("home"); // 'home' | 'support' | 'record-report' | 'learning' | 'analytics' | 'project' | 'privacy'
+  const reduceMotion = useReducedMotion();
+  const quickExitChannelRef = useRef(null);
+  const [activeTab, setActiveTab] = useState("home");
   const [isEmergencyOpen, setIsEmergencyOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isHRMode, setIsHRMode] = useState(false);
   const [isLocked, setIsLocked] = useState(true);
-  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [isSSOOpen, setIsSSOOpen] = useState(false);
+  const [records, setRecords] = useState([]);
+  const [isOffline, setIsOffline] = useState(() => typeof navigator !== "undefined" && !navigator.onLine);
 
   useEffect(() => {
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
-
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
   }, []);
-  const [isSSOOpen, setIsSSOOpen] = useState(false);
 
-  if (isLocked) {
-    return <AppLock onUnlock={() => setIsLocked(false)} />;
+  useEffect(() => {
+    const channel = typeof BroadcastChannel === "function" ? new BroadcastChannel(QUICK_EXIT_CHANNEL) : null;
+    quickExitChannelRef.current = channel;
+
+    function handleChannelMessage(event) {
+      if (event.data?.type === "quick-exit") performQuickExitCleanup();
+    }
+
+    function handleStorage(event) {
+      if (event.key === QUICK_EXIT_STORAGE_KEY && event.newValue) performQuickExitCleanup();
+    }
+
+    channel?.addEventListener("message", handleChannelMessage);
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      channel?.removeEventListener("message", handleChannelMessage);
+      channel?.close();
+      if (quickExitChannelRef.current === channel) quickExitChannelRef.current = null;
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
+
+  function performQuickExitCleanup() {
+    try {
+      sessionStorage.removeItem("db-peace-mood-session");
+    } catch {
+      // Die übrige Zustandsbereinigung funktioniert auch bei blockiertem Sitzungsspeicher.
+    }
+    setRecords([]);
+    resetTickets();
+    setIsEmergencyOpen(false);
+    setIsSearchOpen(false);
+    setIsSSOOpen(false);
+    setIsHRMode(false);
+    setActiveTab("home");
+    setIsLocked(true);
   }
+
+  function prepareQuickExit() {
+    performQuickExitCleanup();
+
+    try {
+      quickExitChannelRef.current?.postMessage({ type: "quick-exit" });
+    } catch {
+      // localStorage-Signal bleibt als Fallback verfügbar.
+    }
+
+    try {
+      const signal = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      localStorage.setItem(QUICK_EXIT_STORAGE_KEY, signal);
+      localStorage.removeItem(QUICK_EXIT_STORAGE_KEY);
+    } catch {
+      // Der aktuelle Tab wurde bereits bereinigt; andere Tabs können bei blockiertem Speicher ggf. nur BroadcastChannel empfangen.
+    }
+  }
+
+  if (isLocked) return <AppLock onUnlock={() => setIsLocked(false)} />;
 
   if (isHRMode) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-db-dark font-sans text-slate-900 dark:text-white selection:bg-db-red selection:text-white">
+      <>
         <HRDashboard onExit={() => setIsHRMode(false)} />
-      </div>
+        <PanicButton onBeforeExit={prepareQuickExit} />
+      </>
     );
   }
 
+  const view = (
+    <ActiveView
+      activeTab={activeTab}
+      onNavigate={setActiveTab}
+      onOpenEmergency={() => setIsEmergencyOpen(true)}
+      records={records}
+      setRecords={setRecords}
+    />
+  );
+
   return (
-    <div className="min-h-screen bg-db-soft dark:bg-db-dark flex flex-col justify-between selection:bg-db-red selection:text-white relative">
-      <div>
-        {/* Global Search Overlay */}
-        <GlobalSearch 
-          isOpen={isSearchOpen} 
-          onClose={() => setIsSearchOpen(false)} 
-          onNavigate={setActiveTab} 
-        />
+    <div className="relative flex min-h-screen flex-col bg-db-soft text-slate-900 selection:bg-db-red selection:text-white dark:bg-db-dark dark:text-white">
+      <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} onNavigate={setActiveTab} />
 
-        {/* Top Navigation */}
-        <Navigation
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          onOpenEmergency={() => setIsEmergencyOpen(true)}
-          onOpenSearch={() => setIsSearchOpen(true)}
-        />
-        
-        {/* DB Red Stripe */}
-        <div className="h-1 w-full db-red-stripe shadow-sm"></div>
+      <Navigation
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onOpenEmergency={() => setIsEmergencyOpen(true)}
+        onOpenSearch={() => setIsSearchOpen(true)}
+      />
 
-        {/* Back Button if in any view other than home */}
-        <AnimatePresence>
-          {activeTab !== "home" && (
-            <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mx-auto max-w-7xl px-4 sm:px-6 pt-4"
-            >
-              <button
-                type="button"
-                onClick={() => setActiveTab("home")}
-                className="inline-flex items-center gap-2 rounded-xl bg-white dark:bg-db-dark/50 px-4 py-2 text-xs font-black text-db-dark dark:text-white border border-db-dark/10 dark:border-white/10 shadow-xs hover:border-db-red dark:hover:border-db-red hover:text-db-red dark:hover:text-db-red transition"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>Zurück zur Übersicht (Home)</span>
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <PrototypeBanner />
+      <div className="h-1 w-full bg-db-red shadow-sm" />
 
-        {/* Main Content Area */}
-        <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8 pb-24">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 pb-28 sm:px-6 sm:py-8">
+        {activeTab !== "home" && (
+          <button
+            type="button"
+            onClick={() => setActiveTab("home")}
+            className="mb-5 inline-flex items-center gap-2 rounded-xl border border-db-dark/10 bg-white px-4 py-2 text-xs font-black text-db-dark shadow-sm transition hover:border-db-red hover:text-db-red focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:border-white/10 dark:bg-white/5 dark:text-white"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Zur Übersicht
+          </button>
+        )}
+
+        {reduceMotion ? (
+          <div key={activeTab}>{view}</div>
+        ) : (
           <AnimatePresence mode="wait">
-            {activeTab === "home" && (
-              <motion.div key="home" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                <DashboardHome onNavigate={setActiveTab} onOpenEmergency={() => setIsEmergencyOpen(true)} />
-              </motion.div>
-            )}
-            
-            {activeTab === "record-report" && (
-              <motion.div key="record-report" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                <RecordAndReportView />
-              </motion.div>
-            )}
-            
-            {activeTab === "learning" && (
-              <motion.div key="learning" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                <LearningHubView />
-              </motion.div>
-            )}
-
-            {activeTab === "rights" && (
-              <motion.div key="rights" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                <RightsAndLawsView onBack={() => setActiveTab("home")} />
-              </motion.div>
-            )}
-
-            {activeTab === "project" && (
-              <motion.div key="project" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                <ProjectOverview />
-              </motion.div>
-            )}
-
-            {activeTab === "profile" && (
-              <motion.div key="profile" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                <ProfileView />
-              </motion.div>
-            )}
-
-            {activeTab === "contacts" && (
-              <motion.div key="contacts" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                <ContactsView />
-              </motion.div>
-            )}
-
-            {activeTab === "privacy" && (
-              <motion.div key="privacy" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                <PrivacyCompliance />
-              </motion.div>
-            )}
-            
-            {activeTab === "support" && (
-              <motion.div key="support" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                <SupportPage onNavigate={setActiveTab} />
-              </motion.div>
-            )}
-
-            {activeTab === "analytics" && (
-              <motion.div key="analytics" variants={pageVariants} initial="initial" animate="animate" exit="exit">
-                <DashboardAnalytics />
-              </motion.div>
-            )}
+            <motion.div key={activeTab} variants={pageVariants} initial="initial" animate="animate" exit="exit">
+              {view}
+            </motion.div>
           </AnimatePresence>
-        </main>
-      </div>
+        )}
+      </main>
 
-      <SSOLoginModal 
+      <SSOLoginModal
         isOpen={isSSOOpen}
         onClose={() => setIsSSOOpen(false)}
         onLoginSuccess={() => {
@@ -179,28 +178,55 @@ export default function App() {
         }}
       />
 
-      {/* Global Floating AI Chat Widget */}
       <FloatingChatWidget />
+      <PanicButton onBeforeExit={prepareQuickExit} />
+      <EmergencyModal isOpen={isEmergencyOpen} onClose={() => setIsEmergencyOpen(false)} />
 
-      {/* Quick Exit / Panic Button */}
-      <PanicButton />
-
-      {/* Emergency Modal */}
-      <EmergencyModal
-        isOpen={isEmergencyOpen}
-        onClose={() => setIsEmergencyOpen(false)}
-      />
-
-      {/* Offline Banner */}
       {isOffline && (
-        <div className="bg-db-red text-white text-xs font-bold py-1.5 px-4 flex items-center justify-center gap-2 z-50">
-          <WifiOff className="w-3 h-3" />
-          Offline-Modus aktiv. Eingaben werden lokal gespeichert und später synchronisiert.
+        <div className="fixed inset-x-0 bottom-0 z-[80] flex items-center justify-center gap-2 bg-amber-500 px-4 py-2 text-xs font-black text-amber-950 shadow-lg" role="status" aria-live="polite">
+          <WifiOff className="h-4 w-4" aria-hidden="true" />
+          Offline: Bereits geladene statische Inhalte können verfügbar sein. Eingaben und Meldungen werden nicht automatisch übertragen oder synchronisiert.
         </div>
       )}
 
-      {/* Footer */}
       <Footer onNavigate={setActiveTab} onToggleHR={() => setIsSSOOpen(true)} />
+    </div>
+  );
+}
+
+function ActiveView({ activeTab, onNavigate, onOpenEmergency, records, setRecords }) {
+  switch (activeTab) {
+    case "record-report":
+      return <RecordAndReportView records={records} setRecords={setRecords} />;
+    case "learning":
+      return <LearningHubView />;
+    case "rights":
+      return <RightsAndLawsView onBack={() => onNavigate("home")} />;
+    case "project":
+      return <ProjectOverview />;
+    case "profile":
+      return <ProfileView />;
+    case "contacts":
+      return <ContactsView />;
+    case "privacy":
+      return <PrivacyCompliance />;
+    case "support":
+      return <SupportPage onNavigate={onNavigate} />;
+    case "analytics":
+      return <DashboardAnalytics />;
+    case "home":
+    default:
+      return <DashboardHome onNavigate={onNavigate} onOpenEmergency={onOpenEmergency} />;
+  }
+}
+
+function PrototypeBanner() {
+  return (
+    <div className="border-b border-violet-200 bg-violet-50 px-4 py-2 text-violet-950 dark:border-violet-900/50 dark:bg-violet-950/25 dark:text-violet-200">
+      <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 text-center text-[11px] font-bold sm:text-xs">
+        <FlaskConical className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+        Innovationsprototyp · keine offizielle DB-Anwendung · keine echten Personen- oder Falldaten eingeben
+      </div>
     </div>
   );
 }

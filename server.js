@@ -3,10 +3,24 @@ import fs from "node:fs";
 import path from "node:path";
 import { GoogleGenAI } from "@google/genai";
 
-const PORT = Number(process.env.API_PORT || 8787);
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-
 loadDotEnv();
+
+const PORT = parsePort(process.env.API_PORT, 8787);
+const MODEL = cleanEnvironmentValue(process.env.GEMINI_MODEL, "gemini-2.5-flash", 120);
+const MAX_BODY_BYTES = 64_000;
+const AI_TIMEOUT_MS = 20_000;
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 30;
+const MAX_RATE_LIMIT_KEYS = 1_000;
+const ALLOWED_BROWSER_ORIGINS = new Set([
+  "http://127.0.0.1:5173",
+  "http://localhost:5173",
+  "http://127.0.0.1:4173",
+  "http://localhost:4173",
+]);
+const rateLimitState = new Map();
+let requestsSincePrune = 0;
+let isShuttingDown = false;
 
 const systemInstructions = `
 Du bist "Azubi-Begleiter" in DB Peace AI, einem lokalen Innovationsprototyp.
@@ -14,24 +28,24 @@ Du hilfst Auszubildenden auf Deutsch bei Sorgen, Stress, Ausbildung, Arbeitsplat
 Mobbing, Diskriminierung, Meldungsvorbereitung und nächsten Schritten.
 
 Ton:
-- ruhig, freundlich, praktisch
-- wie ein unterstützender älterer Azubi oder Coach
+- ruhig, respektvoll und praktisch
 - kurze Antworten, meist unter 120 Wörter
-- keine langen Rechts-/HR-/Medizin-Texte
 - stelle höchstens eine hilfreiche Rückfrage
+- keine langen Rechts-, HR- oder Medizintexte
 
 Regeln:
 - Behaupte keine offizielle DB-Freigabe und keinen Zugriff auf DB-Systeme.
-- Behaupte nicht, interne DB-Einzelfallregeln zu kennen.
+- Behaupte nicht, interne DB-Einzelfallregeln oder Kontaktdaten zu kennen.
 - Du bist nicht HR, Arzt/Ärztin, Anwalt/Anwältin, Therapeut:in oder Notfallstelle.
-- Keine Rechtsberatung, medizinische Beratung, psychologische Beratung oder Finanzberatung.
-- Bei Geldsorgen: nur Orientierung, keine Leistungsversprechen; Beratungs-/Vertrauensperson empfehlen.
-- Bei Konflikten: konkrete Beispiele dokumentieren und zuständige/vertrauenswürdige Personen einbeziehen.
-- Bei Mobbing/Diskriminierung: ernst nehmen, Dokumentation und Unterstützung vorschlagen.
-- Bei Gefahr/Drohung/Gewalt: Sicherheit zuerst, echte Hilfe sofort, nicht allein konfrontieren.
-- Bei Selbstverletzung/Suizid/Krise: sofort reale Hilfe, Vertrauensperson und Notfallhilfe empfehlen.
-- "Menschen entscheiden, nicht die KI" nur sagen, wenn es passt.
-- Überfordere nicht.
+- Gib keine Rechtsberatung, Diagnose oder Therapieanweisung.
+- Bei Konflikten: konkrete Beispiele dokumentieren und vertrauenswürdige Menschen einbeziehen.
+- Bei Mobbing oder Diskriminierung: ernst nehmen, Dokumentation und Unterstützung vorschlagen.
+- Bei gegenwärtiger Gefahr, akuter Drohung oder laufender Gewalt: Sicherheit zuerst, reale Hilfe sofort, nicht allein konfrontieren.
+- Vergangene Drohung oder Gewalt ohne aktuell beschriebene Gefahr nicht automatisch als akuten Notfall darstellen.
+- Bei aktuell beschriebener Selbstverletzungs- oder Suizidgefahr oder akuter Krise: sofort reale Hilfe und eine anwesende Vertrauensperson empfehlen.
+- Eine bloße historische Erwähnung von Selbstverletzung oder Suizid nicht automatisch als aktuelle akute Krise darstellen; bei unklarem Zeitbezug nach aktueller Gefahr fragen.
+- Erkläre bei passenden Fragen, dass Menschen entscheiden und die KI nur Orientierung gibt.
+- Frage nicht nach Klarnamen, Personalnummern oder anderen unnötigen Identifikationsdaten.
 `.trim();
 
 function loadDotEnv() {
@@ -46,151 +60,442 @@ function loadDotEnv() {
     if (index === -1) continue;
     const key = trimmed.slice(0, index).trim();
     const value = trimmed.slice(index + 1).trim().replace(/^['"]|['"]$/g, "");
-    if (key && process.env[key] === undefined) {
-      process.env[key] = value;
-    }
+    if (key && process.env[key] === undefined) process.env[key] = value;
   }
 }
 
-function sendJson(res, status, data) {
-  res.writeHead(status, {
-    "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "no-store",
-  });
+function setSecurityHeaders(res) {
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "no-referrer");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+}
+
+function sendJson(res, status, data, extraHeaders = {}) {
+  if (res.writableEnded) return;
+  setSecurityHeaders(res);
+  for (const [name, value] of Object.entries(extraHeaders)) res.setHeader(name, value);
+  res.statusCode = status;
   res.end(JSON.stringify(data));
 }
 
-async function readJson(req) {
-  let body = "";
-  for await (const chunk of req) {
-    body += chunk;
-    if (body.length > 64_000) {
-      throw new Error("request_too_large");
-    }
+function requireAllowedBrowserRequest(req) {
+  const fetchSite = String(req.headers["sec-fetch-site"] || "").toLowerCase();
+  if (fetchSite === "cross-site") {
+    const error = new Error("cross_site_request_blocked");
+    error.status = 403;
+    throw error;
   }
-  return body ? JSON.parse(body) : {};
+
+  const origin = String(req.headers.origin || "").trim();
+  if (origin && !ALLOWED_BROWSER_ORIGINS.has(origin)) {
+    const error = new Error("origin_not_allowed");
+    error.status = 403;
+    throw error;
+  }
+}
+
+function requireJsonRequest(req) {
+  const contentType = String(req.headers["content-type"] || "").toLowerCase();
+  if (!/^application\/json(?:\s*;|$)/.test(contentType)) {
+    const error = new Error("unsupported_media_type");
+    error.status = 415;
+    throw error;
+  }
+}
+
+async function readJson(req) {
+  const declaredLength = Number(req.headers["content-length"] || 0);
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_BODY_BYTES) {
+    const error = new Error("request_too_large");
+    error.status = 413;
+    throw error;
+  }
+
+  const chunks = [];
+  let totalBytes = 0;
+  for await (const chunk of req) {
+    const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    totalBytes += buffer.length;
+    if (totalBytes > MAX_BODY_BYTES) {
+      const error = new Error("request_too_large");
+      error.status = 413;
+      throw error;
+    }
+    chunks.push(buffer);
+  }
+
+  if (!chunks.length) return {};
+  try {
+    return JSON.parse(Buffer.concat(chunks, totalBytes).toString("utf8"));
+  } catch {
+    const error = new Error("invalid_json");
+    error.status = 400;
+    throw error;
+  }
 }
 
 function sanitizeMessages(messages) {
   if (!Array.isArray(messages)) return [];
 
-  return messages
+  const sanitized = messages
     .filter((message) => message && (message.role === "user" || message.role === "assistant"))
     .map((message) => ({
-      role: message.role === "assistant" ? "model" : "user", // Gemini expects 'model' instead of 'assistant'
-      parts: [{ text: String(message.content || "").slice(0, 900) }],
+      role: message.role === "assistant" ? "model" : "user",
+      parts: [{ text: cleanString(message.content, 1_200, "") }],
     }))
-    .filter((message) => message.parts[0].text.trim())
+    .filter((message) => message.parts[0].text)
     .slice(-10);
+
+  while (sanitized[0]?.role === "model") sanitized.shift();
+  return sanitized;
+}
+
+function isRateLimited(req) {
+  const key = req.socket.remoteAddress || "local";
+  const now = Date.now();
+  requestsSincePrune += 1;
+
+  if (requestsSincePrune >= 100 || rateLimitState.size > MAX_RATE_LIMIT_KEYS) {
+    pruneRateLimitState(now);
+    requestsSincePrune = 0;
+  }
+
+  const current = rateLimitState.get(key);
+  if (!current || now - current.startedAt >= RATE_LIMIT_WINDOW_MS) {
+    rateLimitState.set(key, { count: 1, startedAt: now });
+    return false;
+  }
+
+  current.count += 1;
+  return current.count > RATE_LIMIT_MAX_REQUESTS;
+}
+
+function pruneRateLimitState(now) {
+  for (const [key, value] of rateLimitState) {
+    if (now - value.startedAt >= RATE_LIMIT_WINDOW_MS) rateLimitState.delete(key);
+  }
+
+  if (rateLimitState.size <= MAX_RATE_LIMIT_KEYS) return;
+  const oldest = [...rateLimitState.entries()]
+    .sort((left, right) => left[1].startedAt - right[1].startedAt)
+    .slice(0, rateLimitState.size - MAX_RATE_LIMIT_KEYS);
+  for (const [key] of oldest) rateLimitState.delete(key);
+}
+
+function createAi() {
+  const apiKey = String(process.env.GEMINI_API_KEY || "").trim();
+  return apiKey ? new GoogleGenAI({ apiKey }) : null;
 }
 
 async function handleChat(req, res) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    sendJson(res, 503, { error: "missing_api_key", reply: "" });
+  const ai = createAi();
+  if (!ai) {
+    sendJson(res, 503, {
+      error: "missing_api_key",
+      reply: "",
+      message: "Der lokale KI-Modus ist nicht eingerichtet.",
+    });
     return;
   }
 
   const payload = await readJson(req);
   const messages = sanitizeMessages(payload.messages);
-  
-  if (messages.length === 0) {
-    sendJson(res, 400, { error: "missing_messages", reply: "" });
+  if (messages.length === 0 || messages.at(-1)?.role !== "user") {
+    sendJson(res, 400, { error: "missing_user_message", reply: "" });
     return;
   }
 
-  try {
-    const ai = new GoogleGenAI({ apiKey });
-    
-    // We send the history and the last message
-    const history = messages.slice(0, -1);
-    const lastMessage = messages[messages.length - 1].parts[0].text;
-
-    const chat = ai.chats.create({
-      model: MODEL,
-      config: {
-        systemInstruction: systemInstructions,
-        temperature: 0.7,
-      },
-      history: history
-    });
-
-    const response = await chat.sendMessage({ message: lastMessage });
-
-    sendJson(res, 200, { reply: response.text || "Ich konnte gerade keine passende Antwort erzeugen." });
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    sendJson(res, 500, { error: "api_error", reply: "Es gab einen Fehler bei der KI-Generierung." });
-  }
+  const history = messages.slice(0, -1);
+  const lastMessage = messages.at(-1).parts[0].text;
+  const config = {
+    systemInstruction: systemInstructions,
+    temperature: 0.55,
+    maxOutputTokens: 500,
+  };
+  const chat = ai.chats.create({ model: MODEL, config, history });
+  const response = await withTimeout(chat, lastMessage, config, AI_TIMEOUT_MS);
+  const reply = cleanString(response.text, 4_000, "Ich konnte gerade keine passende Antwort erzeugen.");
+  sendJson(res, 200, { reply, model: MODEL });
 }
 
-async function handleQuiz(req, res) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
+async function handleReportExtraction(req, res) {
+  const ai = createAi();
+  if (!ai) {
+    sendJson(res, 503, { error: "missing_api_key", report: null });
+    return;
+  }
+
+  const payload = await readJson(req);
+  const sourceText = cleanString(payload.text, 4_000, "");
+  if (sourceText.length < 20) {
+    sendJson(res, 400, { error: "text_too_short", report: null });
+    return;
+  }
+
+  const config = {
+    systemInstruction: [
+      "Du strukturierst einen vom Nutzer selbst verfassten Vorfallstext für einen lokalen Demonstrationsprototyp.",
+      "Erfinde keine Fakten und keine internen DB-Regeln.",
+      "Antworte ausschließlich mit einem JSON-Objekt.",
+      "Keys exakt: category, description, date, time, location, witnesses, urgency, missingFields.",
+      "category, description, date, time, location, witnesses und urgency sind Strings.",
+      "missingFields ist ein Array aus kurzen Strings.",
+      "Nutze 'Nicht angegeben', wenn eine Angabe fehlt.",
+      "urgency ist nur einer der Werte: niedrig, mittel, hoch, akut.",
+      "Setze urgency nur dann auf akut, wenn der Text eindeutig eine gegenwärtige und unmittelbare Gefahr beschreibt.",
+      "Vergangene Drohungen oder Gewalt ohne klar aktuelle unmittelbare Gefahr dürfen höchstens hoch sein.",
+      "Wenn der zeitliche Gefahrenstatus unklar ist, verwende nicht akut.",
+    ].join(" "),
+    temperature: 0.2,
+    maxOutputTokens: 1_200,
+  };
+  const chat = ai.chats.create({ model: MODEL, config });
+  const response = await withTimeout(chat, sourceText, config, AI_TIMEOUT_MS);
+  const parsed = parseJsonObject(response.text);
+  if (!parsed) {
+    sendJson(res, 502, { error: "invalid_model_response", report: null });
+    return;
+  }
+
+  const report = {
+    category: cleanString(parsed.category, 120, "Nicht angegeben"),
+    description: cleanString(parsed.description, 2_500, sourceText),
+    date: cleanString(parsed.date, 80, "Nicht angegeben"),
+    time: cleanString(parsed.time, 80, "Nicht angegeben"),
+    location: cleanString(parsed.location, 180, "Nicht angegeben"),
+    witnesses: cleanString(parsed.witnesses, 300, "Nicht angegeben"),
+    urgency: normalizeUrgency(parsed.urgency),
+    missingFields: Array.isArray(parsed.missingFields)
+      ? parsed.missingFields.slice(0, 8).map((item) => cleanString(item, 120, "")).filter(Boolean)
+      : [],
+  };
+
+  sendJson(res, 200, { report, model: MODEL });
+}
+
+async function handleQuiz(_req, res) {
+  const ai = createAi();
+  if (!ai) {
     sendJson(res, 503, { error: "missing_api_key", questions: [] });
     return;
   }
 
-  try {
-    const ai = new GoogleGenAI({ apiKey });
-    const chat = ai.chats.create({
-      model: MODEL,
-      config: {
-        systemInstruction: "Generiere 4 realistische Wissens-Quiz-Fragen für Azubis der Deutschen Bahn zum Thema Mobbing, Diskriminierung, Konflikte am Arbeitsplatz und Rechte in der Ausbildung. Das Output MUSS reines JSON sein (ein Array aus Objekten). Die Keys für jedes Objekt MÜSSEN exakt sein: 'id' (Nummer), 'question' (String), 'answer' (Boolean), 'explanation' (String). Erfinde abwechslungsreiche und nicht immer offensichtliche Szenarien. Keine Markdown-Formatierung, nur das reine JSON-Array.",
-        temperature: 0.9,
-      }
-    });
+  const config = {
+    systemInstruction: [
+      "Generiere vier einfache Wissensfragen für einen lokalen Demonstrationsprototyp für Auszubildende.",
+      "Themen ausschließlich: Eigenschutz bei Konflikten, sachliche Dokumentation, passende reale Hilfewege und Grenzen einer KI-Unterstützung.",
+      "Erzeuge keine Frage, deren richtige Antwort einen konkreten Rechtsanspruch, eine Frist, eine Paragraphenauslegung, eine medizinische Bewertung oder eine interne DB-Regel voraussetzt.",
+      "Antworte ausschließlich mit einem JSON-Array.",
+      "Jedes Objekt enthält exakt: id (Nummer), question (String), answer (Boolean), explanation (String).",
+      "Keine Markdown-Formatierung und keine erfundenen internen Prozesse oder Kontaktdaten.",
+    ].join(" "),
+    temperature: 0.65,
+    maxOutputTokens: 1_500,
+  };
+  const chat = ai.chats.create({ model: MODEL, config });
+  const response = await withTimeout(
+    chat,
+    "Erzeuge vier neue, eindeutig beantwortbare Sicherheits- und Orientierungsfragen.",
+    config,
+    AI_TIMEOUT_MS,
+  );
+  const parsed = parseJsonArray(response.text);
+  const questions = parsed
+    ? parsed.slice(0, 4).map((question, index) => ({
+        id: index + 1,
+        question: cleanString(question.question, 300, ""),
+        answer: normalizeBoolean(question.answer),
+        explanation: cleanString(question.explanation, 600, ""),
+      })).filter((question) => question.question && question.explanation && question.answer !== null)
+    : [];
 
-    const response = await chat.sendMessage({ message: "Generiere 4 neue, zufällige Fragen." });
-    let text = response.text || "[]";
-    
-    // Clean up potential markdown formatting from the AI response
-    text = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    
-    let questions = [];
-    try {
-      questions = JSON.parse(text);
-    } catch (e) {
-      console.error("Failed to parse JSON from AI:", text);
-    }
-
-    sendJson(res, 200, { questions });
-  } catch (error) {
-    console.error("Gemini API Error in Quiz:", error);
-    sendJson(res, 500, { error: "api_error", questions: [] });
+  if (questions.length !== 4) {
+    sendJson(res, 502, { error: "invalid_model_response", questions: [] });
+    return;
   }
+
+  sendJson(res, 200, { questions, model: MODEL });
+}
+
+async function withTimeout(chat, message, config, timeoutMs) {
+  const controller = new AbortController();
+  let timedOut = false;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeoutMs);
+  timer.unref?.();
+
+  try {
+    return await chat.sendMessage({
+      message,
+      config: {
+        ...config,
+        abortSignal: controller.signal,
+      },
+    });
+  } catch (error) {
+    if (timedOut) {
+      const timeoutError = new Error("upstream_timeout");
+      timeoutError.status = 504;
+      throw timeoutError;
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function parseJsonObject(value) {
+  try {
+    const parsed = JSON.parse(cleanJsonText(value));
+    return parsed && !Array.isArray(parsed) && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function parseJsonArray(value) {
+  try {
+    const parsed = JSON.parse(cleanJsonText(value));
+    return Array.isArray(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function cleanJsonText(value) {
+  return String(value || "")
+    .replace(/```json/gi, "")
+    .replace(/```/g, "")
+    .trim();
+}
+
+function cleanString(value, maxLength, fallback) {
+  const text = String(value ?? "").trim().slice(0, maxLength);
+  return text || fallback;
+}
+
+function cleanEnvironmentValue(value, fallback, maxLength) {
+  const text = String(value || "").trim().slice(0, maxLength);
+  return /^[a-zA-Z0-9._-]+$/.test(text) ? text : fallback;
+}
+
+function normalizeUrgency(value) {
+  const normalized = String(value || "").toLowerCase();
+  return ["niedrig", "mittel", "hoch", "akut"].includes(normalized) ? normalized : "Nicht angegeben";
+}
+
+function normalizeBoolean(value) {
+  if (value === true || value === false) return value;
+  if (String(value).toLowerCase() === "true") return true;
+  if (String(value).toLowerCase() === "false") return false;
+  return null;
+}
+
+function parsePort(value, fallback) {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 1 && parsed <= 65_535 ? parsed : fallback;
 }
 
 const server = http.createServer(async (req, res) => {
   try {
-    if (req.method === "GET" && req.url === "/api/chat/status") {
+    if (isShuttingDown) {
+      sendJson(res, 503, { error: "server_shutting_down" }, { Connection: "close" });
+      return;
+    }
+
+    requireAllowedBrowserRequest(req);
+
+    if (isRateLimited(req)) {
+      sendJson(res, 429, { error: "rate_limited", reply: "" }, { "Retry-After": "60" });
+      return;
+    }
+
+    const url = new URL(req.url || "/", `http://${req.headers.host || "127.0.0.1"}`);
+
+    if (req.method === "GET" && url.pathname === "/api/health") {
+      sendJson(res, 200, { status: "ok", prototype: true });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/chat/status") {
       sendJson(res, 200, {
-        connected: Boolean(process.env.GEMINI_API_KEY),
+        configured: Boolean(String(process.env.GEMINI_API_KEY || "").trim()),
         model: MODEL,
+        prototype: true,
       });
       return;
     }
 
-    if (req.method === "POST" && req.url === "/api/chat") {
+    if (req.method === "POST" && url.pathname === "/api/chat") {
+      requireJsonRequest(req);
       await handleChat(req, res);
       return;
     }
 
-    if (req.method === "GET" && req.url === "/api/quiz") {
+    if (req.method === "POST" && url.pathname === "/api/report/extract") {
+      requireJsonRequest(req);
+      await handleReportExtraction(req, res);
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/quiz") {
+      requireJsonRequest(req);
+      await readJson(req);
       await handleQuiz(req, res);
+      return;
+    }
+
+    if (["/api/chat", "/api/report/extract", "/api/quiz", "/api/health", "/api/chat/status"].includes(url.pathname)) {
+      sendJson(res, 405, { error: "method_not_allowed" }, { Allow: allowedMethods(url.pathname) });
       return;
     }
 
     sendJson(res, 404, { error: "not_found" });
   } catch (error) {
-    const status = Number(error.status) || (error.message === "request_too_large" ? 413 : 500);
+    const status = Number(error?.status) || 500;
+    if (status >= 500 && status !== 504) console.error("DB Peace AI API error:", error);
     sendJson(res, status, {
-      error: error.message || "server_error",
+      error: status === 504 ? "upstream_timeout" : status >= 500 ? "server_error" : error.message || "request_failed",
       reply: "",
     });
   }
 });
 
+server.requestTimeout = 30_000;
+server.headersTimeout = 10_000;
+server.keepAliveTimeout = 5_000;
+server.maxRequestsPerSocket = 100;
+
 server.listen(PORT, "127.0.0.1", () => {
-  console.log(`DB Peace AI API proxy läuft auf http://127.0.0.1:${PORT}`);
+  console.log(`DB Peace AI API läuft auf http://127.0.0.1:${PORT} (${MODEL})`);
 });
+
+function allowedMethods(pathname) {
+  return ["/api/chat", "/api/report/extract", "/api/quiz"].includes(pathname) ? "POST" : "GET";
+}
+
+function shutdown(signal) {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  console.log(`DB Peace AI API wird beendet (${signal}).`);
+
+  const forceTimer = setTimeout(() => process.exit(1), 5_000);
+  forceTimer.unref();
+  server.close((error) => {
+    clearTimeout(forceTimer);
+    if (error) {
+      console.error("API-Server konnte nicht sauber beendet werden:", error);
+      process.exit(1);
+    }
+    process.exit(0);
+  });
+}
+
+process.once("SIGINT", () => shutdown("SIGINT"));
+process.once("SIGTERM", () => shutdown("SIGTERM"));

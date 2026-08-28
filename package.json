@@ -3,11 +3,18 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "engines": {
+    "node": ">=22 <23",
+    "npm": ">=10 <12"
+  },
   "scripts": {
     "dev": "node scripts/dev.js",
     "dev:app": "vite",
     "dev:server": "node server.js",
+    "verify": "node scripts/verify-repo.mjs",
+    "test": "node --test tests/*.test.mjs",
     "build": "vite build",
+    "check": "npm run verify && npm test && npm run build",
     "preview": "vite preview"
   },
   "dependencies": {

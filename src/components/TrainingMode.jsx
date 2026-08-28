@@ -1,778 +1,350 @@
-import { useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
-  BadgeCheck,
-  Ban,
   CheckCircle2,
-  ClipboardList,
-  Gauge,
   GraduationCap,
-  Hand,
-  MessageSquareWarning,
+  Info,
   RefreshCw,
   ShieldAlert,
   ShieldCheck,
-  Sparkles,
   TrainFront,
   Wrench,
-  Star,
+  XCircle,
 } from "lucide-react";
 
 const scenarios = [
   {
-    id: "fahrgast",
-    title: "Aggressiver Fahrgast",
-    context: "Ein Fahrgast ist wütend wegen Verspätung und beleidigt Mitarbeitende.",
-    goal: "Ruhig bleiben, Grenzen setzen, Sicherheit beachten.",
-    difficulty: "Mittel",
-    risk: "Mittel",
+    id: "passenger",
+    title: "Aggressive Ansprache am Bahnsteig",
+    context: "Eine Person beschwert sich laut, beleidigt Mitarbeitende und kommt näher.",
     icon: TrainFront,
     rounds: [
       {
-        title: "Situation beginnt",
-        description: "Am Bahnsteig beschwert sich ein Fahrgast lautstark über eine Verspätung.",
-        options: makeOptions(
-          "Dann schreien Sie doch nicht so rum, wir können auch nichts dafür.",
-          "Ich ignoriere den Fahrgast und gehe sofort weg.",
-          "Ich höre kurz zu, bleibe ruhig und erkläre knapp, welche Information verfügbar ist.",
-          "Ich halte Abstand, spreche ruhig, setze früh eine Grenze und bitte bei Bedarf eine Kollegin dazu."
-        ),
+        situation: "Die Person spricht sehr laut und fordert sofort eine Erklärung.",
+        options: [
+          option("Ich werde ebenfalls laut, damit ich mich durchsetze.", "unsafe", "Gegenlautstärke kann die Situation verschärfen."),
+          option("Ich bleibe ruhig, halte Abstand und gebe nur verfügbare Informationen.", "good", "Ruhiger Ton, Abstand und klare Informationen sind eine belastbare erste Reaktion."),
+          option("Ich ignoriere alles, obwohl die Person andere bedroht.", "weak", "Rückzug kann richtig sein, aber bei Gefahr muss reale Unterstützung organisiert werden."),
+        ],
       },
       {
-        title: "Situation wird schwieriger",
-        description: "Der Fahrgast beleidigt dich direkt und spricht sehr laut weiter.",
-        options: makeOptions(
-          "Wenn Sie mich beleidigen, beleidige ich zurück.",
-          "Ich lasse alles stehen, damit es nicht schlimmer wird.",
-          "Ich sage ruhig, dass Beleidigungen nicht akzeptiert werden, und bleibe beim konkreten Anliegen.",
-          "Ich setze eine klare Grenze, vergrößere Abstand und informiere eine zweite Person."
-        ),
+        situation: "Die Person beleidigt dich direkt und überschreitet deine persönliche Distanz.",
+        options: [
+          option("Ich setze eine kurze Grenze, vergrößere den Abstand und hole Unterstützung.", "excellent", "Die Antwort verbindet Grenze, Eigenschutz und reale Unterstützung."),
+          option("Ich bleibe allein stehen und diskutiere weiter.", "unsafe", "Bei zunehmender Bedrohung sollte die direkte Diskussion beendet werden."),
+          option("Ich entferne mich kommentarlos und informiere niemanden.", "weak", "Eigenschutz ist wichtig; bei Gefahr oder Risiko für andere sollte Unterstützung informiert werden."),
+        ],
       },
       {
-        title: "Entscheidung / Eskalationspunkt",
-        description: "Der Fahrgast kommt körperlich näher und wirkt zunehmend bedrohlich.",
-        options: makeOptions(
-          "Ich stelle mich direkt vor ihn, damit er zurückweicht.",
-          "Ich rede weiter allein auf ihn ein.",
-          "Ich beende das Gespräch und hole Unterstützung.",
-          "Ich halte Abstand, bringe mich aus der Nähe, kontaktiere reale Unterstützung und dokumentiere danach sachlich."
-        ),
+        situation: "Die Lage wirkt nicht mehr kontrollierbar und eine Gewalthandlung ist möglich.",
+        options: [
+          option("Ich versuche die Person ohne Ausbildung körperlich festzuhalten.", "unsafe", "Körperliches Eingreifen kann dich und andere zusätzlich gefährden."),
+          option("Ich bringe mich aus der Gefahrenzone und alarmiere reale Hilfe.", "excellent", "In akuter Gefahr haben Abstand, Notruf und Schutz Vorrang vor Dokumentation oder Diskussion."),
+          option("Ich dokumentiere zuerst alles ausführlich in der App.", "unsafe", "Dokumentation erfolgt erst, wenn die akute Gefahr vorbei ist."),
+        ],
       },
     ],
   },
   {
-    id: "werkstatt",
-    title: "Mobbing in der Werkstatt",
-    context: "Ein Azubi wird regelmäßig ausgelacht und vor anderen klein gemacht.",
-    goal: "Mobbing erkennen, richtig reagieren, Hilfe holen.",
-    difficulty: "Mittel",
-    risk: "Mittel",
+    id: "workshop",
+    title: "Wiederholte Ausgrenzung in der Ausbildung",
+    context: "Eine auszubildende Person wird regelmäßig abgewertet und von Aufgaben ausgeschlossen.",
     icon: Wrench,
     rounds: [
       {
-        title: "Situation beginnt",
-        description: "Beim Schichtbeginn machen mehrere Personen abwertende Sprüche über einen Azubi.",
-        options: makeOptions(
-          "Ich mache einen Spruch zurück, damit die Gruppe merkt, wie es ist.",
-          "Ich sage nichts, weil es vielleicht nur Spaß ist.",
-          "Ich benenne ruhig, dass die Sprüche verletzend wirken können.",
-          "Ich unterbreche sachlich, unterstütze den Azubi und beobachte, ob es ein Muster gibt."
-        ),
+        situation: "Im Team fallen wiederholt abwertende Sprüche über dieselbe Person.",
+        options: [
+          option("Ich mache einen Gegenspruch über die andere Person.", "unsafe", "Eine Gegenbeleidigung verschiebt den Konflikt, statt ihn zu begrenzen."),
+          option("Ich benenne ruhig, dass die Aussage abwertend ist, und unterstütze die betroffene Person.", "excellent", "Die Reaktion setzt eine Grenze, ohne zusätzlich zu eskalieren."),
+          option("Ich lache mit, weil es vielleicht nur Spaß ist.", "unsafe", "Mitlachen kann Ausgrenzung verstärken und Betroffene weiter isolieren."),
+        ],
       },
       {
-        title: "Situation wird schwieriger",
-        description: "Der Azubi wird von Aufgaben ausgeschlossen und wirkt sichtbar belastet.",
-        options: makeOptions(
-          "Ich konfrontiere die Gruppe laut vor allen.",
-          "Ich rate dem Azubi, das einfach auszuhalten.",
-          "Ich frage vertraulich, ob Unterstützung gewünscht ist.",
-          "Ich dokumentiere konkrete Beobachtungen, spreche vertraulich mit dem Azubi und binde eine zuständige Person ein."
-        ),
+        situation: "Das Verhalten wiederholt sich über mehrere Wochen.",
+        options: [
+          option("Ich veröffentliche Namen und Screenshots in einem großen Verteiler.", "unsafe", "Unkontrolliertes Weiterverbreiten kann Datenschutz, Betroffene und Klärung zusätzlich belasten."),
+          option("Ich dokumentiere konkrete Beobachtungen und frage die betroffene Person, welche Unterstützung gewünscht ist.", "excellent", "Sachliche Dokumentation und abgestimmte Unterstützung sind ein guter nächster Schritt."),
+          option("Ich warte unbegrenzt ab.", "weak", "Bei einem wiederkehrenden Muster sollte eine passende Vertrauens- oder Fachstelle einbezogen werden."),
+        ],
       },
       {
-        title: "Entscheidung / Eskalationspunkt",
-        description: "Das Verhalten wiederholt sich über mehrere Wochen in der Ausbildungssituation.",
-        options: makeOptions(
-          "Ich schreibe in den Gruppenchat, wer Schuld ist.",
-          "Ich warte weiter ab.",
-          "Ich sammle Fakten und suche das Gespräch mit einer Vertrauensperson.",
-          "Ich sichere konkrete Beispiele, priorisiere Schutz der betroffenen Person und nutze offizielle Unterstützungswege."
-        ),
+        situation: "Du möchtest eine zuständige Stelle ansprechen.",
+        options: [
+          option("Ich schildere nur beobachtbare Tatsachen und kläre vorher Zuständigkeit sowie Umgang mit Vertraulichkeit.", "excellent", "Das reduziert unnötige Daten und schafft Klarheit über den Prozess."),
+          option("Ich garantiere der betroffenen Person, dass alles absolut geheim bleibt.", "unsafe", "Eine absolute Vertraulichkeitsgarantie ist ohne Kenntnis von Rolle und Verfahren nicht belastbar."),
+          option("Ich füge Vermutungen über Motive als sichere Tatsachen hinzu.", "unsafe", "Beobachtungen, Gefühle und Vermutungen müssen getrennt werden."),
+        ],
       },
     ],
   },
   {
-    id: "diskriminierung",
-    title: "Diskriminierende Aussage",
-    context: "In der Gruppe fällt ein Kommentar über Herkunft, Religion, Geschlecht oder Aussehen.",
-    goal: "Grenzen setzen, respektvoll widersprechen.",
-    difficulty: "Mittel",
-    risk: "Mittel",
-    icon: Ban,
-    rounds: [
-      {
-        title: "Situation beginnt",
-        description: "Bei einer Teamübergabe fällt ein abwertender Kommentar über Herkunft.",
-        options: makeOptions(
-          "Ich antworte mit einem abwertenden Kommentar zurück.",
-          "Ich lache unsicher mit, damit es nicht auffällt.",
-          "Ich sage ruhig, dass die Aussage nicht in Ordnung ist.",
-          "Ich widerspreche klar und respektvoll, ohne die betroffene Person in den Mittelpunkt zu drängen."
-        ),
-      },
-      {
-        title: "Situation wird schwieriger",
-        description: "Eine Person sagt, das sei doch nur ein Witz gewesen.",
-        options: makeOptions(
-          "Ich sage, dass diese Person grundsätzlich problematisch ist.",
-          "Ich gebe nach, weil es sonst unangenehm wird.",
-          "Ich bleibe beim Verhalten und erkläre, warum solche Aussagen verletzen können.",
-          "Ich setze eine klare Norm: respektvolle Sprache, keine Abwertung, bei Bedarf spätere Klärung mit Unterstützung."
-        ),
-      },
-      {
-        title: "Entscheidung / Eskalationspunkt",
-        description: "Ähnliche Kommentare fallen wiederholt im Team.",
-        options: makeOptions(
-          "Ich veröffentliche Screenshots im größeren Verteiler.",
-          "Ich ziehe mich komplett zurück.",
-          "Ich dokumentiere die Wiederholung und suche Unterstützung.",
-          "Ich unterstütze Betroffene, dokumentiere sachlich und informiere eine zuständige interne Stelle."
-        ),
-      },
-    ],
-  },
-  {
-    id: "gruppenchat",
-    title: "Konflikt im Gruppenchat",
-    context: "Ein Chat kippt in Beleidigungen und Ausgrenzung.",
-    goal: "Eskalation stoppen, sachlich bleiben, dokumentieren.",
-    difficulty: "Mittel",
-    risk: "Mittel",
-    icon: MessageSquareWarning,
-    rounds: [
-      {
-        title: "Situation beginnt",
-        description: "Im Gruppenchat einer Ausbildungsklasse wird eine Person abwertend kommentiert.",
-        options: makeOptions(
-          "Ich poste noch einen Kommentar dazu.",
-          "Ich lese nur mit und hoffe, dass es endet.",
-          "Ich bitte darum, sachlich zu bleiben.",
-          "Ich stoppe die weitere Eskalation klar, ohne zusätzliche Details zu verbreiten."
-        ),
-      },
-      {
-        title: "Situation wird schwieriger",
-        description: "Es werden Screenshots und private Informationen geteilt.",
-        options: makeOptions(
-          "Ich leite die Screenshots an weitere Personen weiter.",
-          "Ich lösche alles und tue so, als hätte ich nichts gesehen.",
-          "Ich schreibe, dass private Inhalte nicht weiter geteilt werden sollen.",
-          "Ich stoppe die Verbreitung, sichere notwendige Informationen nur für Klärung und hole Unterstützung."
-        ),
-      },
-      {
-        title: "Entscheidung / Eskalationspunkt",
-        description: "Die betroffene Person schreibt, dass sie nicht mehr zur Schicht kommen möchte.",
-        options: makeOptions(
-          "Ich schreibe, sie soll sich nicht so anstellen.",
-          "Ich antworte gar nicht, weil es kompliziert ist.",
-          "Ich frage vertraulich nach und empfehle Unterstützung.",
-          "Ich nehme die Belastung ernst, biete Unterstützung an und informiere eine zuständige Vertrauensperson."
-        ),
-      },
-    ],
-  },
-  {
-    id: "druck",
-    title: "Druck durch Kolleginnen oder Kollegen",
-    context: "Jemand wird gedrängt, etwas Unsicheres oder Falsches zu machen.",
-    goal: "Nein sagen, Sicherheit priorisieren, Unterstützung holen.",
-    difficulty: "Mittel",
-    risk: "Mittel",
-    icon: Hand,
-    rounds: [
-      {
-        title: "Situation beginnt",
-        description: "Kurz vor Schichtbeginn drängt dich jemand, eine Sicherheitsregel zu umgehen.",
-        options: makeOptions(
-          "Ich mache mit, damit es schneller geht.",
-          "Ich sage nichts und verzögere heimlich.",
-          "Ich sage ruhig, dass ich die Regel einhalte.",
-          "Ich sage klar Nein, begründe es mit Sicherheit und schlage eine regelkonforme Lösung vor."
-        ),
-      },
-      {
-        title: "Situation wird schwieriger",
-        description: "Die Person macht Druck und sagt, alle anderen würden das auch so machen.",
-        options: makeOptions(
-          "Ich beschimpfe die Person wegen ihres Verhaltens.",
-          "Ich gebe nach, um nicht als schwierig zu gelten.",
-          "Ich bleibe bei meiner Grenze.",
-          "Ich halte meine Grenze, dokumentiere den Druck und ziehe bei Bedarf eine zuständige Person hinzu."
-        ),
-      },
-      {
-        title: "Entscheidung / Eskalationspunkt",
-        description: "Die Situation könnte Auswirkungen auf Kundensicherheit oder Betrieb haben.",
-        options: makeOptions(
-          "Ich entscheide allein und hoffe, dass nichts passiert.",
-          "Ich verlasse die Situation ohne Information.",
-          "Ich stoppe den unsicheren Ablauf und informiere die verantwortliche Stelle.",
-          "Ich priorisiere Sicherheit, unterbreche den Ablauf und hole sofort verantwortliche Unterstützung."
-        ),
-      },
-    ],
-  },
-  {
-    id: "drohung",
-    title: "Gewaltandrohung",
-    context: "Eine Person droht körperliche Gewalt an.",
-    goal: "Abstand halten, nicht provozieren, reale Hilfe einschalten.",
-    difficulty: "Hoch",
-    risk: "Hoch",
+    id: "safety-rule",
+    title: "Druck, eine Sicherheitsregel zu umgehen",
+    context: "Eine andere Person drängt dich, einen unsicheren Ablauf zu akzeptieren.",
     icon: ShieldAlert,
     rounds: [
       {
-        title: "Situation beginnt",
-        description: "Am Bahnsteig droht eine Person: 'Ich schlage gleich zu.'",
-        options: makeOptions(
-          "Ich fordere die Person heraus, es doch zu versuchen.",
-          "Ich bleibe allein stehen und rede weiter.",
-          "Ich halte Abstand und beende die direkte Diskussion.",
-          "Ich halte Abstand, bringe mich in Sicherheit und kontaktiere sofort reale Unterstützung."
-        ),
+        situation: "Es heißt, die Abkürzung werde immer so gemacht und spare Zeit.",
+        options: [
+          option("Ich mache mit, damit ich nicht als schwierig gelte.", "unsafe", "Sozialer Druck ist kein Grund, eine Sicherheitsregel zu umgehen."),
+          option("Ich lehne den unsicheren Ablauf klar ab und schlage eine regelkonforme Alternative vor.", "excellent", "Die Antwort priorisiert Sicherheit und bleibt lösungsorientiert."),
+          option("Ich beleidige die Person wegen ihres Vorschlags.", "unsafe", "Die Grenze kann ohne persönliche Abwertung gesetzt werden."),
+        ],
       },
       {
-        title: "Situation wird schwieriger",
-        description: "Die Person kommt näher und wirkt unberechenbar.",
-        options: makeOptions(
-          "Ich gehe auf die Person zu, um Stärke zu zeigen.",
-          "Ich diskutiere weiter, um sie zu überzeugen.",
-          "Ich weiche zurück und rufe Unterstützung.",
-          "Ich vergrößere Abstand, warne andere im Umfeld und nutze die vorgesehenen Notfallwege."
-        ),
+        situation: "Der Druck wird stärker und könnte Auswirkungen auf andere haben.",
+        options: [
+          option("Ich stoppe meinen eigenen unsicheren Beitrag und informiere eine verantwortliche Stelle.", "excellent", "Bei möglicher Gefährdung muss Sicherheit vor Tempo und Gruppendruck stehen."),
+          option("Ich verlasse den Bereich, ohne jemanden zu informieren.", "weak", "Eigenschutz ist wichtig; ein fortbestehendes Risiko für andere sollte gemeldet werden."),
+          option("Ich hoffe, dass nichts passiert.", "unsafe", "Ein bekanntes Sicherheitsrisiko darf nicht nur beobachtet werden."),
+        ],
       },
       {
-        title: "Entscheidung / Eskalationspunkt",
-        description: "Die Lage ist nicht mehr sicher kontrollierbar.",
-        options: makeOptions(
-          "Ich versuche die Person körperlich festzuhalten.",
-          "Ich warte ab, ob es wirklich passiert.",
-          "Ich verlasse den Gefahrenbereich und informiere sofort zuständige Hilfe.",
-          "Ich priorisiere Sicherheit, alarmiere reale Hilfe und dokumentiere erst nach der Gefahrensituation."
-        ),
+        situation: "Nach der Situation möchtest du den Vorgang festhalten.",
+        options: [
+          option("Ich notiere Zeitpunkt, Ablauf, konkrete Aussagen und meine Handlung sachlich.", "excellent", "Eine zeitnahe, sachliche Notiz unterstützt spätere Klärung."),
+          option("Ich erfinde Details, damit die Meldung ernster klingt.", "unsafe", "Unzutreffende Angaben schaden der Glaubwürdigkeit und können andere belasten."),
+          option("Ich speichere echte Personendaten in diesem Demonstrationsprototyp.", "unsafe", "Der aktuelle Prototyp ist nicht für reale sensible Daten freigegeben."),
+        ],
       },
     ],
   },
 ];
 
-const learningCards = [
-  {
-    title: "Ruhe bewahren",
-    text: "Sprich langsamer, atme bewusst und bleibe beim beobachtbaren Verhalten. Ruhe senkt oft das Tempo der Eskalation.",
+const quality = {
+  excellent: {
+    label: "Belastbare Option",
+    className: "border-emerald-300 bg-emerald-50 text-emerald-900 dark:border-emerald-700/50 dark:bg-emerald-950/25 dark:text-emerald-100",
+    icon: CheckCircle2,
   },
-  {
-    title: "Abstand halten",
-    text: "Sichere Distanz schützt dich und gibt Handlungsspielraum. Bei Bedrohung zählt Sicherheit vor Diskussion.",
+  good: {
+    label: "Gute Grundlage",
+    className: "border-blue-300 bg-blue-50 text-blue-900 dark:border-blue-700/50 dark:bg-blue-950/25 dark:text-blue-100",
+    icon: CheckCircle2,
   },
-  {
-    title: "Nicht provozieren",
-    text: "Keine Gegenbeleidigungen, keine Machtdemonstration. Klare Sprache ist stärker als laute Sprache.",
+  weak: {
+    label: "Unvollständig",
+    className: "border-amber-300 bg-amber-50 text-amber-950 dark:border-amber-700/50 dark:bg-amber-950/25 dark:text-amber-100",
+    icon: AlertTriangle,
   },
-  {
-    title: "Klare Grenze setzen",
-    text: "Benennen, was nicht akzeptabel ist. Kurz, ruhig und ohne persönliche Abwertung formulieren.",
+  unsafe: {
+    label: "Riskante Option",
+    className: "border-red-300 bg-red-50 text-red-950 dark:border-red-700/50 dark:bg-red-950/25 dark:text-red-100",
+    icon: XCircle,
   },
-  {
-    title: "Unterstützung holen",
-    text: "Schwierige Situationen nicht allein tragen. Kolleginnen, Führung oder zuständige Stellen früh einbinden.",
-  },
-  {
-    title: "Vorfall dokumentieren",
-    text: "Nach der Situation sachlich festhalten: Ort, Zeit, Kontext, konkrete Aussagen und beobachtbares Verhalten.",
-  },
-  {
-    title: "Bei Gefahr Sicherheit priorisieren",
-    text: "Bei Drohung oder Gewalt nicht weiterklären. Abstand, reale Hilfe und Schutz anderer haben Vorrang.",
-  },
-];
+};
 
 function TrainingMode() {
   const [scenarioIndex, setScenarioIndex] = useState(0);
   const [roundIndex, setRoundIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [completed, setCompleted] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [answers, setAnswers] = useState([]);
+  const [isComplete, setIsComplete] = useState(false);
+  const feedbackRef = useRef(null);
 
   const scenario = scenarios[scenarioIndex];
   const round = scenario.rounds[roundIndex];
-  const selected = selectedOption === null ? null : round.options[selectedOption];
-  const metrics = useMemo(() => calculateMetrics(history), [history]);
-  const progress = Math.round(((roundIndex + (selected ? 1 : 0)) / scenario.rounds.length) * 100);
+  const selected = selectedIndex === null ? null : round.options[selectedIndex];
 
-  function chooseScenario(index) {
+  useEffect(() => {
+    if (selected) window.requestAnimationFrame(() => feedbackRef.current?.focus());
+  }, [selected]);
+
+  function selectScenario(index) {
+    if (!Number.isInteger(index) || index < 0 || index >= scenarios.length) return;
     setScenarioIndex(index);
+    resetProgress();
+  }
+
+  function resetProgress() {
     setRoundIndex(0);
-    setSelectedOption(null);
-    setHistory([]);
-    setCompleted(false);
+    setSelectedIndex(null);
+    setAnswers([]);
+    setIsComplete(false);
   }
 
-  function chooseOption(index) {
-    if (selectedOption !== null) return;
-    const option = round.options[index];
-    setSelectedOption(index);
-    setHistory((current) => [...current, option]);
+  function selectAnswer(index) {
+    if (selectedIndex !== null || !round.options[index]) return;
+    const answer = round.options[index];
+    setSelectedIndex(index);
+    setAnswers((current) => [...current, answer]);
   }
 
-  function nextRound() {
-    if (roundIndex >= scenario.rounds.length - 1) {
-      setCompleted(true);
+  function continueTraining() {
+    if (!selected) return;
+    if (roundIndex === scenario.rounds.length - 1) {
+      setIsComplete(true);
       return;
     }
     setRoundIndex((current) => current + 1);
-    setSelectedOption(null);
-  }
-
-  function repeatScenario() {
-    setRoundIndex(0);
-    setSelectedOption(null);
-    setHistory([]);
-    setCompleted(false);
+    setSelectedIndex(null);
   }
 
   return (
-    <section id="training" className="py-16 lg:py-20">
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
-        <EntryHeader />
-        <div className="mt-8 grid gap-6 xl:grid-cols-[0.98fr_1.35fr_0.82fr]">
-          <aside className="space-y-5">
-            <ScenarioSelection activeIndex={scenarioIndex} onSelect={chooseScenario} />
-          </aside>
+    <section className="py-4 sm:py-6">
+      <header className="grid gap-5 lg:grid-cols-[1fr_0.8fr] lg:items-end">
+        <div>
+          <p className="text-sm font-black uppercase tracking-wider text-db-red">Lokale Übung</p>
+          <h2 className="mt-2 text-3xl font-black text-db-dark dark:text-white sm:text-4xl">Szenarien mit fest hinterlegtem Regel-Feedback</h2>
+          <p className="mt-3 max-w-3xl text-base font-medium leading-7 text-db-rail dark:text-white/65">
+            Die Übung verwendet keine KI. Antworten, Bewertungen und Rückmeldungen sind statisch im Code hinterlegt und dienen nur der Reflexion.
+          </p>
+        </div>
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-950 dark:border-amber-800/50 dark:bg-amber-950/25 dark:text-amber-100">
+          <Info className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+          <p>Kein Zertifikat, keine Punkte und keine Kompetenzmessung. Bei akuter Gefahr reale Hilfe nutzen.</p>
+        </div>
+      </header>
 
-          <div className="space-y-5">
-            {!completed ? (
-              <SimulationPanel
-                onChoose={chooseOption}
-                onNext={nextRound}
-                progress={progress}
-                round={round}
-                roundIndex={roundIndex}
-                scenario={scenario}
-                selected={selected}
-                selectedOption={selectedOption}
-              />
-            ) : (
-              <FinalResult
-                metrics={metrics}
-                onNewScenario={() => chooseScenario((scenarioIndex + 1) % scenarios.length)}
-                onRepeat={repeatScenario}
-                scenario={scenario}
-              />
-            )}
+      <div className="mt-7 grid gap-6 xl:grid-cols-[0.75fr_1.35fr]">
+        <aside className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5" aria-label="Trainingsszenarien">
+          <div className="flex items-center gap-3">
+            <GraduationCap className="h-6 w-6 text-db-red" aria-hidden="true" />
+            <h3 className="text-xl font-black text-db-dark dark:text-white">Szenario auswählen</h3>
           </div>
+          <div className="mt-5 space-y-3">
+            {scenarios.map((item, index) => {
+              const Icon = item.icon;
+              const active = index === scenarioIndex;
+              return (
+                <button
+                  type="button"
+                  key={item.id}
+                  onClick={() => selectScenario(index)}
+                  aria-pressed={active}
+                  className={`w-full rounded-xl border p-4 text-left transition ${active ? "border-db-red bg-red-50 dark:bg-db-red/10" : "border-db-dark/10 bg-db-soft hover:border-db-red dark:border-white/10 dark:bg-white/5"}`}
+                >
+                  <div className="flex items-start gap-3">
+                    <Icon className={`mt-0.5 h-5 w-5 shrink-0 ${active ? "text-db-red" : "text-db-rail dark:text-white/55"}`} aria-hidden="true" />
+                    <div>
+                      <p className="font-black text-db-dark dark:text-white">{item.title}</p>
+                      <p className="mt-2 text-xs font-semibold leading-5 text-db-rail dark:text-white/55">{item.context}</p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </aside>
 
-          <aside className="space-y-5">
-            <ScorePanel metrics={metrics} />
-          </aside>
+        <div>
+          {!isComplete ? (
+            <div className="overflow-hidden rounded-xl border border-db-dark/10 bg-white shadow-sm dark:border-white/10 dark:bg-white/5">
+              <div className="bg-db-dark p-5 text-white">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-wider text-red-200">Runde {roundIndex + 1} von {scenario.rounds.length}</p>
+                    <h3 className="mt-2 text-2xl font-black">{scenario.title}</h3>
+                  </div>
+                  <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-black">statische Demo-Logik</span>
+                </div>
+                <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/15" aria-hidden="true">
+                  <div className="h-full rounded-full bg-db-red transition-all" style={{ width: `${((roundIndex + (selected ? 1 : 0)) / scenario.rounds.length) * 100}%` }} />
+                </div>
+              </div>
+
+              <div className="p-5 sm:p-6">
+                <p className="text-xs font-black uppercase tracking-wider text-db-red">Situation</p>
+                <h4 className="mt-2 text-xl font-black leading-8 text-db-dark dark:text-white">{round.situation}</h4>
+
+                <div className="mt-5 space-y-3" role="group" aria-label="Antwortmöglichkeiten">
+                  {round.options.map((answer, index) => {
+                    const locked = selectedIndex !== null;
+                    return (
+                      <button
+                        type="button"
+                        key={answer.text}
+                        aria-disabled={locked}
+                        onClick={() => selectAnswer(index)}
+                        className={`w-full rounded-xl border p-4 text-left text-sm font-semibold leading-6 transition ${selectedIndex === index ? quality[answer.quality].className : "border-db-dark/10 bg-db-soft text-db-dark hover:border-db-red dark:border-white/10 dark:bg-white/5 dark:text-white"} ${locked && selectedIndex !== index ? "cursor-default opacity-60" : ""}`}
+                      >
+                        <span className="mr-2 font-black text-db-red">{String.fromCharCode(65 + index)}.</span>
+                        {answer.text}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {selected && (
+                  <Feedback
+                    answer={selected}
+                    feedbackRef={feedbackRef}
+                    onContinue={continueTraining}
+                    isLast={roundIndex === scenario.rounds.length - 1}
+                  />
+                )}
+              </div>
+            </div>
+          ) : (
+            <Result scenario={scenario} answers={answers} onReset={resetProgress} onNext={() => selectScenario((scenarioIndex + 1) % scenarios.length)} />
+          )}
         </div>
       </div>
     </section>
   );
 }
 
-function EntryHeader() {
-  const badges = [
-    "Realistische DB-Situationen",
-    "Deeskalation üben",
-    "Keine echten Daten",
-  ];
+function Feedback({ answer, feedbackRef, isLast, onContinue }) {
+  const definition = quality[answer.quality];
+  const Icon = definition.icon;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_0.78fr] lg:items-end">
-      <div>
-        <p className="text-sm font-black uppercase tracking-wider text-db-red">Trainingsmodus</p>
-        <h2 className="mt-3 text-4xl font-black leading-tight tracking-normal text-db-dark dark:text-white sm:text-5xl">
-          KI-Trainingsmodus
-        </h2>
-        <p className="mt-4 max-w-3xl text-lg leading-8 text-db-rail dark:text-white/60">
-          Übe schwierige Situationen sicher in einer Simulation - bevor sie im Alltag eskalieren.
-        </p>
-        <p className="mt-4 max-w-3xl text-base font-semibold leading-7 text-db-rail dark:text-white/60">
-          Die KI-Simulation hilft dabei, deeskalierende Antworten, klare Grenzen und sichere
-          nächste Schritte zu trainieren.
-        </p>
-      </div>
-      <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-4 shadow-sm">
-        <p className="flex items-start gap-3 text-sm font-black text-db-dark dark:text-white">
-          <ShieldCheck className="mt-0.5 shrink-0 text-db-red" size={18} aria-hidden="true" />
-          Dieses Training ersetzt keine echte Schulung oder Hilfe in Gefahrensituationen.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {badges.map((badge) => (
-            <span key={badge} className="rounded bg-db-soft dark:bg-db-dark/80 px-3 py-2 text-xs font-black text-db-rail dark:text-white/60">
-              {badge}
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ScenarioSelection({ activeIndex, onSelect }) {
-  return (
-    <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 shadow-panel">
-      <div className="flex items-center gap-3">
-        <GraduationCap className="text-db-red" size={24} aria-hidden="true" />
-        <h3 className="text-xl font-black dark:text-white">Szenario auswählen</h3>
-      </div>
-      <div className="mt-5 grid gap-3">
-        {scenarios.map((scenario, index) => {
-          const Icon = scenario.icon;
-          const active = activeIndex === index;
-          return (
-            <button
-              key={scenario.id}
-              type="button"
-              onClick={() => onSelect(index)}
-              className={`group rounded-lg border p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:shadow-sm ${
-                active
-                  ? "border-db-red bg-red-50"
-                  : "border-db-dark/10 bg-db-soft hover:border-db-red"
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <Icon className={active ? "text-db-red" : "text-db-rail dark:text-white/60 group-hover:text-db-red"} size={24} />
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-black text-db-dark dark:text-white">{scenario.title}</p>
-                    <DifficultyBadge value={scenario.difficulty} />
-                  </div>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-db-rail dark:text-white/60">{scenario.context}</p>
-                  <p className="mt-2 text-xs font-black uppercase tracking-wide text-db-red">
-                    Lernziel: {scenario.goal}
-                  </p>
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function SimulationPanel({ onChoose, onNext, progress, round, roundIndex, scenario, selected, selectedOption }) {
-  return (
-    <div className="overflow-hidden rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 shadow-panel">
-      <div className="border-b border-db-dark/10 dark:border-white/10 bg-db-dark dark:bg-db-dark/80 p-5 text-white">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <p className="text-sm font-black uppercase tracking-wide text-red-200">
-              Runde {roundIndex + 1} von {scenario.rounds.length}
-            </p>
-            <h3 className="mt-2 text-3xl font-black">{scenario.title}</h3>
-            <p className="mt-3 max-w-2xl font-semibold leading-7 text-white/75">{scenario.context}</p>
-          </div>
-          <RiskBadge value={scenario.risk} />
-        </div>
-        <div className="mt-5 h-2 overflow-hidden rounded bg-white/15">
-          <div className="h-full bg-db-red transition-all duration-300" style={{ width: `${progress}%` }} />
-        </div>
-      </div>
-
-      <div className="p-5">
-        <div className="rounded-lg bg-db-soft dark:bg-db-dark/30 p-5">
-          <p className="text-sm font-black uppercase tracking-wide text-db-red">{round.title}</p>
-          <h4 className="mt-2 text-2xl font-black text-db-dark dark:text-white">Was würdest du tun?</h4>
-          <p className="mt-3 text-lg font-semibold leading-8 text-db-rail dark:text-white/60">{round.description}</p>
-          <p className="mt-4 rounded bg-white dark:bg-db-dark/50 p-3 text-sm font-black text-db-dark dark:text-white">
-            Lernziel: {scenario.goal}
-          </p>
-        </div>
-
-        <div className="mt-5 grid gap-3">
-          {round.options.map((option, index) => (
-            <button
-              key={option.text}
-              type="button"
-              onClick={() => onChoose(index)}
-              className={`rounded-lg border p-4 text-left font-semibold leading-7 transition ${
-                selectedOption === index
-                  ? "border-db-red bg-red-50 dark:bg-red-900/30 text-db-dark dark:text-white"
-                  : "border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 hover:-translate-y-0.5 hover:border-db-red hover:shadow-sm"
-              }`}
-            >
-              <span className="mr-3 inline-flex h-7 w-7 items-center justify-center rounded bg-db-soft dark:bg-db-dark/80 text-sm font-black text-db-red">
-                {String.fromCharCode(65 + index)}
-              </span>
-              {option.text}
-            </button>
-          ))}
-        </div>
-
-        {selected && <FeedbackCard option={selected} onNext={onNext} isLast={roundIndex === scenario.rounds.length - 1} />}
-      </div>
-    </div>
-  );
-}
-
-function FeedbackCard({ isLast, onNext, option }) {
-  return (
-    <div className="mt-6 rounded-lg border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-db-dark/30 p-5 shadow-sm transition">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div ref={feedbackRef} tabIndex={-1} role="status" className={`mt-5 rounded-xl border p-5 outline-none ${definition.className}`}>
+      <div className="flex items-start gap-3">
+        <Icon className="mt-0.5 h-6 w-6 shrink-0" aria-hidden="true" />
         <div>
-          <p className="text-sm font-black uppercase tracking-wide text-db-red">Sofortiges Feedback</p>
-          <h4 className="mt-1 text-2xl font-black dark:text-white">Auswertung deiner Antwort</h4>
+          <p className="font-black">{definition.label}</p>
+          <p className="mt-2 text-sm font-semibold leading-6">{answer.feedback}</p>
         </div>
-        <span className={`w-fit rounded px-3 py-1 text-sm font-black ${qualityStyles[option.quality].className}`}>
-          {qualityStyles[option.quality].label}
-        </span>
       </div>
-
-      <div className="mt-5 grid gap-3 md:grid-cols-2">
-        <FeedbackBlock icon={CheckCircle2} title="Was daran gut war" text={option.feedback.good} />
-        <FeedbackBlock icon={AlertTriangle} title="Was riskant war" text={option.feedback.risk} />
-        <FeedbackBlock icon={Sparkles} title="Bessere Alternative" text={option.feedback.alternative} />
-        <FeedbackBlock icon={BadgeCheck} title="Merksatz für den Alltag" text={option.feedback.memory} />
-        <FeedbackBlock icon={ShieldCheck} title="Nächster sicherer Schritt" text={option.feedback.next} wide />
-      </div>
-
-      <div className="mt-5 grid gap-3 md:grid-cols-4">
-        {Object.entries(option.scores).map(([label, value]) => (
-          <ScoreBar key={label} label={metricLabels[label]} value={value} />
-        ))}
-      </div>
-
-      <button
-        type="button"
-        onClick={onNext}
-        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded bg-db-red px-5 py-3 font-black text-white transition hover:bg-red-700 sm:w-auto"
-      >
-        {isLast ? "Training abschließen" : "Nächste Runde"}
-        <ArrowRight size={18} aria-hidden="true" />
+      <button type="button" onClick={onContinue} className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-db-dark px-5 py-3 text-sm font-black text-white hover:bg-slate-800 sm:w-auto">
+        {isLast ? "Lernrückmeldung öffnen" : "Nächste Runde"}
+        <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </button>
     </div>
   );
 }
 
-function FeedbackBlock({ icon: Icon, text, title, wide = false }) {
-  return (
-    <div className={`rounded bg-white dark:bg-db-dark/50 p-4 ${wide ? "md:col-span-2" : ""}`}>
-      <div className="flex items-start gap-3">
-        <Icon className="mt-1 shrink-0 text-db-red" size={18} aria-hidden="true" />
-        <div>
-          <p className="font-black text-db-dark dark:text-white">{title}</p>
-          <p className="mt-1 text-sm font-semibold leading-6 text-db-rail dark:text-white/60">{text}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
-  const average = Math.round(
-    (metrics.deescalation + metrics.safety + metrics.clarity + metrics.professionalism) / 4
-  );
+function Result({ answers, onNext, onReset, scenario }) {
+  const unsafeCount = answers.filter((answer) => answer.quality === "unsafe").length;
+  const weakCount = answers.filter((answer) => answer.quality === "weak").length;
+  const message = unsafeCount === 0 && weakCount === 0
+    ? "Du hast in allen Runden Optionen gewählt, die Sicherheit, klare Grenzen oder passende Unterstützung in den Vordergrund stellen."
+    : unsafeCount === 0
+      ? "Deine Auswahl enthielt keine als riskant markierte Option. Einzelne Situationen lassen sich noch vollständiger lösen."
+      : "In mindestens einer Runde wurde eine riskante Option gewählt. Wiederhole das Szenario und prüfe besonders Eigenschutz, sachliche Grenzen und zuständige reale Hilfe.";
 
   return (
-    <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-6 shadow-panel">
-      <p className="text-sm font-black uppercase tracking-wide text-db-red">Abschluss</p>
-      <div className="flex items-center gap-4 mt-6">
-        <h3 className="text-3xl font-black dark:text-white">Gesamtbewertung: {average}%</h3>
-        {average > 50 && (
-          <div className="bg-amber-100 border border-amber-300 text-amber-700 px-4 py-2 rounded-full font-bold flex items-center gap-2 animate-bounce">
-            <Star className="w-5 h-5 fill-amber-500 text-amber-500" />
-            +50 DB Peace Points
-          </div>
-        )}
-      </div>
-      <p className="mt-3 text-lg font-semibold leading-8 text-db-rail dark:text-white/60">
-        Du hast das Szenario "{scenario.title}" abgeschlossen. Die Auswertung basiert nur auf
-        lokaler Demo-Logik.
-      </p>
+    <div className="rounded-xl border border-db-dark/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/5">
+      <ShieldCheck className="h-9 w-9 text-emerald-600" aria-hidden="true" />
+      <p className="mt-5 text-xs font-black uppercase tracking-wider text-db-red">Lokale Lernrückmeldung</p>
+      <h3 className="mt-2 text-3xl font-black text-db-dark dark:text-white">{scenario.title} abgeschlossen</h3>
+      <p className="mt-4 text-base font-semibold leading-7 text-db-rail dark:text-white/65">{message}</p>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <ResultBlock title="Stärken" text={average >= 70 ? "Du hast sichere, klare und deeskalierende Handlungsoptionen gewählt." : "Du hast wichtige Ansätze erkannt, besonders dort, wo du Grenzen benannt hast."} />
-        <ResultBlock title="Verbesserungsbereich" text={average >= 70 ? "Weiter üben: frühzeitig Unterstützung einbinden und knapp dokumentieren." : "Fokus: Abstand, klare Grenze, keine Gegeneskalation und reale Hilfe bei Gefahr."} />
-        <ResultBlock title="Empfohlene Lernkarte" text={average >= 70 ? "Vorfall dokumentieren" : "Bei Gefahr Sicherheit priorisieren"} />
-        <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-db-dark dark:bg-db-dark/80 p-5 text-white">
-          <GraduationCap size={28} className="text-red-200" aria-hidden="true" />
-          <p className="mt-4 text-sm font-black uppercase tracking-wide text-white/60">Demo-Zertifikat</p>
-          <h4 className="mt-2 text-2xl font-black">Training abgeschlossen - Deeskalation Grundlagen</h4>
-        </div>
+      <div className="mt-6 rounded-xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-800/50 dark:bg-violet-950/25">
+        <p className="text-sm font-black text-violet-950 dark:text-violet-100">Keine Punktzahl und keine Kompetenzbewertung</p>
+        <p className="mt-2 text-xs font-semibold leading-5 text-violet-900/75 dark:text-violet-100/70">
+          Die Rückmeldung basiert ausschließlich auf fest hinterlegten Antwortkategorien. Sie wird nicht gespeichert und ist kein Trainingsnachweis.
+        </p>
       </div>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-        <button
-          type="button"
-          onClick={onRepeat}
-          className="inline-flex items-center justify-center gap-2 rounded border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/50 px-5 py-3 font-black text-db-dark dark:text-white transition hover:border-db-red hover:text-db-red"
-        >
+        <button type="button" onClick={onReset} className="inline-flex items-center justify-center gap-2 rounded-xl border border-db-dark/15 px-5 py-3 text-sm font-black text-db-dark hover:border-db-red hover:text-db-red dark:border-white/15 dark:text-white">
+          <RefreshCw className="h-4 w-4" aria-hidden="true" />
           Wiederholen
-          <RefreshCw size={18} aria-hidden="true" />
         </button>
-        <button
-          type="button"
-          onClick={onNewScenario}
-          className="inline-flex items-center justify-center gap-2 rounded bg-db-red px-5 py-3 font-black text-white transition hover:bg-red-700"
-        >
-          Neues Szenario
-          <ArrowRight size={18} aria-hidden="true" />
+        <button type="button" onClick={onNext} className="inline-flex items-center justify-center gap-2 rounded-xl bg-db-red px-5 py-3 text-sm font-black text-white hover:bg-red-700">
+          Nächstes Szenario
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
     </div>
   );
 }
 
-function ResultBlock({ text, title }) {
-  return (
-    <div className="rounded-lg bg-db-soft dark:bg-db-dark/30 p-5">
-      <p className="text-sm font-black uppercase tracking-wide text-db-red">{title}</p>
-      <p className="mt-2 font-semibold leading-7 text-db-dark dark:text-white">{text}</p>
-    </div>
-  );
+function option(text, qualityName, feedback) {
+  return { text, quality: qualityName, feedback };
 }
-
-function ScorePanel({ metrics }) {
-  return (
-    <div className="rounded-lg bg-db-dark dark:bg-db-dark/80 p-5 text-white shadow-panel">
-      <Gauge size={26} className="text-red-200" aria-hidden="true" />
-      <h3 className="mt-4 text-xl font-black">Kompetenzprofil</h3>
-      <div className="mt-5 space-y-4">
-        <ScoreBar label="Deeskalation" value={metrics.deescalation} dark />
-        <ScoreBar label="Sicherheit" value={metrics.safety} dark />
-        <ScoreBar label="Klarheit" value={metrics.clarity} dark />
-        <ScoreBar label="Professionalität" value={metrics.professionalism} dark />
-      </div>
-    </div>
-  );
-}
-
-function ScoreBar({ dark = false, label, value }) {
-  return (
-    <div>
-      <div className={`mb-2 flex justify-between text-sm font-black ${dark ? "text-white/80" : "text-db-rail dark:text-white/60"}`}>
-        <span>{label}</span>
-        <span>{value}%</span>
-      </div>
-      <div className={`h-2 overflow-hidden rounded ${dark ? "bg-white/15" : "bg-db-dark/10 dark:bg-white/10"}`}>
-        <div className="h-full rounded bg-db-red transition-all duration-500" style={{ width: `${value}%` }} />
-      </div>
-    </div>
-  );
-}
-
-
-
-function DifficultyBadge({ value }) {
-  return (
-    <span className="rounded bg-white dark:bg-db-dark/50 px-2 py-1 text-xs font-black text-db-rail dark:text-white/60 ring-1 ring-db-dark/10 dark:ring-white/10">
-      {value}
-    </span>
-  );
-}
-
-function RiskBadge({ value }) {
-  const className = value === "Hoch" ? "bg-red-100 text-red-800" : "bg-amber-100 text-amber-800";
-  return <span className={`w-fit rounded px-3 py-1 text-sm font-black ${className}`}>Risiko: {value}</span>;
-}
-
-function makeOptions(escalating, avoidant, good, professional) {
-  return [
-    createOption(escalating, "bad"),
-    createOption(avoidant, "weak"),
-    createOption(good, "good"),
-    createOption(professional, "excellent"),
-  ];
-}
-
-function createOption(text, quality) {
-  const templates = {
-    bad: {
-      scores: { deescalation: 20, safety: 25, clarity: 35, professionalism: 20 },
-      feedback: {
-        good: "Du erkennst, dass die Situation eine Reaktion braucht.",
-        risk: "Die Antwort kann die Lage verschärfen, provozieren oder den Fokus von Sicherheit weglenken.",
-        alternative: "Ruhig bleiben, Abstand halten, klare Grenze setzen und Unterstützung einbinden.",
-        memory: "Nicht jede klare Grenze muss laut sein.",
-        next: "Kurz stoppen, Sicherheit prüfen und eine sachliche Formulierung wählen.",
-      },
-    },
-    weak: {
-      scores: { deescalation: 45, safety: 45, clarity: 30, professionalism: 45 },
-      feedback: {
-        good: "Du vermeidest eine direkte Gegeneskalation.",
-        risk: "Zu viel Rückzug kann problematisches Verhalten normalisieren oder Betroffene allein lassen.",
-        alternative: "Kurz, ruhig und klar reagieren: Verhalten benennen, Grenze setzen, Unterstützung holen.",
-        memory: "Abwarten ist nicht immer neutral.",
-        next: "Eine sichere, sachliche Intervention oder Meldung vorbereiten.",
-      },
-    },
-    good: {
-      scores: { deescalation: 76, safety: 72, clarity: 78, professionalism: 80 },
-      feedback: {
-        good: "Die Antwort bleibt ruhig, benennt das Problem und vermeidet Gegenangriffe.",
-        risk: "Achte darauf, früh genug Unterstützung zu holen, wenn die Lage kippt.",
-        alternative: "Noch stärker: klare Grenze plus konkreter nächster Schritt.",
-        memory: "Sachlich bleiben heißt nicht, alles hinzunehmen.",
-        next: "Situation beobachten, bei Wiederholung dokumentieren und zuständige Unterstützung einbinden.",
-      },
-    },
-    excellent: {
-      scores: { deescalation: 92, safety: 94, clarity: 90, professionalism: 93 },
-      feedback: {
-        good: "Sehr gute Balance aus Ruhe, klarer Grenze, Sicherheit und nächstem Schritt.",
-        risk: "Auch professionelle Reaktionen brauchen reale Unterstützung, wenn Gefahr entsteht.",
-        alternative: "Diese Antwort ist bereits sehr belastbar. Ergänzend kann nach der Situation dokumentiert werden.",
-        memory: "Sicherheit zuerst, Klärung danach.",
-        next: "Unterstützung einbinden, wenn nötig, und den Vorfall sachlich festhalten.",
-      },
-    },
-  };
-
-  return {
-    text,
-    quality,
-    ...templates[quality],
-  };
-}
-
-function calculateMetrics(history) {
-  if (!history.length) {
-    return { deescalation: 0, safety: 0, clarity: 0, professionalism: 0 };
-  }
-
-  const totals = history.reduce(
-    (acc, option) => {
-      Object.entries(option.scores).forEach(([key, value]) => {
-        acc[key] += value;
-      });
-      return acc;
-    },
-    { deescalation: 0, safety: 0, clarity: 0, professionalism: 0 }
-  );
-
-  return Object.fromEntries(
-    Object.entries(totals).map(([key, value]) => [key, Math.round(value / history.length)])
-  );
-}
-
-const metricLabels = {
-  deescalation: "Deeskalation",
-  safety: "Sicherheit",
-  clarity: "Klarheit",
-  professionalism: "Professionalität",
-};
-
-const qualityStyles = {
-  bad: { label: "Eskalationsrisiko", className: "bg-red-100 text-red-800" },
-  weak: { label: "Ausweichend", className: "bg-amber-100 text-amber-800" },
-  good: { label: "Deeskalierend", className: "bg-emerald-100 text-emerald-800" },
-  excellent: { label: "Sehr sicher", className: "bg-emerald-100 text-emerald-800" },
-};
 
 export default TrainingMode;

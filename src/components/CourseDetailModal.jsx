@@ -1,345 +1,336 @@
-import React, { useState } from "react";
-import { X, Play, CheckCircle2, Award, Download, ExternalLink, BookOpen, Clock } from "lucide-react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Award,
+  BookOpen,
+  CheckCircle2,
+  Download,
+  ExternalLink,
+  FileText,
+  Info,
+  Play,
+  X,
+} from "lucide-react";
 import { jsPDF } from "jspdf";
+import { useModalDialog } from "../hooks/useModalDialog.js";
+
+const sampleModules = [
+  {
+    title: "Situation sicher einschätzen",
+    duration: "ca. 10 Minuten",
+    content: "Prüfe zuerst, ob eine akute Gefahr besteht. Eigenschutz und reale Hilfe gehen vor. Eine App oder KI ersetzt bei Gewalt, medizinischem Notfall oder unmittelbarer Bedrohung keinen Notruf.",
+    quiz: {
+      question: "Was hat bei einer akut gefährlichen Situation Vorrang?",
+      options: [
+        "Den Vorfall zuerst vollständig in der App dokumentieren",
+        "Eigenschutz und reale Hilfe organisieren",
+        "Die beteiligte Person allein konfrontieren",
+      ],
+      correct: 1,
+    },
+  },
+  {
+    title: "Beobachtungen sachlich dokumentieren",
+    duration: "ca. 10 Minuten",
+    content: "Notiere beobachtbare Tatsachen wie Datum, Uhrzeit, Ort, Beteiligte, mögliche Zeug:innen und konkrete Aussagen. Trenne Wahrnehmungen und Gefühle klar von Vermutungen über Motive.",
+    quiz: {
+      question: "Welche Formulierung ist für ein Gedächtnisprotokoll am geeignetsten?",
+      options: [
+        "Die Person wollte mich bestimmt absichtlich zerstören.",
+        "Am 5. August um 14:10 Uhr fiel im Pausenraum der Satz …",
+        "Alle behandeln mich immer schlecht.",
+      ],
+      correct: 1,
+    },
+  },
+  {
+    title: "Passenden Hilfeweg auswählen",
+    duration: "ca. 10 Minuten",
+    content: "Wähle den nächsten Schritt nach Dringlichkeit und Zuständigkeit. Frage vor dem Teilen sensibler Details, wer Zugriff erhält, wie dokumentiert wird und welche Stelle tatsächlich zuständig ist.",
+    quiz: {
+      question: "Was ist vor dem Teilen sensibler Angaben sinnvoll?",
+      options: [
+        "Zuständigkeit und Umgang mit Vertraulichkeit klären",
+        "Möglichst viele Personen gleichzeitig informieren",
+        "Klarnamen grundsätzlich öffentlich posten",
+      ],
+      correct: 0,
+    },
+  },
+];
 
 export function CourseDetailModal({ course, onClose }) {
-  const [activeTab, setActiveTab] = useState("overview"); // 'overview' | 'player' | 'certificate'
+  const [activeTab, setActiveTab] = useState("overview");
   const [currentModule, setCurrentModule] = useState(0);
   const [completedModules, setCompletedModules] = useState([]);
   const [quizAnswer, setQuizAnswer] = useState(null);
+  const [error, setError] = useState("");
+  const dialogRef = useRef(null);
+  const closeButtonRef = useRef(null);
+  const isOpen = Boolean(course);
+
+  useModalDialog({ isOpen, onClose: closeModal, dialogRef, initialFocusRef: closeButtonRef });
+
+  const safeCourse = useMemo(() => normalizeCourse(course), [course]);
+  const providerUrl = useMemo(() => getVerifiedCourseUrl(course?.link), [course]);
+
+  useEffect(() => {
+    if (!course) return;
+    setActiveTab("overview");
+    setCurrentModule(0);
+    setCompletedModules([]);
+    setQuizAnswer(null);
+    setError("");
+  }, [course]);
 
   if (!course) return null;
 
-  const modules = [
-    {
-      title: "Modul 1: Grundlagen der Zivilcourage & Rechtslage",
-      duration: "20 Min.",
-      content: "Verstehe deine Rechte als Azubi am Arbeitsplatz und lerne, wo Zivilcourage anfängt. Nach § 618 BGB hat der Arbeitgeber eine Fürsorgepflicht.",
-      quiz: {
-        question: "Was ist der wichtigste Grundsatz bei Zivilcourage im Betrieb?",
-        options: [
-          "Selbstschutz geht immer vor!",
-          "Möglichst laut zurückschreien.",
-          "Warten, bis der Meister reagiert.",
-          "Nichts tun und wegsehen."
-        ],
-        correct: 0
-      }
-    },
-    {
-      title: "Modul 2: Deeskalation & De-Escalation Messaging",
-      duration: "30 Min.",
-      content: "Lerne die 'Ich-Botschaften' kennen. Vermeide Vorwürfe, bleibe ruhig im Tonfall, halte 1,5m Sicherheitsabstand.",
-      quiz: {
-        question: "Wie reagiert man am besten auf aggressive Äußerungen?",
-        options: [
-          "Gegenangriff starten",
-          "Ruhe bewahren, Distanz wahren und klare Grenzen setzen",
-          "Sofort körperlich eingreifen",
-          "Den Raum verlassen ohne Rückmeldung"
-        ],
-        correct: 1
-      }
-    },
-    {
-      title: "Modul 3: Dokumentation & Meldung bei der DB",
-      duration: "25 Min.",
-      content: "So erstellst du ein lückenloses Gedächtnisprotokoll für JAV, Betriebsrat oder HR. Datum, Uhrzeit, Zeugen und wörtliche Zitate notieren.",
-      quiz: {
-        question: "Was gehört zwingend in ein Gedächtnisprotokoll?",
-        options: [
-          "Persönliche Vermutungen und Gefühle",
-          "Sachliche Tatsachen, Datum, Uhrzeit, Personen & Aussagen",
-          "Nur der Name des Vorgesetzten",
-          "Keine Angaben"
-        ],
-        correct: 1
-      }
-    }
-  ];
+  const current = sampleModules[currentModule];
+  const answerIsCorrect = quizAnswer === current.quiz.correct;
 
-  const handleNextModule = () => {
-    if (!completedModules.includes(currentModule)) {
-      setCompletedModules([...completedModules, currentModule]);
-    }
-    if (currentModule < modules.length - 1) {
-      setCurrentModule(currentModule + 1);
+  function closeModal() {
+    setError("");
+    onClose();
+  }
+
+  function openModule(index) {
+    const safeIndex = Math.max(0, Math.min(sampleModules.length - 1, index));
+    setCurrentModule(safeIndex);
+    setQuizAnswer(null);
+    setActiveTab("training");
+    setError("");
+  }
+
+  function completeModule() {
+    if (!answerIsCorrect) return;
+    setCompletedModules((items) => items.includes(currentModule) ? items : [...items, currentModule]);
+
+    if (currentModule < sampleModules.length - 1) {
+      setCurrentModule((index) => index + 1);
       setQuizAnswer(null);
-    } else {
-      setActiveTab("certificate");
+      return;
     }
-  };
+    setActiveTab("note");
+  }
 
-  const handleDownloadCertificate = () => {
-    const doc = new jsPDF();
-    
-    // Header
-    doc.setFillColor(226, 0, 26); // DB Red
-    doc.rect(0, 0, 210, 30, "F");
-    
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.setTextColor(255, 255, 255);
-    doc.text("DEUTSCHE BAHN AG - BILDUNGSZERTIFIKAT", 15, 20);
+  function downloadLearningNote() {
+    try {
+      const doc = new jsPDF();
+      doc.setFillColor(31, 41, 55);
+      doc.rect(0, 0, 210, 28, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.setTextColor(255, 255, 255);
+      doc.text("PERSÖNLICHE LERNNOTIZ", 15, 18);
 
-    // Body
-    doc.setFontSize(16);
-    doc.setTextColor(30, 30, 30);
-    doc.text("Teilnahmebescheinigung", 15, 50);
+      const text = [
+        safeCourse.title,
+        "",
+        `Demo-Datensatz / angegebener Anbieter: ${safeCourse.provider}`,
+        `Datum: ${new Date().toLocaleDateString("de-DE")}`,
+        `Bearbeitete Beispielmodule: ${completedModules.length} von ${sampleModules.length}`,
+        "",
+        "Reflexionsfragen:",
+        "- Was war für mich neu?",
+        "- Welchen sicheren nächsten Schritt kann ich in einer schwierigen Situation nutzen?",
+        "- Welche Information möchte ich noch bei einer fachkundigen Stelle prüfen?",
+        "",
+        "WICHTIG: Dieses Dokument ist eine private Lernnotiz aus einem Demonstrationsprototyp.",
+        "Es ist kein Zertifikat, keine Teilnahmebescheinigung und kein offizieller Nachweis.",
+      ].join("\n");
 
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.text("Hiermit wird bestätigt, dass der/die Auszubildende das folgende E-Learning erfolgreich absolviert hat:", 15, 65);
-
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(226, 0, 26);
-    doc.text(course.title, 15, 80);
-
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(60, 60, 60);
-    doc.text(`Anbieter: ${course.provider}`, 15, 92);
-    doc.text(`Abschlussdatum: ${new Date().toLocaleDateString("de-DE")}`, 15, 100);
-    doc.text(`Prüf-ID: CERT-DB-${Math.floor(100000 + Math.random() * 900000)}`, 15, 108);
-
-    doc.setFont("helvetica", "bold");
-    doc.text("Vermittelte Kompetenzen:", 15, 125);
-
-    doc.setFont("helvetica", "normal");
-    doc.text("• Zivilcourage & Deeskalation im Arbeitsumfeld", 20, 135);
-    doc.text("• AGG-Konforme Konfliktbewältigung & Selbstschutz", 20, 143);
-    doc.text("• Rechtssichere Dokumentation für JAV & HR", 20, 151);
-
-    // Stamp / Footer
-    doc.setDrawColor(200, 200, 200);
-    doc.line(15, 220, 195, 220);
-    
-    doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
-    doc.text("DB Peace AI Digital Academy — Offizieller Nachweis für die Personalakte", 15, 230);
-
-    doc.save(`Zertifikat_${course.title.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
-  };
-
-  const getRealProviderUrl = (provider) => {
-    const p = (provider || "").toLowerCase();
-    if (p.includes("bpb")) return "https://www.bpb.de";
-    if (p.includes("mauthausen")) return "https://www.zivilcourage.at";
-    if (p.includes("amadeu")) return "https://www.amadeu-antonio-stiftung.de";
-    if (p.includes("evg")) return "https://www.evg-online.org";
-    if (p.includes("db")) return "https://www.deutschebahn.com";
-    return "https://www.google.com/search?q=" + encodeURIComponent(course.title);
-  };
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10.5);
+      doc.setTextColor(35, 35, 35);
+      const lines = doc.splitTextToSize(text, 180);
+      let y = 42;
+      for (const line of lines) {
+        if (y > 278) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(line, 15, y);
+        y += 5.4;
+      }
+      doc.save(`Lernnotiz_${safeFileName(safeCourse.title)}.pdf`);
+      setError("");
+    } catch {
+      setError("Die Lernnotiz konnte nicht als PDF erzeugt werden.");
+    }
+  }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden relative border border-slate-200">
-        
-        {/* Header */}
-        <div className="bg-slate-900 text-white p-6 relative shrink-0">
-          <button
-            onClick={onClose}
-            className="absolute top-5 right-5 p-1.5 rounded-full bg-white/10 hover:bg-white/20 transition text-white"
-          >
-            <X className="h-5 w-5" />
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeModal(); }}>
+      <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="course-detail-title" aria-describedby="course-detail-description" className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl outline-none">
+        <header className="relative shrink-0 bg-slate-900 p-6 text-white">
+          <button ref={closeButtonRef} type="button" onClick={closeModal} className="absolute right-5 top-5 rounded-full bg-white/10 p-2 transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50" aria-label="Kursdetails schließen">
+            <X className="h-5 w-5" aria-hidden="true" />
           </button>
-          
-          <div className="flex items-center gap-2 mb-2">
-            <span className="bg-db-red text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
-              {course.provider}
-            </span>
-            <span className="text-slate-400 text-xs font-semibold flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" /> 75 Min. Gesamtdauer
-            </span>
+          <div className="mb-2 flex flex-wrap items-center gap-2 pr-12">
+            <span className="rounded-full bg-violet-500/20 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-violet-100">Ungeprüfter Demo-Katalogeintrag</span>
+            <span className="text-xs font-semibold text-white/55">{safeCourse.provider}</span>
           </div>
+          <h2 id="course-detail-title" className="pr-12 text-xl font-black">{safeCourse.title}</h2>
+          <p id="course-detail-description" className="mt-2 pr-12 text-xs font-semibold leading-5 text-white/60">Externe Kursangaben sind nicht verifiziert. Die In-App-Module sind eigenständige Demo-Inhalte.</p>
+        </header>
 
-          <h2 className="text-xl font-extrabold text-white pr-8">{course.title}</h2>
+        <div className="flex shrink-0 overflow-x-auto border-b border-slate-200 bg-slate-50 px-4" role="group" aria-label="Kursdetail-Bereich anzeigen">
+          <TabButton active={activeTab === "overview"} onClick={() => setActiveTab("overview")} icon={BookOpen}>Übersicht</TabButton>
+          <TabButton active={activeTab === "training"} onClick={() => setActiveTab("training")} icon={Play}>Demo-Training</TabButton>
+          <TabButton active={activeTab === "note"} onClick={() => setActiveTab("note")} icon={FileText}>Lernnotiz</TabButton>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex border-b border-slate-200 bg-slate-50 px-6 shrink-0">
-          <button
-            onClick={() => setActiveTab("overview")}
-            className={`py-3 px-4 text-xs font-bold border-b-2 transition flex items-center gap-2 ${
-              activeTab === "overview"
-                ? "border-db-red text-db-red"
-                : "border-transparent text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            <BookOpen className="w-4 h-4" /> Kurs-Übersicht
-          </button>
-          <button
-            onClick={() => setActiveTab("player")}
-            className={`py-3 px-4 text-xs font-bold border-b-2 transition flex items-center gap-2 ${
-              activeTab === "player"
-                ? "border-db-red text-db-red"
-                : "border-transparent text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            <Play className="w-4 h-4" /> In-App Schulung starten
-          </button>
-          <button
-            onClick={() => setActiveTab("certificate")}
-            className={`py-3 px-4 text-xs font-bold border-b-2 transition flex items-center gap-2 ${
-              activeTab === "certificate"
-                ? "border-db-red text-db-red"
-                : "border-transparent text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            <Award className="w-4 h-4" /> Zertifikat
-          </button>
-        </div>
-
-        {/* Content Body */}
-        <div className="p-6 flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto p-6">
           {activeTab === "overview" && (
             <div className="space-y-6">
-              <div>
-                <h3 className="text-sm font-bold text-slate-900 mb-1">Beschreibung</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">{course.desc}</p>
-              </div>
-
-              {course.requirements && (
-                <div className="bg-slate-50 border border-slate-200 p-4 rounded-lg">
-                  <h4 className="text-xs font-bold text-slate-800 mb-1">Voraussetzungen:</h4>
-                  <p className="text-xs text-slate-600">{course.requirements}</p>
-                </div>
+              <Notice />
+              <section>
+                <h3 className="text-sm font-black text-slate-900">Beschreibung aus dem Demo-Datensatz</h3>
+                <p className="mt-2 whitespace-pre-wrap break-words text-sm font-medium leading-6 text-slate-600">{safeCourse.description}</p>
+              </section>
+              {safeCourse.requirements && (
+                <section className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <h3 className="text-xs font-black uppercase tracking-wide text-slate-800">Ungeprüfte Angaben</h3>
+                  <p className="mt-2 whitespace-pre-wrap break-words text-sm font-medium leading-6 text-slate-600">{safeCourse.requirements}</p>
+                </section>
               )}
-
-              <div>
-                <h3 className="text-sm font-bold text-slate-900 mb-3">Lehrplan & Module</h3>
-                <div className="space-y-2">
-                  {modules.map((mod, idx) => (
-                    <div key={idx} className="border border-slate-200 rounded-lg p-3 flex items-center justify-between bg-white hover:bg-slate-50 transition">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                          completedModules.includes(idx) ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"
-                        }`}>
-                          {completedModules.includes(idx) ? <CheckCircle2 className="w-4 h-4" /> : idx + 1}
-                        </div>
+              <section>
+                <h3 className="text-sm font-black text-slate-900">In-App-Demo-Module</h3>
+                <p className="mt-1 text-xs font-semibold text-slate-500">Diese Module gehören zum Prototyp und nicht automatisch zum genannten externen Angebot.</p>
+                <div className="mt-4 space-y-3">
+                  {sampleModules.map((module, index) => (
+                    <button type="button" key={module.title} onClick={() => openModule(index)} className="flex w-full items-center justify-between gap-4 rounded-xl border border-slate-200 p-4 text-left transition hover:border-db-red hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-db-red/30">
+                      <div className="flex min-w-0 items-center gap-3">
+                        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-black ${completedModules.includes(index) ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>
+                          {completedModules.includes(index) ? <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> : index + 1}
+                        </span>
                         <div>
-                          <p className="text-xs font-bold text-slate-800">{mod.title}</p>
-                          <p className="text-[11px] text-slate-500">{mod.duration}</p>
+                          <p className="font-black text-slate-900">{module.title}</p>
+                          <p className="mt-1 text-xs font-semibold text-slate-500">{module.duration}</p>
                         </div>
                       </div>
-                      <button
-                        onClick={() => {
-                          setCurrentModule(idx);
-                          setActiveTab("player");
-                        }}
-                        className="text-xs font-bold text-db-red hover:underline"
-                      >
-                        Starten
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-                <a
-                  href={getRealProviderUrl(course.provider)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-slate-900"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" /> Externe Anbieter-Webseite öffnen
-                </a>
-                <button
-                  onClick={() => setActiveTab("player")}
-                  className="bg-db-red hover:bg-red-700 text-white text-xs font-bold px-5 py-2.5 rounded-lg shadow-sm transition flex items-center gap-2"
-                >
-                  <Play className="w-4 h-4" /> Jetzt In-App lernen
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "player" && (
-            <div className="space-y-6">
-              {/* Progress */}
-              <div className="flex items-center justify-between text-xs font-bold text-slate-500">
-                <span>Modul {currentModule + 1} von {modules.length}</span>
-                <span>{Math.round(((currentModule + 1) / modules.length) * 100)}% Abgeschlossen</span>
-              </div>
-              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                <div 
-                  className="bg-db-red h-full transition-all duration-300" 
-                  style={{ width: `${((currentModule + 1) / modules.length) * 100}%` }}
-                ></div>
-              </div>
-
-              {/* Module Content */}
-              <div className="bg-slate-900 text-white p-5 rounded-xl space-y-3">
-                <h4 className="font-bold text-sm text-db-red">{modules[currentModule].title}</h4>
-                <p className="text-xs leading-relaxed text-slate-300">{modules[currentModule].content}</p>
-              </div>
-
-              {/* Quiz */}
-              <div className="border border-slate-200 rounded-xl p-5 bg-white space-y-3">
-                <h5 className="font-bold text-xs text-slate-900">Wissens-Check:</h5>
-                <p className="text-xs text-slate-700 font-medium">{modules[currentModule].quiz.question}</p>
-                
-                <div className="space-y-2 pt-2">
-                  {modules[currentModule].quiz.options.map((opt, oIdx) => (
-                    <button
-                      key={oIdx}
-                      onClick={() => setQuizAnswer(oIdx)}
-                      className={`w-full text-left p-3 rounded-lg text-xs font-semibold border transition ${
-                        quizAnswer === oIdx
-                          ? oIdx === modules[currentModule].quiz.correct
-                            ? "bg-emerald-50 border-emerald-500 text-emerald-900"
-                            : "bg-red-50 border-red-500 text-red-900"
-                          : "border-slate-200 hover:bg-slate-50 text-slate-800"
-                      }`}
-                    >
-                      {opt}
+                      <Play className="h-4 w-4 shrink-0 text-db-red" aria-hidden="true" />
                     </button>
                   ))}
                 </div>
-              </div>
-
-              <div className="flex justify-between items-center pt-2">
-                <button
-                  disabled={currentModule === 0}
-                  onClick={() => setCurrentModule(currentModule - 1)}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 disabled:opacity-30"
-                >
-                  Zurück
-                </button>
-                <button
-                  onClick={handleNextModule}
-                  className="bg-db-red hover:bg-red-700 text-white text-xs font-bold px-6 py-2.5 rounded-lg shadow-sm transition flex items-center gap-2"
-                >
-                  {currentModule < modules.length - 1 ? "Nächstes Modul" : "Abschließen & Zertifikat"}
+              </section>
+              <div className="flex flex-wrap gap-3 border-t border-slate-200 pt-5">
+                {providerUrl ? (
+                  <a href={providerUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-2 text-sm font-black text-slate-700 hover:border-db-red hover:text-db-red focus:outline-none focus:ring-2 focus:ring-db-red/30">
+                    Anbieter-Seite prüfen
+                    <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                ) : (
+                  <span className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-bold text-amber-900">Keine verifizierbare HTTPS-Anbieter-URL hinterlegt</span>
+                )}
+                <button type="button" onClick={() => openModule(0)} className="inline-flex items-center gap-2 rounded-xl bg-db-red px-5 py-2.5 text-sm font-black text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-db-red/30">
+                  <Play className="h-4 w-4" aria-hidden="true" />
+                  Demo-Training starten
                 </button>
               </div>
             </div>
           )}
 
-          {activeTab === "certificate" && (
-            <div className="text-center py-6 space-y-4">
-              <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Award className="w-8 h-8" />
+          {activeTab === "training" && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between gap-3 text-xs font-black text-slate-500">
+                <span>Beispielmodul {currentModule + 1} von {sampleModules.length}</span>
+                <span>{completedModules.length} abgeschlossen</span>
               </div>
-              <h3 className="text-lg font-black text-slate-900">Herzlichen Glückwunsch!</h3>
-              <p className="text-xs text-slate-600 max-w-md mx-auto">
-                Du hast den Kurs <strong>{course.title}</strong> erfolgreich absolviert. Du kannst dir jetzt dein offizielles Zertifikat für deine Ausbildungsakte herunterladen.
-              </p>
-
-              <div className="pt-4 flex justify-center gap-4">
-                <button
-                  onClick={handleDownloadCertificate}
-                  className="bg-db-red hover:bg-red-700 text-white text-xs font-bold px-6 py-3 rounded-lg shadow-md transition inline-flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" /> Zertifikat herunterladen (PDF)
+              <div className="h-2 overflow-hidden rounded-full bg-slate-100" aria-hidden="true"><div className="h-full rounded-full bg-db-red transition-all" style={{ width: `${(completedModules.length / sampleModules.length) * 100}%` }} /></div>
+              <section className="rounded-xl bg-slate-900 p-5 text-white">
+                <p className="text-xs font-black uppercase tracking-wider text-red-200">{current.duration}</p>
+                <h3 className="mt-2 text-lg font-black">{current.title}</h3>
+                <p className="mt-3 text-sm font-medium leading-7 text-white/75">{current.content}</p>
+              </section>
+              <fieldset className="rounded-xl border border-slate-200 p-5">
+                <legend className="px-1 text-sm font-black text-slate-900">Wissensfrage</legend>
+                <p className="mt-2 text-sm font-medium leading-6 text-slate-700">{current.quiz.question}</p>
+                <div className="mt-4 space-y-2">
+                  {current.quiz.options.map((option, index) => {
+                    const selected = quizAnswer === index;
+                    const correct = selected && index === current.quiz.correct;
+                    const incorrect = selected && index !== current.quiz.correct;
+                    return (
+                      <button type="button" key={option} aria-pressed={selected} onClick={() => setQuizAnswer(index)} className={`w-full rounded-xl border p-3 text-left text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-db-red/30 ${correct ? "border-emerald-500 bg-emerald-50 text-emerald-900" : incorrect ? "border-red-500 bg-red-50 text-red-900" : "border-slate-200 text-slate-800 hover:bg-slate-50"}`}>
+                        {option}
+                      </button>
+                    );
+                  })}
+                </div>
+                {quizAnswer !== null && <p className={`mt-3 text-xs font-bold ${answerIsCorrect ? "text-emerald-700" : "text-red-700"}`} role="status">{answerIsCorrect ? "Richtig. Du kannst das Modul abschließen." : "Noch nicht richtig. Prüfe die Antwort erneut."}</p>}
+              </fieldset>
+              <div className="flex items-center justify-between gap-3">
+                <button type="button" disabled={currentModule === 0} onClick={() => openModule(currentModule - 1)} className="rounded-xl px-4 py-2 text-sm font-black text-slate-600 focus:outline-none focus:ring-2 focus:ring-db-red/30 disabled:opacity-30">Zurück</button>
+                <button type="button" disabled={!answerIsCorrect} onClick={completeModule} className="rounded-xl bg-db-red px-5 py-2.5 text-sm font-black text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-db-red/30 disabled:cursor-not-allowed disabled:opacity-40">
+                  {currentModule < sampleModules.length - 1 ? "Modul abschließen" : "Abschließen und Lernnotiz öffnen"}
                 </button>
               </div>
+            </div>
+          )}
+
+          {activeTab === "note" && (
+            <div className="py-6 text-center">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-violet-100 text-violet-700"><Award className="h-8 w-8" aria-hidden="true" /></div>
+              <h3 className="mt-5 text-2xl font-black text-slate-900">Persönliche Lernnotiz</h3>
+              <p className="mx-auto mt-3 max-w-lg text-sm font-medium leading-7 text-slate-600">Du kannst den aktuellen Lernstand als private PDF-Notiz exportieren. Das Dokument bestätigt keine Teilnahme an einem externen Kurs und ist kein offizieller Nachweis.</p>
+              <div className="mx-auto mt-5 max-w-md rounded-xl border border-amber-200 bg-amber-50 p-4 text-left text-xs font-semibold leading-5 text-amber-950">Bearbeitete Demo-Module: {completedModules.length} von {sampleModules.length}</div>
+              {error && <p role="alert" className="mx-auto mt-4 max-w-md rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-bold text-red-800">{error}</p>}
+              <button type="button" onClick={downloadLearningNote} className="mx-auto mt-6 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-black text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-600/30">
+                <Download className="h-4 w-4" aria-hidden="true" />
+                Private Lernnotiz als PDF
+              </button>
             </div>
           )}
         </div>
       </div>
     </div>
   );
+}
+
+function TabButton({ active, children, icon: Icon, onClick }) {
+  return (
+    <button type="button" aria-pressed={active} onClick={onClick} className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-black focus:outline-none focus:ring-2 focus:ring-inset focus:ring-db-red/30 ${active ? "border-db-red text-db-red" : "border-transparent text-slate-500 hover:text-slate-900"}`}>
+      <Icon className="h-4 w-4" aria-hidden="true" />
+      {children}
+    </button>
+  );
+}
+
+function Notice() {
+  return (
+    <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold leading-5 text-amber-950">
+      <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+      Kurs, Anbieter, Kosten, Termin, Verfügbarkeit und Anerkennung müssen direkt bei einer offiziellen Quelle geprüft werden.
+    </div>
+  );
+}
+
+function normalizeCourse(course) {
+  return {
+    title: String(course?.title || "Unbenannter Demo-Eintrag").slice(0, 180),
+    provider: String(course?.provider || "Anbieter nicht verifiziert").slice(0, 140),
+    description: sanitizeDemoText(course?.desc || course?.description || "Keine Beschreibung hinterlegt."),
+    requirements: sanitizeDemoText(course?.requirements || course?.requirement || ""),
+  };
+}
+
+function sanitizeDemoText(value) {
+  return String(value)
+    .replace(/offizielles angebot/gi, "ungeprüfter Demo-Eintrag")
+    .replace(/offiziell anerkannt/gi, "laut Demo-Datensatz anerkannt")
+    .replace(/anerkannter abschluss/gi, "im Demo-Datensatz behaupteter Abschluss")
+    .slice(0, 1_500);
+}
+
+function getVerifiedCourseUrl(value) {
+  try {
+    const url = new URL(String(value || ""));
+    return url.protocol === "https:" ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
+function safeFileName(value) {
+  return value.replace(/[^a-zA-Z0-9äöüÄÖÜß-]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 80) || "Lernnotiz";
 }

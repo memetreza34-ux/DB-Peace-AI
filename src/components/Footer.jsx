@@ -1,72 +1,38 @@
 import React from "react";
-import { HeartHandshake, BarChart3, Info, ShieldCheck } from "lucide-react";
+import { BarChart3, FlaskConical, HeartHandshake, Info, ShieldCheck } from "lucide-react";
 
 export function Footer({ onNavigate, onToggleHR }) {
   return (
-    <footer className="mt-16 border-t border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark py-8 text-xs font-semibold text-db-rail dark:text-white/60">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Left: Brand & Disclaimer */}
+    <footer className="mt-16 border-t border-db-dark/10 bg-white py-8 text-xs font-semibold text-db-rail dark:border-white/10 dark:bg-db-dark dark:text-white/60">
+      <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6">
+        <div className="flex flex-col items-center justify-between gap-5 lg:flex-row">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-db-red text-white">
-              <HeartHandshake className="h-5 w-5" />
-            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-db-red text-white"><HeartHandshake className="h-5 w-5" aria-hidden="true" /></div>
             <div>
-              <div className="font-extrabold text-db-dark dark:text-white">DB Peace AI — Lokaler Innovationsprototyp</div>
-              <div className="text-db-rail/70 dark:text-white/40">Nicht offizielle Anwendung der Deutsche Bahn AG.</div>
+              <p className="font-black text-db-dark dark:text-white">DB Peace AI · lokaler Innovationsprototyp</p>
+              <p className="mt-0.5 text-db-rail/70 dark:text-white/40">Keine offizielle Anwendung der Deutschen Bahn AG.</p>
             </div>
           </div>
 
-          {/* Core Safety Statement */}
-          <div className="rounded-xl bg-db-warm dark:bg-db-dark/50 px-4 py-2 text-center text-xs font-bold text-db-dark dark:text-white border border-db-dark/5 dark:border-white/5">
-            🛡️ <span className="text-db-red font-black">„Menschen entscheiden, nicht die KI.“</span> — Keine Rechts- oder Medizinberatung.
-          </div>
+          <div className="rounded-xl border border-db-dark/5 bg-db-warm px-4 py-2 text-center text-xs font-bold text-db-dark dark:border-white/5 dark:bg-white/5 dark:text-white">Menschen entscheiden, nicht die KI · keine Rechts-, Medizin- oder Krisenberatung</div>
 
-          {/* Quick Access Links */}
-          <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-db-rail dark:text-white/60">
-            <button
-              type="button"
-              onClick={() => onNavigate("analytics")}
-              className="flex items-center gap-1.5 hover:text-db-red transition"
-            >
-              <BarChart3 className="h-3.5 w-3.5" />
-              <span>Analytics</span>
-            </button>
-            <span>•</span>
-            <button
-              type="button"
-              onClick={() => onNavigate("project")}
-              className="flex items-center gap-1.5 hover:text-db-red transition"
-            >
-              <Info className="h-3.5 w-3.5" />
-              <span>Projekt-Pitch</span>
-            </button>
-            <span>•</span>
-            <button
-              type="button"
-              onClick={() => onNavigate("privacy")}
-              className="flex items-center gap-1.5 hover:text-db-red transition"
-            >
-              <ShieldCheck className="h-3.5 w-3.5 text-green-600" />
-              <span>Datenschutz & Compliance</span>
-            </button>
-            {onToggleHR && (
-              <>
-                <span>•</span>
-                <button
-                  type="button"
-                  onClick={onToggleHR}
-                  className="flex items-center gap-1.5 text-purple-600 hover:text-purple-800 transition"
-                  title="Simuliert die HR-Ansicht"
-                >
-                  <ShieldCheck className="h-3.5 w-3.5" />
-                  <span>HR-Dashboard Simulation</span>
-                </button>
-              </>
-            )}
-          </div>
+          <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-bold" aria-label="Weitere Bereiche">
+            <FooterButton onClick={() => onNavigate("analytics")} icon={BarChart3}>Szenario-Rechner</FooterButton>
+            <FooterButton onClick={() => onNavigate("project")} icon={Info}>Projekt</FooterButton>
+            <FooterButton onClick={() => onNavigate("privacy")} icon={ShieldCheck}>Datenschutzstatus</FooterButton>
+            {onToggleHR && <FooterButton onClick={onToggleHR} icon={FlaskConical} className="text-violet-700 dark:text-violet-300" title="Öffnet ausschließlich eine Ansicht mit erfundenen Beispieldaten">HR-Demo</FooterButton>}
+          </nav>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterButton({ children, className = "", icon: Icon, onClick, title }) {
+  return (
+    <button type="button" onClick={onClick} title={title} className={`flex items-center gap-1.5 rounded px-1 py-1 transition hover:text-db-red focus:outline-none focus:ring-2 focus:ring-db-red/30 ${className}`}>
+      <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+      {children}
+    </button>
   );
 }

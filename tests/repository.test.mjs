@@ -1,0 +1,322 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import test from "node:test";
+import {
+  mockTicketsData,
+  resetTickets,
+  updateTickets,
+} from "../src/data/mockTickets.js";
+
+const root = path.resolve(import.meta.dirname, "..");
+
+function read(relativePath) {
+  return fs.readFileSync(path.join(root, relativePath), "utf8");
+}
+
+function json(relativePath) {
+  return JSON.parse(read(relativePath));
+}
+
+test("package.json und Lockfile sind synchron", () => {
+  const packageJson = json("package.json");
+  const packageLock = json("package-lock.json");
+  const lockRoot = packageLock.packages[""];
+
+  assert.equal(packageLock.version, packageJson.version);
+  assert.equal(lockRoot.version, packageJson.version);
+  assert.deepEqual(lockRoot.dependencies || {}, packageJson.dependencies || {});
+  assert.deepEqual(lockRoot.devDependencies || {}, packageJson.devDependencies || {});
+  assert.equal(packageJson.scripts.check, "npm run verify && npm test && npm run build");
+});
+
+test("dokumentierte API-Routen sind implementiert und verwendet", () => {
+  const server = read("server.js");
+  const readme = read("README.md");
+  const report = read("src/components/AISmartReport.jsx");
+  const quiz = read("src/components/QuizWidget.jsx");
+
+  for (const route of ["/api/health", "/api/chat/status", "/api/chat", "/api/report/extract", "/api/quiz"]) {
+    assert.match(server, new RegExp(route.replaceAll("/", "\\/")));
+  }
+  assert.match(readme, /\/api\/report\/extract/);
+  assert.match(report, /\/api\/report\/extract/);
+  assert.match(quiz, /\/api\/quiz/);
+});
+
+test("API-Proxy enthält die erwarteten Schutzmaßnahmen", () => {
+  const server = read("server.js");
+  const quiz = read("src/components/QuizWidget.jsx");
+
+  assert.match(server, /unsupported_media_type/);
+  assert.match(server, /MAX_BODY_BYTES/);
+  assert.match(server, /AI_TIMEOUT_MS/);
+  assert.match(server, /withTimeout/);
+  assert.match(server, /upstream_timeout/);
+  assert.match(server, /Retry-After/);
+  assert.match(server, /Cross-Origin-Resource-Policy/);
+  assert.match(server, /normalizeBoolean/);
+  assert.match(server, /server\.requestTimeout/);
+  assert.match(server, /process\.once\("SIGTERM"/);
+  assert.match(server, /ALLOWED_BROWSER_ORIGINS/);
+  assert.match(server, /sec-fetch-site/);
+  assert.match(server, /cross_site_request_blocked/);
+  assert.match(server, /origin_not_allowed/);
+  assert.match(server, /\^application\\\/json/);
+  assert.match(server, /req\.method === "POST" && url\.pathname === "\/api\/quiz"/);
+  assert.match(quiz, /method:\s*"POST"/);
+  assert.match(quiz, /"Content-Type":\s*"application\/json"/);
+  assert.match(quiz, /body:\s*"\{\}"/);
+});
+
+test("KI-Status unterscheidet Konfiguration von erfolgreicher Verbindung", () => {
+  const server = read("server.js");
+  const chat = read("src/components/FloatingChatWidget.jsx");
+
+  assert.match(server, /configured:\s*Boolean/);
+  assert.doesNotMatch(server, /connected:\s*Boolean/);
+  assert.match(chat, /data\.configured\s*\?\s*"configured"/);
+  assert.match(chat, /Gemini-Antwort erhalten/);
+  assert.match(chat, /Verbindung noch nicht geprüft/);
+});
+
+test("KI-Quiz bleibt bei allgemeinen Sicherheits- und Orientierungsfragen", () => {
+  const server = read("server.js");
+  const prohibitedTopic = ["Rechte", "in", "der", "Ausbildung"].join(" ");
+
+  assert.match(server, /Themen ausschließlich: Eigenschutz bei Konflikten/);
+  assert.match(server, /keine Frage, deren richtige Antwort einen konkreten Rechtsanspruch/);
+  assert.doesNotMatch(server, new RegExp(prohibitedTopic, "i"));
+});
+
+test("alle lokalen JavaScript-Importe können aufgelöst werden", () => {
+  const sourceFiles = collectFiles("src", /\.(?:js|jsx|mjs)$/);
+  sourceFiles.push(path.join(root, "vite.config.js"));
+
+  for (const filePath of sourceFiles) {
+    const content = fs.readFileSync(filePath, "utf8");
+    for (const specifier of localImportSpecifiers(content)) {
+      assert.ok(resolveImport(filePath, specifier), `${path.relative(root, filePath)}: ${specifier} fehlt`);
+    }
+  }
+});
+
+test("alle JavaScript-Laufzeitdateien unter src sind vom Einstiegspunkt erreichbar", () => {
+  const runtimeFiles = collectFiles("src", /\.(?:js|jsx|mjs)$/).map((file) => path.resolve(file));
+  const reachable = collectReachableRuntimeFiles(path.join(root, "src/main.jsx"));
+  const unreachable = runtimeFiles
+    .filter((file) => !reachable.has(file))
+    .map((file) => path.relative(root, file))
+    .sort();
+
+  assert.deepEqual(unreachable, [], `Nicht erreichbare Laufzeitdateien: ${unreachable.join(", ")}`);
+});
+
+test("kritische Dialoge nutzen die gemeinsame Fokus- und Escape-Steuerung", () => {
+  const modalFiles = [
+    "src/components/EmergencyModal.jsx",
+    "src/components/SSOLoginModal.jsx",
+    "src/components/BildungsurlaubModal.jsx",
+    "src/components/CourseDetailModal.jsx",
+    "src/components/GlobalSearch.jsx",
+  ];
+
+  assert.ok(fs.existsSync(path.join(root, "src/hooks/useModalDialog.js")));
+  for (const file of modalFiles) {
+    const content = read(file);
+    assert.match(content, /useModalDialog/);
+    assert.match(content, /aria-modal="true"/);
+  }
+});
+
+test("KI-Oberflächen brechen Requests beim Verlassen oder Zurücksetzen ab", () => {
+  const smartReport = read("src/components/AISmartReport.jsx");
+  const chat = read("src/components/FloatingChatWidget.jsx");
+  const quiz = read("src/components/QuizWidget.jsx");
+
+  assert.match(smartReport, /isMountedRef/);
+  assert.match(smartReport, /activeControllerRef\.current\?\.abort/);
+  assert.match(chat, /requestGenerationRef/);
+  assert.match(chat, /activeRequestRef\.current\?\.abort/);
+  assert.match(quiz, /activeControllerRef\.current\?\.abort/);
+});
+
+test("bewegte Hauptoberflächen respektieren reduzierte Bewegung", () => {
+  assert.match(read("src/App.jsx"), /useReducedMotion/);
+  assert.match(read("src/components/DashboardHome.jsx"), /useReducedMotion/);
+  assert.match(read("src/components/FloatingChatWidget.jsx"), /useReducedMotion/);
+});
+
+test("Produktions-Fehleransicht zeigt technische Details nur in Entwicklung", () => {
+  const main = read("src/main.jsx");
+  assert.match(main, /import\.meta\.env\.DEV/);
+  assert.match(main, /showTechnicalDetails/);
+});
+
+test("Rechtsdaten bestehen nur aus kuratierten amtlichen Verweisen", () => {
+  const laws = json("src/data/lawsData.json");
+  assert.match(String(laws.lastChecked || ""), /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(Object.hasOwn(laws, "dbRichtlinien"), false);
+  assert.ok(Array.isArray(laws.bundesgesetze) && laws.bundesgesetze.length >= 8 && laws.bundesgesetze.length <= 20);
+
+  for (const law of laws.bundesgesetze) {
+    assert.ok(String(law.id || "").trim());
+    assert.ok(String(law.officialText || "").trim());
+    assert.ok(String(law.translation || "").trim());
+    assert.ok(String(law.actionTip || "").trim());
+    assert.match(String(law.sourceUrl || ""), /^https:\/\/www\.gesetze-im-internet\.de\//);
+  }
+  assert.equal(fs.existsSync(path.join(root, "src/data/generate_laws.py")), false);
+});
+
+test("Lernkatalog enthält nur kleine fiktive Demo-Datensätze", () => {
+  const courses = json("src/data/coursesData.json");
+  const allCourses = Object.values(courses).flat();
+
+  assert.ok(allCourses.length > 0 && allCourses.length <= 12);
+  assert.deepEqual(Object.keys(courses).sort(), ["online", "praesenz", "zertifikat"]);
+  for (const course of allCourses) {
+    assert.match(String(course.provider || ""), /^Fiktiv/i);
+    assert.match(String(course.title || ""), /Demo/i);
+    assert.ok(!course.link || /^https:\/\//.test(course.link));
+  }
+});
+
+test("Analytics ist als Szenario und nicht als reale Auswertung gekennzeichnet", () => {
+  const analytics = read("src/components/DashboardAnalytics.jsx");
+  const misleadingPatterns = [
+    new RegExp(["anonymisierte", "Meldungen"].join("\\s+"), "i"),
+    new RegExp(["Live", "Daten"].join("-"), "i"),
+    /echte Fallzahl/i,
+  ];
+
+  assert.match(analytics, /Szenario-Rechner/);
+  assert.match(analytics, /Erfundene Annahmen/);
+  for (const pattern of misleadingPatterns) assert.doesNotMatch(analytics, pattern);
+});
+
+test("PWA-Manifest verweist auf vorhandene lokale Ressourcen", () => {
+  const manifest = json("public/manifest.json");
+  assert.equal(manifest.start_url, "/");
+  assert.equal(manifest.scope, "/");
+  assert.ok(["standalone", "minimal-ui", "browser"].includes(manifest.display));
+  assert.ok(Array.isArray(manifest.icons) && manifest.icons.length > 0);
+
+  for (const icon of manifest.icons) {
+    assert.ok(icon.src.startsWith("/"));
+    assert.ok(fs.existsSync(path.join(root, "public", icon.src.slice(1))), `Manifest-Ressource fehlt: ${icon.src}`);
+  }
+});
+
+test("Service Worker läuft nur im Produktionsbuild, cachet keine API und löscht nur eigene Caches", () => {
+  const main = read("src/main.jsx");
+  const serviceWorker = read("public/sw.js");
+
+  assert.match(main, /import\.meta\.env\.PROD/);
+  assert.match(main, /serviceWorker\.register\("\/sw\.js"\)/);
+  assert.match(serviceWorker, /url\.pathname\.startsWith\("\/api\/"\)/);
+  assert.match(serviceWorker, /no-store/i);
+  assert.match(serviceWorker, /CACHE_PREFIX\s*=\s*"db-peace-ai-"/);
+  assert.match(serviceWorker, /name\.startsWith\(CACHE_PREFIX\)/);
+});
+
+test("lokaler PIN-Sichtschutz besitzt keinen In-App-Reset und drosselt über Reloads hinweg", () => {
+  const lock = read("src/components/AppLock.jsx");
+  const resetPhrase = ["Lokale PIN", "vergessen oder zurücksetzen"].join(" ");
+
+  assert.match(lock, /THROTTLE_STORAGE_KEY/);
+  assert.match(lock, /readThrottle/);
+  assert.match(lock, /writeThrottle/);
+  assert.match(lock, /clearThrottle/);
+  assert.doesNotMatch(lock, new RegExp(resetPhrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  assert.doesNotMatch(lock, /safeStorageRemove\("local",\s*LOCK_STORAGE_KEY\)/);
+});
+
+test("statisches Training vergibt weder Punkte noch Prozentwerte", () => {
+  const training = read("src/components/TrainingMode.jsx");
+
+  assert.match(training, /Keine Punktzahl und keine Kompetenzbewertung/);
+  assert.doesNotMatch(training, /\bpoints\s*:/);
+  assert.doesNotMatch(training, /\bpercentage\b/);
+  assert.doesNotMatch(training, /Orientierungswert/);
+  assert.doesNotMatch(training, /<main(?:\s|>)/);
+});
+
+test("Demo-Postfach lässt sich auf unveränderte Ausgangsdaten zurücksetzen", () => {
+  const initialIds = mockTicketsData.map((ticket) => ticket.id);
+  updateTickets([{ id: "TEMP", messages: [] }]);
+  assert.deepEqual(mockTicketsData.map((ticket) => ticket.id), ["TEMP"]);
+
+  resetTickets();
+  assert.deepEqual(mockTicketsData.map((ticket) => ticket.id), initialIds);
+  assert.ok(mockTicketsData.every((ticket) => ticket.id.startsWith("DEMO-")));
+});
+
+test("Entwicklungsstarter kann nach SIGTERM zwangsweise beenden", () => {
+  const devScript = read("scripts/dev.js");
+  assert.doesNotMatch(devScript, /child\.killed/);
+  assert.match(devScript, /SIGKILL/);
+  assert.match(devScript, /taskkill/);
+});
+
+test("historische Backup-Verzeichnisse sind nicht Teil des aktiven Repositorys", () => {
+  const names = fs.readdirSync(root);
+  assert.equal(names.some((name) => name.startsWith("backup-before-")), false);
+});
+
+function collectFiles(relativeDirectory, pattern) {
+  const result = [];
+  const directory = path.join(root, relativeDirectory);
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) result.push(...collectFiles(path.relative(root, entryPath), pattern));
+    else if (pattern.test(entry.name)) result.push(entryPath);
+  }
+  return result;
+}
+
+function collectReachableRuntimeFiles(entryFile) {
+  const reachable = new Set();
+  const queue = [path.resolve(entryFile)];
+
+  while (queue.length) {
+    const filePath = queue.shift();
+    if (reachable.has(filePath) || !fs.existsSync(filePath)) continue;
+    reachable.add(filePath);
+
+    const content = fs.readFileSync(filePath, "utf8");
+    for (const specifier of localImportSpecifiers(content)) {
+      const resolved = resolveImport(filePath, specifier);
+      if (resolved && /\.(?:js|jsx|mjs)$/.test(resolved)) queue.push(path.resolve(resolved));
+    }
+  }
+
+  return reachable;
+}
+
+function localImportSpecifiers(content) {
+  const specifiers = [];
+  const patterns = [
+    /(?:import|export)\s+(?:[^"']*?\s+from\s+)?["'](\.{1,2}\/[^"']+)["']/g,
+    /import\(\s*["'](\.{1,2}\/[^"']+)["']\s*\)/g,
+  ];
+  for (const pattern of patterns) {
+    for (const match of content.matchAll(pattern)) specifiers.push(match[1]);
+  }
+  return specifiers;
+}
+
+function resolveImport(importer, specifier) {
+  const clean = specifier.split(/[?#]/, 1)[0];
+  const base = path.resolve(path.dirname(importer), clean);
+  return [
+    base,
+    `${base}.js`,
+    `${base}.jsx`,
+    `${base}.mjs`,
+    `${base}.json`,
+    path.join(base, "index.js"),
+    path.join(base, "index.jsx"),
+    path.join(base, "index.mjs"),
+  ].find((candidate) => fs.existsSync(candidate));
+}

@@ -1,174 +1,196 @@
 # DB Peace AI
-### Der digitale Azubi-Begleiter gegen Mobbing, Hass und Gewalt
+## Ein digitaler Prototyp zur Vorbereitung sicherer nächster Schritte
 
-**Einreichung für:** Wettbewerb „Bahn-Azubis gegen Hass und Gewalt" – Deutsche Bahn & EVG
-**Eingereicht von:** Mohammad Reza Rahimi · Elektroniker für Betriebstechnik (EBT) · 2. Lehrjahr · [Standort]
-**Kontakt:** [E-Mail / Telefon]
-**Status:** Funktionierender Prototyp – **keine reine Idee, sondern bereits gebaut und bedienbar.**
-
----
-
-## 1. In einem Satz
-
-**DB Peace AI ist eine App, die Azubis genau in dem Moment begleitet, in dem sie Mobbing, Hass, Gewalt oder Diskriminierung erleben – sie hilft beim Sortieren, beim sachlichen Festhalten von Vorfällen, beim Vorbereiten einer Meldung und führt direkt zu den echten Hilfe- und Meldestellen der DB. Niedrigschwellig, anonym und jederzeit auf dem Handy.**
-
-> Das Versprechen der App: *„Die App sendet nichts automatisch. Menschen entscheiden, nicht die KI."*
+**Mögliche Einreichung für:** „Azubis gegen Hass und Gewalt“  
+**Eingereicht von:** `[Name] · [Ausbildungsberuf] · [Standort / Ausbildungsjahr]`  
+**Status:** lokal lauffähiger Innovations- und Demonstrationsprototyp; keine offizielle DB-Anwendung
 
 ---
 
-## 2. Das Problem
+## 1. Die Idee in einem Satz
 
-Mobbing, Hass und Gewalt machen vor der Ausbildung nicht halt. Gerade Azubis sind besonders verletzlich:
+**DB Peace AI hilft Auszubildenden, belastende Situationen zu sortieren, Beobachtungen sachlich festzuhalten, einen Meldungsentwurf vorzubereiten und passende reale Hilfewege zu finden – ohne selbst eine Meldestelle oder menschliche Beratung zu ersetzen.**
 
-- **Sie sind neu** – kennen die Strukturen, Ansprechpartner und Meldewege oft noch nicht.
-- **Sie sind abhängig** – aus Angst um die Übernahme oder das Verhältnis zum Team trauen sich viele nicht, etwas zu sagen.
-- **Sie stehen unter Druck** – Scham und Selbstzweifel („Bilde ich mir das nur ein?") führen dazu, dass Vorfälle verschwiegen werden.
-- **Sie kennen ihre Rechte nicht** – kaum ein Azubi weiß, dass eine Beschwerde ihm gesetzlich *keinen* Nachteil bringen darf (§ 16 AGG). Genau diese Angst hält viele vom Reden ab.
-- **Beweise fehlen** – wenn doch jemand reden will, sind Datum, Uhrzeit und Verlauf längst verschwommen. Ohne sachliche Doku verläuft eine Beschwerde oft im Sand.
-
-**Die Folge:** Vorfälle bleiben unsichtbar, Betroffene bleiben allein, manche brechen die Ausbildung ab – und das Unternehmen erfährt erst spät oder gar nicht von einem Problem.
-
-> 💡 *Für die Einreichung:* Hier 1–2 belegbare Zahlen ergänzen (z. B. DGB-Ausbildungsreport zu Konflikten in der Ausbildung). Keine erfundenen Zahlen verwenden.
+> Leitprinzip: **Die App bereitet vor. Menschen prüfen und entscheiden.**
 
 ---
 
-## 3. Die Idee
+## 2. Welches Problem soll der Prototyp lösen?
 
-Eine App, die nicht belehrt, sondern **begleitet** – in der Sprache der Azubis, auf dem Handy, sofort. Sie beantwortet die vier Fragen, die in so einem Moment wirklich zählen:
+Wer neu in der Ausbildung ist, kennt Zuständigkeiten und interne Wege häufig noch nicht. In einer belastenden Situation kommen weitere Hürden hinzu:
 
-| Frage der/des Betroffenen | Antwort der App |
-|---|---|
-| „Was ist hier los und was kann ich tun?" | **Hilfe** – reden, sortieren, schnelle Orientierung + echte Notfallnummern |
-| „Wie halte ich fest, was passiert ist?" | **Festhalten** – Datum, Uhrzeit, Ort, Verlauf – sachlich, anonym, als **PDF** exportierbar |
-| „Wie melde ich das – und an wen?" | **Melden** – sachlicher Entwurf + direkte Wege zu MUT-Team, Compliance & JAV |
-| „Welche Rechte habe ich überhaupt?" | **Regeln & Rechte** – DB-Vereinbarungen + Gesetze in einfacher Sprache |
+- Der Ablauf ist emotional und später schwer exakt zu erinnern.
+- Beobachtungen, Gefühle und Vermutungen vermischen sich.
+- Betroffene wissen nicht, welche Angaben für ein Gespräch hilfreich sind.
+- Es ist unklar, welche Stelle zuständig ist und wie mit Vertraulichkeit umgegangen wird.
+- Bei akuter Gefahr darf eine digitale Dokumentation nicht vom Eigenschutz oder von realer Hilfe ablenken.
 
-Im Zentrum steht der **KI-Azubi-Begleiter**: ein einfacher Chat, dem man schreiben kann, was los ist – er hört zu, ordnet ein und schlägt den nächsten Schritt vor.
+Der Prototyp setzt deshalb **vor** einer möglichen Meldung an: Er unterstützt beim Strukturieren und beim Vorbereiten eines selbstbestimmten nächsten Schritts.
 
----
-
-## 4. Wie es funktioniert (Features – alles bereits gebaut)
-
-**🆘 Hilfe – „Was ist los?"**
-Leitet über konkrete Situationen (*beleidigt, gemobbt, bedroht, diskriminiert*) in Sekunden zum nächsten Schritt – mit dauerhaft sichtbaren **echten Notfallnummern**.
-
-**📞 Echte Anlaufstellen (der entscheidende Unterschied)**
-Die App erfindet keine Hilfe, sondern **führt zu den echten Stellen** – alle als antippbare Telefonnummern:
-- **Notruf 112 / Polizei 110** bei akuter Gefahr
-- **MUT-Team der DB** (0800 100 99 66, anonym), **Compliance-Meldestelle**, **JAV / Vertrauensperson**
-- **Telefonseelsorge** (0800 111 0 111), **Nummer gegen Kummer** (116 111)
-
-**📝 Festhalten – Vorfälle sachlich dokumentieren**
-Strukturierte Einträge (Datum, Uhrzeit, Ort, Verlauf) – **ohne echte Namen.** **Als PDF speichern** → ausdrucken oder abgeben. Aus einer Notiz wird ein echtes, datiertes Dokument.
-
-**📣 Melden – „Wohin mit deiner Meldung?"**
-Geführter Entwurf (anonym / persönlich / Entwurf), als PDF exportierbar – und ein klarer Schritt **„Wohin damit?"**, der direkt die echten DB-Meldewege zeigt. **Es wird nichts automatisch versendet.**
-
-**🤖 KI-Azubi-Begleiter (das Herzstück)**
-Erkennt die Situation automatisch (Mobbing, Diskriminierung, Gefahr, Krise, Stress…) und reagiert passend. Bei akuter Gefahr/Krise tritt er bewusst zurück und nennt **konkrete Notnummern**. Gibt keine Rechts- oder Finanzberatung – verweist auf die richtige Stelle. **Funktioniert auch ohne KI-Anbindung im Demo-Modus** – sofort vorführbar.
-
-**🎓 Lernen – echte Präventionskurse**
-**10 echte Bildungs- und Präventionsangebote** mit Direktlinks: EVG-Jugend (EVA Akademie), DGB-Bildungswerk, Bundeszentrale für politische Bildung, Antidiskriminierungsstelle des Bundes, Amadeu Antonio Stiftung, Gesicht Zeigen!, HateAid, Weisser Ring – plus DB Lernwelt und der Wettbewerb selbst.
-
-**⚖️ Regeln & deine Rechte**
-DB-Konzernbetriebsvereinbarung & Verhaltenskodex, verständlich zusammengefasst – plus deine **gesetzlichen Rechte** mit direkten Links zum Gesetzestext: § 13 AGG (Beschwerderecht), § 12 AGG (Schutzpflicht der DB), **§ 16 AGG (kein Nachteil fürs Beschweren)**, § 4 ArbSchG, § 75 BetrVG, JArbSchG (Schutz unter 18).
-
-**🔒 Datenschutz & Verantwortung**
-Daten bleiben lokal auf dem Gerät, anonyme Nutzung, keine Tracker, nichts wird automatisch gesendet. Impressum, Datenschutz, Barrierefreiheit angelegt.
+Für eine Einreichung sollten hier höchstens belegbare Zahlen aus einer aktuellen, zitierfähigen Quelle ergänzt werden. Keine Schätzungen oder erfundenen Unternehmensdaten verwenden.
 
 ---
 
-## 5. Was DB Peace AI besonders macht
+## 3. Der aktuelle Kernweg
 
-- **Brücke statt Konkurrenz:** Die DB hat bereits Anlaufstellen (MUT, Compliance, JAV). Das Problem ist nicht fehlende Hilfe – sondern dass Azubis sie **nicht kennen oder sich nicht trauen.** Diese App ist der einfachste erste Schritt dorthin.
-- **Niedrigschwellig & im richtigen Moment:** 24/7 auf dem Handy, genau dann, wenn es passiert.
-- **Anonym & verantwortungsvoll:** *KI unterstützt, Menschen entscheiden.* Spielt sich nie als Therapeut oder Anwalt auf.
-- **Aus Azubi-Sicht gebaut:** in der richtigen Sprache, von jemandem, der die Perspektive kennt.
-- **Sofort erlebbar:** kein Setup nötig, läuft im Demo-Modus.
+### Schritt 1: Situation einordnen
 
----
+Ein KI-Begleiter kann eine kurze Orientierung geben. Er soll keine Rechts-, Personal-, Medizin- oder Krisenentscheidung treffen. Ist Gemini nicht eingerichtet oder nicht erreichbar, zeigt die App einen gekennzeichneten lokalen Fallback.
 
-## 6. Der Nutzen für die Deutsche Bahn
+### Schritt 2: Beobachtungen festhalten
 
-| Für … | Nutzen |
-|---|---|
-| **Azubis** | Fühlen sich gesehen, kennen ihre Rechte und werden handlungsfähig – statt allein. |
-| **Vertrauenspersonen / JAV / Ausbilder:innen** | Bekommen sachlich dokumentierte Vorfälle (PDF) statt vager Schilderungen – schneller und fairer klärbar. |
-| **Die DB als Arbeitgeber** | Macht „Gegen Hass und Gewalt" vom Slogan zum gelebten Werkzeug, schützt junge Menschen, beugt Eskalation und Abbrüchen vor – ein echtes Plus für die Arbeitgebermarke. |
-| **Prävention** | Anonyme, aggregierte Muster können (datenschutzkonform) als Frühwarnsignal dienen – nicht zur Überwachung. |
+Ein privater Sitzungsentwurf hilft, Datum, Zeit, Kontext, beobachtbare Aussagen und mögliche Zeugen zu ordnen. Der aktuelle MVP speichert daraus keinen produktiven Fall und überträgt keine Anhänge.
 
----
+### Schritt 3: Meldungsentwurf vorbereiten
 
-## 7. Business Case – was die App der DB sparen kann
+Ein geführtes Formular erzeugt eine Vorschau, die kopiert oder als PDF exportiert werden kann. **Es wird nichts automatisch an DB, HR, JAV, Betriebsrat oder andere Stellen versendet.**
 
-*Konservativ gerechnet, nur im Azubi-Bereich (~11.000 Azubis & dual Studierende). Annahmen aus BIBB-/DGB-Studien und der KPMG-Konfliktkostenstudie – vor Einreichung mit Quelle belegen.*
+### Schritt 4: Reale Hilfe finden
 
-Drei Hebel: **(1) verhinderte Ausbildungsabbrüche** (ein Abbruch kostet den Betrieb ~8.000–15.000 €), **(2) weniger Fehltage** (Mobbing macht messbar krank, ~250–350 €/Tag), **(3) vermiedene Eskalationskosten** (HR-Zeit, Mediation, Rechtsfälle).
-
-| Szenario | Einsparung pro Jahr |
-|---|---|
-| 🔻 **Minimum (sehr konservativ)** | **~125.000 €** |
-| ⚖️ **Realistisch** | **~600.000 – 1.000.000 €** |
-| 🔺 **Optimistisch** | **~2.000.000 €** |
-
-> **Pitch-Satz:** *„Selbst wenn die App nur rund 10 Abbrüche und ein paar hundert Fehltage im Jahr verhindert, spart sie über 100.000 € jährlich – realistisch eher das Fünffache. Und sie kostet fast nichts, weil sie schon existiert."*
-
-**Vision (Konzern):** Ausgeweitet auf alle ~220.000 Beschäftigten wären die Hebel ein Vielfaches – Konfliktkosten binden in Großunternehmen laut KPMG 10–15 % der Führungszeit. Dazu nicht bezifferbar: Arbeitgebermarke, Übernahmequote, vermiedene Negativschlagzeilen.
+Der Kontaktbereich enthält geprüfte externe Hilfsnummern und erklärt, wie bestätigte interne Ansprechstellen über Intranet, Telefonbuch oder bekannte betriebliche Wege gefunden werden können. Interne Kontakte werden nicht erfunden.
 
 ---
 
-## 8. Umsetzung & Machbarkeit
+## 4. Was bereits gebaut ist
 
-**Was es schon gibt (heute):**
-- Voll funktionsfähiger Prototyp (React + Vite, Node.js-Backend als KI-Proxy), Code auf GitHub.
-- Alle Funktionen gebaut und bedienbar – inkl. KI-Begleiter (Demo-Modus), PDF-Export, echte Kontakte & Kurse.
-- Mobile-first Design im echten DB-Look (Verkehrsrot, klare Typo, Icons).
-
-**Schritte zur echten Einführung:**
-1. **Pilot** mit einer Ausbildungsgruppe / einem Standort.
-2. **Anbindung der echten Meldewege** (MUT, Compliance, JAV) statt Demo-Vorschau.
-3. **Datenschutz & Security** nach DB-Standard (DSGVO, EU-Hosting der KI, Rollen-/Rechtekonzept).
-4. **Begleitung durch Profis** – Vertrauenspersonen und Beratungsstellen einbinden.
-5. **Rollout & Schulung** in der Ausbildung.
-
-**Ehrlich:** Die App ersetzt keine Menschen und keine professionelle Hilfe. Sie ist die **Brücke** dorthin – sie senkt die Hürde, den ersten Schritt zu gehen.
-
----
-
-## 9. Warum ich
-
-**Mohammad Reza Rahimi**, Elektroniker für Betriebstechnik (EBT) im 2. Lehrjahr bei der Deutschen Bahn.
-
-Ich wollte schon immer einmal ein großes Projekt von **null** aufbauen – etwas anfangen und wirklich zu Ende bringen, statt nur mitzulaufen. Diese App habe ich **komplett allein** entwickelt, neben einer Ausbildung, die viel Zeit und Kraft kostet. Für mich war das auch ein Test: Wie viel schaffe ich, wenn ich mich einer echten Herausforderung stelle und sie als „Ein-Mann-Armee" durchziehe?
-
-Dass am Ende etwas herauskommt, das anderen Azubis in schweren Momenten wirklich helfen kann, macht es für mich doppelt wertvoll. Ich habe bewusst kein einfaches Thema gewählt, sondern eines, das zählt: dass niemand mit Hass, Gewalt oder Mobbing allein bleibt.
-
-Ich reiche keine Idee auf Papier ein, sondern etwas, das **läuft – allein gebaut.** Das zeigt: Ich meine es ernst, und ich kann umsetzen.
-
-*Einzeleinreichung (kein Team).*
+- responsive React-Oberfläche für Desktop und Mobilgeräte
+- lokale Sichtschutz-PIN ohne Speicherung des Klartext-PINs
+- Gemini-Chat über einen lokalen Node.js-Proxy
+- KI-gestützte Strukturierung eines Meldungsentwurfs
+- Fünf-Schritte-Formular mit Validierung, Kopierfunktion und PDF-Export
+- temporäre Gedächtnisprotokolle und Stimmungseinträge für die aktuelle Sitzung
+- Quiz mit Gemini-Ausgabe und transparentem lokalen Fragenset als Fallback
+- lokale Szenario-Übung mit statischer, erklärter Bewertungslogik
+- Rechteorientierung mit Links zu gesetzlichen Primärquellen
+- geprüfte externe Hilfewege
+- klar gekennzeichnete Demo-Ansichten für HR, Analytics, Projektideen und Kurse
+- automatische Repository-Prüfung gegen irreführende Produktbehauptungen
+- GitHub-Actions-Workflow für Repository-Check und Production-Build
 
 ---
 
-## 10. Vision
+## 5. Was bewusst nicht vorgetäuscht wird
 
-DB Peace AI als fester Bestandteil der DB-Ausbildung: Jede:r Azubi weiß vom ersten Tag an, dass es eine App gibt, die im Notfall da ist und die Rechte kennt. Aus „Gegen Hass und Gewalt" als Haltung wird ein Werkzeug, das man in der Tasche hat. Langfristig: Ausweitung über die Ausbildung hinaus, Integration in bestehende DB-Strukturen, mehrsprachig.
+Der aktuelle Prototyp behauptet nicht:
+
+- eine Meldung sei offiziell oder anonym übermittelt worden
+- Daten seien produktiv verschlüsselt gespeichert
+- eine Anmeldung erfolge über echtes DB-SSO
+- ein Standort werde übertragen
+- Offline-Eingaben würden später synchronisiert
+- ein Kurs oder eine Bildungszeit-Freistellung sei anerkannt
+- ein PDF sei ein offizielles Zertifikat oder Personalnachweis
+- Demo-Fälle und Kennzahlen seien reale Unternehmensdaten
+
+Diese Ehrlichkeit ist ein Teil des Produktkonzepts: Gerade bei einem sensiblen Thema muss die Oberfläche klar zwischen **Orientierung**, **Entwurf**, **Demonstration** und **echtem Prozess** unterscheiden.
 
 ---
 
-## 11. Der Wunsch an die Jury
+## 6. Nutzen des Konzepts
 
-Gebt DB Peace AI die Chance auf einen **Pilot.** Lasst uns gemeinsam testen, ob diese App Azubis wirklich hilft – mit echten Meldewegen und der Begleitung von Profis. Das Fundament steht. Jetzt geht es darum, es in die Hände der zu bringen, für die es gebaut ist.
+### Für Auszubildende
 
-> **DB Peace AI – damit kein Azubi mit Hass und Gewalt allein bleibt.**
+- niedrigere Hürde, Beobachtungen strukturiert aufzuschreiben
+- klarere Trennung zwischen Tatsache, Gefühl und Vermutung
+- verständliche Vorbereitung auf ein Gespräch
+- schneller Hinweis auf Eigenschutz und reale Hilfe bei Gefahr
+
+### Für mögliche Ansprechstellen
+
+- besser vorbereitete, sachlichere Schilderungen
+- weniger Rückfragen zu Grunddaten wie Zeit, Ort und Ablauf
+- klare Erwartung: Die App entscheidet nichts und ersetzt keine zuständige Stelle
+
+### Für Prävention
+
+- Szenarien können sichere Reaktionsprinzipien verständlich üben
+- Hilfewege und Zuständigkeiten können sichtbarer gemacht werden
+- ein späterer Pilot könnte prüfen, ob der Ansatz tatsächlich Hürden senkt
+
+Diese Nutzenpunkte sind **Hypothesen für eine Evaluation**, keine bereits bewiesenen Unternehmensergebnisse.
 
 ---
 
-### Anhang / To-dos vor dem Einreichen
-- [x] Name, Ausbildungsberuf, Lehrjahr, persönlicher Grund eingetragen
-- [ ] **Standort** ergänzen (Header)
-- [ ] **Kontakt** (E-Mail / Telefon) ergänzen
-- [ ] 1–2 belegbare Zahlen zu Mobbing/Ausbildung mit Quelle (Abschnitt 2)
-- [ ] Business-Case-Annahmen kurz mit Quelle hinterlegen (Abschnitt 7)
-- [ ] Screenshots einfügen (Start, Hilfe, Festhalten+PDF, Melden, KI-Chat, Regeln & Rechte)
-- [ ] Format final wählen: PDF / Präsentation (PPTX) / Onepager
-- [ ] Einreichungstermin & -weg prüfen (DB-Wettbewerbsseite „Bahn-Azubis gegen Hass und Gewalt")
+## 7. Warum der Ansatz verantwortungsvoll ist
+
+- **Sicherheit vor Dokumentation:** Bei akuter Gefahr stehen Abstand, Notruf und reale Hilfe an erster Stelle.
+- **Keine automatische Entscheidung:** KI strukturiert und formuliert, Menschen bewerten.
+- **Datenminimierung:** Der Prototyp fordert keine Personalnummer und keine unnötigen Klarnamen an.
+- **Transparente Fallbacks:** Nutzende sehen, ob eine Antwort von Gemini oder aus lokaler Logik stammt.
+- **Keine erfundenen Integrationen:** SSO, Datenbank, Übermittlung, GPS und interne Kontakte werden nicht simuliert, als wären sie real.
+- **Technische Leitplanken:** API-Limits, Sicherheitsheader, kein API-Cache und automatische Prüfregeln sind eingebaut.
+
+---
+
+## 8. Technische Umsetzung
+
+- **Frontend:** React 19, Vite, Tailwind CSS, Framer Motion
+- **Lokaler API-Proxy:** Node.js-HTTP-Server
+- **KI:** Gemini über `@google/genai`
+- **Dokumente:** jsPDF
+- **PWA:** Manifest und Service Worker; API-Antworten werden nicht gecacht
+- **Qualität:** `npm run verify`, `npm run build`, kombinierter `npm run check` und GitHub Actions
+
+Der API-Schlüssel bleibt im lokalen Serverprozess. Der Server bindet standardmäßig an `127.0.0.1`.
+
+---
+
+## 9. Was für einen echten Pilotbetrieb fehlt
+
+Ein produktiver Pilot darf erst beginnen, wenn mindestens folgende Punkte geklärt und umgesetzt sind:
+
+1. verantwortliche Organisationseinheit und menschliches Bearbeitungsteam
+2. bestätigte interne Kontakte, Zuständigkeiten und Eskalationswege
+3. Datenschutz-Folgenabschätzung und Beteiligung von Datenschutz, Compliance, Betriebsrat und JAV
+4. echte Authentifizierung und serverseitige Rollen
+5. sichere Datenbank, Verschlüsselung, Anhänge, Audit-Logs und Löschfristen
+6. fachliche Prüfung aller Rechts-, Hilfe- und Kriseninhalte
+7. automatisierte Tests, Barrierefreiheitsprüfung und Browser-/Mobiltests
+8. Bedrohungsmodell, Penetrationstest, Monitoring und Incident Response
+9. zunächst ein Test mit synthetischen Daten und klaren Abbruchkriterien
+
+Die detaillierte Roadmap befindet sich in GitHub Issue #2.
+
+---
+
+## 10. Vorschlag für die nächste Entscheidung
+
+Nicht sofort „ausrollen“, sondern einen **fachlich begleiteten Konzept- und Usability-Test mit ausschließlich synthetischen Daten** durchführen.
+
+Dabei sollten insbesondere diese Fragen gemessen werden:
+
+- Verstehen Nutzende, dass kein Fall automatisch versendet wird?
+- Können sie Beobachtungen sachlicher strukturieren?
+- Finden sie in einer Gefahrensituation schneller den richtigen realen Hilfeweg?
+- Sind Demo, KI-Ausgabe und offizielle Prozesse klar voneinander getrennt?
+- Welche Funktionen sind tatsächlich hilfreich und welche sollten entfernt werden?
+
+Erst nach dieser Evaluation sollte entschieden werden, ob und in welcher Form ein sicherer Pilot sinnvoll ist.
+
+---
+
+## 11. Persönlicher Teil für die Einreichung
+
+`[Name]`, Auszubildende:r als `[Ausbildungsberuf]` am Standort `[Standort]`.
+
+`[In zwei bis vier eigenen Sätzen erklären: Warum ist das Thema wichtig? Welche konkrete Hürde soll die Idee senken? Keine realen Fälle oder Namen ohne Einwilligung nennen.]`
+
+Der besondere Beitrag besteht nicht darin, bereits eine fertige Meldestelle zu behaupten. Der Beitrag ist ein funktionsfähiger Prototyp, der zeigt, **wie eine sensible digitale Hilfe klar, vorsichtig und menschenzentriert gestaltet werden könnte.**
+
+---
+
+## 12. Abschluss
+
+> **DB Peace AI – Orientierung und Vorbereitung, damit der nächste reale Schritt leichter und sicherer wird.**
+
+---
+
+## Checkliste vor einer Einreichung
+
+- [ ] Name, Ausbildungsberuf und Standort ergänzen
+- [ ] persönlichen Beweggrund in eigenen Worten ergänzen
+- [ ] nur belegbare aktuelle Zahlen mit Quelle verwenden
+- [ ] Screenshots ausschließlich mit synthetischen Daten erstellen
+- [ ] deutlich zeigen: Entwurf, Demo und keine automatische Übermittlung
+- [ ] aktuellen CI- und Buildstatus dokumentieren
+- [ ] Vorgaben des Wettbewerbs zu Format, Länge, Marken und Datenschutz prüfen

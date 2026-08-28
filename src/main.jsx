@@ -1,5 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { MotionConfig } from "framer-motion";
 import App from "./App.jsx";
 import "./styles.css";
 
@@ -22,15 +23,16 @@ class AppErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
+      const showTechnicalDetails = import.meta.env.DEV && this.state.message;
       return (
-        <div style={{ minHeight: "100vh", padding: "32px", background: "#fff", color: "#1f2328" }}>
+        <div style={{ minHeight: "100vh", padding: "32px", background: "#fff", color: "#1f2328" }} role="alert">
           <h1 style={{ color: "#e2001a", fontSize: "40px", fontWeight: 900, margin: 0 }}>
             Die App konnte nicht vollständig geladen werden
           </h1>
           <p style={{ marginTop: "16px", fontSize: "18px", fontWeight: 700 }}>
-            React ist geladen, aber beim Rendern ist ein Fehler aufgetreten.
+            Beim Anzeigen der Oberfläche ist ein Fehler aufgetreten. Es wurde dadurch keine Meldung automatisch versendet.
           </p>
-          {this.state.message && (
+          {showTechnicalDetails && (
             <div
               style={{
                 marginTop: "16px",
@@ -43,7 +45,7 @@ class AppErrorBoundary extends React.Component {
                 whiteSpace: "pre-wrap",
               }}
             >
-              <div style={{ marginBottom: "12px" }}>Technische Fehlermeldung:</div>
+              <div style={{ marginBottom: "12px" }}>Technische Fehlermeldung nur im Entwicklungsmodus:</div>
               <div>{this.state.message}</div>
             </div>
           )}
@@ -62,7 +64,7 @@ class AppErrorBoundary extends React.Component {
               cursor: "pointer",
             }}
           >
-            Zur Übersicht zurück
+            App neu laden
           </button>
         </div>
       );
@@ -76,23 +78,39 @@ const root = document.getElementById("root");
 
 if (!root) {
   document.body.innerHTML =
-    '<div style="padding:32px;font-family:sans-serif;color:#1f2328"><h1 style="color:#e2001a">DB Peace AI</h1><p>Root-Element fehlt. Bitte index.html prüfen.</p></div>';
+    '<div style="padding:32px;font-family:sans-serif;color:#1f2328"><h1 style="color:#e2001a">DB Peace AI</h1><p>Die Anwendung konnte nicht gestartet werden.</p></div>';
 } else {
   createRoot(root).render(
     <React.StrictMode>
-      <AppErrorBoundary>
-        <App />
-      </AppErrorBoundary>
-    </React.StrictMode>
+      <MotionConfig reducedMotion="user">
+        <AppErrorBoundary>
+          <App />
+        </AppErrorBoundary>
+      </MotionConfig>
+    </React.StrictMode>,
   );
 }
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').then((registration) => {
-      console.log('DB Peace AI ServiceWorker registered with scope:', registration.scope);
-    }).catch((error) => {
-      console.log('ServiceWorker registration failed:', error);
+if ("serviceWorker" in navigator) {
+  if (import.meta.env.PROD) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").then((registration) => {
+        console.info("DB Peace AI Service Worker registriert:", registration.scope);
+      }).catch((error) => {
+        console.warn("Service-Worker-Registrierung fehlgeschlagen:", error);
+      });
     });
-  });
+  } else {
+    // Nur die Registrierung entfernen, die den Root-Bereich dieser App kontrolliert.
+    // Fremde Service Worker mit anderen Scopes derselben localhost-Origin bleiben unangetastet.
+    void navigator.serviceWorker.getRegistration("/")
+      .then((registration) => registration?.unregister())
+      .catch(() => undefined);
+
+    if ("caches" in window) {
+      void caches.keys()
+        .then((names) => Promise.all(names.filter((name) => name.startsWith("db-peace-ai-")).map((name) => caches.delete(name))))
+        .catch(() => undefined);
+    }
+  }
 }

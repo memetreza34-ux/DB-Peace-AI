@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  ArrowLeft,
   EyeOff,
+  HandHeart,
   HeartPulse,
   HelpCircle,
+  PhoneCall,
   Scale,
+  ShieldAlert,
   Siren,
   UsersRound,
-  HandHeart,
-  ArrowLeft,
-  PhoneCall
 } from "lucide-react";
 
 const situations = [
@@ -17,186 +18,216 @@ const situations = [
     title: "Ich werde gemobbt",
     icon: EyeOff,
     explanation: "Wiederholtes Bloßstellen, Ausgrenzen oder Schikanieren.",
-    guidance: "Nimm das Muster ernst. Sprich mit einer vertrauten Person und sammle konkrete Beispiele. Nicht isoliert bleiben.",
-    contacts: ["Vertrauensperson", "JAV / Betriebsrat", "Ausbilder/in"]
+    guidance: "Nimm das Muster ernst. Notiere konkrete Beispiele und sprich mit einer vertrauenswürdigen Person. Bleib nicht allein mit der Situation.",
+    contacts: ["vertrauen", "vertretung", "ausbildung"],
   },
   {
     id: "bedrohung",
     title: "Ich wurde bedroht",
     icon: ShieldAlert,
-    explanation: "Verbale Drohung, Einschüchterung oder körperliche Annäherung.",
-    guidance: "Halte Abstand, gehe an einen sicheren Ort und beende die Diskussion. Nicht provozieren.",
-    contacts: ["Sicherheitsstelle / Notruf 110", "Führungskraft"]
+    explanation: "Drohung, Einschüchterung oder körperliche Annäherung.",
+    guidance: "Geh auf Abstand, suche einen sicheren Ort und beende die Diskussion. Bei unmittelbarer Gefahr rufe die Polizei.",
+    contacts: ["polizei", "notruf", "fuehrung"],
   },
   {
     id: "gewalt",
     title: "Ich habe Gewalt beobachtet",
     icon: Siren,
-    explanation: "Körperliche Gewalt, Bedrohung oder gefährliche Eskalation.",
-    guidance: "Nicht dazwischengehen, wenn du dich gefährdest. Abstand halten und sofort Hilfe holen.",
-    contacts: ["Sicherheitsstelle / Notruf 110", "Führungskraft"]
+    explanation: "Körperliche Gewalt oder eine gefährliche Eskalation.",
+    guidance: "Gefährde dich nicht selbst. Halte Abstand, hole sofort reale Hilfe und merke dir nur Details, wenn das sicher möglich ist.",
+    contacts: ["polizei", "notruf", "fuehrung"],
   },
   {
     id: "diskriminierung",
     title: "Ich erlebe Diskriminierung",
     icon: Scale,
-    explanation: "Abwertung wegen Herkunft, Religion, Geschlecht, Aussehen oder Identität.",
-    guidance: "Ruhig widersprechen und die Aussage als nicht akzeptabel benennen (sofern sicher möglich). Wortlaut notieren.",
-    contacts: ["Compliance / Meldestelle", "JAV / Betriebsrat", "Vertrauensperson"]
+    explanation: "Abwertung wegen Herkunft, Religion, Geschlecht, Behinderung, Alter oder Identität.",
+    guidance: "Notiere möglichst genauen Wortlaut, Datum, Ort und mögliche Zeug:innen. Lass die Situation durch eine zuständige menschliche Stelle prüfen.",
+    contacts: ["vertretung", "vertrauen", "compliance"],
   },
   {
     id: "ueberlastung",
-    title: "Ich bin psychisch überlastet",
+    title: "Ich bin stark belastet",
     icon: HeartPulse,
     explanation: "Die Situation belastet dich stark oder hält länger an.",
-    guidance: "Suche zeitnah Unterstützung. Du musst eine belastende Situation nicht allein sortieren.",
-    contacts: ["Mitarbeitenden-Unterstützung", "Telefonseelsorge (0800 111 0 111)", "Vertrauensperson"]
+    guidance: "Suche zeitnah Unterstützung und bleib bei einer akuten Krise nicht allein. Der Prototyp ersetzt keine medizinische oder psychologische Hilfe.",
+    contacts: ["seelsorge", "vertrauen", "ausbildung"],
   },
   {
     id: "kunde",
     title: "Ein Kunde ist aggressiv",
     icon: UsersRound,
     explanation: "Aggression, Beleidigung oder Druck im Kundenkontakt.",
-    guidance: "Kurz und ruhig sprechen, Abstand halten und klare Grenzen setzen.",
-    contacts: ["Kolleg/in", "Sicherheitsstelle", "Führungskraft"]
+    guidance: "Sprich kurz und ruhig, halte Abstand, setze klare Grenzen und hole Kolleg:innen oder die zuständige Sicherheitsstruktur hinzu.",
+    contacts: ["fuehrung", "polizei"],
   },
   {
     id: "orientierung",
     title: "Ich brauche Orientierung",
     icon: HelpCircle,
     explanation: "Du weißt nicht, an wen du dich wenden sollst.",
-    guidance: "Nutze als ersten vertraulichen Schritt eine Vertrauensperson. Bei Gefahr immer sofort Notruf.",
-    contacts: ["Vertrauensperson", "JAV / Betriebsrat"]
+    guidance: "Beginne mit einer Vertrauensperson oder Interessenvertretung. Du kannst vorher einen sachlichen Meldungsentwurf vorbereiten.",
+    contacts: ["vertrauen", "vertretung", "ausbildung"],
   },
   {
     id: "unterstuetzen",
-    title: "Ich möchte helfen",
+    title: "Ich möchte jemandem helfen",
     icon: HandHeart,
-    explanation: "Du möchtest einer anderen Person Unterstützung anbieten.",
-    guidance: "Biete Unterstützung an und frage, was die Person braucht. Nicht über die betroffene Person hinweg entscheiden.",
-    contacts: ["Vertrauensperson (gemeinsam)"]
-  }
+    explanation: "Du möchtest einer betroffenen Person Unterstützung anbieten.",
+    guidance: "Höre zu, frage nach dem gewünschten nächsten Schritt und entscheide nicht über den Kopf der betroffenen Person hinweg.",
+    contacts: ["vertrauen", "vertretung"],
+  },
 ];
 
 const contactDetails = {
-  "Vertrauensperson": { desc: "Erster vertraulicher Einstieg, Orientierung, emotionale Entlastung.", role: "Intern" },
-  "JAV / Betriebsrat": { desc: "Interessenvertretung, Schutz, Begleitung im Arbeits- und Ausbildungskontext.", role: "Intern" },
-  "Ausbilder/in": { desc: "Wenn der Vorfall Ausbildung, Anleitung oder Teamalltag betrifft.", role: "Intern" },
-  "Sicherheitsstelle / Notruf 110": { desc: "Akute Sicherheitslage, Gewalt, direkte Bedrohung.", role: "Notfall", isUrgent: true },
-  "Führungskraft": { desc: "Zur direkten Deeskalation und Einsatzkoordination.", role: "Intern" },
-  "Compliance / Meldestelle": { desc: "Schwere Verstöße, Diskriminierung, Hassrede.", role: "Intern" },
-  "Mitarbeitenden-Unterstützung": { desc: "Psychische Belastung, Beratung, Stabilisierung.", role: "Intern" },
-  "Telefonseelsorge (0800 111 0 111)": { desc: "Anonyme, kostenfreie Beratung rund um die Uhr in Krisen.", role: "Extern" },
-  "Kolleg/in": { desc: "Direkte Unterstützung in der akuten Situation.", role: "Intern" },
-  "Vertrauensperson (gemeinsam)": { desc: "Begleite die betroffene Person zur Vertrauensperson.", role: "Intern" }
+  vertrauen: {
+    title: "Vertrauensperson",
+    role: "Intern",
+    description: "Möglicher Einstieg für Orientierung und Begleitung. Kläre vor sensiblen Angaben Zuständigkeit und Umgang mit Vertraulichkeit und nutze nur bestätigte Kontakte deines Standorts.",
+    action: "prepare",
+  },
+  vertretung: {
+    title: "JAV oder Betriebsrat",
+    role: "Intern",
+    description: "Interessenvertretung und Begleitung im Arbeits- und Ausbildungskontext. Kontaktdaten müssen intern bestätigt werden.",
+    action: "prepare",
+  },
+  ausbildung: {
+    title: "Ausbildungsbetreuung",
+    role: "Intern",
+    description: "Für Vorfälle, die Ausbildung, Anleitung, Einsatz oder Teamalltag betreffen.",
+    action: "prepare",
+  },
+  fuehrung: {
+    title: "Zuständige Führungskraft",
+    role: "Intern",
+    description: "Für unmittelbare Deeskalation und betriebliche Koordination. Nutze den offiziellen Dienstweg deines Standorts.",
+    action: "prepare",
+  },
+  compliance: {
+    title: "Compliance- oder Beschwerdestelle",
+    role: "Intern",
+    description: "Für schwere Verstöße und Diskriminierung. Der Prototyp enthält bewusst keine unbestätigte interne Adresse.",
+    action: "prepare",
+  },
+  polizei: {
+    title: "Polizei",
+    role: "Notfall",
+    description: "Bei akuter Bedrohung, Gewalt oder einer unmittelbar gefährlichen Situation.",
+    href: "tel:110",
+    label: "110 anrufen",
+    urgent: true,
+  },
+  notruf: {
+    title: "Rettungsdienst und Feuerwehr",
+    role: "Notfall",
+    description: "Bei medizinischem Notfall, Feuer oder Lebensgefahr.",
+    href: "tel:112",
+    label: "112 anrufen",
+    urgent: true,
+  },
+  seelsorge: {
+    title: "TelefonSeelsorge",
+    role: "Extern",
+    description: "Kostenfreie Unterstützung in Krisen und schwierigen Lebenslagen.",
+    href: "tel:116123",
+    label: "116 123 anrufen",
+  },
 };
 
 export default function SupportPage({ onNavigate }) {
-  const [step, setStep] = useState(1);
   const [selected, setSelected] = useState(null);
+  const detailHeadingRef = useRef(null);
 
-  function selectSituation(sit) {
-    setSelected(sit);
-    setStep(2);
+  useEffect(() => {
+    if (selected) window.requestAnimationFrame(() => detailHeadingRef.current?.focus());
+  }, [selected]);
+
+  if (!selected) {
+    return (
+      <div className="mx-auto max-w-4xl space-y-7 py-4">
+        <header className="text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600">
+            <PhoneCall className="h-6 w-6" aria-hidden="true" />
+          </div>
+          <h1 className="mt-4 text-3xl font-black text-db-dark dark:text-white">Finde die richtige Unterstützung</h1>
+          <p className="mx-auto mt-3 max-w-2xl text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
+            Wähle deine Situation. Interne Kontakte sind nur Orientierung und müssen für deinen Standort offiziell bestätigt werden.
+          </p>
+        </header>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {situations.map((situation) => {
+            const Icon = situation.icon;
+            return (
+              <button key={situation.id} type="button" onClick={() => setSelected(situation)} className="group rounded-xl border border-db-dark/10 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-white/10 dark:bg-db-dark/50">
+                <div className="flex items-center gap-3">
+                  <Icon className="h-5 w-5 text-emerald-600" aria-hidden="true" />
+                  <span className="font-black text-db-dark group-hover:text-emerald-700 dark:text-white">{situation.title}</span>
+                </div>
+                <p className="mt-2 text-xs font-semibold leading-5 text-db-rail dark:text-white/60">{situation.explanation}</p>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
   }
 
-  function goBack() {
-    setStep(1);
-    setSelected(null);
-  }
+  const SelectedIcon = selected.icon;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8 animate-fadeIn">
-      {/* STEP 1: SITUATION SELECTION */}
-      {step === 1 && (
-        <div className="text-center space-y-6 py-4">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-md bg-green-500/10 text-green-600 mb-2">
-            <PhoneCall className="h-6 w-6" />
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-db-dark dark:text-white">Finde die richtige Unterstützung</h2>
-          <p className="text-sm font-semibold text-db-rail dark:text-white/60 max-w-lg mx-auto">
-            Wähle aus, in welcher Situation du dich befindest. Wir zeigen dir sofort, welche Anlaufstellen bei der DB und extern für dich da sind.
-          </p>
+    <div className="mx-auto max-w-3xl space-y-6">
+      <button type="button" onClick={() => setSelected(null)} className="flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-bold text-db-rail hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:text-white/60">
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Andere Situation wählen
+      </button>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 text-left">
-            {situations.map((sit) => {
-              const Icon = sit.icon;
-              return (
-                <button
-                  key={sit.id}
-                  onClick={() => selectSituation(sit)}
-                  className="group rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 hover:-translate-y-1 hover:border-green-500 transition shadow-sm"
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <Icon className="h-5 w-5 text-green-600" />
-                    <span className="font-black text-db-dark dark:text-white group-hover:text-green-700">{sit.title}</span>
+      <section className="rounded-xl border border-emerald-200 bg-emerald-50 p-6 dark:border-emerald-900/60 dark:bg-emerald-950/25">
+        <div className="flex items-center gap-4 border-b border-emerald-200/70 pb-4 dark:border-emerald-900/60">
+          <SelectedIcon className="h-8 w-8 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
+          <h1 ref={detailHeadingRef} tabIndex={-1} className="text-2xl font-black text-emerald-950 outline-none dark:text-emerald-200">{selected.title}</h1>
+        </div>
+        <div className="mt-5 rounded-xl bg-white/70 p-4 text-sm font-semibold leading-6 text-emerald-950 dark:bg-black/20 dark:text-emerald-200">
+          {selected.guidance}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-black text-db-dark dark:text-white">Passende Anlaufstellen</h2>
+        <div className="mt-3 space-y-3">
+          {selected.contacts.map((contactId) => {
+            const contact = contactDetails[contactId];
+            return (
+              <article key={contactId} className={`rounded-xl border bg-white p-4 shadow-sm dark:bg-db-dark/50 ${contact.urgent ? "border-red-300 dark:border-red-900" : "border-db-dark/10 dark:border-white/10"}`}>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className={`font-black ${contact.urgent ? "text-red-700 dark:text-red-400" : "text-db-dark dark:text-white"}`}>{contact.title}</h3>
+                      <span className={`rounded px-2 py-0.5 text-[10px] font-black uppercase ${contact.urgent ? "bg-red-100 text-red-800" : "bg-db-warm text-db-dark/70 dark:bg-white/10 dark:text-white/70"}`}>{contact.role}</span>
+                    </div>
+                    <p className="mt-1 text-xs font-semibold leading-5 text-db-rail dark:text-white/60">{contact.description}</p>
                   </div>
-                  <p className="text-xs font-semibold text-db-rail dark:text-white/60">{sit.explanation}</p>
-                </button>
-              );
-            })}
-          </div>
+
+                  {contact.href ? (
+                    <a href={contact.href} className={`shrink-0 rounded-xl px-4 py-2.5 text-center text-xs font-black text-white focus:outline-none focus:ring-2 focus:ring-offset-2 ${contact.urgent ? "bg-red-600 hover:bg-red-700 focus:ring-red-500" : "bg-db-dark hover:bg-black focus:ring-db-red"}`}>
+                      {contact.label}
+                    </a>
+                  ) : (
+                    <button type="button" onClick={() => onNavigate?.("record-report")} className="shrink-0 rounded-xl bg-db-dark px-4 py-2.5 text-xs font-black text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-db-red/30">
+                      Entwurf vorbereiten
+                    </button>
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </div>
-      )}
+      </section>
 
-      {/* STEP 2: GUIDANCE & CONTACTS */}
-      {step === 2 && selected && (
-        <div className="space-y-6">
-          <button
-            onClick={goBack}
-            className="flex items-center gap-2 text-sm font-bold text-db-rail dark:text-white/60 hover:text-green-600 transition"
-          >
-            <ArrowLeft className="h-4 w-4" /> Zurück zur Übersicht
-          </button>
-
-          <div className="rounded-md bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 p-6 sm:p-8 space-y-6">
-             <div className="flex items-center gap-4 border-b border-green-200/50 dark:border-green-800/50 pb-4">
-               <selected.icon className="h-8 w-8 text-green-700 dark:text-green-400" />
-               <h3 className="text-xl sm:text-2xl font-black text-green-900 dark:text-green-300">{selected.title}</h3>
-             </div>
-             
-             <div>
-               <h4 className="text-sm font-black text-green-800 dark:text-green-400 uppercase tracking-wider mb-2">Was du jetzt tun solltest</h4>
-               <p className="text-sm font-medium text-green-900 dark:text-green-300 leading-relaxed bg-white/60 dark:bg-black/20 p-4 rounded-xl border border-green-200 dark:border-green-800">
-                 {selected.guidance}
-               </p>
-             </div>
-
-             <div className="pt-4">
-               <h4 className="text-sm font-black text-green-800 dark:text-green-400 uppercase tracking-wider mb-4">Empfohlene Anlaufstellen</h4>
-               <div className="grid gap-3">
-                 {selected.contacts.map((contactName) => {
-                   const details = contactDetails[contactName];
-                   return (
-                     <div key={contactName} className={`rounded-xl border p-4 bg-white dark:bg-db-dark/50 flex flex-col sm:flex-row gap-4 sm:items-center justify-between ${details?.isUrgent ? 'border-red-200 dark:border-red-800 shadow-sm' : 'border-db-dark/10 dark:border-white/10 shadow-sm'}`}>
-                        <div>
-                          <div className="flex items-center gap-2">
-                             <span className={`font-black text-sm ${details?.isUrgent ? 'text-red-700 dark:text-red-400' : 'text-db-dark dark:text-white'}`}>{contactName}</span>
-                             <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${details?.isUrgent ? 'bg-red-100 text-red-800' : 'bg-db-warm dark:bg-white/10 text-db-dark/70 dark:text-white/70'}`}>
-                                {details?.role || 'Intern'}
-                             </span>
-                          </div>
-                          <p className="text-xs font-semibold text-db-rail dark:text-white/60 mt-1">{details?.desc}</p>
-                        </div>
-                        <button 
-                          onClick={() => window.location.href = 'mailto:hilfe@db-peace.de?subject=Anfrage%20aus%20Support-Bereich'}
-                          className={`shrink-0 rounded-lg px-4 py-2 text-xs font-black transition ${details?.isUrgent ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-db-dark text-white hover:bg-black'}`}>
-                           Kontaktieren
-                        </button>
-                     </div>
-                   );
-                 })}
-               </div>
-             </div>
-          </div>
-          
-          <div className="rounded-xl border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-db-dark/50 p-5 text-center">
-             <p className="text-xs font-semibold text-db-rail dark:text-white/60">
-               Nicht sicher, was du tun sollst? Nutze unser anonymes <strong className="text-db-dark dark:text-white cursor-pointer underline" onClick={() => onNavigate && onNavigate("record-report")}>Gedächtnisprotokoll</strong> (Säule 2), um den Vorfall zunächst privat für dich festzuhalten.
-             </p>
-          </div>
-        </div>
-      )}
+      <p className="rounded-xl border border-db-dark/10 bg-db-soft p-4 text-xs font-semibold leading-5 text-db-rail dark:border-white/10 dark:bg-db-dark/50 dark:text-white/60">
+        DB Peace AI ist ein Prototyp. Er stellt keine Verbindung zu internen DB-Systemen her und übermittelt keine Meldung automatisch.
+      </p>
     </div>
   );
 }

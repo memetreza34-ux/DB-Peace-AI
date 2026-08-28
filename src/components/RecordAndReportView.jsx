@@ -1,441 +1,398 @@
-import React, { useState, useRef, useEffect } from "react";
-import AnonymousReport from "./AnonymousReport.jsx";
+import React, { useMemo, useRef, useState } from "react";
+import { jsPDF } from "jspdf";
+import {
+  ArrowLeft,
+  Bot,
+  Clock,
+  Download,
+  FileText,
+  Megaphone,
+  NotebookPen,
+  Plus,
+  Trash2,
+  X,
+} from "lucide-react";
+import { useModalDialog } from "../hooks/useModalDialog.js";
 import { AISmartReport } from "./AISmartReport.jsx";
-import { NotebookPen, Megaphone, Plus, Clock, FileText, CheckCircle2, Camera, X, ArrowLeft } from "lucide-react";
+import AnonymousReport from "./AnonymousReport.jsx";
 
-export function RecordAndReportView() {
-  const [subTab, setSubTab] = useState(null); // null | 'protokoll' | 'meldung' | 'ki'
+const emptyEntry = {
+  date: "",
+  time: "",
+  location: "",
+  description: "",
+  witnesses: "",
+};
 
-  // Local storage / state for recorded entries
-  const [records, setRecords] = useState([
-    {
-      id: 1,
-      date: "2026-07-20",
-      time: "14:15",
-      location: "Werkstatt / Pausenraum",
-      category: "Beleidigung & Ausgrenzung",
-      description: "Wiederholte abwertende Sprüche während der Teambesprechung.",
-      witnesses: "2 Kolleg:innen anwesend",
-      files: [],
-    },
-  ]);
-
-  const [newDate, setNewDate] = useState("");
-  const [newTime, setNewTime] = useState("");
-  const [newLoc, setNewLoc] = useState("");
-  const [newDesc, setNewDesc] = useState("");
-  const [newFiles, setNewFiles] = useState([]);
+export function RecordAndReportView({ records, setRecords }) {
+  const [subTab, setSubTab] = useState(null);
+  const [draft, setDraft] = useState(emptyEntry);
   const [showForm, setShowForm] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const fileInputRef = useRef(null);
+  const [error, setError] = useState("");
+  const [exportError, setExportError] = useState("");
 
-  useEffect(() => {
-    if (subTab !== "protokoll") {
-      newFiles.forEach(f => {
-        if (f.url) URL.revokeObjectURL(f.url);
-      });
-      setNewFiles([]);
-      setShowForm(false);
-    }
-  }, [subTab]);
+  function updateDraft(field, value) {
+    setDraft((current) => ({ ...current, [field]: value }));
+    setError("");
+  }
 
-  useEffect(() => {
-    return () => {
-      newFiles.forEach(f => {
-        if (f.url) URL.revokeObjectURL(f.url);
-      });
-    };
-  }, [newFiles]);
+  function openForm() {
+    setDraft(emptyEntry);
+    setError("");
+    setShowForm(true);
+  }
 
-  const handleFileChange = (e) => {
-    if (e.target.files) {
-      const filesArray = Array.from(e.target.files).map(file => ({
-        name: file.name,
-        type: file.type,
-        url: file.type.startsWith('image/') ? URL.createObjectURL(file) : null
-      }));
-      setNewFiles([...newFiles, ...filesArray]);
-    }
-  };
-
-  const removeFile = (index) => {
-    const file = newFiles[index];
-    if (file.url) {
-      URL.revokeObjectURL(file.url);
-    }
-    setNewFiles(newFiles.filter((_, i) => i !== index));
-  };
-
-  const handleAddRecord = (e) => {
-    e.preventDefault();
-    if (!newDesc.trim()) return;
-    const entry = {
-      id: Date.now(),
-      date: newDate || new Date().toISOString().split("T")[0],
-      time: newTime || "12:00",
-      location: newLoc || "Nicht angegeben",
-      category: "Vorfall-Protokoll",
-      description: newDesc,
-      witnesses: "Keine Angaben",
-      files: newFiles,
-    };
-    setRecords([entry, ...records]);
-    setNewDesc("");
-    setNewLoc("");
-    newFiles.forEach(f => { if (f.url) URL.revokeObjectURL(f.url); });
-    setNewFiles([]);
+  function cancelForm() {
+    setDraft(emptyEntry);
+    setError("");
     setShowForm(false);
-  };
+  }
+
+  function addRecord(event) {
+    event.preventDefault();
+    const description = draft.description.trim();
+    if (description.length < 20) {
+      setError("Beschreibe den Vorfall mit mindestens 20 Zeichen.");
+      return;
+    }
+
+    const entry = {
+      id: createRecordId(),
+      date: draft.date || "Nicht angegeben",
+      time: draft.time || "Nicht angegeben",
+      location: draft.location.trim() || "Nicht angegeben",
+      description,
+      witnesses: draft.witnesses.trim() || "Nicht angegeben",
+      source: "Manuell erstellt",
+    };
+
+    setRecords((current) => [entry, ...current]);
+    cancelForm();
+  }
+
+  function addAiRecord(report) {
+    const sourceMode = report.sourceMode === "ai" ? "ai" : "local";
+    const entry = {
+      id: createRecordId(),
+      date: report.date || "Nicht angegeben",
+      time: report.time || "Nicht angegeben",
+      location: report.location || "Nicht angegeben",
+      description: report.description,
+      witnesses: report.witnesses || "Nicht angegeben",
+      category: report.category,
+      urgency: report.urgency,
+      source: sourceMode === "ai" ? "Gemini-strukturierter Entwurf · ungeprüft" : "Lokaler Schlüsselwort-Fallback",
+    };
+
+    setRecords((current) => [entry, ...current]);
+    setSubTab("protocol");
+    setExportError("");
+    setSelectedRecord(entry);
+  }
+
+  function selectRecord(record) {
+    setExportError("");
+    setSelectedRecord(record);
+  }
+
+  function deleteRecord(id) {
+    setRecords((current) => current.filter((record) => record.id !== id));
+    if (selectedRecord?.id === id) setSelectedRecord(null);
+    setExportError("");
+  }
+
+  function exportRecord(record) {
+    setExportError("");
+    try {
+      const doc = new jsPDF();
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(20);
+      doc.setTextColor(226, 0, 26);
+      doc.text("DB Peace – Gedächtnisprotokoll", 18, 20);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(90, 90, 90);
+      doc.text("Lokaler Demonstrationsentwurf – nicht automatisch gespeichert oder übermittelt", 18, 30);
+
+      const content = [
+        `Datum: ${record.date}`,
+        `Uhrzeit: ${record.time}`,
+        `Ort / Kontext: ${record.location}`,
+        `Mögliche Zeug:innen: ${record.witnesses}`,
+        `Quelle: ${record.source}`,
+        record.category ? `Kategorie: ${record.category}` : null,
+        record.urgency ? `Dringlichkeitsorientierung: ${record.urgency}` : null,
+        "",
+        "Sachverhalt:",
+        record.description,
+        "",
+        "Hinweis: Vor Verwendung auf Richtigkeit prüfen. Menschen entscheiden über weitere Schritte.",
+      ].filter(Boolean).join("\n");
+
+      const lines = doc.splitTextToSize(content, 174);
+      doc.setFontSize(11);
+      doc.setTextColor(30, 30, 30);
+      let y = 43;
+      for (const line of lines) {
+        if (y > 278) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(line, 18, y);
+        y += 5.5;
+      }
+      doc.save(`DB-Peace-Protokoll-${safeFileSegment(record.date)}-${record.id.slice(0, 8)}.pdf`);
+    } catch {
+      setExportError("Das Gedächtnisprotokoll konnte nicht als PDF erzeugt werden. Der Sitzungsentwurf wurde nicht verändert.");
+    }
+  }
 
   return (
     <div className="space-y-6">
-      {/* Header Banner */}
-      <div className="rounded-md bg-gradient-to-r from-db-dark via-db-dark/90 to-db-rail p-6 text-white shadow-md relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm backdrop-blur-md">
-              <NotebookPen className="h-3.5 w-3.5 text-amber-400" />
-              <span>Säule 2: Festhalten & Melden</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              Gedächtnisprotokoll & Vorfall-Meldung
-            </h1>
-            <p className="text-sm font-medium text-white/80 leading-relaxed">
-              Halte Geschehnisse sachlich und anonym fest – als Gedächtnisstütze für dich selbst oder als vorbereitete Meldung für JAV, Betriebsrat oder Ausbilder:innen.
-            </p>
-          </div>
-
+      <header className="rounded-xl bg-gradient-to-r from-db-dark to-db-rail p-6 text-white shadow-md">
+        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-black text-db-warm">
+          <NotebookPen className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />
+          Festhalten und vorbereiten
         </div>
+        <h1 className="mt-3 text-3xl font-black">Gedächtnisprotokoll und Meldungsentwurf</h1>
+        <p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-white/75">
+          Halte Fakten im aktuellen App-Zustand fest oder erstelle einen exportierbaren Entwurf. Nichts wird automatisch an DB, HR, JAV oder andere Stellen übertragen.
+        </p>
+      </header>
+
+      <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold leading-6 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/25 dark:text-amber-200">
+        Die Protokolle bleiben nur im Arbeitsspeicher dieser geöffneten App. Bei Neuladen oder Schließen können sie verloren gehen. Exportiere wichtige Entwürfe als PDF und speichere sie anschließend an einem geeigneten sicheren Ort.
       </div>
 
-      {/* STEP 1: GRID SELECTION */}
-      {!subTab && (
-        <div className="text-center space-y-6 py-4">
-          <h2 className="text-2xl sm:text-3xl font-black text-db-dark dark:text-white">Was möchtest du tun?</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 text-left">
-            <button
-              onClick={() => setSubTab("protokoll")}
-              className="group rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 hover:-translate-y-1 hover:border-amber-400 dark:hover:border-amber-400 transition shadow-sm"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <NotebookPen className="h-6 w-6 text-amber-500" />
-                <span className="font-black text-db-dark dark:text-white text-lg group-hover:text-amber-600 transition-colors">Vorfall festhalten</span>
-              </div>
-              <p className="text-sm font-semibold text-db-rail dark:text-white/60">Privates Gedächtnisprotokoll anlegen, um Fakten sofort zu sichern.</p>
-            </button>
-
-            <button
-              onClick={() => setSubTab("meldung")}
-              className="group rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 hover:-translate-y-1 hover:border-db-red dark:hover:border-db-red transition shadow-sm"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <Megaphone className="h-6 w-6 text-db-red" />
-                <span className="font-black text-db-dark dark:text-white text-lg group-hover:text-db-red transition-colors">Meldung verfassen</span>
-              </div>
-              <p className="text-sm font-semibold text-db-rail dark:text-white/60">Einen Vorfall offiziell, sachlich und auf Wunsch anonym melden.</p>
-            </button>
-
-            <button
-              onClick={() => setSubTab("ki")}
-              className="group rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 hover:-translate-y-1 hover:border-blue-500 dark:hover:border-blue-500 transition shadow-sm"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <span className="font-black text-db-dark dark:text-white text-lg group-hover:text-blue-600 transition-colors">🤖 KI-Assistent</span>
-              </div>
-              <p className="text-sm font-semibold text-db-rail dark:text-white/60">Schreibe oder diktiere frei, was passiert ist. Die KI füllt das Formular für dich aus.</p>
-            </button>
-          </div>
-        </div>
+      {exportError && (
+        <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-800 dark:border-red-900/50 dark:bg-red-950/25 dark:text-red-300">
+          {exportError}
+        </p>
       )}
 
-      {/* BACK BUTTON */}
-      {subTab && (
-        <button
-          onClick={() => setSubTab(null)}
-          className="flex items-center gap-2 text-sm font-bold text-db-rail dark:text-white/60 hover:text-db-red dark:hover:text-db-red transition"
-        >
-          <ArrowLeft className="h-4 w-4" /> Zurück zur Übersicht
-        </button>
+      {!subTab ? (
+        <Selection onSelect={setSubTab} recordCount={records.length} />
+      ) : (
+        <>
+          <button type="button" onClick={() => setSubTab(null)} className="inline-flex items-center gap-2 rounded-lg px-2 py-1 text-sm font-black text-db-rail hover:bg-db-soft hover:text-db-red focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:text-white/60 dark:hover:bg-white/5">
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Zur Auswahl
+          </button>
+
+          {subTab === "protocol" && (
+            <ProtocolView
+              records={records}
+              draft={draft}
+              error={error}
+              showForm={showForm}
+              onOpenForm={openForm}
+              onCancelForm={cancelForm}
+              onUpdate={updateDraft}
+              onSubmit={addRecord}
+              onSelect={selectRecord}
+              onDelete={deleteRecord}
+              onExport={exportRecord}
+            />
+          )}
+          {subTab === "report" && <AnonymousReport />}
+          {subTab === "ai" && <AISmartReport onReportGenerated={addAiRecord} />}
+        </>
       )}
 
-      {/* Sub-Tab 3: KI Assistent */}
-      {subTab === "ki" && (
-        <AISmartReport 
-          onReportGenerated={(generatedReport) => {
-            const entry = {
-              id: Date.now(),
-              date: generatedReport.date,
-              time: generatedReport.time,
-              location: generatedReport.location,
-              category: generatedReport.category,
-              description: generatedReport.description,
-              witnesses: "Keine Angaben",
-              files: [],
-            };
-            setRecords([entry, ...records]);
-          }} 
-        />
-      )}
-
-      {/* Sub-Tab 1: Vorfall Festhalten (Gedächtnisprotokoll) */}
-      {subTab === "protokoll" && (
-        <div className="space-y-6">
-          <div className="rounded-md bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 p-6 shadow-sm">
-            <div className="flex items-center justify-between pb-4 border-b border-db-dark/10 dark:border-white/10">
-              <div>
-                <h2 className="text-lg font-black text-db-dark dark:text-white">Dein Anonymes Gedächtnisprotokoll</h2>
-                <p className="text-xs font-semibold text-db-rail dark:text-white/60">
-                  Sichere Fakten (Datum, Zeit, Ort), solange deine Erinnerung frisch ist.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowForm(!showForm)}
-                className="flex items-center gap-2 rounded-xl bg-db-red px-4 py-2 text-xs sm:text-sm font-extrabold text-white hover:bg-db-red/90 transition shadow-sm"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Eintrag hinzufügen</span>
-              </button>
-            </div>
-
-            {/* Quick Add Form */}
-            {showForm && (
-              <form onSubmit={handleAddRecord} className="mt-4 p-4 rounded-xl bg-db-warm/50 dark:bg-db-dark/30 border border-db-dark/10 dark:border-white/10 space-y-4">
-                <h3 className="text-sm font-black text-db-dark dark:text-white">Neuer Protokoll-Eintrag</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div>
-                    <label className="text-xs font-bold text-db-rail dark:text-white/60">Datum</label>
-                    <input
-                      type="date"
-                      value={newDate}
-                      onChange={(e) => setNewDate(e.target.value)}
-                      className="mt-1 w-full rounded-lg border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 dark:text-white p-2 text-xs font-semibold"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-db-rail dark:text-white/60">Uhrzeit</label>
-                    <input
-                      type="time"
-                      value={newTime}
-                      onChange={(e) => setNewTime(e.target.value)}
-                      className="mt-1 w-full rounded-lg border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 dark:text-white p-2 text-xs font-semibold"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-db-rail dark:text-white/60">Ort / Kontext</label>
-                    <input
-                      type="text"
-                      placeholder="z.B. Werkstatt, Pausenraum, Chat"
-                      value={newLoc}
-                      onChange={(e) => setNewLoc(e.target.value)}
-                      className="mt-1 w-full rounded-lg border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 dark:text-white p-2 text-xs font-semibold"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-db-rail dark:text-white/60">Was genau ist passiert? (Ohne Klarnamen)</label>
-                  <textarea
-                    rows={3}
-                    placeholder="Beschreibe den Vorfall sachlich: Wer hat was gesagt/getan?"
-                    value={newDesc}
-                    onChange={(e) => setNewDesc(e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 dark:text-white p-2.5 text-xs font-semibold"
-                  />
-                </div>
-                
-                {/* File Upload Section */}
-                <div className="flex flex-col gap-2">
-                  <input 
-                    type="file" 
-                    multiple 
-                    ref={fileInputRef} 
-                    onChange={handleFileChange} 
-                    className="hidden" 
-                    accept="image/*,video/*,.pdf,.doc,.docx"
-                  />
-                  
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="flex items-center gap-1.5 rounded-lg border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 px-3 py-1.5 text-xs font-bold text-db-dark dark:text-white hover:bg-db-warm dark:hover:bg-white/5 transition"
-                    >
-                      <Camera className="h-4 w-4 text-db-red" />
-                      <span>Foto / Datei anhängen</span>
-                    </button>
-                  </div>
-                  
-                  {/* File Preview */}
-                  {newFiles.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-1">
-                      {newFiles.map((f, idx) => (
-                        <div key={idx} className="flex items-center gap-1.5 rounded-md bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 px-2 py-1 shadow-sm">
-                          <span className="text-[10px] font-semibold text-db-dark dark:text-white truncate max-w-[120px]">{f.name}</span>
-                          <button type="button" onClick={() => removeFile(idx)} className="text-db-rail dark:text-white/60 hover:text-red-500 dark:hover:text-red-400">
-                            <X className="h-3 w-3" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => { 
-                      newFiles.forEach(f => { if (f.url) URL.revokeObjectURL(f.url); });
-                      setNewFiles([]); 
-                      setShowForm(false); 
-                    }}
-                    className="rounded-lg px-3 py-1.5 text-xs font-bold text-db-rail dark:text-white/60 hover:bg-db-dark/5 dark:hover:bg-white/5"
-                  >
-                    Abbrechen
-                  </button>
-                  <button
-                    type="submit"
-                    className="rounded-lg bg-db-dark px-4 py-1.5 text-xs font-extrabold text-white hover:bg-db-dark/90"
-                  >
-                    Speichern
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {/* List of Entries */}
-            <div className="mt-4 space-y-3">
-              {records.length === 0 ? (
-                <div className="text-center py-8 text-db-rail/70 dark:text-white/40 text-xs font-medium">
-                  Noch keine Protokoll-Einträge vorhanden.
-                </div>
-              ) : (
-                records.map((r) => (
-                  <div 
-                    key={r.id} 
-                    onClick={() => setSelectedRecord(r)}
-                    className="cursor-pointer rounded-xl border border-db-dark/10 dark:border-white/10 p-4 bg-white dark:bg-db-dark/30 hover:border-db-red/30 dark:hover:border-db-red/50 transition shadow-xs"
-                  >
-                    <div className="flex items-center justify-between text-xs font-extrabold text-db-rail dark:text-white/60">
-                      <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1 text-db-dark dark:text-white">
-                          <Clock className="h-3.5 w-3.5 text-db-red" /> {r.date} um {r.time} Uhr
-                        </span>
-                        <span className="rounded bg-db-warm dark:bg-db-dark/50 px-2 py-0.5 text-db-dark dark:text-white">
-                          📍 {r.location}
-                        </span>
-                      </div>
-                      <span className="text-green-600 dark:text-green-400 flex items-center gap-1 font-bold">
-                        <CheckCircle2 className="h-3.5 w-3.5" /> Anonym gesichert
-                      </span>
-                    </div>
-                    <p className="mt-2 text-sm font-semibold text-db-dark dark:text-white leading-relaxed">
-                      {r.description}
-                    </p>
-                    
-                    {/* Render attached files if any */}
-                    {r.files && r.files.length > 0 && (
-                      <div className="mt-3 flex flex-wrap gap-2 pt-2 border-t border-db-dark/5 dark:border-white/5">
-                        {r.files.map((file, idx) => (
-                          <div key={idx} className="flex items-center gap-1.5 rounded-lg bg-db-warm/50 dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 px-2 py-1">
-                            <Camera className="h-3.5 w-3.5 text-db-rail dark:text-white/60" />
-                            <span className="text-[11px] font-semibold text-db-dark dark:text-white">{file.name}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Action to switch to Meldungs-Assistent */}
-            <div className="mt-6 p-4 rounded-xl bg-db-warm/40 dark:bg-db-dark/30 border border-db-dark/10 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="text-xs font-semibold text-db-dark dark:text-white">
-                Bereit, aus deinen Notizen einen sachlichen Entwurf für eine Vorfall-Meldung zu generieren?
-              </div>
-              <button
-                type="button"
-                onClick={() => setSubTab("meldung")}
-                className="shrink-0 rounded-xl bg-db-red px-4 py-2 text-xs font-black text-white hover:bg-db-red/90 transition shadow-sm"
-              >
-                Meldung in 5 Schritten verfassen →
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Sub-Tab 2: Melden (5-Schritte-Assistent) */}
-      {subTab === "meldung" && (
-        <div className="rounded-md bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 p-4 sm:p-6 shadow-sm">
-          <AnonymousReport />
-        </div>
-      )}
-      {/* Selected Record Modal */}
       {selectedRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-db-dark/60 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-db-dark rounded-lg p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg relative border dark:border-white/10">
-            <button 
-              onClick={() => setSelectedRecord(null)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-db-warm/50 dark:bg-db-dark/50 hover:bg-db-dark/10 dark:hover:bg-white/10 transition text-db-dark dark:text-white"
-            >
-              <X className="h-5 w-5" />
-            </button>
-            <h2 className="text-xl font-black text-db-dark dark:text-white mb-4 flex items-center gap-2">
-              <NotebookPen className="h-6 w-6 text-db-red" />
-              Protokoll-Eintrag
-            </h2>
-            <div className="flex flex-wrap items-center gap-3 mb-6 text-sm font-extrabold text-db-rail dark:text-white/60">
-              <span className="flex items-center gap-1 text-db-dark dark:text-white">
-                <Clock className="h-4 w-4 text-db-red" /> {selectedRecord.date} um {selectedRecord.time} Uhr
-              </span>
-              <span className="rounded bg-db-warm dark:bg-db-dark/50 px-2 py-1 text-db-dark dark:text-white">
-                📍 {selectedRecord.location}
-              </span>
-            </div>
-            
-            <div className="bg-db-soft dark:bg-db-dark/30 rounded-xl p-4 border border-db-dark/5 dark:border-white/5 mb-6">
-              <h3 className="text-xs font-bold text-db-rail dark:text-white/60 uppercase tracking-wider mb-2">Beschreibung</h3>
-              <p className="text-sm font-semibold text-db-dark dark:text-white whitespace-pre-wrap leading-relaxed">
-                {selectedRecord.description}
-              </p>
-            </div>
-
-            {selectedRecord.files && selectedRecord.files.length > 0 && (
-              <div>
-                <h3 className="text-xs font-bold text-db-rail dark:text-white/60 uppercase tracking-wider mb-3">Anhänge ({selectedRecord.files.length})</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {selectedRecord.files.map((file, idx) => (
-                    <div key={idx} className="rounded-xl border border-db-dark/10 dark:border-white/10 bg-db-warm/10 dark:bg-db-dark/30 overflow-hidden group">
-                      {file.url ? (
-                        <div className="relative aspect-video bg-db-dark/5 dark:bg-white/5">
-                          <img src={file.url} alt={file.name} className="w-full h-full object-cover" />
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center aspect-video bg-db-dark/5 dark:bg-white/5">
-                          <FileText className="h-8 w-8 text-db-rail/50 dark:text-white/30" />
-                        </div>
-                      )}
-                      <div className="p-2 text-[10px] font-bold text-db-dark dark:text-white truncate bg-white dark:bg-db-dark/50">
-                        {file.name}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            <div className="mt-8 flex justify-end">
-              <button
-                onClick={() => setSelectedRecord(null)}
-                className="rounded-lg bg-db-dark px-6 py-2.5 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-md"
-              >
-                Schließen
-              </button>
-            </div>
-          </div>
-        </div>
+        <RecordModal
+          record={selectedRecord}
+          exportError={exportError}
+          onClose={() => {
+            setExportError("");
+            setSelectedRecord(null);
+          }}
+          onDelete={deleteRecord}
+          onExport={exportRecord}
+        />
       )}
     </div>
   );
+}
+
+function Selection({ onSelect, recordCount }) {
+  const cards = [
+    {
+      id: "protocol",
+      title: "Vorfall festhalten",
+      text: "Sachliches Gedächtnisprotokoll im aktuellen App-Zustand erstellen.",
+      icon: NotebookPen,
+      accent: "text-amber-600 bg-amber-500/10",
+      badge: recordCount ? `${recordCount} Entwurf${recordCount === 1 ? "" : "e"}` : null,
+    },
+    {
+      id: "report",
+      title: "Meldungsentwurf verfassen",
+      text: "Vorfall in fünf Schritten strukturieren und als PDF exportieren.",
+      icon: Megaphone,
+      accent: "text-db-red bg-db-red/10",
+    },
+    {
+      id: "ai",
+      title: "Text mit KI strukturieren",
+      text: "Freitext über den lokalen Gemini-Proxy in Felder aufteilen lassen.",
+      icon: Bot,
+      accent: "text-violet-700 bg-violet-500/10",
+    },
+  ];
+
+  return (
+    <section>
+      <h2 className="text-center text-2xl font-black text-db-dark dark:text-white">Was möchtest du tun?</h2>
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        {cards.map(({ id, title, text, icon: Icon, accent, badge }) => (
+          <button key={id} type="button" onClick={() => onSelect(id)} className="group rounded-xl border border-db-dark/10 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-db-red/40 focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:border-white/10 dark:bg-db-dark/50">
+            <div className="flex items-start justify-between gap-3">
+              <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${accent}`}><Icon className="h-5 w-5" aria-hidden="true" /></div>
+              {badge && <span className="rounded-full bg-db-soft px-2.5 py-1 text-[10px] font-black text-db-rail dark:bg-white/10 dark:text-white/60">{badge}</span>}
+            </div>
+            <h3 className="mt-4 text-lg font-black text-db-dark group-hover:text-db-red dark:text-white">{title}</h3>
+            <p className="mt-2 text-sm font-semibold leading-6 text-db-rail dark:text-white/60">{text}</p>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ProtocolView({ records, draft, error, showForm, onOpenForm, onCancelForm, onUpdate, onSubmit, onSelect, onDelete, onExport }) {
+  return (
+    <section className="rounded-xl border border-db-dark/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-db-dark/50 sm:p-6">
+      <div className="flex flex-col gap-4 border-b border-db-dark/10 pb-4 dark:border-white/10 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-xl font-black text-db-dark dark:text-white">Private Entwürfe dieser Sitzung</h2>
+          <p className="mt-1 text-xs font-semibold text-db-rail dark:text-white/60">Keine Datenbank, keine Cloud und keine automatische Synchronisation.</p>
+        </div>
+        <button type="button" onClick={showForm ? onCancelForm : onOpenForm} className="inline-flex items-center justify-center gap-2 rounded-xl bg-db-red px-4 py-2.5 text-sm font-black text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-db-red/30">
+          {showForm ? <X className="h-4 w-4" aria-hidden="true" /> : <Plus className="h-4 w-4" aria-hidden="true" />}
+          {showForm ? "Formular schließen" : "Eintrag hinzufügen"}
+        </button>
+      </div>
+
+      {showForm && (
+        <form onSubmit={onSubmit} className="mt-5 space-y-4 rounded-xl border border-db-dark/10 bg-db-soft p-4 dark:border-white/10 dark:bg-white/5">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Input label="Datum optional" type="date" value={draft.date} onChange={(value) => onUpdate("date", value)} />
+            <Input label="Uhrzeit optional" type="time" value={draft.time} onChange={(value) => onUpdate("time", value)} />
+            <Input label="Ort / Kontext optional" value={draft.location} maxLength={180} placeholder="Ohne Klarnamen" onChange={(value) => onUpdate("location", value)} />
+          </div>
+          <Input label="Mögliche Zeug:innen optional" value={draft.witnesses} maxLength={300} placeholder="z. B. zwei Kolleg:innen – keine Klarnamen" onChange={(value) => onUpdate("witnesses", value)} />
+          <label className="block">
+            <span className="text-sm font-black text-db-dark dark:text-white">Sachliche Beschreibung</span>
+            <textarea value={draft.description} onChange={(event) => onUpdate("description", event.target.value.slice(0, 3_000))} maxLength={3_000} rows={6} className="mt-2 w-full rounded-xl border border-db-dark/15 bg-white p-3 text-sm font-medium leading-6 text-db-dark outline-none focus:border-db-red focus:ring-2 focus:ring-db-red/20 dark:border-white/15 dark:bg-db-dark/40 dark:text-white" placeholder="Was wurde gesagt oder getan? Was hast du selbst beobachtet?" />
+            <span className="mt-1 block text-right text-[10px] font-bold text-db-rail/60 dark:text-white/40">{draft.description.length}/3000</span>
+          </label>
+          {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p>}
+          <div className="flex justify-end gap-3">
+            <button type="button" onClick={onCancelForm} className="rounded-xl border border-db-dark/15 px-4 py-2.5 text-sm font-black text-db-dark focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:border-white/15 dark:text-white">Abbrechen</button>
+            <button type="submit" className="rounded-xl bg-db-dark px-5 py-2.5 text-sm font-black text-white focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:bg-white dark:text-db-dark">In Sitzung übernehmen</button>
+          </div>
+        </form>
+      )}
+
+      <div className="mt-5 space-y-3">
+        {records.length ? records.map((record) => (
+          <article key={record.id} className="rounded-xl border border-db-dark/10 p-4 transition hover:border-db-red/30 dark:border-white/10">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <button type="button" onClick={() => onSelect(record)} className="min-w-0 flex-1 rounded-lg text-left focus:outline-none focus:ring-2 focus:ring-db-red/30">
+                <div className="flex flex-wrap items-center gap-2 text-xs font-black text-db-rail dark:text-white/60">
+                  <span className="flex items-center gap-1 text-db-dark dark:text-white"><Clock className="h-3.5 w-3.5 text-db-red" aria-hidden="true" />{record.date} · {record.time}</span>
+                  <span className="rounded bg-db-soft px-2 py-0.5 dark:bg-white/10">{record.location}</span>
+                  <span className="rounded bg-violet-50 px-2 py-0.5 text-violet-700 dark:bg-violet-950/30 dark:text-violet-300">{record.source}</span>
+                </div>
+                <p className="mt-2 line-clamp-3 text-sm font-semibold leading-6 text-db-dark dark:text-white">{record.description}</p>
+              </button>
+              <div className="flex shrink-0 gap-2">
+                <button type="button" onClick={() => onExport(record)} className="rounded-lg border border-db-dark/10 p-2 text-db-rail hover:border-db-red hover:text-db-red focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:border-white/10" aria-label="Eintrag als PDF exportieren"><Download className="h-4 w-4" aria-hidden="true" /></button>
+                <button type="button" onClick={() => onDelete(record.id)} className="rounded-lg border border-red-200 p-2 text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500/30 dark:border-red-900/50" aria-label="Eintrag löschen"><Trash2 className="h-4 w-4" aria-hidden="true" /></button>
+              </div>
+            </div>
+          </article>
+        )) : (
+          <div className="rounded-xl border border-dashed border-db-dark/15 py-12 text-center dark:border-white/15">
+            <FileText className="mx-auto h-10 w-10 text-db-dark/15 dark:text-white/15" aria-hidden="true" />
+            <p className="mt-3 text-sm font-black text-db-dark dark:text-white">Noch keine Entwürfe in dieser Sitzung</p>
+            <p className="mt-1 text-xs font-semibold text-db-rail dark:text-white/60">Erstelle einen manuellen Eintrag oder übernimm einen strukturierten Entwurf.</p>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function Input({ label, onChange, ...props }) {
+  return (
+    <label className="block">
+      <span className="text-xs font-black text-db-rail dark:text-white/60">{label}</span>
+      <input {...props} onChange={(event) => onChange(event.target.value)} className="mt-1 w-full rounded-xl border border-db-dark/15 bg-white p-2.5 text-sm font-semibold text-db-dark outline-none focus:border-db-red focus:ring-2 focus:ring-db-red/20 dark:border-white/15 dark:bg-db-dark/40 dark:text-white" />
+    </label>
+  );
+}
+
+function RecordModal({ record, exportError, onClose, onDelete, onExport }) {
+  const dialogRef = useRef(null);
+  const closeButtonRef = useRef(null);
+  const rows = useMemo(() => [
+    ["Datum", record.date],
+    ["Uhrzeit", record.time],
+    ["Ort / Kontext", record.location],
+    ["Mögliche Zeug:innen", record.witnesses],
+    ["Quelle", record.source],
+    ...(record.category ? [["Kategorie", record.category]] : []),
+    ...(record.urgency ? [["Dringlichkeitsorientierung", record.urgency]] : []),
+  ], [record]);
+
+  useModalDialog({
+    isOpen: true,
+    onClose,
+    dialogRef,
+    initialFocusRef: closeButtonRef,
+  });
+
+  return (
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <div ref={dialogRef} tabIndex={-1} className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-2xl outline-none dark:bg-db-dark" role="dialog" aria-modal="true" aria-labelledby="record-modal-title">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-black uppercase tracking-wide text-db-red">Sitzungsentwurf</p>
+            <h2 id="record-modal-title" className="mt-1 text-2xl font-black text-db-dark dark:text-white">Gedächtnisprotokoll</h2>
+          </div>
+          <button ref={closeButtonRef} type="button" onClick={onClose} className="rounded-full p-2 text-db-rail hover:bg-db-soft focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:text-white/60 dark:hover:bg-white/10" aria-label="Protokoll schließen"><X className="h-5 w-5" aria-hidden="true" /></button>
+        </div>
+        <dl className="mt-5 grid gap-3 sm:grid-cols-2">
+          {rows.map(([label, value]) => (
+            <div key={label} className="rounded-xl bg-db-soft p-3 dark:bg-white/5"><dt className="text-[10px] font-black uppercase tracking-wide text-db-red">{label}</dt><dd className="mt-1 text-sm font-semibold text-db-dark dark:text-white">{value}</dd></div>
+          ))}
+        </dl>
+        <div className="mt-4 rounded-xl bg-db-soft p-4 dark:bg-white/5">
+          <p className="text-[10px] font-black uppercase tracking-wide text-db-red">Sachverhalt</p>
+          <p className="mt-2 whitespace-pre-wrap text-sm font-semibold leading-6 text-db-dark dark:text-white">{record.description}</p>
+        </div>
+        {exportError && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-800 dark:border-red-900/50 dark:bg-red-950/25 dark:text-red-300">{exportError}</p>}
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <button type="button" onClick={() => onDelete(record.id)} className="flex items-center justify-center gap-2 rounded-xl border border-red-200 px-4 py-3 text-sm font-black text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500/30 dark:border-red-900/50 dark:text-red-300"><Trash2 className="h-4 w-4" aria-hidden="true" />Löschen</button>
+          <button type="button" onClick={() => onExport(record)} className="flex items-center justify-center gap-2 rounded-xl bg-db-dark px-4 py-3 text-sm font-black text-white focus:outline-none focus:ring-2 focus:ring-db-red/30 dark:bg-white dark:text-db-dark"><Download className="h-4 w-4" aria-hidden="true" />PDF</button>
+          <button type="button" onClick={onClose} className="rounded-xl bg-db-red px-4 py-3 text-sm font-black text-white focus:outline-none focus:ring-2 focus:ring-db-red/30">Schließen</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function createRecordId() {
+  return globalThis.crypto?.randomUUID?.() || `record-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function safeFileSegment(value) {
+  return String(value || "Nicht-angegeben")
+    .replace(/[^a-zA-Z0-9äöüÄÖÜß-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40) || "Nicht-angegeben";
 }
