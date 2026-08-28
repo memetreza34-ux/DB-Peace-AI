@@ -80,8 +80,13 @@ werden sie geliefert?
       Für einen Pilot ist zu klären: EU-Hosting, Auftragsverarbeitung, welche Inhalte
       das Gerät überhaupt verlassen dürfen. **Empfehlung: im Pilot ohne KI-Anbindung
       starten.** Die Krisenerkennung läuft bewusst lokal und ist davon unabhängig.
-- [ ] **Speicherort.** Aktuell `localStorage` des Browsers. Bei geteilten Geräten
-      (Schulungsraum, Diensthandy) ist zu klären, ob das tragbar ist.
+- [x] **Speicherort.** Beim ersten Start fragt die App, ob das Gerät einer Person
+      gehört oder geteilt wird. Persönliches Gerät: `localStorage` plus PIN.
+      Geteiltes Gerät: `sessionStorage`, nichts überlebt das Schließen des
+      Fensters, und es gibt keine PIN — sie könnte die Inhalte der vorherigen
+      Person ohnehin nicht schützen. Umstellen geht nur zusammen mit dem Löschen
+      aller Inhalte (Datenschutz-Ansicht). **Für den Pilot zu klären:** Reicht
+      das für Schulungsräume, oder braucht es dort einen reinen Lesemodus?
 - [ ] **Quick Exit.** Verlässt die App schnell. Zu prüfen, ob dabei alle sichtbaren
       Spuren verschwinden sollen.
 - [ ] **Hosting** der Anwendung selbst (heute nur lokal lauffähig).

@@ -4,6 +4,10 @@
  * Grundhaltung wie überall in dieser App: Was nicht hinterlegt ist, wird als
  * „noch nicht hinterlegt" gezeigt und nicht geraten. Ein leeres Ergebnis ist
  * hier ein gültiges Ergebnis.
+ *
+ * Die Standortwahl geht bewusst nicht über src/lib/speicher.js: Sie ist keine
+ * persönliche Angabe, und auf einem geteilten Werkstattgerät ist der Standort
+ * für alle derselbe. Er darf also bleiben.
  */
 
 import { STANDORTE, STANDORT_ROLLEN } from "../config/standorte.js";

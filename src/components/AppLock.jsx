@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Lock, ShieldCheck, Delete } from "lucide-react";
+import { Lock, ShieldCheck, Delete, Smartphone, Users } from "lucide-react";
 import { pinEingerichtet, pinEinrichten, pinPruefen, sperreRestMs } from "../lib/lock";
+import { GETEILT, PERSOENLICH, geraetemodusSetzen, modusGewaehlt } from "../lib/geraet.js";
 
 export function AppLock({ onUnlock }) {
+  // Vor allem anderen: Gehört dieses Gerät einer Person, oder teilen es sich
+  // mehrere? Davon hängt ab, ob überhaupt etwas gespeichert werden darf.
+  const [modusOffen, setModusOffen] = useState(() => !modusGewaehlt());
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
   const [meldung, setMeldung] = useState("");
@@ -76,6 +80,20 @@ export function AppLock({ onUnlock }) {
       abgebrochen = true;
     };
   }, [pin, einrichten, ersteEingabe, onUnlock, fehlerZeigen]);
+
+  if (modusOffen) {
+    return (
+      <Geraetewahl
+        onWahl={(modus) => {
+          geraetemodusSetzen(modus);
+          setModusOffen(false);
+          // Auf einem geteilten Gerät bleibt nichts zurück, also gibt es auch
+          // nichts zu sperren. Eine PIN wäre hier nur eine Hürde ohne Schutz.
+          if (modus === GETEILT) onUnlock();
+        }}
+      />
+    );
+  }
 
   const gesperrt = gesperrtBis > 0;
 
@@ -202,6 +220,78 @@ export function AppLock({ onUnlock }) {
             nicht im Klartext.
           </span>
         </div>
+      </motion.div>
+    </div>
+  );
+}
+
+/**
+ * Die erste Frage beim allerersten Start.
+ *
+ * Sie steht vor der PIN, weil sie die wichtigere ist: Auf einem geteilten Gerät
+ * schützt keine vierstellige PIN die Inhalte der vorherigen Person. Die App
+ * speichert dort deshalb nichts, was das Schließen des Fensters überdauert.
+ */
+function Geraetewahl({ onWahl }) {
+  return (
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-white selection:bg-db-red">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md flex flex-col items-center"
+      >
+        <div className="bg-db-red/20 p-4 rounded-full mb-6">
+          <Lock className="w-12 h-12 text-db-red" />
+        </div>
+
+        <h1 className="text-2xl font-black mb-2 tracking-tight text-center">
+          Wer nutzt dieses Gerät?
+        </h1>
+        <p className="text-slate-400 font-medium text-sm mb-8 text-center max-w-sm leading-relaxed">
+          Davon hängt ab, ob die App etwas auf diesem Gerät speichern darf. Du kannst das später
+          nicht versehentlich umstellen — frag im Zweifel, wem das Gerät gehört.
+        </p>
+
+        <div className="w-full space-y-3">
+          <button
+            type="button"
+            onClick={() => onWahl(PERSOENLICH)}
+            className="w-full rounded-2xl border-2 border-white/15 bg-white/5 p-5 text-left transition hover:border-db-red hover:bg-white/10"
+          >
+            <span className="flex items-center gap-3">
+              <Smartphone className="h-6 w-6 shrink-0 text-db-red" />
+              <span className="font-black">Nur ich nutze dieses Gerät</span>
+            </span>
+            <span className="mt-2 block text-sm font-medium leading-relaxed text-slate-400">
+              Dein persönliches Diensthandy oder dein Laptop. Deine Notizen bleiben gespeichert und
+              sind mit einer PIN geschützt.
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onWahl(GETEILT)}
+            className="w-full rounded-2xl border-2 border-white/15 bg-white/5 p-5 text-left transition hover:border-db-red hover:bg-white/10"
+          >
+            <span className="flex items-center gap-3">
+              <Users className="h-6 w-6 shrink-0 text-db-red" />
+              <span className="font-black">Mehrere nutzen dieses Gerät</span>
+            </span>
+            <span className="mt-2 block text-sm font-medium leading-relaxed text-slate-400">
+              Werkstatt-Tablet, Schulungsraum, Schichtgerät. Dann speichert die App nichts: Sobald
+              du das Fenster schließt, ist alles weg — auch für die nächste Person. Rechte,
+              Kontakte und Meldewege funktionieren weiter.
+            </span>
+          </button>
+        </div>
+
+        <p className="mt-8 flex items-start gap-2 text-xs font-medium leading-relaxed text-slate-500 max-w-sm">
+          <ShieldCheck className="mt-px h-4 w-4 shrink-0 text-emerald-500" />
+          <span>
+            Eine vierstellige PIN kann Inhalte nicht verschlüsseln. Auf einem geteilten Gerät wäre
+            sie deshalb ein falsches Versprechen — dort speichert die App lieber gar nichts.
+          </span>
+        </p>
       </motion.div>
     </div>
   );

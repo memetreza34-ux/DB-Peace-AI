@@ -2,9 +2,12 @@
  * Das Gedächtnisprotokoll auf dem Gerät.
  *
  * Einordnung, damit hier niemand mehr hineinliest als drinsteht: Die Einträge
- * liegen im localStorage dieses Browsers. Sie werden nirgendwohin übertragen —
- * aber sie sind auch nicht verschlüsselt. Wer das Gerät entsperrt hat, kann sie
- * lesen. Die PIN sperrt die Oberfläche, nicht den Speicher.
+ * bleiben auf diesem Gerät und werden nirgendwohin übertragen — aber sie sind
+ * nicht verschlüsselt. Wer das Gerät entsperrt hat, kann sie lesen. Die PIN
+ * sperrt die Oberfläche, nicht den Speicher.
+ *
+ * Wohin genau geschrieben wird, entscheidet der Gerätemodus (src/lib/geraet.js):
+ * Auf einem geteilten Gerät überlebt nichts das Schließen des Fensters.
  *
  * Fotos werden vor dem Speichern verkleinert und als Data-URL abgelegt, sonst
  * wären sie nach dem nächsten Neuladen weg (Blob-URLs überleben das nicht) und
@@ -12,6 +15,9 @@
  * Video — werden bewusst nicht mitgespeichert; dafür ist der Platz zu knapp.
  * Von ihnen bleibt nur der Name, und die App sagt das auch.
  */
+
+import { lesen, schreiben } from "./speicher.js";
+import { istGeteilt } from "./geraet.js";
 
 const SPEICHER_SCHLUESSEL = "db-peace-protokoll";
 const MAX_BILDKANTE = 1400;
@@ -54,7 +60,7 @@ export function eintraegeFuerSpeicher(eintraege) {
 /** Lädt das Protokoll. `ersterStart` ist true, solange nie gespeichert wurde. */
 export function protokollLaden() {
   try {
-    const roh = localStorage.getItem(SPEICHER_SCHLUESSEL);
+    const roh = lesen(SPEICHER_SCHLUESSEL);
     if (roh === null) return { eintraege: [BEISPIEL_EINTRAG], ersterStart: true };
     const daten = JSON.parse(roh);
     if (!Array.isArray(daten)) return { eintraege: [], ersterStart: false };
@@ -65,19 +71,16 @@ export function protokollLaden() {
   }
 }
 
+/** Sagt der Oberfläche, wie lange die Einträge bleiben. */
+export function speicherHinweis() {
+  return istGeteilt()
+    ? "Dieses Gerät ist als geteiltes Gerät eingestellt: Deine Einträge verschwinden, sobald du das Fenster schließt. Nichts bleibt für die nächste Person zurück."
+    : "Deine Einträge bleiben auf diesem Gerät und werden nirgendwohin gesendet. Sie sind dort aber nicht verschlüsselt — wer das Gerät entsperrt hat, kann sie lesen.";
+}
+
 /** Speichert das Protokoll. Gibt bei vollem Speicher einen Klartext-Hinweis zurück. */
 export function protokollSpeichern(eintraege) {
-  try {
-    localStorage.setItem(SPEICHER_SCHLUESSEL, JSON.stringify(eintraegeFuerSpeicher(eintraege)));
-    return { ok: true, fehler: "" };
-  } catch {
-    return {
-      ok: false,
-      fehler:
-        "Der Speicher dieses Geräts ist voll. Der Eintrag ist noch auf dem Bildschirm, aber " +
-        "noch nicht dauerhaft gesichert. Lösche ältere Einträge oder Fotos und versuche es erneut.",
-    };
-  }
+  return schreiben(SPEICHER_SCHLUESSEL, JSON.stringify(eintraegeFuerSpeicher(eintraege)));
 }
 
 /**

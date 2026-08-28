@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { GETEILT, PERSOENLICH, geraetemodus, geraetemodusSetzen } from "../lib/geraet.js";
 import {
   BadgeCheck,
   CheckCircle2,
@@ -67,7 +68,8 @@ function PrivacyCompliance() {
         <AiBoundaries />
         <UserControl />
         <ComplianceChecklist checked={checked} toggle={toggle} />
-        <FinalDisclaimer />
+        <Geraeteeinstellung />
+      <FinalDisclaimer />
       </div>
     </section>
   );
@@ -181,6 +183,56 @@ function ComplianceChecklist({ checked, toggle }) {
         ))}
       </div>
     </Section>
+  );
+}
+
+/**
+ * Der Gerätemodus lässt sich hier ändern — bewusst an einer Stelle, die man
+ * suchen muss, und nur zusammen mit dem Löschen der Inhalte. Sonst wäre der
+ * Wechsel von „geteilt" auf „nur ich" ein stiller Weg, fremde Notizen sichtbar
+ * zu machen.
+ */
+function Geraeteeinstellung() {
+  const [modus, setModus] = useState(() => geraetemodus());
+
+  const umstellen = () => {
+    const ziel = modus === PERSOENLICH ? GETEILT : PERSOENLICH;
+    const bestaetigt = window.confirm(
+      "Gerätemodus umstellen? Dabei werden alle auf diesem Gerät gespeicherten Inhalte " +
+        "gelöscht — Protokolleinträge, Chatverlauf und Projekte. Das lässt sich nicht rückgängig machen."
+    );
+    if (!bestaetigt) return;
+
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch {
+      /* Kein Speicherzugriff — dann ist auch nichts zu löschen. */
+    }
+    geraetemodusSetzen(ziel);
+    setModus(ziel);
+    window.location.reload();
+  };
+
+  return (
+    <div className="mt-10 rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
+      <h3 className="text-2xl font-black">Dieses Gerät</h3>
+      <p className="mt-3 max-w-3xl font-semibold leading-7 text-db-rail">
+        {modus === PERSOENLICH
+          ? "Eingestellt als persönliches Gerät: Deine Einträge bleiben gespeichert und die App ist mit einer PIN geschützt."
+          : "Eingestellt als geteiltes Gerät: Die App speichert nichts dauerhaft. Sobald das Fenster geschlossen wird, ist alles weg — auch für die nächste Person."}
+      </p>
+      <button
+        type="button"
+        onClick={umstellen}
+        className="mt-5 inline-flex min-h-11 items-center rounded-xl border border-db-dark/15 px-5 py-2.5 text-sm font-black text-db-dark transition hover:border-db-red hover:text-db-red"
+      >
+        {modus === PERSOENLICH ? "Auf geteiltes Gerät umstellen" : "Auf persönliches Gerät umstellen"}
+      </button>
+      <p className="mt-3 text-xs font-semibold text-db-rail">
+        Beim Umstellen werden alle gespeicherten Inhalte gelöscht.
+      </p>
+    </div>
   );
 }
 

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { lesen, schreiben } from "../lib/speicher.js";
 import { Bot, Send, X, MessageSquareText } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { erkenneKrise } from "../lib/crisis";
@@ -41,7 +42,7 @@ export function FloatingChatWidget() {
   ];
 
   const [messages, setMessages] = useState(() => {
-    const saved = localStorage.getItem("db-peace-chat");
+    const saved = lesen("db-peace-chat");
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -53,7 +54,7 @@ export function FloatingChatWidget() {
   });
 
   useEffect(() => {
-    localStorage.setItem("db-peace-chat", JSON.stringify(messages));
+    schreiben("db-peace-chat", JSON.stringify(messages));
   }, [messages]);
 
   const [input, setInput] = useState("");

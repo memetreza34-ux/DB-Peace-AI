@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import AnonymousReport from "./AnonymousReport.jsx";
 import { AISmartReport } from "./AISmartReport.jsx";
 import { NotebookPen, Megaphone, Plus, Clock, FileText, Camera, X, ArrowLeft, Trash2, Smartphone, AlertTriangle } from "lucide-react";
-import { protokollLaden, protokollSpeichern, dateiEinlesen } from "../lib/protokoll.js";
+import { protokollLaden, protokollSpeichern, dateiEinlesen, speicherHinweis } from "../lib/protokoll.js";
 import { useDialog } from "../lib/useDialog.js";
 
 export function RecordAndReportView() {
@@ -213,9 +213,7 @@ export function RecordAndReportView() {
             <div className="mt-4 flex items-start gap-2.5 rounded-xl bg-db-soft dark:bg-white/5 border border-db-dark/10 dark:border-white/10 p-3">
               <Smartphone className="mt-0.5 h-4 w-4 shrink-0 text-db-rail dark:text-white/60" />
               <p className="text-[11px] font-semibold leading-relaxed text-db-rail dark:text-white/60">
-                Deine Einträge bleiben auf diesem Gerät und werden nirgendwohin gesendet. Sie sind
-                dort aber nicht verschlüsselt — wer das Gerät entsperrt hat, kann sie lesen. Auf
-                einem geteilten Gerät lösche sie besser, wenn du fertig bist.
+                {speicherHinweis()}
               </p>
             </div>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { LogOut } from "lucide-react";
+import { entfernen } from "../lib/speicher.js";
 
 /**
  * Schnell raus hier.
@@ -17,7 +18,7 @@ import { LogOut } from "lucide-react";
 export function PanicButton() {
   const sofortRaus = () => {
     try {
-      localStorage.removeItem("db-peace-chat");
+      entfernen("db-peace-chat");
       sessionStorage.clear();
     } catch {
       /* Speicher blockiert — dann wenigstens die Seite verlassen */

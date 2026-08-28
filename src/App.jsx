@@ -13,6 +13,7 @@ import { GlobalSearch } from "./components/GlobalSearch.jsx";
 import { RightsAndLawsView } from "./components/RightsAndLawsView.jsx";
 import { RollenPostfach } from "./components/RollenPostfach.jsx";
 import { AppLock } from "./components/AppLock.jsx";
+import { istGeteilt, modusGewaehlt } from "./lib/geraet.js";
 import { PanicButton } from "./components/PanicButton.jsx";
 import { RollenWechsel } from "./components/RollenWechsel.jsx";
 
@@ -34,7 +35,9 @@ export default function App() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   // null = Azubi-Ansicht. Sonst die Id der Rolle, deren Postfach angesehen wird.
   const [aktiveRolle, setAktiveRolle] = useState(null);
-  const [isLocked, setIsLocked] = useState(true);
+  // Auf einem geteilten Gerät gibt es keine gespeicherten Inhalte und damit
+  // nichts zu sperren. Ist der Modus noch nicht gewählt, fragt AppLock danach.
+  const [isLocked, setIsLocked] = useState(() => !modusGewaehlt() || !istGeteilt());
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
   useEffect(() => {

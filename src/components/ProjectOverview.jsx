@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { lesen, schreiben } from "../lib/speicher.js";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Users, CheckCircle2, Sparkles, X, HeartHandshake, FileText, LayoutDashboard, Eye, Clock } from "lucide-react";
 
@@ -37,12 +38,12 @@ const INITIAL_PROJECTS = [
 
 export default function ProjectOverview() {
   const [projects, setProjects] = useState(() => {
-    const saved = localStorage.getItem("db-peace-projects");
+    const saved = lesen("db-peace-projects");
     return saved ? JSON.parse(saved) : INITIAL_PROJECTS;
   });
 
   useEffect(() => {
-    localStorage.setItem("db-peace-projects", JSON.stringify(projects));
+    schreiben("db-peace-projects", JSON.stringify(projects));
   }, [projects]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
