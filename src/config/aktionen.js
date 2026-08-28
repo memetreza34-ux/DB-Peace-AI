@@ -39,6 +39,88 @@ export const AKTIONEN = {
     grundlage: "§ 70 Abs. 1 Nr. 1 BetrVG",
     brauchtZustimmung: true,
   },
+  beschwerde_aufnehmen: {
+    id: "beschwerde_aufnehmen",
+    label: "Beschwerde formal aufnehmen",
+    beschreibung:
+      "Hält der Betriebsrat die Beschwerde für berechtigt, wirkt er beim Arbeitgeber auf Abhilfe hin. Das ist der Weg, den sonst niemand hat.",
+    vermerk: "Beschwerde formal aufgenommen. Der Betriebsrat prüft, ob er sie für berechtigt hält.",
+    grundlage: "§ 85 BetrVG",
+  },
+  monatsgespraech: {
+    id: "monatsgespraech",
+    label: "Für das Monatsgespräch vormerken",
+    beschreibung:
+      "Das Thema im regelmäßigen Gespräch mit dem Arbeitgeber ansprechen — ohne den Einzelfall preiszugeben.",
+    vermerk: "Für das Monatsgespräch vorgemerkt, ohne Angaben zur meldenden Person.",
+    grundlage: "§ 74 BetrVG",
+  },
+  nachteilsausgleich: {
+    id: "nachteilsausgleich",
+    label: "Nachteilsausgleich prüfen",
+    beschreibung:
+      "Prüfen, ob ein Nachteilsausgleich in Frage kommt — bei Prüfungen, Arbeitszeit oder Ausstattung.",
+    vermerk: "Nachteilsausgleich wird geprüft.",
+  },
+  beteiligung_einfordern: {
+    id: "beteiligung_einfordern",
+    label: "Beteiligung einfordern",
+    beschreibung:
+      "Die Schwerbehindertenvertretung ist rechtzeitig zu beteiligen. Wurde sie übergangen, ist die Durchführung auszusetzen.",
+    vermerk: "Beteiligung der Schwerbehindertenvertretung eingefordert.",
+    grundlage: "§ 178 SGB IX",
+  },
+  weg_waehlen: {
+    id: "weg_waehlen",
+    label: "Weg gemeinsam wählen",
+    beschreibung:
+      "Vertrauliches Gespräch oder formale Beschwerde — die betroffene Person entscheidet, und zwar bevor Fristen ablaufen.",
+    vermerk:
+      "Vorgehen gemeinsam besprochen: vertrauliches Gespräch oder formale Beschwerde. Die Entscheidung liegt bei der betroffenen Person.",
+  },
+  frist_erklaeren: {
+    id: "frist_erklaeren",
+    label: "Über die Frist informieren",
+    beschreibung:
+      "Die betroffene Person soll früh wissen, dass für Ansprüche nach dem AGG eine Frist von zwei Monaten läuft — auch während intern noch beraten wird.",
+    vermerk: "Über die laufende Frist nach dem AGG informiert.",
+    grundlage: "§ 15 Abs. 4 AGG",
+  },
+  beratung_vermitteln: {
+    id: "beratung_vermitteln",
+    label: "Beratung vermitteln",
+    beschreibung:
+      "Den Kontakt zur Mitarbeitendenunterstützung herstellen — anonym und außerhalb des Betriebs.",
+    vermerk: "Kontakt zur Beratung vermittelt. Die Nutzung bleibt freiwillig und anonym.",
+  },
+  wiedervorlage: {
+    id: "wiedervorlage",
+    label: "In zwei Wochen nachfragen",
+    beschreibung:
+      "Dranbleiben statt abhaken. Persönliche Anliegen brauchen keinen Vorgang, aber jemanden, der sich wieder meldet.",
+    vermerk: "Wiedervorlage in zwei Wochen notiert.",
+  },
+  standortgespraech: {
+    id: "standortgespraech",
+    label: "Gespräch am Standort ansetzen",
+    beschreibung: "Beide Seiten getrennt vorbereiten, bevor sie zusammen an einen Tisch gehen.",
+    vermerk: "Gespräch am Standort angesetzt, mit getrennten Vorgesprächen.",
+  },
+  massnahme_standort: {
+    id: "massnahme_standort",
+    label: "Maßnahme für den Standort veranlassen",
+    beschreibung:
+      "Wenn mehrere ähnliche Fälle auftreten, hilft keine Einzelfallklärung — dann muss sich etwas am Standort ändern.",
+    vermerk: "Maßnahme für den Standort veranlasst.",
+  },
+  oertliche_jav_einbeziehen: {
+    id: "oertliche_jav_einbeziehen",
+    label: "Örtliche JAV einbeziehen",
+    beschreibung:
+      "Achtung: Wer sich hierher gewendet hat, wollte die Leute vor Ort meist bewusst heraushalten. Ohne ausdrückliche Zustimmung ist das ein Vertrauensbruch.",
+    vermerk: "Örtliche JAV mit Zustimmung der meldenden Person einbezogen.",
+    brauchtZustimmung: true,
+  },
   vier_augen: {
     id: "vier_augen",
     label: "Vier-Augen-Gespräch vorschlagen",
@@ -77,9 +159,17 @@ export const AKTIONEN = {
 /** Welche Aktionen hat welche Rolle? Rollen ohne Eintrag behalten das Grundpostfach. */
 export const ROLLEN_AKTIONEN = {
   jav: ["sprechstunde", "begleitung", "br_einbringen"],
+  gjav: ["sprechstunde", "oertliche_jav_einbeziehen"],
+  kjav: ["sprechstunde", "oertliche_jav_einbeziehen"],
+  betriebsrat: ["beschwerde_aufnehmen", "monatsgespraech"],
+  sbv: ["nachteilsausgleich", "beteiligung_einfordern"],
+  gleichstellung: ["weg_waehlen", "frist_erklaeren"],
   afk: ["vier_augen", "ausbildungsplan"],
+  ngk: ["beratung_vermitteln", "wiedervorlage"],
+  ausbildungsleitung: ["standortgespraech", "massnahme_standort"],
   hr: ["eingang_bestaetigen", "massnahme"],
   compliance: ["eingang_bestaetigen", "anonyme_rueckfrage"],
+  // vertrauensleute: bewusst leer — wer nur reden will, löst keinen Vorgang aus.
 };
 
 /** Die Aktionen einer Rolle, als vollständige Objekte. */

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   AlarmClock,
   ArrowLeft,
@@ -14,7 +14,8 @@ import {
   ShieldCheck,
   UserCheck,
 } from "lucide-react";
-import { DEMO_FAELLE } from "../data/demoFaelle.js";
+import { abonnieren, alleFaelle, fallWeitergeben, verlaufErgaenzen } from "../lib/faelle.js";
+import { POSTFACH_ROLLEN } from "../config/rollen.js";
 import {
   rolleFinden,
   gruppeVon,
@@ -37,29 +38,30 @@ import { eingangsDatum, fristenFuer, fristStand } from "../lib/fristen.js";
  * filtert nichts selbst und bekommt auch keine Gesamtliste als Prop — was eine
  * Rolle nicht sehen darf, kommt hier gar nicht erst an.
  */
+const jetzt = () => new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+
 export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
   const rolle = rolleFinden(rolleId);
   const gruppe = gruppeVon(rolleId);
   const regel = weiterleitungsRegel(rolleId);
   const zeigtFristen = darf(rolleId, "fristenSetzen");
 
-  const grundFaelle = useMemo(() => sichtbareFaelle(rolleId, DEMO_FAELLE), [rolleId]);
+  const [bestand, setBestand] = useState(() => alleFaelle());
+  useEffect(() => abonnieren(setBestand), []);
+
+  const grundFaelle = useMemo(() => sichtbareFaelle(rolleId, bestand), [rolleId, bestand]);
   // Nur die selbst gemeldeten Vorgänge werden gezählt. Fälle über die eigene
   // Person bleiben ungezählt — sonst verriete die Zahl, dass es sie gibt.
-  const eigeneAusgeblendet = useMemo(() => ausgeblendeteEigene(rolleId, DEMO_FAELLE), [rolleId]);
+  const eigeneAusgeblendet = useMemo(() => ausgeblendeteEigene(rolleId, bestand), [rolleId, bestand]);
   const eigeneRolle = istMeineRolle(rolleId);
   const aktionen = aktionenFuer(rolleId);
   const auswertung = useMemo(() => musterErkennen(grundFaelle), [grundFaelle]);
   const zeigtAuswertung = darf(rolleId, "statistik");
-  const [antworten, setAntworten] = useState({});
   const [gewaehlteId, setGewaehlteId] = useState(grundFaelle[0]?.id ?? null);
   const [entwurf, setEntwurf] = useState("");
   const [weiterleitHinweis, setWeiterleitHinweis] = useState(false);
 
-  const faelle = grundFaelle.map((fall) => ({
-    ...fall,
-    verlauf: [...fall.verlauf, ...(antworten[fall.id] ?? [])],
-  }));
+  const faelle = grundFaelle;
   const gewaehlt = faelle.find((fall) => fall.id === gewaehlteId) ?? null;
 
   if (!rolle) {
@@ -76,16 +78,12 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
   const antworten_senden = (event) => {
     event.preventDefault();
     if (!entwurf.trim() || !gewaehlt) return;
-    const neu = {
+    verlaufErgaenzen(gewaehlt.id, {
       id: Date.now(),
       von: "rolle",
       text: entwurf.trim(),
-      zeit: new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }),
-    };
-    setAntworten((aktuell) => ({
-      ...aktuell,
-      [gewaehlt.id]: [...(aktuell[gewaehlt.id] ?? []), neu],
-    }));
+      zeit: jetzt(),
+    });
     setEntwurf("");
   };
 
@@ -100,16 +98,27 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
       );
       if (!bestaetigt) return;
     }
-    const vermerk = {
+    verlaufErgaenzen(gewaehlt.id, {
       id: Date.now(),
       von: "system",
       text: `${rolle.kurz}: ${aktion.vermerk}`,
-      zeit: new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }),
-    };
-    setAntworten((aktuell) => ({
-      ...aktuell,
-      [gewaehlt.id]: [...(aktuell[gewaehlt.id] ?? []), vermerk],
-    }));
+      zeit: jetzt(),
+    });
+  };
+
+  const weitergeben = (zielId) => {
+    const ziel = POSTFACH_ROLLEN.find((eintrag) => eintrag.id === zielId);
+    if (!gewaehlt || !ziel) return;
+
+    const bestaetigt = window.confirm(
+      `Fall an ${ziel.kurz} weitergeben?\n\n${regel.bedingung}\n\n` +
+        "Die Weitergabe steht danach für beide Seiten im Verlauf und lässt sich nicht zurücknehmen."
+    );
+    if (!bestaetigt) return;
+
+    fallWeitergeben(gewaehlt.id, rolle.kurz, ziel.id, ziel.kurz, jetzt());
+    setWeiterleitHinweis(false);
+    setGewaehlteId(null);
   };
 
   return (
@@ -372,11 +381,25 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                         An eine andere Stelle weitergeben
                       </button>
                       {weiterleitHinweis && (
-                        <p className="mt-2 rounded-xl border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-white/5 p-3 text-xs font-semibold leading-relaxed text-db-rail dark:text-white/70">
-                          {regel.bedingung} Die betroffene Person wird gefragt und sieht im eigenen
-                          Verlauf, was sie entschieden hat. In dieser Vorschau wird nichts
-                          weitergegeben.
-                        </p>
+                        <div className="mt-2 rounded-xl border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-white/5 p-3">
+                          <p className="text-xs font-semibold leading-relaxed text-db-rail dark:text-white/70">
+                            {regel.bedingung} Die Weitergabe steht danach für beide Seiten im
+                            Verlauf — der Fall verschwindet aus diesem Postfach und liegt bei der
+                            gewählten Stelle.
+                          </p>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {POSTFACH_ROLLEN.filter((ziel) => ziel.id !== rolleId).map((ziel) => (
+                              <button
+                                key={ziel.id}
+                                type="button"
+                                onClick={() => weitergeben(ziel.id)}
+                                className="min-h-11 rounded-lg border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 px-3 text-xs font-bold text-db-dark dark:text-white transition hover:border-db-red hover:text-db-red"
+                              >
+                                {ziel.kurz}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                       )}
                     </div>
                   )}

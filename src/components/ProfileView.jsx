@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   User, 
@@ -22,8 +22,9 @@ import {
   ArrowRight,
   Star
 } from "lucide-react";
-import { DEMO_FAELLE } from "../data/demoFaelle.js";
+import { abonnieren, alleFaelle, verlaufErgaenzen } from "../lib/faelle.js";
 import { eigeneFaelle, rolleFinden } from "../lib/rolle.js";
+import { eingangsDatum, fristenFuer, fristStand } from "../lib/fristen.js";
 import { protokollLaden } from "../lib/protokoll.js";
 import { stimmungLaden, tagesbezeichnung } from "../lib/stimmung.js";
 
@@ -31,7 +32,8 @@ export function ProfileView() {
   const [activeTab, setActiveTab] = useState("postfach");
   // Die eigenen Vorgänge — dieselben Fälle, die im Postfach der jeweiligen
   // Stelle liegen. Antworten bleiben in diesem Tab, es geht nichts hinaus.
-  const [tickets, setTickets] = useState(() => eigeneFaelle(DEMO_FAELLE));
+  const [tickets, setTickets] = useState(() => eigeneFaelle(alleFaelle()));
+  useEffect(() => abonnieren((bestand) => setTickets(eigeneFaelle(bestand))), []);
   const [selectedTicketId, setSelectedTicketId] = useState(null);
   const [replyText, setReplyText] = useState("");
 
@@ -40,18 +42,12 @@ export function ProfileView() {
     const selectedTicket = tickets.find(t => t.id === selectedTicketId);
     if (!replyText.trim() || !selectedTicket) return;
 
-    const neu = {
+    verlaufErgaenzen(selectedTicket.id, {
       id: Date.now(),
       von: "melder",
       text: replyText,
-      zeit: new Date().toLocaleTimeString("de-DE", { hour: '2-digit', minute: '2-digit' })
-    };
-
-    setTickets((aktuell) =>
-      aktuell.map((fall) =>
-        fall.id === selectedTicket.id ? { ...fall, verlauf: [...fall.verlauf, neu] } : fall
-      )
-    );
+      zeit: new Date().toLocaleTimeString("de-DE", { hour: '2-digit', minute: '2-digit' }),
+    });
     setReplyText("");
   };
 
@@ -125,6 +121,7 @@ export function ProfileView() {
               <div className="w-full lg:w-2/3 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 flex flex-col overflow-hidden">
                 {selectedTicket ? (
                   <>
+                    <FristenFuerMich fall={selectedTicket} />
                     <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
                        {selectedTicket.verlauf.map(msg => (
                           <div key={msg.id} className={`flex ${msg.von === 'melder' ? 'justify-end' : 'justify-start'}`}>
@@ -387,5 +384,53 @@ export function ProfileView() {
 
       </div>
     </motion.div>
+  );
+}
+
+/**
+ * Was die meldende Person über den Fristenlauf wissen muss.
+ *
+ * Die bearbeitende Stelle sieht ihre Fristen längst. Für Betroffene ist die
+ * Frage aber die wichtigere: Wann muss ich eine Antwort bekommen — und läuft
+ * währenddessen eine Frist, die mir schadet, wenn ich sie verpasse?
+ */
+function FristenFuerMich({ fall }) {
+  const eingang = eingangsDatum(fall);
+  const fristen = eingang ? fristenFuer(fall.empfaenger, fall) : [];
+  if (fristen.length === 0) return null;
+
+  const stelle = rolleFinden(fall.empfaenger)?.kurz ?? "die zuständige Stelle";
+
+  return (
+    <div className="border-b border-db-dark/10 dark:border-white/10 bg-db-soft/60 dark:bg-white/5 p-4 space-y-2">
+      {fristen.map((frist) => {
+        const stand = fristStand(frist, eingang);
+        const ueberfaellig = stand.stand === "ueberfaellig";
+        return (
+          <div
+            key={frist.id}
+            className={`rounded-xl border p-3 ${
+              ueberfaellig
+                ? "border-db-red/40 bg-red-50 dark:bg-red-950/20"
+                : "border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/30"
+            }`}
+          >
+            <p
+              className={`text-xs font-black ${
+                ueberfaellig ? "text-db-redInk dark:text-red-300" : "text-db-dark dark:text-white"
+              }`}
+            >
+              {frist.bezeichnung}: {stand.text}
+            </p>
+            <p className="mt-1 text-[11px] font-semibold leading-relaxed text-db-rail dark:text-white/60">
+              {ueberfaellig
+                ? `${stelle} hätte sich längst melden müssen. Du darfst nachfragen — und dich an eine andere Stelle wenden, wenn nichts passiert.`
+                : frist.erklaerung}{" "}
+              ({frist.grundlage})
+            </p>
+          </div>
+        );
+      })}
+    </div>
   );
 }

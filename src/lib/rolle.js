@@ -47,13 +47,17 @@ export function hatPostfach(rolleId) {
  * Die zwei Fälle werden bewusst unterschiedlich behandelt:
  *
  * - Den eigenen Vorgang darf man erklärt bekommen — man weiß ohnehin, dass man
- *   ihn geschrieben hat.
- * - Ein Fall, der sich gegen einen richtet, verschwindet spurlos. Ein Hinweis
- *   wie „ein Vorgang wird dir nicht angezeigt" würde der betroffenen Person
- *   verraten, dass jemand sie gemeldet hat — und damit die Meldung selbst.
+ *   ihn geschrieben hat. Ausgeblendet wird er nur dort, wo man ihn bearbeiten
+ *   könnte, also in den eigenen Rollen. In der Vorschau auf eine fremde Stelle
+ *   ist man nicht Bearbeiter, sondern sieht schlicht den eigenen Vorgang.
+ * - Ein Fall, der sich gegen einen richtet, verschwindet dagegen überall und
+ *   spurlos. Ein Hinweis wie „ein Vorgang wird dir nicht angezeigt" würde der
+ *   betroffenen Person verraten, dass jemand sie gemeldet hat — und damit die
+ *   Meldung selbst.
  */
-export function istBefangen(fall) {
-  return Boolean(fall?.vonMir) || Boolean(fall?.betrifftMich);
+export function istBefangen(fall, rolleId) {
+  if (fall?.betrifftMich) return true;
+  return Boolean(fall?.vonMir) && istMeineRolle(rolleId);
 }
 
 /**
@@ -65,7 +69,7 @@ export function istBefangen(fall) {
 export function sichtbareFaelle(rolleId, faelle) {
   if (!Array.isArray(faelle)) return [];
   if (!hatPostfach(rolleId)) return [];
-  return faelle.filter((fall) => fall?.empfaenger === rolleId && !istBefangen(fall));
+  return faelle.filter((fall) => fall?.empfaenger === rolleId && !istBefangen(fall, rolleId));
 }
 
 /**
@@ -75,7 +79,7 @@ export function sichtbareFaelle(rolleId, faelle) {
  * bleiben absichtlich ungezählt — sonst verriete die Zahl ihre Existenz.
  */
 export function ausgeblendeteEigene(rolleId, faelle) {
-  if (!Array.isArray(faelle) || !hatPostfach(rolleId)) return 0;
+  if (!Array.isArray(faelle) || !hatPostfach(rolleId) || !istMeineRolle(rolleId)) return 0;
   return faelle.filter((fall) => fall?.empfaenger === rolleId && fall?.vonMir).length;
 }
 

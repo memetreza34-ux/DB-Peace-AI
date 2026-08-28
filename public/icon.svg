@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="DB Peace">
+  <!--
+    Bewusst NICHT das DB-Logo: Die App ist keine offizielle Anwendung der
+    Deutschen Bahn, und ein Icon mit dem Konzernzeichen auf dem Startbildschirm
+    würde genau das behaupten. Stattdessen ein Schild mit Sprechblase — Schutz
+    und Reden, worum es hier geht.
+  -->
+  <rect width="512" height="512" rx="112" fill="#E2001A"/>
+  <path d="M256 96l112 40v104c0 74-47 140-112 168-65-28-112-94-112-168V136l112-40z"
+        fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linejoin="round"/>
+  <path d="M196 214h120a16 16 0 0 1 16 16v62a16 16 0 0 1-16 16h-42l-30 30v-30h-48a16 16 0 0 1-16-16v-62a16 16 0 0 1 16-16z"
+        fill="#FFFFFF"/>
+</svg>

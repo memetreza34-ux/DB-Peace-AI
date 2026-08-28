@@ -355,6 +355,7 @@ export const DEMO_FAELLE = [
   {
     id: "COM-0663",
     tageHer: 0,
+    vonMir: true,
     empfaenger: "compliance",
     status: "in-bearbeitung",
     eingegangen: "Heute, 07:15",

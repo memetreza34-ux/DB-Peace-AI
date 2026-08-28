@@ -142,7 +142,13 @@ Grundpostfach. Was eine Rolle kann, steht in `src/config/aktionen.js`.
 | Rolle | Eigene Funktionen |
 |---|---|
 | JAV | Sprechstunde anbieten, Begleitung anbieten, beim Betriebsrat einbringen |
+| Gesamt-/Konzern-JAV | Sprechstunde anbieten, örtliche JAV einbeziehen (nur mit Zustimmung) |
+| Betriebsrat | Beschwerde formal aufnehmen (§ 85), fürs Monatsgespräch vormerken (§ 74) |
+| SBV | Nachteilsausgleich prüfen, Beteiligung einfordern (§ 178 SGB IX) |
+| Gleichstellung | Weg gemeinsam wählen, über die AGG-Frist informieren |
 | AFK | Vier-Augen-Gespräch vorschlagen, Bezug zum Ausbildungsplan |
+| NGK | Beratung vermitteln, in zwei Wochen nachfragen |
+| Ausbildungsleitung | Gespräch am Standort ansetzen, Maßnahme für den Standort |
 | HR | Eingang bestätigen, Maßnahme vermerken |
 | Compliance | Eingang bestätigen, anonyme Rückfrage |
 | Vertrauensleute | **bewusst keine** — wer nur reden will, löst keinen Vorgang aus |
@@ -204,8 +210,9 @@ stattdessen bearbeitet. Dafür bräuchte sie mehrere Personen je Gremium.
       Gesamtliste, nur das Ergebnis von `sichtbareFaelle()`.
 - [x] Rückkanal: anonym antworten.
 - [x] Tests dafür, dass keine Rolle fremde Fälle sieht.
-- [ ] **Offen:** Zustimmungs-Dialog beim Weiterleiten. Heute steht dort nur der
-      Hinweis auf die Regel — der Ablauf selbst fehlt.
+- [x] **Weitergabe an eine andere Stelle** — mit Zielauswahl, Rückfrage nach der
+      Zustimmung und einem Vermerk, den beide Seiten sehen. Der Fall verlässt
+      das eine Postfach und liegt danach im anderen (`src/lib/faelle.js`).
 
 ### Phase 3 — Standort — erledigt am 26.08.2026
 
@@ -226,9 +233,10 @@ stattdessen bearbeitet. Dafür bräuchte sie mehrere Personen je Gremium.
 - [x] `src/lib/fristen.js` mit Paragraf an jeder Frist; die Werte gehören vor
       dem Pilot bestätigt (siehe Pilot-Checkliste).
 - [x] Sichtbarer Fristenlauf im Postfach, überfällige Fristen rot.
-- [ ] **Offen:** Für die meldende Person sichtbar machen — „Deine Meldung ist
-      seit X Tagen offen, bis wann du eine Antwort bekommen musst: …". Das ist
-      die Seite, die für Betroffene zählt, und sie fehlt noch.
+- [x] **Für die meldende Person sichtbar**: In der Sammlung steht an jedem
+      eigenen Vorgang, welche Frist läuft und wie lange noch. Ist sie abgelaufen,
+      sagt die App, dass nachfragen erlaubt ist und man sich an eine andere
+      Stelle wenden darf.
 - [ ] **Offen:** Erinnerung an die zuständige Rolle, wenn die Frist knapp wird.
 
 ### Phase 5 — Anonymität schützen (Woche 7–8)

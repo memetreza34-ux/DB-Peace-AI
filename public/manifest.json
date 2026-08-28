@@ -1,16 +1,23 @@
 {
   "name": "DB Peace AI",
   "short_name": "Peace AI",
-  "description": "Zivilcourage und Meldemanagement für die Deutsche Bahn",
+  "description": "Begleiter für Auszubildende bei Konflikten, Mobbing und Diskriminierung. Prototyp, keine offizielle Anwendung der Deutschen Bahn AG.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F3F4F6",
-  "theme_color": "#F1142A",
+  "background_color": "#F0F3F5",
+  "theme_color": "#E2001A",
   "icons": [
     {
-      "src": "/vite.svg",
+      "src": "/icon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ]
 }

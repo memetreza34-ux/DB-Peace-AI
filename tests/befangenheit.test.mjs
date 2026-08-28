@@ -43,14 +43,21 @@ test("die Zählung verrät keinen Fall über die eigene Person", () => {
   assert.equal(ausgeblendeteEigene("jav", eigener), 1, "den eigenen Vorgang darf man erklärt bekommen");
 });
 
-test("Befangenheit greift in jeder Rolle, nicht nur in der JAV", () => {
+test("ein Fall über die eigene Person bleibt in jeder Rolle unsichtbar", () => {
   for (const rolle of ROLLEN) {
-    const faelle = [
-      { id: "E", empfaenger: rolle.id, vonMir: true },
-      { id: "G", empfaenger: rolle.id, betrifftMich: true },
-    ];
-    assert.equal(sichtbareFaelle(rolle.id, faelle).length, 0, `${rolle.id} zeigt einen befangenen Fall`);
+    const faelle = [{ id: "G", empfaenger: rolle.id, betrifftMich: true }];
+    assert.equal(sichtbareFaelle(rolle.id, faelle).length, 0, `${rolle.id} zeigt einen Fall über die eigene Person`);
   }
+});
+
+test("der eigene Vorgang ist nur in den eigenen Rollen ausgeblendet", () => {
+  const faelle = [
+    { id: "E1", empfaenger: "jav", vonMir: true },
+    { id: "E2", empfaenger: "compliance", vonMir: true },
+  ];
+  assert.equal(sichtbareFaelle("jav", faelle).length, 0, "in der eigenen Rolle ausgeblendet");
+  assert.equal(sichtbareFaelle("compliance", faelle).length, 1, "in der Vorschau sichtbar");
+  assert.equal(ausgeblendeteEigene("compliance", faelle), 0, "und dort auch nicht gezählt");
 });
 
 test("die eigene Sammlung zeigt den Vorgang weiterhin", async () => {
@@ -63,11 +70,16 @@ test("die eigene Sammlung zeigt den Vorgang weiterhin", async () => {
   );
 });
 
-test("istBefangen erkennt beide Fälle und lässt normale durch", () => {
-  assert.equal(istBefangen({ vonMir: true }), true);
-  assert.equal(istBefangen({ betrifftMich: true }), true);
-  assert.equal(istBefangen({ id: "normal" }), false);
-  assert.equal(istBefangen(null), false);
+test("istBefangen unterscheidet eigene Rollen von der Vorschau", () => {
+  // In der eigenen Rolle wäre man Bearbeiter des eigenen Falls — das geht nicht.
+  assert.equal(istBefangen({ vonMir: true }, "jav"), true);
+  // In der Vorschau auf eine fremde Stelle ist man kein Bearbeiter.
+  assert.equal(istBefangen({ vonMir: true }, "compliance"), false);
+  // Ein Fall über die eigene Person bleibt überall unsichtbar.
+  assert.equal(istBefangen({ betrifftMich: true }, "jav"), true);
+  assert.equal(istBefangen({ betrifftMich: true }, "compliance"), true);
+  assert.equal(istBefangen({ id: "normal" }, "jav"), false);
+  assert.equal(istBefangen(null, "jav"), false);
 });
 
 test("eigene Rollen sind von Vorschau-Rollen unterscheidbar", () => {
