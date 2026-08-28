@@ -245,7 +245,9 @@ stattdessen bearbeitet. Dafür bräuchte sie mehrere Personen je Gremium.
 - [ ] **Offen:** `DashboardAnalytics.jsx` daran anschließen. Die Analytics-Seite
       zeigt weiterhin frei erfundene Kennzahlen ohne Sperre — das passt nicht
       mehr zu dem, was die Postfächer tun.
-- [ ] Löschkonzept: wie lange bleibt ein Fall im Postfach, wer löscht ihn.
+- [~] Löschkonzept: Die App benennt die offene Frage an abgeschlossenen
+      Vorgängen, statt eine Frist zu erfinden. Die Entscheidung gehört ins
+      Pilotgespräch — siehe Pilot-Checkliste.
 - [ ] Quick Exit gegen die neuen Ansichten prüfen — nichts darf zurückbleiben.
 
 ### Phase 6 — Feinschliff (Woche 8–10)
@@ -281,7 +283,8 @@ An die Ausbildung und die Interessenvertretungen:
 - [ ] Wer bekommt eine Meldung, wenn keine Rolle ausgewählt wurde?
 - [ ] Darf eine Rolle einen Fall abgeben, wenn sie sich nicht zuständig fühlt —
       und wie erfährt die betroffene Person davon?
-- [ ] Wie lange bleibt ein abgeschlossener Fall sichtbar?
+- [ ] Wie lange bleibt ein abgeschlossener Fall sichtbar, und wer löscht ihn?
+      Kann die meldende Person das Löschen verlangen?
 - [ ] Wer pflegt die Standortdaten und wie oft?
 - [ ] Sollen Beschäftigte außerhalb der Ausbildung die App nutzen dürfen?
 

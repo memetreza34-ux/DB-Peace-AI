@@ -105,6 +105,9 @@ werden sie geliefert?
 - [ ] Wer ist Ansprechpartner, wenn über die App eine Meldung eingeht?
 - [ ] Wie wird sichergestellt, dass eine Meldung nicht zum Nachteil wird (§ 16 AGG)?
 - [ ] Soll die App auf Azubis begrenzt bleiben oder allen Beschäftigten offenstehen?
+- [ ] Wie lange bleibt ein abgeschlossener Vorgang im Postfach sichtbar, wer
+      löscht ihn, und kann die meldende Person das Löschen verlangen? Die App
+      legt das bewusst nicht selbst fest und sagt das in der Ansicht auch.
 - [ ] Wer pflegt die Kontaktdaten und in welchem Rhythmus?
 - [ ] Begleitung durch Profis: Wer schaut sich die Krisen-Texte fachlich an?
 

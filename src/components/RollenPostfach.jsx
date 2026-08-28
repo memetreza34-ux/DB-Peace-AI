@@ -308,6 +308,14 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                   </div>
                 </div>
 
+                {gewaehlt.status === "abgeschlossen" && (
+                  <p className="border-t border-db-dark/10 dark:border-white/10 bg-db-soft/60 dark:bg-white/5 px-5 py-3 text-xs font-semibold leading-relaxed text-db-rail dark:text-white/60">
+                    Abgeschlossen. Wie lange ein abgeschlossener Vorgang sichtbar bleibt und wer
+                    ihn löscht, ist vor einem Pilotbetrieb zu klären — die App legt das nicht
+                    eigenmächtig fest.
+                  </p>
+                )}
+
                 <Hinweisleiste rolleId={rolleId} fall={gewaehlt} />
 
                 <div className="max-h-80 space-y-3 overflow-y-auto p-5">
