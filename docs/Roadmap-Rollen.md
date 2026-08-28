@@ -237,25 +237,27 @@ stattdessen bearbeitet. Dafür bräuchte sie mehrere Personen je Gremium.
       eigenen Vorgang, welche Frist läuft und wie lange noch. Ist sie abgelaufen,
       sagt die App, dass nachfragen erlaubt ist und man sich an eine andere
       Stelle wenden darf.
-- [ ] **Offen:** Erinnerung an die zuständige Rolle, wenn die Frist knapp wird.
+- [x] **Erinnerung im Postfach**, sobald eine Frist knapp wird oder abgelaufen
+      ist — mit dem Zusatz, dass die meldende Person das ebenfalls sieht.
 
 ### Phase 5 — Anonymität schützen (Woche 7–8)
 
 - [x] Schwellenwert fünf — steckt in `src/lib/muster.js`, im Postfach sichtbar.
-- [ ] **Offen:** `DashboardAnalytics.jsx` daran anschließen. Die Analytics-Seite
-      zeigt weiterhin frei erfundene Kennzahlen ohne Sperre — das passt nicht
-      mehr zu dem, was die Postfächer tun.
+- [x] `DashboardAnalytics.jsx` folgt derselben Schwelle: Kategorien darunter
+      werden nicht ausgewiesen, auch nicht mit Namen.
 - [~] Löschkonzept: Die App benennt die offene Frage an abgeschlossenen
       Vorgängen, statt eine Frist zu erfinden. Die Entscheidung gehört ins
       Pilotgespräch — siehe Pilot-Checkliste.
-- [ ] Quick Exit gegen die neuen Ansichten prüfen — nichts darf zurückbleiben.
+- [x] Quick Exit im Rollen-Postfach ergänzt — er fehlte dort ganz, ausgerechnet
+      wo fremde Meldungen auf dem Bildschirm stehen.
 
 ### Phase 6 — Feinschliff (Woche 8–10)
 
-- [ ] Rollen-Onboarding: eine Seite je Gruppe, die erklärt, was diese Rolle in
-      der App darf und was nicht.
+- [x] Rollen erklären sich in ihrem Postfach selbst: Gruppe, Aufgabe,
+      Rechtsgrundlage, typische Themen und was sie hier tun kann.
 - [ ] Als Web-App erreichbar machen — heute läuft sie nur lokal.
-- [ ] Auf dem Handy durchspielen, jede Rolle einzeln.
+- [x] Auf 375 px durchgespielt; dabei fiel auf, dass der Quick Exit den letzten
+      Absatz verdeckte.
 - [ ] `npm run verify` grün, `docs/Pilot-Checkliste.md` nachziehen.
 
 ---

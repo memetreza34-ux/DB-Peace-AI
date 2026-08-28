@@ -57,6 +57,25 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
   const aktionen = aktionenFuer(rolleId);
   const auswertung = useMemo(() => musterErkennen(grundFaelle), [grundFaelle]);
   const zeigtAuswertung = darf(rolleId, "statistik");
+
+  // Fristen laufen im Hintergrund weiter — wer erst beim Öffnen eines Falls
+  // merkt, dass eine abgelaufen ist, merkt es zu spät.
+  const fristenLage = useMemo(() => {
+    if (!zeigtFristen) return { ueberfaellig: 0, knapp: 0 };
+    let ueberfaellig = 0;
+    let knapp = 0;
+    for (const fall of grundFaelle) {
+      if (fall.status === "abgeschlossen") continue;
+      const eingang = eingangsDatum(fall);
+      if (!eingang) continue;
+      for (const frist of fristenFuer(rolleId, fall)) {
+        const stand = fristStand(frist, eingang).stand;
+        if (stand === "ueberfaellig") ueberfaellig += 1;
+        else if (stand === "knapp") knapp += 1;
+      }
+    }
+    return { ueberfaellig, knapp };
+  }, [grundFaelle, rolleId, zeigtFristen]);
   const [gewaehlteId, setGewaehlteId] = useState(grundFaelle[0]?.id ?? null);
   const [entwurf, setEntwurf] = useState("");
   const [weiterleitHinweis, setWeiterleitHinweis] = useState(false);
@@ -192,6 +211,48 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
             auch nicht als Zahl und nicht in einer Auswertung.
           </p>
         </div>
+
+        {(fristenLage.ueberfaellig > 0 || fristenLage.knapp > 0) && (
+          <div
+            className={`flex items-start gap-3 rounded-xl border p-4 ${
+              fristenLage.ueberfaellig > 0
+                ? "border-db-red/40 bg-red-50 dark:bg-red-950/20"
+                : "border-amber-300 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/20"
+            }`}
+          >
+            <AlarmClock
+              className={`mt-0.5 h-5 w-5 shrink-0 ${
+                fristenLage.ueberfaellig > 0 ? "text-db-red" : "text-amber-600 dark:text-amber-400"
+              }`}
+            />
+            <p
+              className={`text-sm font-semibold leading-relaxed ${
+                fristenLage.ueberfaellig > 0
+                  ? "text-db-redInk dark:text-red-300"
+                  : "text-amber-900 dark:text-amber-200"
+              }`}
+            >
+              {fristenLage.ueberfaellig > 0 && (
+                <>
+                  <strong>
+                    {fristenLage.ueberfaellig === 1
+                      ? "Eine Frist ist abgelaufen"
+                      : `${fristenLage.ueberfaellig} Fristen sind abgelaufen`}
+                    .
+                  </strong>{" "}
+                  Die meldende Person sieht das ebenfalls.{" "}
+                </>
+              )}
+              {fristenLage.knapp > 0 && (
+                <>
+                  {fristenLage.knapp === 1
+                    ? "Eine weitere Frist läuft in den nächsten Tagen ab."
+                    : `${fristenLage.knapp} weitere Fristen laufen in den nächsten Tagen ab.`}
+                </>
+              )}
+            </p>
+          </div>
+        )}
 
         {eigeneAusgeblendet > 0 && (
           <div className="flex items-start gap-3 rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-4">
