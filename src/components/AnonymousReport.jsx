@@ -1,6 +1,8 @@
 import { useMemo, useState, useRef } from "react";
 import { jsPDF } from "jspdf";
 import { MeldewegeKarte } from "./MeldewegeKarte.jsx";
+import { POSTFACH_ROLLEN } from "../config/rollen.js";
+import { rolleFinden } from "../lib/rolle.js";
 import {
   AlertTriangle,
   ArrowRight,
@@ -497,29 +499,54 @@ function RiskStep({ form, update }) {
 }
 
 function ContactStep({ form, update }) {
-  const recipients = [
-    "AFK (Ausbildungsfachkraft)", 
-    "NGK (Nachwuchskräfte-Betreuer:in)", 
-    "JAV (Jugend- und Auszubildendenvertretung)", 
-    "Betriebsrat (BR)", 
-    "Gleichstellungsbeauftragte",
-    "HR-Partner"
-  ];
+  const oertlich = POSTFACH_ROLLEN.filter((rolle) => !rolle.ueberoertlich);
+  const ueberoertlich = POSTFACH_ROLLEN.filter((rolle) => rolle.ueberoertlich);
+
   return (
     <StepPanel
       title="Empfänger & Anonymität"
-      text="Wähle aus, an wen du diese Meldung senden möchtest. Deine persönlichen Daten werden automatisch aus deinem DB-Profil angehängt, außer du wählst explizit 'anonym'."
+      text="Wähle, an wen deine Meldung gehen soll. Die App verschickt nichts von selbst — sie bereitet einen Entwurf vor, den du danach selbst weitergibst."
     >
       <div className="space-y-3">
         <span className="block font-black text-db-dark dark:text-white">An wen soll die Meldung gehen?</span>
         <div className="grid gap-3 sm:grid-cols-2">
-          {recipients.map((rep) => (
+          {oertlich.map((rolle) => (
             <ChoiceButton
-              key={rep}
-              active={form.contact === rep}
-              onClick={() => update("contact", rep)}
+              key={rolle.id}
+              active={form.contact === rolle.id}
+              onClick={() => update("contact", rolle.id)}
             >
-              {rep}
+              {rolle.kurz}
+              <span className="mt-1 block text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
+                {rolle.name}
+              </span>
+            </ChoiceButton>
+          ))}
+        </div>
+      </div>
+
+      {/* An kleinen Standorten kennt man sich. Wer die Leute vor Ort heraushalten
+          will, braucht einen Weg daran vorbei — sonst meldet er gar nicht. */}
+      <div className="mt-6 space-y-3">
+        <span className="block font-black text-db-dark dark:text-white">
+          Lieber nicht an deinem Standort?
+        </span>
+        <p className="text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
+          An kleinen Standorten kennen sich alle — manchmal sitzt in der JAV jemand aus dem
+          eigenen Lehrjahr. Dann kannst du eine Ebene darüber wählen. Das ist keine Eskalation,
+          sondern dein gutes Recht.
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {ueberoertlich.map((rolle) => (
+            <ChoiceButton
+              key={rolle.id}
+              active={form.contact === rolle.id}
+              onClick={() => update("contact", rolle.id)}
+            >
+              {rolle.kurz}
+              <span className="mt-1 block text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
+                {rolle.grundlage}
+              </span>
             </ChoiceButton>
           ))}
         </div>
@@ -535,7 +562,7 @@ function ContactStep({ form, update }) {
         <span>
           Ich möchte komplett anonym bleiben
           <span className="block text-sm font-semibold leading-6 text-db-rail dark:text-white/60 mt-1">
-            Deine DB-Profildaten werden entfernt. Die Meldung kann nicht mehr zu dir zurückverfolgt werden.
+            Dein Entwurf bekommt dann keine Absenderzeile. Achte auch im Text darauf, keine Angaben zu nennen, an denen man dich erkennt.
           </span>
         </span>
       </label>
@@ -543,7 +570,7 @@ function ContactStep({ form, update }) {
       {!form.anonymous && (
         <div className="rounded-lg border border-emerald-500/20 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/30 p-4 text-sm font-bold leading-6 text-emerald-900 dark:text-emerald-300 flex items-start sm:items-center gap-3 mt-4">
           <BadgeCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5 sm:mt-0" />
-          <span>Deine hinterlegten DB-Profildaten werden automatisch und sicher mitgesendet. Du musst nichts eintippen.</span>
+          <span>Dein Entwurf bekommt eine Absenderzeile zum Ausfüllen. Die App kennt deinen Namen nicht — du trägst ihn selbst ein, bevor du die Meldung weitergibst.</span>
         </div>
       )}
     </StepPanel>
@@ -675,6 +702,13 @@ function AnalysisCard({ analysis, onImprove, onPreview, onReset, form }) {
     addSection("Kontext", form?.context || "nicht angegeben");
     addSection("Beschreibung (Original)", form?.description || "nicht angegeben");
     addSection("Empfohlene Stelle", analysis.route);
+    addSection("Gewählter Empfänger", rolleFinden(form?.contact)?.name || "nicht angegeben");
+    addSection(
+      "Absender",
+      form?.anonymous
+        ? "anonym — keine Angaben zur Person"
+        : "Name: ________________ (vor dem Weitergeben selbst eintragen)"
+    );
 
     doc.save("DB_Peace_Vorfallprotokoll.pdf");
   };
@@ -868,6 +902,18 @@ function createDraftReport(form, analysis, improved) {
     { label: "Dringlichkeit", value: form.danger },
     { label: "KI-Zusammenfassung", value: effectiveAnalysis.summary, wide: true },
     { label: "Empfohlene Weiterleitung", value: effectiveAnalysis.route, wide: true },
+    {
+      label: "Gewählter Empfänger",
+      value: rolleFinden(form.contact)?.name || "nicht angegeben",
+      wide: true,
+    },
+    {
+      label: "Absender",
+      value: form.anonymous
+        ? "anonym — keine Angaben zur Person"
+        : "Name: ________________ (vor dem Weitergeben selbst eintragen)",
+      wide: true,
+    },
   ];
 }
 

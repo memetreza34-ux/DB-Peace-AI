@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   User, 
@@ -22,56 +22,41 @@ import {
   ArrowRight,
   Star
 } from "lucide-react";
-import { mockTicketsData, subscribeToTickets, updateTickets } from "../data/mockTickets";
+import { DEMO_FAELLE } from "../data/demoFaelle.js";
+import { eigeneFaelle, rolleFinden } from "../lib/rolle.js";
+import { protokollLaden } from "../lib/protokoll.js";
 
 export function ProfileView() {
   const [activeTab, setActiveTab] = useState("postfach");
-  const [tickets, setTickets] = useState([...mockTicketsData]);
+  // Die eigenen Vorgänge — dieselben Fälle, die im Postfach der jeweiligen
+  // Stelle liegen. Antworten bleiben in diesem Tab, es geht nichts hinaus.
+  const [tickets, setTickets] = useState(() => eigeneFaelle(DEMO_FAELLE));
   const [selectedTicketId, setSelectedTicketId] = useState(null);
   const [replyText, setReplyText] = useState("");
-
-  useEffect(() => {
-    const unsubscribe = subscribeToTickets((newTickets) => {
-      setTickets([...newTickets]);
-    });
-    return () => unsubscribe();
-  }, []);
 
   const handleSendReply = (e) => {
     e.preventDefault();
     const selectedTicket = tickets.find(t => t.id === selectedTicketId);
     if (!replyText.trim() || !selectedTicket) return;
 
-    const newMsg = {
+    const neu = {
       id: Date.now(),
-      sender: "azubi",
+      von: "melder",
       text: replyText,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      zeit: new Date().toLocaleTimeString("de-DE", { hour: '2-digit', minute: '2-digit' })
     };
 
-    const updatedTickets = tickets.map(t => {
-      if (t.id === selectedTicket.id) {
-        return { ...t, messages: [...t.messages, newMsg] };
-      }
-      return t;
-    });
-
-    updateTickets(updatedTickets);
+    setTickets((aktuell) =>
+      aktuell.map((fall) =>
+        fall.id === selectedTicket.id ? { ...fall, verlauf: [...fall.verlauf, neu] } : fall
+      )
+    );
     setReplyText("");
   };
 
-  // Beispielinhalte, damit die Ansicht im Prototyp nicht leer wirkt. Sie sind
-  // erfunden — im Betrieb stehen hier ausschliesslich eigene Einträge. Die
-  // Ansicht weist unten sichtbar darauf hin.
-  const savedRecords = [
-    {
-      id: 1,
-      date: "2026-07-20",
-      time: "14:15",
-      category: "Beleidigung & Ausgrenzung",
-      description: "Wiederholte abwertende Sprüche während der Teambesprechung.",
-    }
-  ];
+  // Dieselben Einträge wie unter „Festhalten & Melden" — beide Ansichten lesen
+  // denselben Gerätespeicher, sonst zeigen sie Unterschiedliches.
+  const savedRecords = protokollLaden().eintraege;
 
   const moodHistory = [
     { date: "Heute", mood: "Gut", icon: "🙂", color: "text-emerald-500" },
@@ -116,9 +101,14 @@ export function ProfileView() {
                      >
                        <div className="flex justify-between items-start mb-1">
                           <span className="font-black text-db-dark dark:text-white text-sm">{ticket.id}</span>
-                          <span className="bg-db-dark/5 dark:bg-white/10 text-db-dark dark:text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded">{ticket.status}</span>
+                          <span className="shrink-0 whitespace-nowrap rounded bg-db-dark/5 dark:bg-white/10 px-2 py-0.5 text-[10px] font-bold text-db-dark dark:text-white">
+                            {{ offen: "offen", "in-bearbeitung": "läuft", abgeschlossen: "erledigt" }[ticket.status] ?? ticket.status}
+                          </span>
                        </div>
-                       <p className="text-xs font-bold text-db-rail dark:text-white/60 mb-2 truncate">{ticket.category}</p>
+                       <p className="text-xs font-bold text-db-rail dark:text-white/60 mb-1 truncate">{ticket.kategorie}</p>
+                       <p className="text-[11px] font-semibold text-db-rail/70 dark:text-white/40 truncate">
+                         an {rolleFinden(ticket.empfaenger)?.kurz ?? "unbekannt"}
+                       </p>
                      </button>
                    ))}
                  </div>
@@ -129,16 +119,19 @@ export function ProfileView() {
                 {selectedTicket ? (
                   <>
                     <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
-                       {selectedTicket.messages.map(msg => (
-                          <div key={msg.id} className={`flex ${msg.sender === 'azubi' ? 'justify-end' : 'justify-start'}`}>
-                            {msg.sender === 'system' ? (
+                       {selectedTicket.verlauf.map(msg => (
+                          <div key={msg.id} className={`flex ${msg.von === 'melder' ? 'justify-end' : 'justify-start'}`}>
+                            {msg.von === 'system' ? (
                               <div className="w-full text-center py-2">
                                  <span className="text-[10px] font-bold uppercase text-db-rail dark:text-white/40 bg-db-dark/5 dark:bg-white/5 px-3 py-1 rounded-full">{msg.text}</span>
                               </div>
                             ) : (
-                              <div className={`max-w-[85%] rounded-md p-4 ${msg.sender === 'azubi' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-db-soft dark:bg-white/5 text-db-dark dark:text-white rounded-tl-sm border border-db-dark/10 dark:border-white/10'}`}>
+                              <div className={`max-w-[85%] rounded-md p-4 ${msg.von === 'melder' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-db-soft dark:bg-white/5 text-db-dark dark:text-white rounded-tl-sm border border-db-dark/10 dark:border-white/10'}`}>
                                  <div className="flex items-center gap-2 mb-1 opacity-70 text-[10px] font-bold uppercase tracking-wider">
-                                    {msg.sender === 'azubi' ? 'Du' : 'HR / Vorgesetzter'} • {msg.timestamp}
+                                    {msg.von === 'melder'
+                                      ? 'Du'
+                                      : rolleFinden(selectedTicket.empfaenger)?.kurz ?? 'Bearbeitung'}{' '}
+                                    • {msg.zeit}
                                  </div>
                                  <p className="text-sm font-medium">{msg.text}</p>
                               </div>
@@ -157,7 +150,7 @@ export function ProfileView() {
                           />
                           <button 
                             type="submit"
-                            disabled={!replyText.trim() || selectedTicket.status === 'closed'}
+                            disabled={!replyText.trim() || selectedTicket.status === 'abgeschlossen'}
                             className="bg-db-red text-white p-3 rounded-xl hover:bg-red-700 transition disabled:opacity-50"
                           >
                              <Send className="w-5 h-5" />
@@ -188,7 +181,7 @@ export function ProfileView() {
                   <Clock className="w-3 h-3" />
                   {record.date} • {record.time}
                 </div>
-                <h4 className="font-black text-db-dark dark:text-white text-lg mb-1">{record.category}</h4>
+                <h4 className="font-black text-db-dark dark:text-white text-lg mb-1">{record.category || "Protokoll-Eintrag"}</h4>
                 <p className="text-sm text-db-dark/80 dark:text-white/80">{record.description}</p>
                 {/* Beide Funktionen sind im Prototyp nicht angebunden. Sichtbar
                     deaktiviert statt mit einem Hinweisfenster beim Klick. */}
@@ -283,8 +276,8 @@ export function ProfileView() {
           <h1 className="text-3xl font-black mb-1">Mein DB Peace</h1>
           <p className="text-white/70 font-medium mb-2">Dein sicherer, privater Raum.</p>
           <p className="text-white/60 text-xs font-semibold mb-4 max-w-xl leading-relaxed">
-            Im Prototyp sind hier Beispieleinträge hinterlegt, damit die Ansicht nicht leer ist.
-            Sie stammen nicht von dir.
+            Postfach, Stimmungsverlauf und gemerkte Kurse zeigen im Prototyp erfundene
+            Beispiele. Deine Gedächtnisprotokolle sind echt — sie liegen auf diesem Gerät.
           </p>
           {/* Bewusst keine Punkte, Level oder Ranglisten: Wer diese App öffnet,
               weil er gemobbt wird, sammelt keine Abzeichen. Belohnungslogik wäre

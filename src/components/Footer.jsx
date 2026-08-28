@@ -1,7 +1,7 @@
 import React from "react";
-import { HeartHandshake, BarChart3, Info, ShieldCheck } from "lucide-react";
+import { HeartHandshake, BarChart3, Info, ShieldCheck, Eye } from "lucide-react";
 
-export function Footer({ onNavigate, onToggleHR }) {
+export function Footer({ onNavigate, onRollenAnsehen }) {
   return (
     // pb-28 hält den Fußbereich frei von den schwebenden Schaltflächen (Quick Exit, Chat)
     <footer className="mt-16 border-t border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark pt-8 pb-28 sm:pb-8 text-xs font-semibold text-db-rail dark:text-white/60">
@@ -53,17 +53,17 @@ export function Footer({ onNavigate, onToggleHR }) {
               <ShieldCheck className="h-3.5 w-3.5 text-green-600" />
               <span>Datenschutz & Compliance</span>
             </button>
-            {onToggleHR && (
+            {onRollenAnsehen && (
               <>
                 <span>•</span>
                 <button
                   type="button"
-                  onClick={onToggleHR}
-                  className="flex items-center gap-1.5 text-purple-600 hover:text-purple-800 transition"
-                  title="Vorschau: So könnte eine Meldung bei HR ankommen"
+                  onClick={onRollenAnsehen}
+                  className="flex items-center gap-1.5 text-purple-700 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 transition"
+                  title="Vorschau: So käme eine Meldung bei JAV, Betriebsrat, HR oder Compliance an"
                 >
-                  <ShieldCheck className="h-3.5 w-3.5" />
-                  <span>HR-Sicht ansehen</span>
+                  <Eye className="h-3.5 w-3.5" />
+                  <span>Andere Perspektive ansehen</span>
                 </button>
               </>
             )}

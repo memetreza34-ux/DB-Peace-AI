@@ -11,10 +11,10 @@ import { ProfileView } from "./components/ProfileView.jsx";
 import { ContactsView } from "./components/ContactsView.jsx";
 import { GlobalSearch } from "./components/GlobalSearch.jsx";
 import { RightsAndLawsView } from "./components/RightsAndLawsView.jsx";
-import { HRDashboard } from "./components/HRDashboard.jsx";
+import { RollenPostfach } from "./components/RollenPostfach.jsx";
 import { AppLock } from "./components/AppLock.jsx";
 import { PanicButton } from "./components/PanicButton.jsx";
-import { SSOLoginModal } from "./components/SSOLoginModal.jsx";
+import { RollenWechsel } from "./components/RollenWechsel.jsx";
 
 import DashboardAnalytics from "./components/DashboardAnalytics.jsx";
 import ProjectOverview from "./components/ProjectOverview.jsx";
@@ -32,7 +32,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("home"); // 'home' | 'support' | 'record-report' | 'learning' | 'analytics' | 'project' | 'privacy'
   const [isEmergencyOpen, setIsEmergencyOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isHRMode, setIsHRMode] = useState(false);
+  // null = Azubi-Ansicht. Sonst die Id der Rolle, deren Postfach angesehen wird.
+  const [aktiveRolle, setAktiveRolle] = useState(null);
   const [isLocked, setIsLocked] = useState(true);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
@@ -48,17 +49,37 @@ export default function App() {
       window.removeEventListener("offline", handleOffline);
     };
   }, []);
-  const [isSSOOpen, setIsSSOOpen] = useState(false);
+  const [istRollenwahlOffen, setIstRollenwahlOffen] = useState(false);
 
   if (isLocked) {
     return <AppLock onUnlock={() => setIsLocked(false)} />;
   }
 
-  if (isHRMode) {
+  // Die Rollenauswahl wird an beiden Stellen gebraucht: aus der Azubi-Ansicht
+  // heraus und aus einem Postfach, um direkt zur nächsten Rolle zu wechseln.
+  const rollenauswahl = (
+    <RollenWechsel
+      isOpen={istRollenwahlOffen}
+      onClose={() => setIstRollenwahlOffen(false)}
+      aktiveRolle={aktiveRolle}
+      onRolleWaehlen={(rolleId) => {
+        setIstRollenwahlOffen(false);
+        setAktiveRolle(rolleId);
+      }}
+    />
+  );
+
+  if (aktiveRolle) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-db-dark font-sans text-slate-900 dark:text-white selection:bg-db-red selection:text-white">
-        <HRDashboard onExit={() => setIsHRMode(false)} />
-      </div>
+      <>
+        <RollenPostfach
+          key={aktiveRolle}
+          rolleId={aktiveRolle}
+          onExit={() => setAktiveRolle(null)}
+          onRolleWechseln={() => setIstRollenwahlOffen(true)}
+        />
+        {rollenauswahl}
+      </>
     );
   }
 
@@ -172,14 +193,7 @@ export default function App() {
         </main>
       </div>
 
-      <SSOLoginModal 
-        isOpen={isSSOOpen}
-        onClose={() => setIsSSOOpen(false)}
-        onLoginSuccess={() => {
-          setIsSSOOpen(false);
-          setIsHRMode(true);
-        }}
-      />
+      {rollenauswahl}
 
       {/* Global Floating AI Chat Widget */}
       <FloatingChatWidget />
@@ -203,7 +217,7 @@ export default function App() {
       )}
 
       {/* Footer */}
-      <Footer onNavigate={setActiveTab} onToggleHR={() => setIsSSOOpen(true)} />
+      <Footer onNavigate={setActiveTab} onRollenAnsehen={() => setIstRollenwahlOffen(true)} />
     </div>
   );
 }

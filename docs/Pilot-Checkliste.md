@@ -108,6 +108,13 @@ eigene Konfiguration ausgeliefert?
 - [ ] **DB-interne Regelwerke** in derselben Datei (Konzernbetriebsvereinbarung,
       Verhaltenskodex, „Übernahmegarantie") sind als Zitate dargestellt, aber ohne
       Quellenangabe. Vor einem Pilot belegen oder entfernen.
+- [ ] **Fristen** in `src/lib/fristen.js` — Eingangsbestätigung und Rückmeldung nach
+      HinSchG, Geltendmachungsfrist nach AGG. Die Tageswerte stehen so im Gesetz und
+      sind mit Paragraf hinterlegt, aber bevor sich in einem Pilot jemand darauf
+      verlässt, gehören sie bestätigt. Dasselbe gilt für die Rechtshinweise in
+      `src/lib/hinweise.js` (JArbSchG, § 85 BetrVG, § 178 SGB IX).
+- [ ] **Anonymitätsschwelle** in `src/lib/muster.js` — aktuell fünf gleichartige Fälle.
+      Mit Betriebsrat und Datenschutz abstimmen, ob das für kleine Standorte reicht.
 - [ ] **Bildungsangebote** in `src/data/coursesData.json` — Organisationen und Links
       sind geprüft, die Angebote selbst sollten mit der Ausbildung abgestimmt werden.
 
@@ -119,7 +126,7 @@ Diese Bereiche zeigen erfundene Daten und sind in der App als solche gekennzeich
 
 | Bereich | Inhalt |
 |---|---|
-| HR-Dashboard | erfundene Fälle, Hinweisbanner in der Ansicht |
+| Rollen-Postfächer (JAV, BR, HR, Compliance …) | erfundene Fälle, Hinweisbanner in jeder Ansicht |
 | Analytics | fiktive Kennzahlen, im Text als solche benannt |
 | Sammlung / Profil | Beispieleinträge, Hinweis im Kopfbereich |
 | Zertifikatslehrgänge | leer, mit Begründung |
