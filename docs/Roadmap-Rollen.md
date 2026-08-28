@@ -200,15 +200,19 @@ stattdessen bearbeitet. Dafür bräuchte sie mehrere Personen je Gremium.
 - [ ] **Offen:** Zustimmungs-Dialog beim Weiterleiten. Heute steht dort nur der
       Hinweis auf die Regel — der Ablauf selbst fehlt.
 
-### Phase 3 — Standort (Woche 4–5)
+### Phase 3 — Standort — erledigt am 26.08.2026
 
-- [ ] `src/config/standorte.js` — je Standort die echten Personen hinter JAV,
-      BR, AFK, NGK, Ausbildungsleitung, SBV.
-- [ ] Standortauswahl beim ersten Start, änderbar im Profil.
-- [ ] `OFFEN_FUER_PILOT` bleibt der ehrliche Fallback: was nicht hinterlegt ist,
-      steht als „noch nicht hinterlegt" da.
-- [ ] Einen Standort als Beispiel ausfüllen (erfundene Namen, klar markiert),
-      damit in der Vorführung ein vollständiger Weg zu sehen ist.
+- [x] `src/config/standorte.js` mit der Struktur für JAV, BR, SBV, AFK, NGK und
+      Ausbildungsleitung je Standort.
+- [x] Standortauswahl unter „Ansprechpartner & Meldewege", bleibt gespeichert.
+- [x] `OFFEN_FUER_PILOT` bleibt der Fallback, solange kein Standort gewählt ist.
+- [x] Ein Beispielstandort ausgefüllt — **ohne Rufnummern und E-Mail-Adressen**.
+      Eine erfundene Nummer, die jemand in einer Notlage anruft, wäre schlimmer
+      als gar keine Angabe. Ein Test hält das fest.
+- [x] Der Melde-Assistent zeigt unter „Wohin mit deiner Meldung?" die Personen
+      des eingestellten Standorts.
+- [ ] **Offen:** echte Standortdaten. Die Struktur steht, gefüllt ist nur das
+      Beispiel.
 
 ### Phase 4 — Fristen und Status — weitgehend erledigt am 26.08.2026
 

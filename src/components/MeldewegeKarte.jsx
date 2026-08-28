@@ -1,6 +1,9 @@
 import React from "react";
 import { ExternalLink, Mail, PhoneCall, MapPin, Info } from "lucide-react";
 import { DB_MELDEWEGE, OFFEN_FUER_PILOT, telLink } from "../config/kontakte";
+import { standortLaden, besetzungFuer } from "../lib/standort.js";
+import { STANDORT_ROLLEN } from "../config/standorte.js";
+import { rolleFinden } from "../lib/rolle.js";
 
 /**
  * „Und wohin jetzt damit?" — der Schritt, der aus einem Entwurf eine echte
@@ -29,18 +32,58 @@ export function MeldewegeKarte({ entwurf }) {
         ))}
       </div>
 
+      <StandortHinweis />
+    </div>
+  );
+}
+
+/**
+ * Wer am eingestellten Standort ansprechbar ist. Ohne Standort bleibt es beim
+ * ehrlichen Hinweis, dass diese Stellen noch nicht hinterlegt sind.
+ */
+function StandortHinweis() {
+  const standort = standortLaden();
+
+  if (!standort) {
+    return (
       <div className="mt-5 rounded-xl bg-db-soft dark:bg-white/5 p-4 border border-db-dark/10 dark:border-white/10">
         <p className="text-xs font-black text-db-dark dark:text-white flex items-center gap-2 mb-2">
           <MapPin className="w-4 h-4 text-db-red" /> An deinem Standort
         </p>
         <p className="text-xs font-medium text-db-rail dark:text-white/60 leading-relaxed">
-          {OFFEN_FUER_PILOT.filter((s) => !s.wert)
-            .map((s) => s.name)
+          {OFFEN_FUER_PILOT.filter((eintrag) => !eintrag.wert)
+            .map((eintrag) => eintrag.name)
             .join(", ")}{" "}
-          sind je nach Standort verschieden und im Prototyp noch nicht hinterlegt. Frag im Zweifel
-          deine Ausbildungsleitung oder schau im DB-Intranet.
+          sind je nach Standort verschieden und noch nicht hinterlegt. Deinen Standort kannst du
+          unter „Ansprechpartner &amp; Meldewege" einstellen.
         </p>
       </div>
+    );
+  }
+
+  const besetzt = STANDORT_ROLLEN.map((rolleId) => ({
+    rolle: rolleFinden(rolleId),
+    personen: besetzungFuer(standort, rolleId),
+  })).filter((eintrag) => eintrag.personen.length > 0);
+
+  return (
+    <div className="mt-5 rounded-xl bg-db-soft dark:bg-white/5 p-4 border border-db-dark/10 dark:border-white/10">
+      <p className="text-xs font-black text-db-dark dark:text-white flex items-center gap-2 mb-2">
+        <MapPin className="w-4 h-4 text-db-red" /> An deinem Standort
+        {standort.beispiel && (
+          <span className="rounded bg-amber-100 dark:bg-amber-950/40 px-2 py-0.5 text-[10px] text-amber-800 dark:text-amber-300">
+            Beispiel
+          </span>
+        )}
+      </p>
+      <ul className="space-y-1.5">
+        {besetzt.map(({ rolle, personen }) => (
+          <li key={rolle.id} className="text-xs font-medium text-db-rail dark:text-white/60">
+            <span className="font-black text-db-dark dark:text-white">{rolle.kurz}:</span>{" "}
+            {personen.map((person) => person.name).join(", ")}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

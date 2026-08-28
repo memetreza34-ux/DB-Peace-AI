@@ -48,8 +48,13 @@ dafür bewusst keine Daten.
 - [ ] **DB Sicherheit** — interne Rufnummer
 - [ ] **Gleichstellungsbeauftragte** je Bereich
 
-Offene Frage dazu: Soll die App den Standort abfragen, oder wird je Standort eine
-eigene Konfiguration ausgeliefert?
+Die Struktur dafür steht seit dem 26.08.2026 in `src/config/standorte.js`, die
+Auswahl trifft die nutzende Person selbst unter „Ansprechpartner & Meldewege".
+Gefüllt ist bisher nur ein Beispielstandort mit erfundenen Personen — bewusst
+ohne Rufnummern und E-Mail-Adressen.
+
+Offene Frage dazu: Wer pflegt die echten Standortdaten, und in welcher Form
+werden sie geliefert?
 
 ---
 

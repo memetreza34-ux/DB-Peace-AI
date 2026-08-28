@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import { STANDORTE, STANDORT_ROLLEN } from "../config/standorte.js";
+import { standortLaden, standortSpeichern, besetzungFuer } from "../lib/standort.js";
+import { rolleFinden } from "../lib/rolle.js";
 import { motion } from "framer-motion";
 import {
   ShieldAlert,
@@ -23,6 +26,13 @@ import {
 } from "../config/kontakte";
 
 export function ContactsView() {
+  const [standort, setStandort] = useState(() => standortLaden());
+
+  const standortWaehlen = (id) => {
+    standortSpeichern(id);
+    setStandort(id ? STANDORTE.find((eintrag) => eintrag.id === id) ?? null : null);
+  };
+
   const notrufe = EXTERNE_HILFE.filter((k) => k.dringend);
   const beratung = EXTERNE_HILFE.filter((k) => !k.dringend);
 
@@ -130,37 +140,108 @@ export function ContactsView() {
           <MapPin className="w-5 h-5 text-db-red" />
           <h2 className="text-lg font-black text-db-dark dark:text-white">An deinem Standort</h2>
         </div>
-        <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-5 max-w-3xl leading-relaxed">
-          Diese Stellen sind je nach Standort und Ausbildungsbereich unterschiedlich. Dieser
-          Prototyp erfindet dafür keine Kontaktdaten — im Pilotbetrieb werden sie hinterlegt.
+        <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-4 max-w-3xl leading-relaxed">
+          Diese Stellen sind je nach Standort und Ausbildungsbereich unterschiedlich. Wähle deinen
+          Standort, dann siehst du, wer dort hinter den Rollen steht.
         </p>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {OFFEN_FUER_PILOT.map((s) => (
-            <div
-              key={s.id}
-              className="rounded-xl bg-white dark:bg-db-dark/50 p-4 border border-db-dark/10 dark:border-white/10"
-            >
-              <h3 className="font-black text-sm text-db-dark dark:text-white mb-1">{s.name}</h3>
-              <p className="text-xs font-medium text-db-rail dark:text-white/60 mb-3 leading-relaxed">
-                {s.beschreibung}
-              </p>
-              {s.wert ? (
-                <a
-                  href={telLink(s.wert)}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-db-red hover:underline"
-                >
-                  <PhoneCall className="w-3.5 h-3.5" /> {s.wert}
-                </a>
-              ) : (
-                <p className="text-[11px] font-semibold text-db-rail/80 dark:text-white/50 flex items-start gap-1.5">
-                  <Info className="w-3.5 h-3.5 shrink-0 mt-px" />
-                  <span>{s.hinweis}</span>
-                </p>
-              )}
-            </div>
-          ))}
+        <div className="mb-5 flex flex-wrap items-center gap-2">
+          <label htmlFor="standortwahl" className="text-xs font-black text-db-dark dark:text-white">
+            Dein Standort
+          </label>
+          <select
+            id="standortwahl"
+            value={standort?.id ?? ""}
+            onChange={(event) => standortWaehlen(event.target.value)}
+            className="min-h-11 rounded-xl border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/50 px-3 text-sm font-bold text-db-dark dark:text-white"
+          >
+            <option value="">Noch nicht gewählt</option>
+            {STANDORTE.map((eintrag) => (
+              <option key={eintrag.id} value={eintrag.id}>
+                {eintrag.name}
+                {eintrag.beispiel ? " (Beispiel)" : ""}
+              </option>
+            ))}
+          </select>
         </div>
+
+        {standort?.beispiel && (
+          <p className="mb-5 flex items-start gap-2 rounded-xl border border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20 p-3 text-xs font-semibold leading-relaxed text-amber-900 dark:text-amber-200">
+            <Info className="mt-px h-4 w-4 shrink-0" />
+            <span>
+              Beispiel-Standort mit erfundenen Personen — so sieht es aus, wenn echte Daten
+              hinterlegt sind. Bewusst ohne Rufnummern: Eine erfundene Nummer, die jemand in einer
+              Notlage anruft, wäre schlimmer als gar keine Angabe.
+            </span>
+          </p>
+        )}
+
+        {standort ? (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {STANDORT_ROLLEN.map((rolleId) => {
+              const rolle = rolleFinden(rolleId);
+              const personen = besetzungFuer(standort, rolleId);
+              return (
+                <div
+                  key={rolleId}
+                  className="rounded-xl bg-white dark:bg-db-dark/50 p-4 border border-db-dark/10 dark:border-white/10"
+                >
+                  <h3 className="font-black text-sm text-db-dark dark:text-white">{rolle?.kurz}</h3>
+                  <p className="mb-3 text-[11px] font-semibold text-db-rail dark:text-white/50">
+                    {rolle?.name}
+                  </p>
+                  {personen.length > 0 ? (
+                    <ul className="space-y-2.5">
+                      {personen.map((person) => (
+                        <li key={person.name}>
+                          <p className="text-xs font-black text-db-dark dark:text-white">{person.name}</p>
+                          <p className="text-[11px] font-semibold text-db-rail dark:text-white/60">
+                            {person.funktion}
+                          </p>
+                          <p className="text-[11px] font-medium text-db-rail/80 dark:text-white/50">
+                            {person.erreichbar}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="flex items-start gap-1.5 text-[11px] font-semibold text-db-rail/80 dark:text-white/50">
+                      <Info className="mt-px h-3.5 w-3.5 shrink-0" />
+                      <span>Für diesen Standort noch nicht hinterlegt.</span>
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {OFFEN_FUER_PILOT.map((eintrag) => (
+              <div
+                key={eintrag.id}
+                className="rounded-xl bg-white dark:bg-db-dark/50 p-4 border border-db-dark/10 dark:border-white/10"
+              >
+                <h3 className="font-black text-sm text-db-dark dark:text-white mb-1">{eintrag.name}</h3>
+                <p className="text-xs font-medium text-db-rail dark:text-white/60 mb-3 leading-relaxed">
+                  {eintrag.beschreibung}
+                </p>
+                {eintrag.wert ? (
+                  <a
+                    href={telLink(eintrag.wert)}
+                    className="inline-flex items-center gap-2 text-xs font-bold text-db-red hover:underline"
+                  >
+                    <PhoneCall className="w-3.5 h-3.5" /> {eintrag.wert}
+                  </a>
+                ) : (
+                  <p className="text-[11px] font-semibold text-db-rail/80 dark:text-white/50 flex items-start gap-1.5">
+                    <Info className="w-3.5 h-3.5 shrink-0 mt-px" />
+                    <span>{eintrag.hinweis}</span>
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </motion.div>
 
       {/* Viele Azubis im ersten Lehrjahr sind noch keine 18 — für sie gelten
