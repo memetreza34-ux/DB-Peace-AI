@@ -122,6 +122,11 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                   {rolle.grundlage || rolle.grundlageOffen}
                 </p>
               )}
+              {rolle.themen?.length > 0 && (
+                <p className="mt-1.5 text-xs font-semibold text-db-rail/80 dark:text-white/50">
+                  Typisch hier: {rolle.themen.join(" · ")}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-wrap items-center gap-2">

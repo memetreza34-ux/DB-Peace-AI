@@ -1,15 +1,26 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { STANDORTE, STANDORT_ROLLEN } from "../src/config/standorte.js";
+import { STANDORTE, STANDORT_ROLLEN, STELLEN } from "../src/config/standorte.js";
 import { besetzungFuer, istBesetzt } from "../src/lib/standort.js";
 import { rolleFinden } from "../src/lib/rolle.js";
 
-test("jeder hinterlegte Standort nennt Rollen, die es wirklich gibt", () => {
+test("jeder Standort-Eintrag ist entweder eine bekannte Rolle oder eine benannte Stelle", () => {
+  // Nicht alles am Standort ist eine Rolle im Sinne von rollen.js: DB Sicherheit
+  // ist eine Stelle ohne Postfach. Beides muss aber benannt sein, sonst steht in
+  // der Kontaktansicht eine Karte ohne Überschrift.
   for (const standort of STANDORTE) {
-    for (const rolleId of Object.keys(standort.besetzung)) {
-      assert.ok(rolleFinden(rolleId), `${standort.id} nennt die unbekannte Rolle ${rolleId}`);
-      assert.ok(STANDORT_ROLLEN.includes(rolleId), `${rolleId} gehört nicht zu den Standort-Rollen`);
+    for (const eintragId of Object.keys(standort.besetzung)) {
+      const bekannt = Boolean(rolleFinden(eintragId)) || Boolean(STELLEN[eintragId]);
+      assert.ok(bekannt, `${standort.id} nennt ${eintragId}, das weder Rolle noch Stelle ist`);
+      assert.ok(STANDORT_ROLLEN.includes(eintragId), `${eintragId} fehlt in STANDORT_ROLLEN`);
     }
+  }
+});
+
+test("jeder Eintrag in STANDORT_ROLLEN lässt sich beschriften", () => {
+  for (const eintragId of STANDORT_ROLLEN) {
+    const bezeichnung = rolleFinden(eintragId)?.kurz ?? STELLEN[eintragId]?.kurz;
+    assert.ok(bezeichnung, `${eintragId} hat keine Bezeichnung für die Anzeige`);
   }
 });
 

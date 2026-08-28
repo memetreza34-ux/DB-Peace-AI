@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { STANDORTE, STANDORT_ROLLEN } from "../config/standorte.js";
+import { STANDORTE, STANDORT_ROLLEN, STELLEN } from "../config/standorte.js";
 import { standortLaden, standortSpeichern, besetzungFuer } from "../lib/standort.js";
 import { rolleFinden } from "../lib/rolle.js";
 import { motion } from "framer-motion";
@@ -179,7 +179,9 @@ export function ContactsView() {
         {standort ? (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {STANDORT_ROLLEN.map((rolleId) => {
-              const rolle = rolleFinden(rolleId);
+              // Am Standort steht nicht nur, wer eine Rolle mit Postfach hat —
+              // DB Sicherheit ist eine Stelle ohne Postfach und gehört trotzdem hierher.
+              const rolle = rolleFinden(rolleId) ?? STELLEN[rolleId];
               const personen = besetzungFuer(standort, rolleId);
               return (
                 <div

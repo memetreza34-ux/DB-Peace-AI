@@ -43,9 +43,27 @@ export const STANDORTE = [
       ausbildungsleitung: [
         { name: "Dr. Claudia Reinhardt", funktion: "Ausbildungsleitung", erreichbar: "Termin über das Sekretariat" },
       ],
+      // Keine Person, sondern eine Stelle — steht hier, damit sie nicht
+      // verschwindet, sobald ein Standort gewählt ist.
+      "db-sicherheit": [
+        { name: "DB Sicherheit vor Ort", funktion: "Sicherheitsvorfälle am Standort", erreichbar: "Interne Rufnummer wird im Pilotbetrieb hinterlegt. Bei akuter Gefahr immer 110." },
+      ],
     },
   },
 ];
 
 /** Die Rollen, für die ein Standort überhaupt Personen benennt. */
-export const STANDORT_ROLLEN = ["jav", "betriebsrat", "sbv", "afk", "ngk", "ausbildungsleitung"];
+export const STANDORT_ROLLEN = [
+  "jav",
+  "betriebsrat",
+  "sbv",
+  "afk",
+  "ngk",
+  "ausbildungsleitung",
+  "db-sicherheit",
+];
+
+/** Einträge, die keine Rolle im Sinne von rollen.js sind, sondern eine Stelle. */
+export const STELLEN = {
+  "db-sicherheit": { kurz: "DB Sicherheit", name: "Sicherheitsvorfälle am Standort" },
+};

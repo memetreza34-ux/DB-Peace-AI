@@ -37,9 +37,11 @@ const kpis = [
   },
   {
     title: "Hochrisiko-Hinweise",
-    value: "4",
-    explanation: "Nur Priorisierung für menschliche Prüfung, keine Sanktion.",
-    trend: "stabil",
+    // Bewusst keine Zahl: Sie läge unter der Anonymitätsschwelle von fünf, und
+    // dieselbe Regel gilt auf dieser Seite wie in den Rollen-Postfächern.
+    value: "unter der Schwelle",
+    explanation: `Weniger als ${SCHWELLE} Fälle — die Zahl wird nicht ausgewiesen, weil daraus erkennbar wäre, um wen es geht.`,
+    trend: "nur Priorisierung, keine Sanktion",
     icon: ShieldAlert,
   },
   {

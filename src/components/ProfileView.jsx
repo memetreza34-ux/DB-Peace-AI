@@ -25,6 +25,7 @@ import {
 import { DEMO_FAELLE } from "../data/demoFaelle.js";
 import { eigeneFaelle, rolleFinden } from "../lib/rolle.js";
 import { protokollLaden } from "../lib/protokoll.js";
+import { stimmungLaden, tagesbezeichnung } from "../lib/stimmung.js";
 
 export function ProfileView() {
   const [activeTab, setActiveTab] = useState("postfach");
@@ -58,11 +59,17 @@ export function ProfileView() {
   // denselben Gerätespeicher, sonst zeigen sie Unterschiedliches.
   const savedRecords = protokollLaden().eintraege;
 
-  const moodHistory = [
-    { date: "Heute", mood: "Gut", icon: "🙂", color: "text-emerald-500" },
-    { date: "Gestern", mood: "Gestresst", icon: "😞", color: "text-red-500" },
-    { date: "Vorgestern", mood: "Okay", icon: "😐", color: "text-amber-500" },
-  ];
+  // Die echten Einträge aus dem Stimmungs-Tracker auf der Startseite.
+  const stimmungsBezeichnung = {
+    good: { mood: "Gut", icon: "🙂", color: "text-emerald-500" },
+    neutral: { mood: "Okay", icon: "😐", color: "text-amber-500" },
+    bad: { mood: "Gestresst", icon: "😞", color: "text-red-500" },
+  };
+  const moodHistory = stimmungLaden().map((eintrag) => ({
+    date: tagesbezeichnung(eintrag.datum),
+    notiz: eintrag.notiz,
+    ...(stimmungsBezeichnung[eintrag.stimmung] ?? { mood: eintrag.stimmung, icon: "•", color: "text-db-rail" }),
+  }));
 
   const savedCourses = [
     {
@@ -216,15 +223,24 @@ export function ProfileView() {
             <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Stimmungs-Verlauf</h3>
             <div className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-6 shadow-sm">
               <div className="space-y-6">
-                {moodHistory.map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between border-b border-db-dark/5 dark:border-white/5 pb-4 last:border-0 last:pb-0">
-                    <div>
-                      <div className="text-xs font-bold text-db-rail dark:text-white/60 mb-1">{item.date}</div>
-                      <div className="font-black text-db-dark dark:text-white">{item.mood}</div>
+                {moodHistory.length === 0 ? (
+                  <p className="py-6 text-center text-sm font-semibold text-db-rail dark:text-white/50">
+                    Noch kein Eintrag. Auf der Startseite kannst du festhalten, wie deine Schicht war.
+                  </p>
+                ) : (
+                  moodHistory.map((item, idx) => (
+                    <div key={idx} className="flex items-center justify-between gap-4 border-b border-db-dark/5 dark:border-white/5 pb-4 last:border-0 last:pb-0">
+                      <div className="min-w-0">
+                        <div className="text-xs font-bold text-db-rail dark:text-white/60 mb-1">{item.date}</div>
+                        <div className="font-black text-db-dark dark:text-white">{item.mood}</div>
+                        {item.notiz && (
+                          <p className="mt-1 text-xs font-semibold text-db-rail dark:text-white/60">{item.notiz}</p>
+                        )}
+                      </div>
+                      <div className={`shrink-0 text-4xl ${item.color}`}>{item.icon}</div>
                     </div>
-                    <div className={`text-4xl ${item.color}`}>{item.icon}</div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -276,8 +292,9 @@ export function ProfileView() {
           <h1 className="text-3xl font-black mb-1">Mein DB Peace</h1>
           <p className="text-white/70 font-medium mb-2">Dein sicherer, privater Raum.</p>
           <p className="text-white/60 text-xs font-semibold mb-4 max-w-xl leading-relaxed">
-            Postfach, Stimmungsverlauf und gemerkte Kurse zeigen im Prototyp erfundene
-            Beispiele. Deine Gedächtnisprotokolle sind echt — sie liegen auf diesem Gerät.
+            Postfach und gemerkte Kurse zeigen im Prototyp erfundene Beispiele. Deine
+            Gedächtnisprotokolle und dein Stimmungs-Tagebuch sind echt — sie liegen auf diesem
+            Gerät.
           </p>
           {/* Bewusst keine Punkte, Level oder Ranglisten: Wer diese App öffnet,
               weil er gemobbt wird, sammelt keine Abzeichen. Belohnungslogik wäre

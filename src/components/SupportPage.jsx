@@ -19,7 +19,7 @@ const situations = [
     icon: EyeOff,
     explanation: "Wiederholtes Bloßstellen, Ausgrenzen oder Schikanieren.",
     guidance: "Nimm das Muster ernst. Sprich mit einer vertrauten Person und sammle konkrete Beispiele. Nicht isoliert bleiben.",
-    contacts: ["Vertrauensperson", "JAV / Betriebsrat", "Ausbilder/in"]
+    contacts: ["Vertrauensperson", "JAV", "Betriebsrat", "Ausbilder/in"]
   },
   {
     id: "bedrohung",
@@ -43,7 +43,7 @@ const situations = [
     icon: Scale,
     explanation: "Abwertung wegen Herkunft, Religion, Geschlecht, Aussehen oder Identität.",
     guidance: "Ruhig widersprechen und die Aussage als nicht akzeptabel benennen (sofern sicher möglich). Wortlaut notieren.",
-    contacts: ["Compliance / Meldestelle", "JAV / Betriebsrat", "Vertrauensperson"]
+    contacts: ["Gleichstellungsbeauftragte", "Compliance / Meldestelle", "JAV", "Vertrauensperson"]
   },
   {
     id: "ueberlastung",
@@ -59,7 +59,7 @@ const situations = [
     icon: UsersRound,
     explanation: "Aggression, Beleidigung oder Druck im Kundenkontakt.",
     guidance: "Kurz und ruhig sprechen, Abstand halten und klare Grenzen setzen.",
-    contacts: ["Kolleg/in", "Sicherheitsstelle", "Führungskraft"]
+    contacts: ["Kolleg/in", "Sicherheitsstelle / Notruf 110", "Führungskraft"]
   },
   {
     id: "orientierung",
@@ -67,7 +67,7 @@ const situations = [
     icon: HelpCircle,
     explanation: "Du weißt nicht, an wen du dich wenden sollst.",
     guidance: "Nutze als ersten vertraulichen Schritt eine Vertrauensperson. Bei Gefahr immer sofort Notruf.",
-    contacts: ["Vertrauensperson", "JAV / Betriebsrat"]
+    contacts: ["Vertrauensperson", "JAV", "Betriebsrat"]
   },
   {
     id: "unterstuetzen",
@@ -86,12 +86,17 @@ const contactDetails = {
   "Vertrauensperson": {
     desc: "Erster vertraulicher Einstieg, Orientierung, emotionale Entlastung.",
     role: "Intern",
-    hinweis: "Ansprechpartner an deinem Standort – Aushang oder Ausbildungsleitung."
+    hinweis: "Unter \u201eAnsprechpartner & Meldewege\u201c siehst du, wer an deinem Standort ansprechbar ist."
   },
-  "JAV / Betriebsrat": {
-    desc: "Interessenvertretung, Schutz, Begleitung im Arbeits- und Ausbildungskontext.",
+  "JAV": {
+    desc: "Deine eigene Interessenvertretung als Azubi. Begleitet dich auch zu Gesprächen.",
     role: "Intern",
-    hinweis: "Wer das an deinem Standort ist, hängt am Schwarzen Brett oder steht im DB-Intranet."
+    hinweis: "Wer das an deinem Standort ist, steht unter „Ansprechpartner & Meldewege\u201c — sobald du dort deinen Standort gewählt hast."
+  },
+  "Betriebsrat": {
+    desc: "Vertretung aller Beschäftigten. Kann eine Beschwerde formal aufnehmen (§ 85 BetrVG).",
+    role: "Intern",
+    hinweis: "Wer das an deinem Standort ist, steht unter „Ansprechpartner & Meldewege\u201c — sobald du dort deinen Standort gewählt hast."
   },
   "Ausbilder/in": {
     desc: "Wenn der Vorfall Ausbildung, Anleitung oder Teamalltag betrifft.",
@@ -108,6 +113,11 @@ const contactDetails = {
     desc: "Zur direkten Deeskalation und Einsatzkoordination.",
     role: "Intern",
     hinweis: "Deine direkte Führungskraft im Betrieb."
+  },
+  "Gleichstellungsbeauftragte": {
+    desc: "Für Benachteiligung und Belästigung. Wichtig: Für Ansprüche nach dem AGG läuft eine Frist von zwei Monaten (§ 15 Abs. 4 AGG).",
+    role: "Intern",
+    hinweis: "Wer das in deinem Bereich ist, klärt die Ausbildungsleitung."
   },
   "Compliance / Meldestelle": {
     desc: "Schwere Verstöße, Diskriminierung, Hassrede.",
@@ -138,7 +148,7 @@ const contactDetails = {
   "Vertrauensperson (gemeinsam)": {
     desc: "Begleite die betroffene Person zur Vertrauensperson.",
     role: "Intern",
-    hinweis: "Ansprechpartner an deinem Standort – Aushang oder Ausbildungsleitung."
+    hinweis: "Unter \u201eAnsprechpartner & Meldewege\u201c siehst du, wer an deinem Standort ansprechbar ist."
   }
 };
 

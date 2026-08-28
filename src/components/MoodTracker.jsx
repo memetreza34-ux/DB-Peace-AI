@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { stimmungSpeichern } from "../lib/stimmung.js";
 import { motion, AnimatePresence } from "framer-motion";
 import { Frown, Meh, Smile, Send, CheckCircle2 } from "lucide-react";
 
@@ -18,14 +19,13 @@ export function MoodTracker() {
     e.preventDefault();
     if (!selectedMood) return;
     
-    const submissionData = {
-      mood: selectedMood,
-      note,
-      reason: selectedMood === "bad" ? reason : null
-    };
-    console.log("Mood submitted:", submissionData);
-    
-    // In a real app, send to backend here
+    // Die App nennt das ein Tagebuch — also wird es auch geführt.
+    stimmungSpeichern({
+      stimmung: selectedMood,
+      notiz: note,
+      grund: selectedMood === "bad" ? reason : null,
+    });
+
     setSubmitted(true);
     setTimeout(() => {
       // Reset after a while or leave as submitted for the day
