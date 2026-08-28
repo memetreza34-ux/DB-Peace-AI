@@ -149,3 +149,12 @@ test("die Fristenrechnung ignoriert die Uhrzeit", () => {
   assert.equal(verbleibendeTage(frist, heuteFrueh, heuteSpaet), frist.tage);
   assert.equal(verbleibendeTage(frist, heuteSpaet, heuteFrueh), frist.tage);
 });
+
+test("aggregierte Zahlen folgen derselben Schwelle", async () => {
+  const { ausweisbar } = await import("../src/lib/muster.js");
+
+  assert.equal(ausweisbar(SCHWELLE), true);
+  assert.equal(ausweisbar(SCHWELLE - 1), false);
+  assert.equal(ausweisbar(0), false);
+  assert.equal(ausweisbar(undefined), false);
+});

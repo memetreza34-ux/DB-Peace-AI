@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { ausweisbar, SCHWELLE, sperrBegruendung } from "../lib/muster.js";
 import {
   AlertTriangle,
   BadgeEuro,
@@ -171,13 +172,21 @@ function KpiGrid() {
 }
 
 function CategoryBreakdown() {
-  const max = Math.max(...categories.map(([, value]) => value));
+  // Dieselbe Anonymitätsschwelle wie in den Rollen-Postfächern: Was darunter
+  // liegt, wird nicht ausgewiesen — auch nicht mit Namen der Kategorie. Bei
+  // wenigen Fällen an einem Standort wäre sonst erkennbar, um wen es geht.
+  const ausgewiesen = categories.filter(([, value]) => ausweisbar(value));
+  const gesperrt = categories.length - ausgewiesen.length;
+  const max = Math.max(...ausgewiesen.map(([, value]) => value), 1);
+
   return (
     <div className="rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
       <h3 className="text-2xl font-black">Meldungen nach Kategorie</h3>
-      <p className="mt-2 font-semibold leading-7 text-db-rail">Anonymisierte Mock-Kategorien im Demo-Zeitraum.</p>
+      <p className="mt-2 font-semibold leading-7 text-db-rail">
+        Anonymisierte Mock-Kategorien im Demo-Zeitraum. Ausgewiesen wird erst ab {SCHWELLE} Fällen.
+      </p>
       <div className="mt-6 space-y-4">
-        {categories.map(([label, value]) => (
+        {ausgewiesen.map(([label, value]) => (
           <div key={label}>
             <div className="mb-2 flex justify-between text-sm font-black text-db-rail">
               <span>{label}</span>
@@ -189,6 +198,14 @@ function CategoryBreakdown() {
           </div>
         ))}
       </div>
+
+      {gesperrt > 0 && (
+        <p className="mt-6 rounded-xl border border-db-dark/10 bg-db-soft p-4 text-sm font-semibold leading-relaxed text-db-rail">
+          {gesperrt === 1 ? "Eine weitere Kategorie liegt" : `${gesperrt} weitere Kategorien liegen`}{" "}
+          unter der Schwelle und {gesperrt === 1 ? "wird" : "werden"} bewusst nicht ausgewiesen —
+          auch nicht mit Namen. {sperrBegruendung()}
+        </p>
+      )}
     </div>
   );
 }

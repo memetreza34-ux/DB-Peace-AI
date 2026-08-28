@@ -79,6 +79,10 @@ export default function App() {
           onRolleWechseln={() => setIstRollenwahlOffen(true)}
         />
         {rollenauswahl}
+        {/* Gerade hier gebraucht: Im Postfach stehen fremde Meldungen auf dem
+            Bildschirm. Wenn jemand hereinkommt, muss das genauso schnell weg
+            sein wie in der Azubi-Ansicht. */}
+        <PanicButton />
       </>
     );
   }

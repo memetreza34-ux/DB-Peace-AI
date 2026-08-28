@@ -35,6 +35,11 @@ export function musterErkennen(faelle, schwelle = SCHWELLE) {
   return { muster, gesperrt, schwelle };
 }
 
+/** Darf eine Zahl ausgewiesen werden? Für bereits aggregierte Auswertungen. */
+export function ausweisbar(anzahl, schwelle = SCHWELLE) {
+  return typeof anzahl === "number" && anzahl >= schwelle;
+}
+
 /** Der Satz, der erklärt, warum unterhalb der Schwelle nichts steht. */
 export function sperrBegruendung(schwelle = SCHWELLE) {
   return (
