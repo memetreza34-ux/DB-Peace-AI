@@ -16,18 +16,14 @@ import {
 } from "lucide-react";
 import { MoodTracker } from "./MoodTracker";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-};
+/*
+ * Das Einblenden läuft bewusst über CSS (.motion-card in styles.css) und nicht
+ * über framer-motion-Varianten. Grund: Wird die Seite in einem Tab im
+ * Hintergrund aufgebaut, pausiert der Browser die JS-Animationen — die Karten
+ * blieben dann mit opacity 0 stehen und die Startseite war dauerhaft leer.
+ * Eine CSS-Animation mit `both` endet auch dann im sichtbaren Zustand.
+ */
+const einblendVerzoegerung = (index) => ({ animationDelay: `${Math.min(index, 6) * 55}ms` });
 
 export function DashboardHome({ onNavigate, onOpenEmergency }) {
   const dashboardItems = [
@@ -106,18 +102,10 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
   ];
 
   return (
-    <motion.div 
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
-      className="space-y-10"
-    >
+    <div className="space-y-10">
       
       {/* Welcome Banner */}
-      <motion.div 
-        variants={itemVariants}
-        className="rounded-lg bg-db-dark px-6 py-10 sm:px-10 sm:py-14 text-center shadow-lg shadow-db-dark/20 relative overflow-hidden group"
-      >
+      <div className="motion-card rounded-lg bg-db-dark px-6 py-10 sm:px-10 sm:py-14 text-center shadow-lg shadow-db-dark/20 relative overflow-hidden group">
         {/* Background Glow */}
         <motion.div 
           animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
@@ -130,8 +118,8 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
         
         {/* Animated Train */}
         <motion.div
-          initial={{ x: "-150%", opacity: 0 }}
-          animate={{ x: "250vw", opacity: [0, 1, 1, 0] }}
+          initial={false}
+          animate={{ x: ["-150%", "250vw"], opacity: [0, 1, 1, 0] }}
           transition={{ 
             duration: 12, 
             repeat: Infinity, 
@@ -164,23 +152,18 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
         </motion.div>
 
         <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-6 max-w-2xl mx-auto">
-          <motion.h1 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight drop-shadow-lg"
-          >
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight drop-shadow-lg">
             Willkommen bei DB Peace
-          </motion.h1>
+          </h1>
           <p className="text-base sm:text-lg font-medium text-white/80 max-w-xl">
             Dein digitaler Raum für ein respektvolles Miteinander. Wähle aus, was du gerade brauchst.
           </p>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div variants={itemVariants} className="max-w-md mx-auto w-full z-20 relative">
+      <div className="motion-card max-w-md mx-auto w-full z-20 relative" style={einblendVerzoegerung(1)}>
         <MoodTracker />
-      </motion.div>
+      </div>
 
       {/* Grid Menu */}
       {/* Eigene Überschrift statt Sprung von h1 direkt auf h3 — hilft beim
@@ -190,16 +173,17 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 relative z-20">
-        {dashboardItems.map((item) => {
+        {dashboardItems.map((item, index) => {
           const Icon = item.icon;
           return (
             <motion.button
-              variants={itemVariants}
+              initial={false}
               whileHover={{ y: -4, scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               key={item.id}
               onClick={item.action}
-              className={`group flex flex-col items-start rounded-md border border-db-dark/5 dark:border-white/10 bg-white/70 dark:bg-db-dark/50 backdrop-blur-md p-6 text-left transition-colors shadow-sm hover:shadow-md dark:hover:bg-db-dark/80 ${item.borderColor}`}
+              style={einblendVerzoegerung(index)}
+              className={`motion-card group flex flex-col items-start rounded-md border border-db-dark/5 dark:border-white/10 bg-white/70 dark:bg-db-dark/50 backdrop-blur-md p-6 text-left transition-colors shadow-sm hover:shadow-md dark:hover:bg-db-dark/80 ${item.borderColor}`}
             >
               <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl mb-4 transition-transform group-hover:scale-110 ${item.bgColor} ${item.color}`}>
                 <Icon className="h-6 w-6" />
@@ -221,7 +205,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
       </div>
 
       {/* Secondary Actions / Footer of Dashboard */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="motion-card grid grid-cols-1 sm:grid-cols-2 gap-4" style={einblendVerzoegerung(6)}>
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
@@ -251,8 +235,8 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
             <p className="text-xs font-semibold text-db-rail dark:text-white/70 mt-0.5">Offizielle Konzern-Richtlinien</p>
           </div>
         </motion.button>
-      </motion.div>
+      </div>
 
-    </motion.div>
+    </div>
   );
 }

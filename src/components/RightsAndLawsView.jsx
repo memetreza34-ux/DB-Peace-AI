@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Scale, ArrowLeft, BookOpen, AlertCircle, ChevronDown, CheckCircle2, Info, Building2, BookText, Search, Activity } from "lucide-react";
 import lawsData from "../data/lawsData.json";
 import { QuizWidget } from "./QuizWidget";
+import { AzubiRightsCheck } from "./AzubiRightsCheck.jsx";
 
 const iconMap = {
   Scale, BookOpen, Building2, AlertCircle, CheckCircle2, BookText
@@ -180,6 +181,11 @@ export function RightsAndLawsView({ onBack }) {
       {/* Interactive Quiz Widget */}
       <div className="max-w-3xl mx-auto -mt-2 mb-8 relative z-20">
         <QuizWidget />
+      </div>
+
+      {/* Die häufigsten Alltagsfragen, bevor es zu den Paragrafen geht */}
+      <div className="max-w-3xl mx-auto mb-10">
+        <AzubiRightsCheck />
       </div>
 
       {/* Tabs */}

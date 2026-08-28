@@ -1,7 +1,15 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Scale, Clock, ShieldAlert, HeartHandshake, ChevronDown, ChevronUp } from "lucide-react";
 
+/**
+ * Die vier Fragen, die Azubis im Alltag wirklich stellen — in einfacher Sprache,
+ * vor den Gesetzestexten. Wer wissen will, wo das steht, findet die Paragrafen
+ * darunter in der Gesetzesliste.
+ *
+ * Bewusst ohne AnimatePresence: In diesem Projekt blieben damit schon Elemente
+ * unsichtbar im DOM liegen. Der aufgeklappte Text wird konditional gerendert.
+ */
 export function AzubiRightsCheck() {
   const [expandedId, setExpandedId] = useState(null);
 
@@ -10,39 +18,45 @@ export function AzubiRightsCheck() {
       id: "overtime",
       icon: Clock,
       title: "Überstunden als Azubi",
-      color: "text-blue-500",
+      color: "text-blue-600 dark:text-blue-400",
       bg: "bg-blue-500/10",
-      content: "Als Azubi (unter 18) machst du prinzipiell keine Überstunden (Jugendarbeitsschutzgesetz). Wenn du über 18 bist, darfst du Überstunden machen, sie müssen aber zwingend bezahlt oder in Freizeit ausgeglichen werden. Die Ausbildung steht immer im Vordergrund, nicht die Arbeitsleistung!"
+      content:
+        "Als Azubi unter 18 machst du grundsätzlich keine Überstunden (Jugendarbeitsschutzgesetz). Über 18 sind sie erlaubt, müssen aber bezahlt oder in Freizeit ausgeglichen werden. Die Ausbildung steht immer vor der Arbeitsleistung.",
+      gesetz: "§ 8 und § 21 JArbSchG, § 17 BBiG",
     },
     {
       id: "tasks",
       icon: ShieldAlert,
       title: "Ausbildungsfremde Aufgaben",
-      color: "text-amber-500",
+      color: "text-amber-600 dark:text-amber-400",
       bg: "bg-amber-500/10",
-      content: "Kaffee kochen, Halle fegen (wenn es nichts mit der Lehre zu tun hat) oder private Autos der Meister waschen? Das ist verboten! Du bist zum Lernen da, nicht als billige Hilfskraft. Ausbildungsfremde Tätigkeiten darfst du höflich aber bestimmt ablehnen."
+      content:
+        "Aufgaben, die nichts mit deiner Ausbildung zu tun haben, musst du nicht übernehmen — das Privatauto der Meisterin waschen zum Beispiel. Du bist zum Lernen da. Du darfst das höflich, aber deutlich ablehnen.",
+      gesetz: "§ 14 BBiG",
     },
     {
       id: "jav",
       icon: HeartHandshake,
-      title: "Die JAV ist dein Backup",
+      title: "Die JAV ist für dich da",
       color: "text-db-red",
       bg: "bg-db-red/10",
-      content: "Die Jugend- und Auszubildendenvertretung (JAV) ist quasi dein eigener kleiner Betriebsrat. Wenn du Stress mit dem Ausbilder hast oder dich ungerecht behandelt fühlst, geh zur JAV. Die Gespräche sind absolut vertraulich!"
+      content:
+        "Die Jugend- und Auszubildendenvertretung ist deine eigene Interessenvertretung. Bei Ärger mit der Ausbildung oder wenn du dich ungerecht behandelt fühlst, kannst du dorthin gehen. Die Gespräche sind vertraulich.",
+      gesetz: "§ 60 ff. BetrVG",
     },
     {
       id: "school",
       icon: Scale,
       title: "Berufsschule & Freistellung",
-      color: "text-emerald-500",
+      color: "text-emerald-600 dark:text-emerald-400",
       bg: "bg-emerald-500/10",
-      content: "Für den Berufsschulunterricht musst du freigestellt werden. Wenn du einen vollen Schultag (mehr als 5 Schulstunden) hast, darfst du danach nicht mehr in den Betrieb gerufen werden. Das gilt als voller Arbeitstag (8 Stunden)."
-    }
+      content:
+        "Für die Berufsschule musst du freigestellt werden. Nach einem Schultag mit mehr als fünf Unterrichtsstunden darf dich der Betrieb nicht mehr rufen — der Tag zählt als voller Arbeitstag.",
+      gesetz: "§ 9 JArbSchG, § 15 BBiG",
+    },
   ];
 
-  const toggleExpand = (id) => {
-    setExpandedId(expandedId === id ? null : id);
-  };
+  const toggleExpand = (id) => setExpandedId(expandedId === id ? null : id);
 
   return (
     <div className="w-full">
@@ -50,9 +64,10 @@ export function AzubiRightsCheck() {
         <div className="rounded-full bg-db-red/10 p-3 text-db-red mb-3">
           <Scale className="h-6 w-6" />
         </div>
-        <h2 className="text-2xl font-black text-db-dark">Azubi-Rechte Quick-Check</h2>
-        <p className="text-sm font-medium text-db-rail max-w-lg mt-2">
-          Dein Wissen ist dein bester Schutz. Hier sind die wichtigsten Basics, die du als DB-Azubi kennen musst, verständlich erklärt.
+        <h2 className="text-2xl font-black text-db-dark dark:text-white">Azubi-Rechte auf einen Blick</h2>
+        <p className="text-sm font-medium text-db-rail dark:text-white/60 max-w-lg mt-2">
+          Die vier Fragen, die am häufigsten kommen — kurz beantwortet. Die vollständigen
+          Gesetzestexte stehen darunter.
         </p>
       </div>
 
@@ -65,39 +80,39 @@ export function AzubiRightsCheck() {
               layout
               key={right.id}
               className={`rounded-md border transition-colors ${
-                isExpanded ? "bg-white border-db-dark/20 shadow-md" : "bg-white/60 border-db-dark/5 hover:border-db-dark/10 hover:bg-white"
+                isExpanded
+                  ? "bg-white dark:bg-db-dark/50 border-db-dark/20 dark:border-white/20 shadow-md"
+                  : "bg-white/60 dark:bg-db-dark/30 border-db-dark/5 dark:border-white/10 hover:border-db-dark/10 dark:hover:border-white/20 hover:bg-white dark:hover:bg-db-dark/50"
               }`}
             >
               <button
+                type="button"
                 onClick={() => toggleExpand(right.id)}
-                className="flex w-full items-center justify-between p-5 text-left"
+                aria-expanded={isExpanded}
+                aria-controls={`recht-${right.id}`}
+                className="flex w-full items-center justify-between gap-3 p-5 text-left"
               >
                 <div className="flex items-center gap-4">
                   <div className={`rounded-xl p-2 ${right.bg} ${right.color}`}>
                     <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="font-bold text-db-dark">{right.title}</h3>
+                  <h3 className="font-bold text-db-dark dark:text-white">{right.title}</h3>
                 </div>
-                <div className="text-db-rail">
+                <div className="text-db-rail dark:text-white/60 shrink-0">
                   {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
                 </div>
               </button>
 
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    key="rechte-details"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="px-5 pb-5 pt-0 text-sm font-medium leading-relaxed text-db-rail pl-16">
-                      {right.content}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {isExpanded && (
+                <div id={`recht-${right.id}`} className="px-5 pb-5 pt-0 sm:pl-16">
+                  <p className="text-sm font-medium leading-relaxed text-db-rail dark:text-white/70">
+                    {right.content}
+                  </p>
+                  <p className="mt-3 text-xs font-bold uppercase tracking-wide text-db-rail/70 dark:text-white/50">
+                    Nachzulesen in: {right.gesetz}
+                  </p>
+                </div>
+              )}
             </motion.div>
           );
         })}

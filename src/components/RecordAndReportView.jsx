@@ -1,24 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import AnonymousReport from "./AnonymousReport.jsx";
 import { AISmartReport } from "./AISmartReport.jsx";
-import { NotebookPen, Megaphone, Plus, Clock, FileText, CheckCircle2, Camera, X, ArrowLeft } from "lucide-react";
+import { NotebookPen, Megaphone, Plus, Clock, FileText, Camera, X, ArrowLeft, Trash2, Smartphone, AlertTriangle } from "lucide-react";
+import { protokollLaden, protokollSpeichern, dateiEinlesen } from "../lib/protokoll.js";
+import { useDialog } from "../lib/useDialog.js";
 
 export function RecordAndReportView() {
   const [subTab, setSubTab] = useState(null); // null | 'protokoll' | 'meldung' | 'ki'
 
-  // Local storage / state for recorded entries
-  const [records, setRecords] = useState([
-    {
-      id: 1,
-      date: "2026-07-20",
-      time: "14:15",
-      location: "Werkstatt / Pausenraum",
-      category: "Beleidigung & Ausgrenzung",
-      description: "Wiederholte abwertende Sprüche während der Teambesprechung.",
-      witnesses: "2 Kolleg:innen anwesend",
-      files: [],
-    },
-  ]);
+  // Die Einträge liegen im Speicher dieses Geräts — siehe src/lib/protokoll.js.
+  const [records, setRecords] = useState(() => protokollLaden().eintraege);
+  const [speicherFehler, setSpeicherFehler] = useState("");
 
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
@@ -31,39 +23,48 @@ export function RecordAndReportView() {
 
   useEffect(() => {
     if (subTab !== "protokoll") {
-      newFiles.forEach(f => {
-        if (f.url) URL.revokeObjectURL(f.url);
-      });
       setNewFiles([]);
       setShowForm(false);
     }
   }, [subTab]);
 
+  // Jede Änderung geht sofort auf das Gerät. Schlägt das fehl, sagt die App das,
+  // statt den Eintrag stillschweigend zu verlieren.
   useEffect(() => {
-    return () => {
-      newFiles.forEach(f => {
-        if (f.url) URL.revokeObjectURL(f.url);
-      });
-    };
-  }, [newFiles]);
+    const { ok, fehler } = protokollSpeichern(records);
+    setSpeicherFehler(ok ? "" : fehler);
+  }, [records]);
 
-  const handleFileChange = (e) => {
-    if (e.target.files) {
-      const filesArray = Array.from(e.target.files).map(file => ({
-        name: file.name,
-        type: file.type,
-        url: file.type.startsWith('image/') ? URL.createObjectURL(file) : null
-      }));
-      setNewFiles([...newFiles, ...filesArray]);
-    }
+  const handleFileChange = async (e) => {
+    if (!e.target.files?.length) return;
+    const eingelesen = await Promise.all(Array.from(e.target.files).map(dateiEinlesen));
+    setNewFiles((aktuell) => [...aktuell, ...eingelesen]);
+    e.target.value = ""; // damit dieselbe Datei erneut ausgewählt werden kann
   };
 
   const removeFile = (index) => {
-    const file = newFiles[index];
-    if (file.url) {
-      URL.revokeObjectURL(file.url);
-    }
-    setNewFiles(newFiles.filter((_, i) => i !== index));
+    setNewFiles((aktuell) => aktuell.filter((_, i) => i !== index));
+  };
+
+  const handleDeleteRecord = (id) => {
+    const confirmed = window.confirm(
+      "Diesen Eintrag von diesem Gerät löschen? Das lässt sich nicht rückgängig machen."
+    );
+    if (!confirmed) return;
+    setRecords((aktuell) => aktuell.filter((r) => r.id !== id));
+    setSelectedRecord(null);
+  };
+
+  const schliesseDetail = useCallback(() => setSelectedRecord(null), []);
+  const detailRef = useDialog(Boolean(selectedRecord), schliesseDetail);
+
+  const handleAlleLoeschen = () => {
+    const confirmed = window.confirm(
+      "Wirklich alle Protokoll-Einträge von diesem Gerät löschen? Das lässt sich nicht rückgängig machen."
+    );
+    if (!confirmed) return;
+    setRecords([]);
+    setSelectedRecord(null);
   };
 
   const handleAddRecord = (e) => {
@@ -82,7 +83,6 @@ export function RecordAndReportView() {
     setRecords([entry, ...records]);
     setNewDesc("");
     setNewLoc("");
-    newFiles.forEach(f => { if (f.url) URL.revokeObjectURL(f.url); });
     setNewFiles([]);
     setShowForm(false);
   };
@@ -183,20 +183,50 @@ export function RecordAndReportView() {
           <div className="rounded-md bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 p-6 shadow-sm">
             <div className="flex items-center justify-between pb-4 border-b border-db-dark/10 dark:border-white/10">
               <div>
-                <h2 className="text-lg font-black text-db-dark dark:text-white">Dein Anonymes Gedächtnisprotokoll</h2>
+                <h2 className="text-lg font-black text-db-dark dark:text-white">Dein Gedächtnisprotokoll</h2>
                 <p className="text-xs font-semibold text-db-rail dark:text-white/60">
-                  Sichere Fakten (Datum, Zeit, Ort), solange deine Erinnerung frisch ist.
+                  Halte Fakten fest (Datum, Zeit, Ort), solange deine Erinnerung frisch ist.
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => setShowForm(!showForm)}
-                className="flex items-center gap-2 rounded-xl bg-db-red px-4 py-2 text-xs sm:text-sm font-extrabold text-white hover:bg-db-red/90 transition shadow-sm"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Eintrag hinzufügen</span>
-              </button>
+              <div className="flex items-center gap-2">
+                {records.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleAlleLoeschen}
+                    className="flex min-h-11 items-center gap-1.5 rounded-xl border border-db-dark/15 dark:border-white/15 px-3 py-2 text-xs font-bold text-db-rail dark:text-white/60 hover:border-db-red hover:text-db-red transition"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="hidden sm:inline">Alles löschen</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setShowForm(!showForm)}
+                  className="flex min-h-11 items-center gap-2 rounded-xl bg-db-red px-4 py-2 text-xs sm:text-sm font-extrabold text-white hover:bg-db-red/90 transition shadow-sm"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Eintrag hinzufügen</span>
+                </button>
+              </div>
             </div>
+
+            <div className="mt-4 flex items-start gap-2.5 rounded-xl bg-db-soft dark:bg-white/5 border border-db-dark/10 dark:border-white/10 p-3">
+              <Smartphone className="mt-0.5 h-4 w-4 shrink-0 text-db-rail dark:text-white/60" />
+              <p className="text-[11px] font-semibold leading-relaxed text-db-rail dark:text-white/60">
+                Deine Einträge bleiben auf diesem Gerät und werden nirgendwohin gesendet. Sie sind
+                dort aber nicht verschlüsselt — wer das Gerät entsperrt hat, kann sie lesen. Auf
+                einem geteilten Gerät lösche sie besser, wenn du fertig bist.
+              </p>
+            </div>
+
+            {speicherFehler && (
+              <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-db-red/30 bg-red-50 dark:bg-red-950/20 p-3">
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-db-red" />
+                <p className="text-[11px] font-bold leading-relaxed text-db-red dark:text-red-300">
+                  {speicherFehler}
+                </p>
+              </div>
+            )}
 
             {/* Quick Add Form */}
             {showForm && (
@@ -283,10 +313,9 @@ export function RecordAndReportView() {
                 <div className="flex justify-end gap-2">
                   <button
                     type="button"
-                    onClick={() => { 
-                      newFiles.forEach(f => { if (f.url) URL.revokeObjectURL(f.url); });
-                      setNewFiles([]); 
-                      setShowForm(false); 
+                    onClick={() => {
+                      setNewFiles([]);
+                      setShowForm(false);
                     }}
                     className="rounded-lg px-3 py-1.5 text-xs font-bold text-db-rail dark:text-white/60 hover:bg-db-dark/5 dark:hover:bg-white/5"
                   >
@@ -324,9 +353,27 @@ export function RecordAndReportView() {
                           📍 {r.location}
                         </span>
                       </div>
-                      <span className="text-green-600 dark:text-green-400 flex items-center gap-1 font-bold">
-                        <CheckCircle2 className="h-3.5 w-3.5" /> Anonym gesichert
-                      </span>
+                      <div className="flex items-center gap-2">
+                        {r.beispiel && (
+                          <span className="rounded bg-amber-100 dark:bg-amber-950/40 px-2 py-0.5 text-amber-800 dark:text-amber-300">
+                            Beispiel
+                          </span>
+                        )}
+                        <span className="flex items-center gap-1 font-bold text-db-rail dark:text-white/60">
+                          <Smartphone className="h-3.5 w-3.5" /> Nur auf diesem Gerät
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteRecord(r.id);
+                          }}
+                          aria-label="Eintrag löschen"
+                          className="flex h-11 w-11 items-center justify-center rounded-lg text-db-rail dark:text-white/60 hover:bg-db-red/10 hover:text-db-red transition"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
                     <p className="mt-2 text-sm font-semibold text-db-dark dark:text-white leading-relaxed">
                       {r.description}
@@ -373,15 +420,30 @@ export function RecordAndReportView() {
       )}
       {/* Selected Record Modal */}
       {selectedRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-db-dark/60 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-db-dark rounded-lg p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg relative border dark:border-white/10">
-            <button 
-              onClick={() => setSelectedRecord(null)}
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-db-dark/60 backdrop-blur-sm p-4"
+          onClick={schliesseDetail}
+        >
+          <div
+            ref={detailRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="protokoll-eintrag-titel"
+            tabIndex={-1}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-db-dark rounded-lg p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg relative border dark:border-white/10 outline-none"
+          >
+            <button
+              aria-label="Schließen"
+              onClick={schliesseDetail}
               className="absolute top-4 right-4 p-2 rounded-full bg-db-warm/50 dark:bg-db-dark/50 hover:bg-db-dark/10 dark:hover:bg-white/10 transition text-db-dark dark:text-white"
             >
               <X className="h-5 w-5" />
             </button>
-            <h2 className="text-xl font-black text-db-dark dark:text-white mb-4 flex items-center gap-2">
+            <h2
+              id="protokoll-eintrag-titel"
+              className="text-xl font-black text-db-dark dark:text-white mb-4 flex items-center gap-2"
+            >
               <NotebookPen className="h-6 w-6 text-db-red" />
               Protokoll-Eintrag
             </h2>
@@ -416,8 +478,13 @@ export function RecordAndReportView() {
                           <FileText className="h-8 w-8 text-db-rail/50 dark:text-white/30" />
                         </div>
                       )}
-                      <div className="p-2 text-[10px] font-bold text-db-dark dark:text-white truncate bg-white dark:bg-db-dark/50">
-                        {file.name}
+                      <div className="bg-white dark:bg-db-dark/50 p-2">
+                        <p className="truncate text-[10px] font-bold text-db-dark dark:text-white">{file.name}</p>
+                        {!file.gespeichert && (
+                          <p className="mt-0.5 text-[10px] font-semibold leading-tight text-db-rail dark:text-white/50">
+                            Nur der Name gemerkt — die Datei liegt weiter auf deinem Gerät.
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -425,10 +492,17 @@ export function RecordAndReportView() {
               </div>
             )}
             
-            <div className="mt-8 flex justify-end">
+            <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
               <button
-                onClick={() => setSelectedRecord(null)}
-                className="rounded-lg bg-db-dark px-6 py-2.5 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-md"
+                onClick={() => handleDeleteRecord(selectedRecord.id)}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-db-dark/15 dark:border-white/15 px-5 py-2.5 text-sm font-extrabold text-db-rail dark:text-white/70 transition hover:border-db-red hover:text-db-red"
+              >
+                <Trash2 className="h-4 w-4" />
+                Eintrag löschen
+              </button>
+              <button
+                onClick={schliesseDetail}
+                className="min-h-11 rounded-lg bg-db-dark px-6 py-2.5 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-md"
               >
                 Schließen
               </button>
