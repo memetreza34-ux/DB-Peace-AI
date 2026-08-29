@@ -251,6 +251,26 @@ stattdessen bearbeitet. Dafür bräuchte sie mehrere Personen je Gremium.
 - [x] Quick Exit im Rollen-Postfach ergänzt — er fehlte dort ganz, ausgerechnet
       wo fremde Meldungen auf dem Bildschirm stehen.
 
+### Vereinfachung — 29.08.2026
+
+Wer diese App öffnet, weil es ihm schlecht geht, soll nicht erst eine
+Gremienstruktur verstehen. Durchgesehen und gekürzt:
+
+- [x] **Startseite von zwölf auf neun Bedienelemente.** Analytics und
+      „Projekte & Ideen" sind keine Wege für jemanden in einer Notlage; beide
+      bleiben im Fußbereich erreichbar. Der Knopf „DB Compliance — Offizielle
+      Konzern-Richtlinien" ist ganz weg: Er versprach etwas anderes, als er tat
+      (er führte auf die Datenschutzseite der App).
+- [x] **Melde-Assistent: drei Vorschläge statt zwölf Optionen.** Die Art des
+      Vorfalls steht in Schritt 1 fest — daraus schlägt die App passende Stellen
+      vor (`src/lib/empfehlung.js`) und sagt dazu, dass jede andere wählbar
+      bleibt. Ein Klick öffnet die vollständige Liste.
+- [x] **Postfach: zwei Dauerbanner zu einer Zeile.** Beide Aussagen bleiben,
+      aber sie stehen nicht mehr als zwei Absätze vor jedem Fall — davor können
+      im Ernstfall noch Fristenwarnung und Befangenheitshinweis stehen.
+- [x] **Kontaktseite gestrafft**: drei ausufernde Beschreibungen gekürzt, ohne
+      eine einzige belegte Angabe zu verlieren.
+
 ### Phase 6 — Feinschliff (Woche 8–10)
 
 - [x] Rollen erklären sich in ihrem Postfach selbst: Gruppe, Aufgabe,

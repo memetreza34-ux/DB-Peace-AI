@@ -2,6 +2,7 @@ import { useMemo, useState, useRef } from "react";
 import { jsPDF } from "jspdf";
 import { MeldewegeKarte } from "./MeldewegeKarte.jsx";
 import { POSTFACH_ROLLEN } from "../config/rollen.js";
+import { empfehlungsGrund, empfohleneRollen } from "../lib/empfehlung.js";
 import { rolleFinden } from "../lib/rolle.js";
 import {
   AlertTriangle,
@@ -499,45 +500,43 @@ function RiskStep({ form, update }) {
 }
 
 function ContactStep({ form, update }) {
-  const oertlich = POSTFACH_ROLLEN.filter((rolle) => !rolle.ueberoertlich);
-  const ueberoertlich = POSTFACH_ROLLEN.filter((rolle) => rolle.ueberoertlich);
+  const [alleZeigen, setAlleZeigen] = useState(false);
+
+  const empfohlen = empfohleneRollen(form.type)
+    .map((id) => POSTFACH_ROLLEN.find((rolle) => rolle.id === id))
+    .filter(Boolean);
+  const uebrige = POSTFACH_ROLLEN.filter(
+    (rolle) => !empfohlen.some((eintrag) => eintrag.id === rolle.id)
+  );
+  const gewaehltAusUebrigen = uebrige.some((rolle) => rolle.id === form.contact);
 
   return (
     <StepPanel
-      title="Empfänger & Anonymität"
-      text="Wähle, an wen deine Meldung gehen soll. Die App verschickt nichts von selbst — sie bereitet einen Entwurf vor, den du danach selbst weitergibst."
+      title="An wen soll die Meldung gehen?"
+      text="Die App verschickt nichts von selbst — sie bereitet einen Entwurf vor, den du danach selbst weitergibst."
     >
-      <div className="space-y-3">
-        <span className="block font-black text-db-dark dark:text-white">An wen soll die Meldung gehen?</span>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {oertlich.map((rolle) => (
-            <ChoiceButton
-              key={rolle.id}
-              active={form.contact === rolle.id}
-              onClick={() => update("contact", rolle.id)}
-            >
-              {rolle.kurz}
-              <span className="mt-1 block text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
-                {rolle.name}
-              </span>
-            </ChoiceButton>
-          ))}
-        </div>
+      <p className="text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
+        {empfehlungsGrund(form.type)}
+      </p>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        {empfohlen.map((rolle) => (
+          <ChoiceButton
+            key={rolle.id}
+            active={form.contact === rolle.id}
+            onClick={() => update("contact", rolle.id)}
+          >
+            {rolle.kurz}
+            <span className="mt-1 block text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
+              {rolle.beschreibung.split(".")[0]}.
+            </span>
+          </ChoiceButton>
+        ))}
       </div>
 
-      {/* An kleinen Standorten kennt man sich. Wer die Leute vor Ort heraushalten
-          will, braucht einen Weg daran vorbei — sonst meldet er gar nicht. */}
-      <div className="mt-6 space-y-3">
-        <span className="block font-black text-db-dark dark:text-white">
-          Lieber nicht an deinem Standort?
-        </span>
-        <p className="text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
-          An kleinen Standorten kennen sich alle — manchmal sitzt in der JAV jemand aus dem
-          eigenen Lehrjahr. Dann kannst du eine Ebene darüber wählen. Das ist keine Eskalation,
-          sondern dein gutes Recht.
-        </p>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {ueberoertlich.map((rolle) => (
+      {(alleZeigen || gewaehltAusUebrigen) && (
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {uebrige.map((rolle) => (
             <ChoiceButton
               key={rolle.id}
               active={form.contact === rolle.id}
@@ -545,12 +544,22 @@ function ContactStep({ form, update }) {
             >
               {rolle.kurz}
               <span className="mt-1 block text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
-                {rolle.grundlage}
+                {rolle.ueberoertlich ? "Nicht an deinem Standort" : rolle.beschreibung.split(".")[0] + "."}
               </span>
             </ChoiceButton>
           ))}
         </div>
-      </div>
+      )}
+
+      {!alleZeigen && !gewaehltAusUebrigen && (
+        <button
+          type="button"
+          onClick={() => setAlleZeigen(true)}
+          className="mt-4 min-h-11 text-sm font-black text-db-red underline underline-offset-4"
+        >
+          Andere Stelle wählen — auch außerhalb deines Standorts
+        </button>
+      )}
 
       <label className="flex items-start gap-3 rounded-lg bg-white dark:bg-db-dark/50 p-4 font-bold text-db-dark dark:text-white border border-db-dark/10 dark:border-white/10 mt-6">
         <input

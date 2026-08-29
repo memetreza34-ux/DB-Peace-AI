@@ -5,9 +5,6 @@ import {
   HelpCircle,
   PhoneCall,
   GraduationCap,
-  Lightbulb,
-  LineChart,
-  ShieldCheck,
   Siren,
   ArrowRight,
   TrainFront,
@@ -26,6 +23,9 @@ import { MoodTracker } from "./MoodTracker";
 const einblendVerzoegerung = (index) => ({ animationDelay: `${Math.min(index, 6) * 55}ms` });
 
 export function DashboardHome({ onNavigate, onOpenEmergency }) {
+  // Bewusst kurz gehalten: Wer diese App öffnet, weil es ihm schlecht geht,
+  // soll fünf Wege sehen und nicht sieben. Analytics und Projekte sind
+  // Nebenschauplätze und stehen im Fußbereich.
   const dashboardItems = [
     {
       // Steht bewusst an erster Stelle: Wer die App im Ernstfall öffnet, weiss
@@ -79,26 +79,6 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
       borderColor: "hover:border-teal-500 hover:shadow-teal-500/10 dark:hover:border-teal-400",
       action: () => onNavigate("rights")
     },
-    {
-      id: "project",
-      title: "Projekte & Ideen",
-      description: "Reiche eigene Präventions-Ideen ein oder arbeite an Projekten mit.",
-      icon: Lightbulb,
-      color: "text-amber-500 dark:text-amber-400",
-      bgColor: "bg-amber-500/10 dark:bg-amber-500/20",
-      borderColor: "hover:border-amber-500 hover:shadow-amber-500/10 dark:hover:border-amber-400",
-      action: () => onNavigate("project")
-    },
-    {
-      id: "analytics",
-      title: "Analytics",
-      description: "Auswertungen, Trends und Statistiken zum Betriebsklima.",
-      icon: LineChart,
-      color: "text-indigo-600 dark:text-indigo-400",
-      bgColor: "bg-indigo-500/10 dark:bg-indigo-500/20",
-      borderColor: "hover:border-indigo-500 hover:shadow-indigo-500/10 dark:hover:border-indigo-400",
-      action: () => onNavigate("analytics")
-    }
   ];
 
   return (
@@ -205,7 +185,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
       </div>
 
       {/* Secondary Actions / Footer of Dashboard */}
-      <div className="motion-card grid grid-cols-1 sm:grid-cols-2 gap-4" style={einblendVerzoegerung(6)}>
+      <div className="motion-card" style={einblendVerzoegerung(6)}>
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
@@ -221,20 +201,6 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
           </div>
         </motion.button>
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => onNavigate("privacy")}
-          className="flex items-center gap-4 rounded-md border border-emerald-200/50 dark:border-emerald-500/20 bg-white/70 dark:bg-emerald-500/5 backdrop-blur-md p-5 text-left transition hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:border-emerald-200 dark:hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/10 group"
-        >
-          <div className="rounded-xl bg-emerald-100 dark:bg-emerald-500/20 p-3 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
-            <ShieldCheck className="h-6 w-6" />
-          </div>
-          <div>
-            <h4 className="font-black text-db-dark dark:text-white">DB Compliance</h4>
-            <p className="text-xs font-semibold text-db-rail dark:text-white/70 mt-0.5">Offizielle Konzern-Richtlinien</p>
-          </div>
-        </motion.button>
       </div>
 
     </div>

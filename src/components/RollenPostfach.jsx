@@ -153,17 +153,15 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
               <p className="mt-1 max-w-2xl text-sm font-semibold text-db-rail dark:text-white/60">
                 {rolle.beschreibung}
               </p>
-              {(rolle.grundlage || rolle.grundlageOffen) && (
-                <p className="mt-2 flex items-center gap-1.5 text-xs font-bold text-db-rail/80 dark:text-white/50">
-                  <Scale className="h-3.5 w-3.5" />
-                  {rolle.grundlage || rolle.grundlageOffen}
-                </p>
-              )}
-              {rolle.themen?.length > 0 && (
-                <p className="mt-1.5 text-xs font-semibold text-db-rail/80 dark:text-white/50">
-                  Typisch hier: {rolle.themen.join(" · ")}
-                </p>
-              )}
+              <p className="mt-2 flex flex-wrap items-center gap-x-2 text-xs font-semibold text-db-rail/80 dark:text-white/50">
+                {(rolle.grundlage || rolle.grundlageOffen) && (
+                  <span className="flex items-center gap-1.5 font-bold">
+                    <Scale className="h-3.5 w-3.5" />
+                    {rolle.grundlage || rolle.grundlageOffen}
+                  </span>
+                )}
+                {rolle.themen?.length > 0 && <span>· {rolle.themen.join(" · ")}</span>}
+              </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
@@ -192,24 +190,18 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
           (Quick Exit). Auf dem Handy verdeckte der Knopf sonst den letzten
           Absatz — und Dienstgeräte sind genau der Fall, für den das zählt. */}
       <div className="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 py-6 pb-28 sm:pb-8">
-        {/* Ohne diesen Hinweis wirkt die Ansicht wie ein echtes Meldesystem. */}
-        <div className="flex items-start gap-3 rounded-xl border border-amber-300 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/20 p-4">
-          <Info className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
-          <p className="text-sm font-semibold leading-relaxed text-amber-900 dark:text-amber-200">
-            Vorschau mit frei erfundenen Beispielfällen. Keine echten Meldungen, keine echten
-            Personen, keine Verbindung zu DB-Systemen. Antworten, die du hier schreibst, bleiben in
-            diesem Browser-Tab und erreichen niemanden.
-          </p>
-        </div>
-
-        {/* Der Kern der Sache: die Trennung, und dass sie auch für Zahlen gilt. */}
-        <div className="flex items-start gap-3 rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-4">
-          <Lock className="mt-0.5 h-5 w-5 shrink-0 text-db-red" />
-          <p className="text-sm font-semibold leading-relaxed text-db-rail dark:text-white/70">
-            Hier stehen ausschließlich Fälle, die an <strong className="text-db-dark dark:text-white">{rolle.kurz}</strong>{" "}
-            gerichtet wurden. Was an eine andere Stelle ging, ist in dieser Ansicht nicht sichtbar —
-            auch nicht als Zahl und nicht in einer Auswertung.
-          </p>
+        {/* Zwei Aussagen, die immer gelten: erfundene Fälle, und die Trennung.
+            Bewusst in einer Zeile statt in zwei Absätzen — davor stehen im
+            Ernstfall noch Fristenwarnung und Befangenheitshinweis. */}
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 px-4 py-3">
+          <span className="flex items-center gap-2 text-xs font-bold text-amber-800 dark:text-amber-300">
+            <Info className="h-4 w-4 shrink-0" />
+            Erfundene Beispielfälle — nichts davon erreicht jemanden
+          </span>
+          <span className="flex items-center gap-2 text-xs font-bold text-db-rail dark:text-white/60">
+            <Lock className="h-4 w-4 shrink-0 text-db-red" />
+            Nur Fälle an {rolle.kurz}. Andere Stellen sind hier unsichtbar, auch als Zahl
+          </span>
         </div>
 
         {(fristenLage.ueberfaellig > 0 || fristenLage.knapp > 0) && (

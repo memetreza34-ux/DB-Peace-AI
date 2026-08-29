@@ -43,8 +43,7 @@ export function ContactsView() {
           Wichtige Kontakte & SOS
         </h1>
         <p className="text-lg text-db-rail dark:text-white/70 font-medium">
-          Hier findest du alle wichtigen Ansprechpartner – egal ob es brennt oder du einfach
-          jemanden zum Reden brauchst.
+          Bei akuter Gefahr die Nummern ganz oben. Alles andere ist für später.
         </p>
       </div>
 

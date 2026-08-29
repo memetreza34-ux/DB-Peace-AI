@@ -22,7 +22,7 @@ export const DB_MELDEWEGE = [
     id: "bkms",
     name: "Hinweisgebersystem der DB (BKMS)",
     beschreibung:
-      "Das offizielle Meldesystem des DB-Konzerns. Anonyme Nutzung möglich, in zwölf Sprachen verfügbar. Du kannst darüber auch anonym Rückfragen beantworten.",
+      "Offizielles Meldesystem des Konzerns, in zwölf Sprachen. Anonym nutzbar — auch Rückfragen bleiben anonym.",
     art: "online",
     url: "https://www.bkms-system.net/deutschebahn",
     empfohlenBei: ["mobbing", "diskriminierung", "belästigung", "fehlverhalten"],
@@ -31,8 +31,7 @@ export const DB_MELDEWEGE = [
   {
     id: "meldestelle-beschaeftigung",
     name: "Meldestelle Beschäftigungsbedingungen",
-    beschreibung:
-      "Der thematisch passende Kanal für Missstände rund um Arbeits- und Beschäftigungsbedingungen — dazu zählen Mobbing, Diskriminierung und Belästigung am Arbeitsplatz.",
+    beschreibung: "Für Mobbing, Diskriminierung und Belästigung am Arbeitsplatz.",
     art: "email",
     email: "Meldestelle-Beschaeftigung@deutschebahn.com",
     empfohlenBei: ["mobbing", "diskriminierung", "belästigung"],
@@ -83,7 +82,7 @@ export const DB_BERATUNG = [
     id: "mut",
     name: "MUT – Mitarbeitendenunterstützung",
     beschreibung:
-      "Anonyme Beratung für alle Beschäftigten des DB-Konzerns bei persönlichen, familiären, gesundheitlichen, sozialen und beruflichen Fragen. Auch für Auszubildende.",
+      "Anonyme Beratung bei persönlichen, gesundheitlichen und beruflichen Fragen — auch für Azubis.",
     art: "intern",
     url: "https://www.lyra-mut.de",
     intranet: "db.de/mut-hotline",
