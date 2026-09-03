@@ -58,9 +58,9 @@ export function QuizWidget() {
 
   if (isLoading) {
     return (
-      <div className="w-full h-64 rounded-lg bg-white dark:bg-db-dark/80  border border-db-dark/10 dark:border-white/10 shadow-md flex flex-col items-center justify-center gap-4 transition-colors">
+      <div className="w-full h-64 rounded-lg bg-white dark:bg-db-dark/80  border border-line/10 shadow-md flex flex-col items-center justify-center gap-4 transition-colors">
         <Loader2 className="h-8 w-8 text-db-red animate-spin" />
-        <p className="text-sm font-semibold text-db-rail dark:text-white/70">
+        <p className="text-sm font-semibold text-ink-muted">
           KI generiert neue Quiz-Fragen...
         </p>
       </div>
@@ -112,7 +112,7 @@ export function QuizWidget() {
   const currentQ = questions[currentQIndex];
 
   return (
-    <div className="w-full rounded-lg bg-white dark:bg-db-dark/80  border border-db-dark/10 dark:border-white/10 shadow-md p-6 relative overflow-hidden transition-colors">
+    <div className="w-full rounded-lg bg-white dark:bg-db-dark/80  border border-line/10 shadow-md p-6 relative overflow-hidden transition-colors">
       
       {/* Progress */}
       <div className="flex items-center gap-1 mb-6">
@@ -128,7 +128,7 @@ export function QuizWidget() {
         Wissens-Quiz • Frage {currentQIndex + 1}
       </div>
       
-      <h3 className="text-lg font-bold text-db-dark dark:text-white leading-snug min-h-[4rem]">
+      <h3 className="text-lg font-bold text-ink leading-snug min-h-[4rem]">
         {currentQ.question}
       </h3>
 
@@ -143,13 +143,13 @@ export function QuizWidget() {
           >
             <button 
               onClick={() => handleAnswer(true)}
-              className="flex-1 bg-db-warm/50 dark:bg-white/5 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 border border-db-dark/10 dark:border-white/10 rounded-xl p-4 text-center font-bold text-db-dark dark:text-white transition"
+              className="flex-1 bg-db-warm/50 dark:bg-white/5 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 border border-line/10 rounded-xl p-4 text-center font-bold text-ink transition"
             >
               Ja
             </button>
             <button 
               onClick={() => handleAnswer(false)}
-              className="flex-1 bg-db-warm/50 dark:bg-white/5 hover:bg-red-100 dark:hover:bg-red-500/20 border border-db-dark/10 dark:border-white/10 rounded-xl p-4 text-center font-bold text-db-dark dark:text-white transition"
+              className="flex-1 bg-db-warm/50 dark:bg-white/5 hover:bg-red-100 dark:hover:bg-red-500/20 border border-line/10 rounded-xl p-4 text-center font-bold text-ink transition"
             >
               Nein
             </button>
@@ -182,7 +182,7 @@ export function QuizWidget() {
             </div>
             <button 
               onClick={nextQuestion}
-              className="mt-4 w-full flex items-center justify-center gap-2 bg-white dark:bg-white/10 border border-db-dark/10 dark:border-white/10 rounded-xl py-2.5 text-sm font-bold text-db-dark dark:text-white hover:bg-db-warm/50 dark:hover:bg-white/20 transition"
+              className="mt-4 w-full flex items-center justify-center gap-2 bg-white dark:bg-white/10 border border-line/10 rounded-xl py-2.5 text-sm font-bold text-ink hover:bg-db-warm/50 dark:hover:bg-white/20 transition"
             >
               Weiter <ArrowRight className="w-4 h-4" />
             </button>

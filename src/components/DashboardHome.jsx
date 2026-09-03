@@ -73,12 +73,12 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
         weicher roter Schein, ein fahrender Zug und blinkende Sterne — hübsch,
         aber nach nichts, was die Bahn je gedruckt hätte.
       */}
-      <div className="motion-card bg-db-dark px-6 py-10 sm:px-10 sm:py-12">
+      <div className="motion-card bg-surface-inverse px-6 py-10 sm:px-10 sm:py-12">
         <div className="mx-auto max-w-3xl">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-ink-inverse leading-tight">
             Willkommen bei DB Peace
           </h1>
-          <p className="mt-3 max-w-xl text-base sm:text-lg font-normal text-white/75 leading-relaxed">
+          <p className="mt-3 max-w-xl text-base sm:text-lg font-normal text-ink-inverse/75 leading-relaxed">
             Dein digitaler Raum für ein respektvolles Miteinander. Wähle aus, was du gerade brauchst.
           </p>
           <div className="mt-6 h-1 w-24 bg-db-red" />
@@ -92,7 +92,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
       {/* Grid Menu */}
       {/* Eigene Überschrift statt Sprung von h1 direkt auf h3 — hilft beim
           Vorlesen mit Screenreader und gibt der Kartenwand einen Sinn. */}
-      <h2 className="text-xl font-bold text-db-dark dark:text-white mt-2">
+      <h2 className="text-xl font-bold text-ink mt-2">
         Was brauchst du gerade?
       </h2>
 
@@ -105,13 +105,13 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
               type="button"
               onClick={item.action}
               style={einblendVerzoegerung(index)}
-              className="motion-card group flex flex-col items-start border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-6 text-left transition-colors hover:border-db-red"
+              className="motion-card group flex flex-col items-start border border-line/10 bg-surface p-6 text-left transition-colors hover:border-db-red"
             >
-              <Icon className="h-6 w-6 text-db-dark dark:text-white group-hover:text-db-red transition-colors" />
-              <h3 className="mt-4 text-lg font-bold text-db-dark dark:text-white group-hover:text-db-red transition-colors">
+              <Icon className="h-6 w-6 text-ink group-hover:text-db-red transition-colors" />
+              <h3 className="mt-4 text-lg font-bold text-ink group-hover:text-db-red transition-colors">
                 {item.title}
               </h3>
-              <p className="mt-1.5 flex-1 text-sm font-normal leading-relaxed text-db-rail dark:text-white/70">
+              <p className="mt-1.5 flex-1 text-sm font-normal leading-relaxed text-ink-muted">
                 {item.description}
               </p>
               <span className="mt-4 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-db-red">

@@ -44,7 +44,7 @@ export function AISmartReport({ onReportGenerated }) {
   };
 
   return (
-    <div className="bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 overflow-hidden flex flex-col h-[500px]">
+    <div className="bg-surface rounded-md border border-line/10 overflow-hidden flex flex-col h-[500px]">
       {/* Header */}
       <div className="bg-db-dark p-4 flex items-center gap-3 text-white">
         <div className="bg-white/10 p-2 rounded-full ">
@@ -63,7 +63,7 @@ export function AISmartReport({ onReportGenerated }) {
             <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
               msg.role === 'user' 
                 ? 'bg-db-red text-white rounded-tr-none' 
-                : 'bg-white dark:bg-db-dark/50 border border-gray-200 dark:border-white/10 text-db-dark dark:text-white rounded-tl-none'
+                : 'bg-surface border border-gray-200 dark:border-white/10 text-ink rounded-tl-none'
             }`}>
               {msg.text}
             </div>
@@ -71,7 +71,7 @@ export function AISmartReport({ onReportGenerated }) {
         ))}
         {isTyping && (
           <div className="flex justify-start">
-            <div className="bg-white dark:bg-db-dark/50 border border-gray-200 dark:border-white/10 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-2 shadow-sm">
+            <div className="bg-surface border border-gray-200 dark:border-white/10 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-2 shadow-sm">
               <Loader2 className="w-4 h-4 animate-spin text-db-red" />
               <span className="text-sm text-gray-500 dark:text-gray-400">Analysiert Text...</span>
             </div>
@@ -116,7 +116,7 @@ export function AISmartReport({ onReportGenerated }) {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Beschreibe den Vorfall..."
-            className="flex-1 border-2 border-db-dark/10 dark:border-white/10 dark:bg-db-dark/30 dark:text-white rounded-full px-4 py-2.5 text-sm focus:outline-none focus:border-db-red transition pr-12"
+            className="flex-1 border-2 border-line/10 dark:bg-db-dark/30 dark:text-white rounded-full px-4 py-2.5 text-sm focus:outline-none focus:border-db-red transition pr-12"
           />
           <button 
             onClick={handleSend}

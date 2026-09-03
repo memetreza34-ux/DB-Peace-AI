@@ -174,8 +174,8 @@ export default function SupportPage({ onNavigate }) {
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-md bg-green-500/10 text-green-600 mb-2">
             <PhoneCall className="h-6 w-6" />
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-db-dark dark:text-white">Finde die richtige Unterstützung</h2>
-          <p className="text-sm font-semibold text-db-rail dark:text-white/60 max-w-lg mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold text-ink">Finde die richtige Unterstützung</h2>
+          <p className="text-sm font-semibold text-ink-muted max-w-lg mx-auto">
             Wähle aus, in welcher Situation du dich befindest. Wir zeigen dir sofort, welche Anlaufstellen bei der DB und extern für dich da sind.
           </p>
 
@@ -186,13 +186,13 @@ export default function SupportPage({ onNavigate }) {
                 <button
                   key={sit.id}
                   onClick={() => selectSituation(sit)}
-                  className="group rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 hover:-translate-y-1 hover:border-green-500 transition shadow-sm"
+                  className="group rounded-xl border border-line/10 bg-surface p-5 hover:-translate-y-1 hover:border-green-500 transition shadow-sm"
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <Icon className="h-5 w-5 text-green-600" />
-                    <span className="font-bold text-db-dark dark:text-white group-hover:text-green-700">{sit.title}</span>
+                    <span className="font-bold text-ink group-hover:text-green-700">{sit.title}</span>
                   </div>
-                  <p className="text-xs font-semibold text-db-rail dark:text-white/60">{sit.explanation}</p>
+                  <p className="text-xs font-semibold text-ink-muted">{sit.explanation}</p>
                 </button>
               );
             })}
@@ -205,7 +205,7 @@ export default function SupportPage({ onNavigate }) {
         <div className="space-y-6">
           <button
             onClick={goBack}
-            className="flex items-center gap-2 text-sm font-bold text-db-rail dark:text-white/60 hover:text-green-600 transition"
+            className="flex items-center gap-2 text-sm font-bold text-ink-muted hover:text-green-600 transition"
           >
             <ArrowLeft className="h-4 w-4" /> Zurück zur Übersicht
           </button>
@@ -229,15 +229,15 @@ export default function SupportPage({ onNavigate }) {
                  {selected.contacts.map((contactName) => {
                    const details = contactDetails[contactName];
                    return (
-                     <div key={contactName} className={`rounded-xl border p-4 bg-white dark:bg-db-dark/50 flex flex-col sm:flex-row gap-4 sm:items-center justify-between ${details?.isUrgent ? 'border-red-200 dark:border-red-800 shadow-sm' : 'border-db-dark/10 dark:border-white/10 shadow-sm'}`}>
+                     <div key={contactName} className={`rounded-xl border p-4 bg-surface flex flex-col sm:flex-row gap-4 sm:items-center justify-between ${details?.isUrgent ? 'border-red-200 dark:border-red-800 shadow-sm' : 'border-line/10 shadow-sm'}`}>
                         <div>
                           <div className="flex items-center gap-2">
-                             <span className={`font-bold text-sm ${details?.isUrgent ? 'text-red-700 dark:text-red-400' : 'text-db-dark dark:text-white'}`}>{contactName}</span>
+                             <span className={`font-bold text-sm ${details?.isUrgent ? 'text-red-700 dark:text-red-400' : 'text-ink'}`}>{contactName}</span>
                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${details?.isUrgent ? 'bg-red-100 text-red-800' : 'bg-db-warm dark:bg-white/10 text-db-dark/70 dark:text-white/70'}`}>
                                 {details?.role || 'Intern'}
                              </span>
                           </div>
-                          <p className="text-xs font-semibold text-db-rail dark:text-white/60 mt-1">{details?.desc}</p>
+                          <p className="text-xs font-semibold text-ink-muted mt-1">{details?.desc}</p>
                           {!details?.ziel && details?.hinweis && (
                             <p className="text-[11px] font-semibold text-db-rail/80 dark:text-white/50 mt-1.5">
                               {details.hinweis}
@@ -255,7 +255,7 @@ export default function SupportPage({ onNavigate }) {
                             {details.ziel.label}
                           </a>
                         ) : (
-                          <span className="shrink-0 rounded-lg border border-db-dark/15 dark:border-white/15 px-4 py-2 text-xs font-bold text-db-rail dark:text-white/60 text-center">
+                          <span className="shrink-0 rounded-lg border border-line/15 px-4 py-2 text-xs font-bold text-ink-muted text-center">
                             Vor Ort erfragen
                           </span>
                         )}
@@ -266,9 +266,9 @@ export default function SupportPage({ onNavigate }) {
              </div>
           </div>
           
-          <div className="rounded-xl border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-db-dark/50 p-5 text-center">
-             <p className="text-xs font-semibold text-db-rail dark:text-white/60">
-               Noch unsicher, was du tun sollst? Du kannst den Vorfall erst mal nur für dich <strong className="text-db-dark dark:text-white cursor-pointer underline" onClick={() => onNavigate && onNavigate("record-report")}>aufschreiben</strong> – ohne dass jemand davon erfährt. Später entscheidest du, ob etwas daraus wird.
+          <div className="rounded-xl border border-line/10 bg-db-soft dark:bg-db-dark/50 p-5 text-center">
+             <p className="text-xs font-semibold text-ink-muted">
+               Noch unsicher, was du tun sollst? Du kannst den Vorfall erst mal nur für dich <strong className="text-ink cursor-pointer underline" onClick={() => onNavigate && onNavigate("record-report")}>aufschreiben</strong> – ohne dass jemand davon erfährt. Später entscheidest du, ob etwas daraus wird.
              </p>
           </div>
         </div>

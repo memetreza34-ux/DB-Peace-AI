@@ -5,6 +5,18 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Semantische Ebene — siehe src/styles/tokens.css. Diese Namen sagen,
+        // wofür eine Farbe da ist; hell und dunkel klären die Tokens.
+        ground: "rgb(var(--ground) / <alpha-value>)",
+        surface: "rgb(var(--surface) / <alpha-value>)",
+        "surface-sunk": "rgb(var(--surface-sunk) / <alpha-value>)",
+        "surface-inverse": "rgb(var(--surface-inverse) / <alpha-value>)",
+        "ink-inverse": "rgb(var(--ink-inverse) / <alpha-value>)",
+        ink: "rgb(var(--ink) / <alpha-value>)",
+        "ink-muted": "rgb(var(--ink-muted) / <alpha-value>)",
+        line: "rgb(var(--line) / <alpha-value>)",
+        accent: "rgb(var(--accent) / <alpha-value>)",
+        "accent-ink": "rgb(var(--accent-ink) / <alpha-value>)",
         db: {
           red: "#E2001A", // Official DB Red — für Flächen und Text ab 18px
           redInk: "#A40013", // abgedunkelt für kleinen Text auf hellem Grund (Kontrast)

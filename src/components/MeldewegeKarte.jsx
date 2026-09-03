@@ -18,10 +18,10 @@ export function MeldewegeKarte({ entwurf }) {
   const text = entwurfAlsText(entwurf);
 
   return (
-    <div className="rounded-lg border-2 border-db-red/30 bg-white dark:bg-db-dark/50 p-5 shadow-panel">
+    <div className="rounded-lg border-2 border-db-red/30 bg-surface p-5 shadow-panel">
       <p className="text-sm font-bold uppercase tracking-wide text-db-red">Nächster Schritt</p>
       <h3 className="mt-1 text-2xl font-bold dark:text-white">Wohin mit deiner Meldung?</h3>
-      <p className="mt-2 text-sm font-semibold text-db-rail dark:text-white/70 leading-relaxed">
+      <p className="mt-2 text-sm font-semibold text-ink-muted leading-relaxed">
         Diese App verschickt nichts von allein. Wähle einen offiziellen Meldeweg der DB — dein
         Entwurf wird dabei übernommen, und du entscheidest, ob und was du abschickst.
       </p>
@@ -46,11 +46,11 @@ function StandortHinweis() {
 
   if (!standort) {
     return (
-      <div className="mt-5 rounded-xl bg-db-soft dark:bg-white/5 p-4 border border-db-dark/10 dark:border-white/10">
-        <p className="text-xs font-bold text-db-dark dark:text-white flex items-center gap-2 mb-2">
+      <div className="mt-5 rounded-xl bg-surface-sunk p-4 border border-line/10">
+        <p className="text-xs font-bold text-ink flex items-center gap-2 mb-2">
           <MapPin className="w-4 h-4 text-db-red" /> An deinem Standort
         </p>
-        <p className="text-xs font-medium text-db-rail dark:text-white/60 leading-relaxed">
+        <p className="text-xs font-medium text-ink-muted leading-relaxed">
           {OFFEN_FUER_PILOT.filter((eintrag) => !eintrag.wert)
             .map((eintrag) => eintrag.name)
             .join(", ")}{" "}
@@ -67,8 +67,8 @@ function StandortHinweis() {
   })).filter((eintrag) => eintrag.personen.length > 0);
 
   return (
-    <div className="mt-5 rounded-xl bg-db-soft dark:bg-white/5 p-4 border border-db-dark/10 dark:border-white/10">
-      <p className="text-xs font-bold text-db-dark dark:text-white flex items-center gap-2 mb-2">
+    <div className="mt-5 rounded-xl bg-surface-sunk p-4 border border-line/10">
+      <p className="text-xs font-bold text-ink flex items-center gap-2 mb-2">
         <MapPin className="w-4 h-4 text-db-red" /> An deinem Standort
         {standort.beispiel && (
           <span className="rounded bg-amber-100 dark:bg-amber-950/40 px-2 py-0.5 text-[10px] text-amber-800 dark:text-amber-300">
@@ -78,8 +78,8 @@ function StandortHinweis() {
       </p>
       <ul className="space-y-1.5">
         {besetzt.map(({ rolle, personen }) => (
-          <li key={rolle.id} className="text-xs font-medium text-db-rail dark:text-white/60">
-            <span className="font-bold text-db-dark dark:text-white">{rolle.kurz}:</span>{" "}
+          <li key={rolle.id} className="text-xs font-medium text-ink-muted">
+            <span className="font-bold text-ink">{rolle.kurz}:</span>{" "}
             {personen.map((person) => person.name).join(", ")}
           </li>
         ))}
@@ -135,9 +135,9 @@ function Weg({ weg, betreff, text }) {
 
 function Zeile({ name, beschreibung, aktion, hinweis }) {
   return (
-    <div className="rounded-xl border border-db-dark/10 dark:border-white/10 bg-db-soft/50 dark:bg-white/5 p-4">
-      <h4 className="font-bold text-sm text-db-dark dark:text-white">{name}</h4>
-      <p className="mt-1 text-xs font-medium text-db-rail dark:text-white/60 leading-relaxed">
+    <div className="rounded-xl border border-line/10 bg-db-soft/50 dark:bg-white/5 p-4">
+      <h4 className="font-bold text-sm text-ink">{name}</h4>
+      <p className="mt-1 text-xs font-medium text-ink-muted leading-relaxed">
         {beschreibung}
       </p>
 

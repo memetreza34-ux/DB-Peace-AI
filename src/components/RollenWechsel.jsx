@@ -39,7 +39,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
         onClick={(event) => event.stopPropagation()}
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark shadow-lg outline-none"
+        className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-line/10 bg-white dark:bg-db-dark shadow-lg outline-none"
       >
         <button
           onClick={onClose}
@@ -49,14 +49,14 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
           <X className="h-5 w-5" />
         </button>
 
-        <div className="border-b border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-white/5 p-6 text-center">
+        <div className="border-b border-line/10 bg-surface-sunk p-6 text-center">
           <div className="mx-auto mb-4 w-fit rounded-xl bg-db-dark dark:bg-white p-3 text-white dark:text-db-dark shadow-sm">
             <Eye className="h-8 w-8" />
           </div>
-          <h2 id="rollenwahl-titel" className="text-xl font-bold text-db-dark dark:text-white">
+          <h2 id="rollenwahl-titel" className="text-xl font-bold text-ink">
             Rolle wechseln
           </h2>
-          <p className="mt-1 text-sm font-medium text-db-rail dark:text-white/60">
+          <p className="mt-1 text-sm font-medium text-ink-muted">
             Deine eigenen Rollen — und eine Vorschau auf alle übrigen
           </p>
         </div>
@@ -79,18 +79,18 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
                     className={`rounded-xl border-2 p-3.5 text-left transition hover:-translate-y-0.5 hover:shadow-sm ${
                       istAktiv
                         ? "border-db-red bg-db-red/5"
-                        : "border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/50 hover:border-db-red"
+                        : "border-line/15 bg-surface hover:border-db-red"
                     }`}
                   >
                     <span className="flex items-center justify-between gap-2">
-                      <span className="text-sm font-bold text-db-dark dark:text-white">{rolle.kurz}</span>
+                      <span className="text-sm font-bold text-ink">{rolle.kurz}</span>
                       {istAktiv && (
                         <span className="rounded bg-db-red px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
                           aktiv
                         </span>
                       )}
                     </span>
-                    <span className="mt-0.5 block text-xs font-semibold text-db-rail dark:text-white/60">
+                    <span className="mt-0.5 block text-xs font-semibold text-ink-muted">
                       {rolle.id === "azubi" ? "Eigene Sachen festhalten und melden" : "Fälle bearbeiten"}
                     </span>
                   </button>
@@ -99,7 +99,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
             </div>
           </div>
 
-          <div className="border-t border-db-dark/10 dark:border-white/10 pt-5">
+          <div className="border-t border-line/10 pt-5">
             <p className="text-xs font-bold uppercase tracking-wide text-db-rail dark:text-white/50">
               Andere Stellen ansehen
             </p>
@@ -134,14 +134,14 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
                     className={`rounded-xl border p-3.5 text-left transition hover:-translate-y-0.5 hover:border-db-red hover:shadow-sm ${
                       aktiveRolle === rolle.id
                         ? "border-db-red bg-db-red/5"
-                        : "border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50"
+                        : "border-line/10 bg-surface"
                     }`}
                   >
-                    <span className="block text-sm font-bold text-db-dark dark:text-white">
+                    <span className="block text-sm font-bold text-ink">
                       {rolle.kurz}
                     </span>
                     {rolle.name !== rolle.kurz && (
-                      <span className="mt-0.5 block text-xs font-semibold text-db-rail dark:text-white/60">
+                      <span className="mt-0.5 block text-xs font-semibold text-ink-muted">
                         {rolle.name}
                       </span>
                     )}

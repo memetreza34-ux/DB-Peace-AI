@@ -61,7 +61,7 @@ export function RightsAndLawsView({ onBack }) {
     return (
       <div 
         key={law.id} 
-        className={`rounded-md border transition-all duration-300 overflow-hidden ${isOpen ? 'border-db-dark/20 dark:border-white/20 bg-white dark:bg-db-dark shadow-lg' : 'border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 hover:border-db-dark/20 dark:hover:border-white/20 hover:shadow-md'}`}
+        className={`rounded-md border transition-all duration-300 overflow-hidden ${isOpen ? 'border-db-dark/20 dark:border-white/20 bg-white dark:bg-db-dark shadow-lg' : 'border-line/10 bg-surface hover:border-db-dark/20 dark:hover:border-white/20 hover:shadow-md'}`}
       >
         {/* Card Header (Clickable) */}
         <button 
@@ -73,8 +73,8 @@ export function RightsAndLawsView({ onBack }) {
               <Icon className="h-6 w-6 text-db-red" />
             </div>
             <div>
-              <p className="text-sm font-bold text-db-rail dark:text-white/60">{law.subtitle}</p>
-              <h3 className="text-lg font-bold text-db-dark dark:text-white">{law.paragraph}</h3>
+              <p className="text-sm font-bold text-ink-muted">{law.subtitle}</p>
+              <h3 className="text-lg font-bold text-ink">{law.paragraph}</h3>
             </div>
           </div>
           <ChevronDown className={`h-5 w-5 text-db-dark/50 dark:text-white/50 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
@@ -87,10 +87,10 @@ export function RightsAndLawsView({ onBack }) {
             <div className="space-y-5 mt-4">
               {/* Official Text */}
               <div className="bg-db-dark/5 dark:bg-white/5 rounded-xl p-4 border-l-4 border-db-rail">
-                <p className="text-xs font-bold text-db-dark dark:text-white uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <p className="text-xs font-bold text-ink uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <BookOpen className="h-3.5 w-3.5" /> Offizieller Text
                 </p>
-                <p className="text-sm font-medium text-db-dark dark:text-white italic">"{law.officialText}"</p>
+                <p className="text-sm font-medium text-ink italic">"{law.officialText}"</p>
                 {law.quelle && (
                   <p className="mt-2 text-[11px] font-semibold text-db-rail dark:text-white/50">
                     Quelle:{" "}
@@ -122,8 +122,8 @@ export function RightsAndLawsView({ onBack }) {
               <div className="flex items-start gap-3 p-3 bg-db-soft dark:bg-db-dark/30 rounded-lg">
                 <Info className="h-5 w-5 text-db-red shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-xs font-bold text-db-dark dark:text-white">Tipp für die Praxis:</p>
-                  <p className="text-xs font-semibold text-db-rail dark:text-white/60">{law.actionTip}</p>
+                  <p className="text-xs font-bold text-ink">Tipp für die Praxis:</p>
+                  <p className="text-xs font-semibold text-ink-muted">{law.actionTip}</p>
                 </div>
               </div>
             </div>
@@ -137,7 +137,7 @@ export function RightsAndLawsView({ onBack }) {
   return (
     <div className="space-y-6 animate-fadeIn pb-24">
       {/* Header */}
-      <div className="bg-db-dark p-6 text-white relative overflow-hidden">
+      <div className="bg-surface-inverse p-6 text-ink-inverse relative overflow-hidden">
         <div className="space-y-2 max-w-2xl relative z-10">
           <button
             onClick={onBack}
@@ -181,13 +181,13 @@ export function RightsAndLawsView({ onBack }) {
       <div className="flex bg-db-dark/5 dark:bg-white/5 p-1 rounded-xl w-full max-w-md mx-auto">
         <button
           onClick={() => { setActiveTab("bundesgesetze"); setOpenCard(null); setSearchQuery(""); }}
-          className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition ${activeTab === 'bundesgesetze' ? 'bg-white dark:bg-db-dark text-db-dark dark:text-white shadow-sm' : 'text-db-rail dark:text-white/60 hover:text-db-dark dark:hover:text-white'}`}
+          className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition ${activeTab === 'bundesgesetze' ? 'bg-white dark:bg-db-dark text-ink shadow-sm' : 'text-ink-muted hover:text-db-dark dark:hover:text-white'}`}
         >
           Bundesgesetze
         </button>
         <button
           onClick={() => { setActiveTab("dbRichtlinien"); setOpenCard(null); setSearchQuery(""); }}
-          className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition ${activeTab === 'dbRichtlinien' ? 'bg-white dark:bg-db-dark text-db-dark dark:text-white shadow-sm' : 'text-db-rail dark:text-white/60 hover:text-db-dark dark:hover:text-white'}`}
+          className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition ${activeTab === 'dbRichtlinien' ? 'bg-white dark:bg-db-dark text-ink shadow-sm' : 'text-ink-muted hover:text-db-dark dark:hover:text-white'}`}
         >
           DB Richtlinien
         </button>
@@ -203,7 +203,7 @@ export function RightsAndLawsView({ onBack }) {
           placeholder="Suche nach Rechten (z.B. Urlaub, Überstunden, Mobbing)..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-xl py-3.5 pl-11 pr-4 text-sm font-medium text-db-dark dark:text-white placeholder:text-db-dark/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-db-red/20 focus:border-db-red shadow-sm transition-all"
+          className="w-full bg-surface border border-line/10 rounded-xl py-3.5 pl-11 pr-4 text-sm font-medium text-ink placeholder:text-db-dark/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-db-red/20 focus:border-db-red shadow-sm transition-all"
         />
         {searchQuery && (
           <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-xs font-bold text-db-dark/40 dark:text-white/40">
@@ -217,17 +217,17 @@ export function RightsAndLawsView({ onBack }) {
         {filteredLaws.length > 0 ? (
           Object.entries(groupedLaws).map(([title, laws]) => (
             <div key={title} className="space-y-4">
-              <h2 className="text-xl font-bold text-db-dark dark:text-white pl-3 border-l-4 border-db-red/80">{title}</h2>
-              <div className="space-y-4 pl-4 border-l-2 border-db-dark/10 dark:border-white/10 ml-3">
+              <h2 className="text-xl font-bold text-ink pl-3 border-l-4 border-db-red/80">{title}</h2>
+              <div className="space-y-4 pl-4 border-l-2 border-line/10 ml-3">
                 {laws.map(renderCard)}
               </div>
             </div>
           ))
         ) : (
-          <div className="text-center py-12 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10">
+          <div className="text-center py-12 bg-surface rounded-md border border-line/10">
             <Scale className="h-12 w-12 text-db-dark/10 dark:text-white/10 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-db-dark dark:text-white">Keine Gesetze gefunden</h3>
-            <p className="text-sm font-medium text-db-rail dark:text-white/60 mt-1">
+            <h3 className="text-lg font-bold text-ink">Keine Gesetze gefunden</h3>
+            <p className="text-sm font-medium text-ink-muted mt-1">
               Wir konnten kein passendes Gesetz zu deiner Suche finden.
             </p>
           </div>

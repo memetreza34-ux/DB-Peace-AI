@@ -61,7 +61,7 @@ export function ProfileView() {
   // Die echten Einträge aus dem Stimmungs-Tracker auf der Startseite.
   const stimmungsBezeichnung = {
     good: { mood: "Gut", Icon: Smile, color: "text-emerald-600 dark:text-emerald-400" },
-    neutral: { mood: "Okay", Icon: Meh, color: "text-db-rail dark:text-white/60" },
+    neutral: { mood: "Okay", Icon: Meh, color: "text-ink-muted" },
     bad: { mood: "Gestresst", Icon: Frown, color: "text-db-red" },
   };
   const moodHistory = stimmungLaden().map((eintrag) => ({
@@ -90,14 +90,14 @@ export function ProfileView() {
         const selectedTicket = tickets.find(t => t.id === selectedTicketId);
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-db-dark dark:text-white mb-2">Meine Meldungen & Postfach</h3>
-            <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-6">
+            <h3 className="font-bold text-xl text-ink mb-2">Meine Meldungen & Postfach</h3>
+            <p className="text-sm font-medium text-ink-muted mb-6">
               Hier siehst du deine eingereichten, anonymen Meldungen und kannst sicher mit den Bearbeitern (JAV, HR) schreiben.
             </p>
             
             <div className="flex flex-col lg:flex-row gap-4 h-[500px]">
               {/* Inbox List */}
-              <div className="w-full lg:w-1/3 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 flex flex-col overflow-hidden shrink-0">
+              <div className="w-full lg:w-1/3 bg-surface rounded-md border border-line/10 flex flex-col overflow-hidden shrink-0">
                  <div className="overflow-y-auto flex-1 p-2 space-y-2">
                    {tickets.map(ticket => (
                      <button
@@ -106,12 +106,12 @@ export function ProfileView() {
                        className={`w-full text-left p-4 rounded-xl border transition-all ${selectedTicketId === ticket.id ? 'border-db-red bg-db-red/5 dark:bg-db-red/10' : 'border-transparent hover:bg-db-dark/5 dark:hover:bg-white/5'}`}
                      >
                        <div className="flex justify-between items-start mb-1">
-                          <span className="font-bold text-db-dark dark:text-white text-sm">{ticket.id}</span>
-                          <span className="shrink-0 whitespace-nowrap rounded bg-db-dark/5 dark:bg-white/10 px-2 py-0.5 text-[10px] font-bold text-db-dark dark:text-white">
+                          <span className="font-bold text-ink text-sm">{ticket.id}</span>
+                          <span className="shrink-0 whitespace-nowrap rounded bg-db-dark/5 dark:bg-white/10 px-2 py-0.5 text-[10px] font-bold text-ink">
                             {{ offen: "offen", "in-bearbeitung": "läuft", abgeschlossen: "erledigt" }[ticket.status] ?? ticket.status}
                           </span>
                        </div>
-                       <p className="text-xs font-bold text-db-rail dark:text-white/60 mb-1 truncate">{ticket.kategorie}</p>
+                       <p className="text-xs font-bold text-ink-muted mb-1 truncate">{ticket.kategorie}</p>
                        <p className="text-[11px] font-semibold text-db-rail/70 dark:text-white/40 truncate">
                          an {rolleFinden(ticket.empfaenger)?.kurz ?? "unbekannt"}
                        </p>
@@ -121,7 +121,7 @@ export function ProfileView() {
               </div>
 
               {/* Chat Area */}
-              <div className="w-full lg:w-2/3 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 flex flex-col overflow-hidden">
+              <div className="w-full lg:w-2/3 bg-surface rounded-md border border-line/10 flex flex-col overflow-hidden">
                 {selectedTicket ? (
                   <>
                     <FristenFuerMich fall={selectedTicket} />
@@ -133,7 +133,7 @@ export function ProfileView() {
                                  <span className="text-[10px] font-bold uppercase text-db-rail dark:text-white/40 bg-db-dark/5 dark:bg-white/5 px-3 py-1 rounded-full">{msg.text}</span>
                               </div>
                             ) : (
-                              <div className={`max-w-[85%] rounded-md p-4 ${msg.von === 'melder' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-db-soft dark:bg-white/5 text-db-dark dark:text-white rounded-tl-sm border border-db-dark/10 dark:border-white/10'}`}>
+                              <div className={`max-w-[85%] rounded-md p-4 ${msg.von === 'melder' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-surface-sunk text-ink rounded-tl-sm border border-line/10'}`}>
                                  <div className="flex items-center gap-2 mb-1 opacity-70 text-[10px] font-bold uppercase tracking-wider">
                                     {msg.von === 'melder'
                                       ? 'Du'
@@ -146,14 +146,14 @@ export function ProfileView() {
                           </div>
                        ))}
                     </div>
-                    <div className="p-3 border-t border-db-dark/10 dark:border-white/10 bg-white dark:bg-transparent shrink-0">
+                    <div className="p-3 border-t border-line/10 bg-white dark:bg-transparent shrink-0">
                        <form onSubmit={handleSendReply} className="flex gap-2">
                           <input 
                             type="text" 
                             value={replyText}
                             onChange={(e) => setReplyText(e.target.value)}
                             placeholder="Anonym antworten..."
-                            className="flex-1 bg-db-dark/5 dark:bg-white/5 border border-db-dark/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-db-dark dark:text-white focus:outline-none focus:border-db-red"
+                            className="flex-1 bg-db-dark/5 dark:bg-white/5 border border-line/10 rounded-xl px-4 py-3 text-sm font-medium text-ink focus:outline-none focus:border-db-red"
                           />
                           <button 
                             type="submit"
@@ -178,17 +178,17 @@ export function ProfileView() {
       case "protokolle":
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-db-dark dark:text-white mb-2">Meine Gedächtnisprotokolle</h3>
-            <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-6">
+            <h3 className="font-bold text-xl text-ink mb-2">Meine Gedächtnisprotokolle</h3>
+            <p className="text-sm font-medium text-ink-muted mb-6">
               Diese Einträge bleiben auf diesem Gerät und werden nirgendwo hochgeladen.
             </p>
             {savedRecords.map(record => (
-              <div key={record.id} className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm hover:shadow-md transition">
-                <div className="flex items-center gap-2 text-xs font-bold text-db-rail dark:text-white/60 mb-2">
+              <div key={record.id} className="bg-surface border border-line/10 rounded-md p-5 shadow-sm hover:shadow-md transition">
+                <div className="flex items-center gap-2 text-xs font-bold text-ink-muted mb-2">
                   <Clock className="w-3 h-3" />
                   {record.date} • {record.time}
                 </div>
-                <h4 className="font-bold text-db-dark dark:text-white text-lg mb-1">{record.category || "Protokoll-Eintrag"}</h4>
+                <h4 className="font-bold text-ink text-lg mb-1">{record.category || "Protokoll-Eintrag"}</h4>
                 <p className="text-sm text-db-dark/80 dark:text-white/80">{record.description}</p>
                 {/* Beide Funktionen sind im Prototyp nicht angebunden. Sichtbar
                     deaktiviert statt mit einem Hinweisfenster beim Klick. */}
@@ -220,8 +220,8 @@ export function ProfileView() {
       case "stimmung":
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-db-dark dark:text-white mb-2">Stimmungs-Verlauf</h3>
-            <div className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-6 shadow-sm">
+            <h3 className="font-bold text-xl text-ink mb-2">Stimmungs-Verlauf</h3>
+            <div className="bg-surface border border-line/10 rounded-md p-6 shadow-sm">
               <div className="space-y-6">
                 {moodHistory.length === 0 ? (
                   <p className="py-6 text-center text-sm font-semibold text-db-rail dark:text-white/50">
@@ -231,10 +231,10 @@ export function ProfileView() {
                   moodHistory.map((item, idx) => (
                     <div key={idx} className="flex items-center justify-between gap-4 border-b border-db-dark/5 dark:border-white/5 pb-4 last:border-0 last:pb-0">
                       <div className="min-w-0">
-                        <div className="text-xs font-bold text-db-rail dark:text-white/60 mb-1">{item.date}</div>
-                        <div className="font-bold text-db-dark dark:text-white">{item.mood}</div>
+                        <div className="text-xs font-bold text-ink-muted mb-1">{item.date}</div>
+                        <div className="font-bold text-ink">{item.mood}</div>
                         {item.notiz && (
-                          <p className="mt-1 text-xs font-semibold text-db-rail dark:text-white/60">{item.notiz}</p>
+                          <p className="mt-1 text-xs font-semibold text-ink-muted">{item.notiz}</p>
                         )}
                       </div>
                       {item.Icon && <item.Icon className={`h-8 w-8 shrink-0 ${item.color}`} />}
@@ -248,16 +248,16 @@ export function ProfileView() {
       case "kurse":
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-db-dark dark:text-white mb-2">Gemerkte Kurse</h3>
+            <h3 className="font-bold text-xl text-ink mb-2">Gemerkte Kurse</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {savedCourses.map((course, idx) => (
-                <div key={idx} className="group bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm hover:border-db-red dark:hover:border-db-red transition cursor-pointer flex flex-col justify-between">
+                <div key={idx} className="group bg-surface border border-line/10 rounded-md p-5 shadow-sm hover:border-db-red dark:hover:border-db-red transition cursor-pointer flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center gap-2 text-xs font-bold text-db-rail dark:text-white/60 mb-2 uppercase tracking-wider">
+                    <div className="flex items-center gap-2 text-xs font-bold text-ink-muted mb-2 uppercase tracking-wider">
                       <Video className="w-3 h-3" />
                       {course.type}
                     </div>
-                    <h4 className="font-bold text-db-dark dark:text-white text-lg group-hover:text-db-red transition">{course.title}</h4>
+                    <h4 className="font-bold text-ink text-lg group-hover:text-db-red transition">{course.title}</h4>
                   </div>
                   <div className="mt-6 flex items-center justify-between">
                     <span className="text-xs font-bold text-db-dark/70 dark:text-white/70">{course.duration}</span>
@@ -405,7 +405,7 @@ function FristenFuerMich({ fall }) {
   const stelle = rolleFinden(fall.empfaenger)?.kurz ?? "die zuständige Stelle";
 
   return (
-    <div className="border-b border-db-dark/10 dark:border-white/10 bg-db-soft/60 dark:bg-white/5 p-4 space-y-2">
+    <div className="border-b border-line/10 bg-db-soft/60 dark:bg-white/5 p-4 space-y-2">
       {fristen.map((frist) => {
         const stand = fristStand(frist, eingang);
         const ueberfaellig = stand.stand === "ueberfaellig";
@@ -415,17 +415,17 @@ function FristenFuerMich({ fall }) {
             className={`rounded-xl border p-3 ${
               ueberfaellig
                 ? "border-db-red/40 bg-red-50 dark:bg-red-950/20"
-                : "border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/30"
+                : "border-line/10 bg-surface"
             }`}
           >
             <p
               className={`text-xs font-bold ${
-                ueberfaellig ? "text-db-redInk dark:text-red-300" : "text-db-dark dark:text-white"
+                ueberfaellig ? "text-db-redInk dark:text-red-300" : "text-ink"
               }`}
             >
               {frist.bezeichnung}: {stand.text}
             </p>
-            <p className="mt-1 text-[11px] font-semibold leading-relaxed text-db-rail dark:text-white/60">
+            <p className="mt-1 text-[11px] font-semibold leading-relaxed text-ink-muted">
               {ueberfaellig
                 ? `${stelle} hätte sich längst melden müssen. Du darfst nachfragen — und dich an eine andere Stelle wenden, wenn nichts passiert.`
                 : frist.erklaerung}{" "}

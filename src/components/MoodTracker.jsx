@@ -40,7 +40,7 @@ export function MoodTracker() {
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-6"
+      className="w-full border border-line/10 bg-surface p-6"
     >
       {/* Ohne AnimatePresence mode="wait": Das wartet auf die Exit-Animation des
           alten Zustands. Läuft die nicht zu Ende, erscheint die Bestätigung nie. */}
@@ -52,8 +52,8 @@ export function MoodTracker() {
             className="flex flex-col gap-4"
           >
             <div>
-              <h2 className="text-lg font-bold text-db-dark dark:text-white">Wie war deine Schicht heute?</h2>
-              <p className="text-sm font-medium text-db-rail dark:text-white/70">Dein privates Stimmungs-Tagebuch. Niemand außer dir sieht das.</p>
+              <h2 className="text-lg font-bold text-ink">Wie war deine Schicht heute?</h2>
+              <p className="text-sm font-medium text-ink-muted">Dein privates Stimmungs-Tagebuch. Niemand außer dir sieht das.</p>
             </div>
 
             <div className="flex gap-4 mt-2">
@@ -72,7 +72,7 @@ export function MoodTracker() {
                     }`}
                   >
                     <Icon className={`h-8 w-8 ${isActive ? 'text-white' : mood.color}`} />
-                    <span className={`text-xs font-bold ${isActive ? 'text-white' : 'text-db-dark dark:text-white/80'}`}>
+                    <span className={`text-xs font-bold ${isActive ? 'text-white' : 'text-ink/80'}`}>
                       {mood.label}
                     </span>
                   </button>
@@ -95,7 +95,7 @@ export function MoodTracker() {
                       animate={{ opacity: 1 }} 
                       className="mt-2"
                     >
-                      <p className="text-xs font-bold text-db-rail dark:text-white/70 mb-2 uppercase tracking-wide">
+                      <p className="text-xs font-bold text-ink-muted mb-2 uppercase tracking-wide">
                         Woran liegt es? (Optional)
                       </p>
                       <div className="flex flex-wrap gap-2">
@@ -122,7 +122,7 @@ export function MoodTracker() {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     placeholder="Optional: Ein kurzes Stichwort (z.B. 'Ärger mit Meister', 'Gute Fahrt')"
-                    className="w-full rounded-xl border border-db-dark/20 dark:border-white/20 bg-white dark:bg-db-dark/50 dark:text-white px-4 py-3 text-sm focus:border-db-red focus:outline-none focus:ring-1 focus:ring-db-red transition placeholder:text-db-rail/50 dark:placeholder:text-white/40"
+                    className="w-full rounded-xl border border-db-dark/20 dark:border-white/20 bg-surface dark:text-white px-4 py-3 text-sm focus:border-db-red focus:outline-none focus:ring-1 focus:ring-db-red transition placeholder:text-db-rail/50 dark:placeholder:text-white/40"
                   />
                   <button
                     type="submit"
@@ -145,8 +145,8 @@ export function MoodTracker() {
             <div className="rounded-full bg-emerald-100 dark:bg-emerald-500/20 p-4 text-emerald-600 dark:text-emerald-400 mb-3">
               <CheckCircle2 className="h-8 w-8" />
             </div>
-            <h2 className="text-lg font-bold text-db-dark dark:text-white">Gespeichert!</h2>
-            <p className="text-sm font-medium text-db-rail dark:text-white/70 max-w-xs">
+            <h2 className="text-lg font-bold text-ink">Gespeichert!</h2>
+            <p className="text-sm font-medium text-ink-muted max-w-xs">
               Dein Eintrag wurde in dein privates Tagebuch aufgenommen. Gute Erholung!
             </p>
           </motion.div>

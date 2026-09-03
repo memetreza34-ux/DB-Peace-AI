@@ -394,25 +394,25 @@ function EntryHeader() {
     <div className="grid gap-6 lg:grid-cols-[1fr_0.78fr] lg:items-end">
       <div>
         <p className="text-sm font-bold uppercase tracking-wider text-db-red">Trainingsmodus</p>
-        <h2 className="mt-3 text-4xl font-bold leading-tight tracking-normal text-db-dark dark:text-white sm:text-5xl">
+        <h2 className="mt-3 text-4xl font-bold leading-tight tracking-normal text-ink sm:text-5xl">
           KI-Trainingsmodus
         </h2>
-        <p className="mt-4 max-w-3xl text-lg leading-8 text-db-rail dark:text-white/60">
+        <p className="mt-4 max-w-3xl text-lg leading-8 text-ink-muted">
           Übe schwierige Situationen sicher in einer Simulation - bevor sie im Alltag eskalieren.
         </p>
-        <p className="mt-4 max-w-3xl text-base font-semibold leading-7 text-db-rail dark:text-white/60">
+        <p className="mt-4 max-w-3xl text-base font-semibold leading-7 text-ink-muted">
           Die KI-Simulation hilft dabei, deeskalierende Antworten, klare Grenzen und sichere
           nächste Schritte zu trainieren.
         </p>
       </div>
-      <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-4 shadow-sm">
-        <p className="flex items-start gap-3 text-sm font-bold text-db-dark dark:text-white">
+      <div className="rounded-lg border border-line/10 bg-surface p-4 shadow-sm">
+        <p className="flex items-start gap-3 text-sm font-bold text-ink">
           <ShieldCheck className="mt-0.5 shrink-0 text-db-red" size={18} aria-hidden="true" />
           Dieses Training ersetzt keine echte Schulung oder Hilfe in Gefahrensituationen.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           {badges.map((badge) => (
-            <span key={badge} className="rounded bg-db-soft dark:bg-db-dark/80 px-3 py-2 text-xs font-bold text-db-rail dark:text-white/60">
+            <span key={badge} className="rounded bg-db-soft dark:bg-db-dark/80 px-3 py-2 text-xs font-bold text-ink-muted">
               {badge}
             </span>
           ))}
@@ -424,7 +424,7 @@ function EntryHeader() {
 
 function ScenarioSelection({ activeIndex, onSelect }) {
   return (
-    <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 shadow-panel">
+    <div className="rounded-lg border border-line/10 bg-surface p-5 shadow-panel">
       <div className="flex items-center gap-3">
         <GraduationCap className="text-db-red" size={24} aria-hidden="true" />
         <h3 className="text-xl font-bold dark:text-white">Szenario auswählen</h3>
@@ -445,13 +445,13 @@ function ScenarioSelection({ activeIndex, onSelect }) {
               }`}
             >
               <div className="flex items-start gap-3">
-                <Icon className={active ? "text-db-red" : "text-db-rail dark:text-white/60 group-hover:text-db-red"} size={24} />
+                <Icon className={active ? "text-db-red" : "text-ink-muted group-hover:text-db-red"} size={24} />
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-bold text-db-dark dark:text-white">{scenario.title}</p>
+                    <p className="font-bold text-ink">{scenario.title}</p>
                     <DifficultyBadge value={scenario.difficulty} />
                   </div>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-db-rail dark:text-white/60">{scenario.context}</p>
+                  <p className="mt-2 text-sm font-semibold leading-6 text-ink-muted">{scenario.context}</p>
                   <p className="mt-2 text-xs font-bold uppercase tracking-wide text-db-red">
                     Lernziel: {scenario.goal}
                   </p>
@@ -467,8 +467,8 @@ function ScenarioSelection({ activeIndex, onSelect }) {
 
 function SimulationPanel({ onChoose, onNext, progress, round, roundIndex, scenario, selected, selectedOption }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 shadow-panel">
-      <div className="border-b border-db-dark/10 dark:border-white/10 bg-db-dark dark:bg-db-dark/80 p-5 text-white">
+    <div className="overflow-hidden rounded-lg border border-line/10 bg-surface shadow-panel">
+      <div className="border-b border-line/10 bg-db-dark dark:bg-db-dark/80 p-5 text-white">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-sm font-bold uppercase tracking-wide text-red-200">
@@ -487,9 +487,9 @@ function SimulationPanel({ onChoose, onNext, progress, round, roundIndex, scenar
       <div className="p-5">
         <div className="rounded-lg bg-db-soft dark:bg-db-dark/30 p-5">
           <p className="text-sm font-bold uppercase tracking-wide text-db-red">{round.title}</p>
-          <h4 className="mt-2 text-2xl font-bold text-db-dark dark:text-white">Was würdest du tun?</h4>
-          <p className="mt-3 text-lg font-semibold leading-8 text-db-rail dark:text-white/60">{round.description}</p>
-          <p className="mt-4 rounded bg-white dark:bg-db-dark/50 p-3 text-sm font-bold text-db-dark dark:text-white">
+          <h4 className="mt-2 text-2xl font-bold text-ink">Was würdest du tun?</h4>
+          <p className="mt-3 text-lg font-semibold leading-8 text-ink-muted">{round.description}</p>
+          <p className="mt-4 rounded bg-surface p-3 text-sm font-bold text-ink">
             Lernziel: {scenario.goal}
           </p>
         </div>
@@ -502,8 +502,8 @@ function SimulationPanel({ onChoose, onNext, progress, round, roundIndex, scenar
               onClick={() => onChoose(index)}
               className={`rounded-lg border p-4 text-left font-semibold leading-7 transition ${
                 selectedOption === index
-                  ? "border-db-red bg-red-50 dark:bg-red-900/30 text-db-dark dark:text-white"
-                  : "border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 hover:-translate-y-0.5 hover:border-db-red hover:shadow-sm"
+                  ? "border-db-red bg-red-50 dark:bg-red-900/30 text-ink"
+                  : "border-line/10 bg-surface hover:-translate-y-0.5 hover:border-db-red hover:shadow-sm"
               }`}
             >
               <span className="mr-3 inline-flex h-7 w-7 items-center justify-center rounded bg-db-soft dark:bg-db-dark/80 text-sm font-bold text-db-red">
@@ -522,7 +522,7 @@ function SimulationPanel({ onChoose, onNext, progress, round, roundIndex, scenar
 
 function FeedbackCard({ isLast, onNext, option }) {
   return (
-    <div className="mt-6 rounded-lg border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-db-dark/30 p-5 shadow-sm transition">
+    <div className="mt-6 rounded-lg border border-line/10 bg-db-soft dark:bg-db-dark/30 p-5 shadow-sm transition">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-bold uppercase tracking-wide text-db-red">Sofortiges Feedback</p>
@@ -561,12 +561,12 @@ function FeedbackCard({ isLast, onNext, option }) {
 
 function FeedbackBlock({ icon: Icon, text, title, wide = false }) {
   return (
-    <div className={`rounded bg-white dark:bg-db-dark/50 p-4 ${wide ? "md:col-span-2" : ""}`}>
+    <div className={`rounded bg-surface p-4 ${wide ? "md:col-span-2" : ""}`}>
       <div className="flex items-start gap-3">
         <Icon className="mt-1 shrink-0 text-db-red" size={18} aria-hidden="true" />
         <div>
-          <p className="font-bold text-db-dark dark:text-white">{title}</p>
-          <p className="mt-1 text-sm font-semibold leading-6 text-db-rail dark:text-white/60">{text}</p>
+          <p className="font-bold text-ink">{title}</p>
+          <p className="mt-1 text-sm font-semibold leading-6 text-ink-muted">{text}</p>
         </div>
       </div>
     </div>
@@ -579,7 +579,7 @@ function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
   );
 
   return (
-    <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-6 shadow-panel">
+    <div className="rounded-lg border border-line/10 bg-surface p-6 shadow-panel">
       <p className="text-sm font-bold uppercase tracking-wide text-db-red">Abschluss</p>
       <div className="flex items-center gap-4 mt-6">
         <h3 className="text-3xl font-bold dark:text-white">Gesamtbewertung: {average}%</h3>
@@ -590,7 +590,7 @@ function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
           </div>
         )}
       </div>
-      <p className="mt-3 text-lg font-semibold leading-8 text-db-rail dark:text-white/60">
+      <p className="mt-3 text-lg font-semibold leading-8 text-ink-muted">
         Du hast das Szenario "{scenario.title}" abgeschlossen. Die Auswertung basiert nur auf
         lokaler Demo-Logik.
       </p>
@@ -599,7 +599,7 @@ function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
         <ResultBlock title="Stärken" text={average >= 70 ? "Du hast sichere, klare und deeskalierende Handlungsoptionen gewählt." : "Du hast wichtige Ansätze erkannt, besonders dort, wo du Grenzen benannt hast."} />
         <ResultBlock title="Verbesserungsbereich" text={average >= 70 ? "Weiter üben: frühzeitig Unterstützung einbinden und knapp dokumentieren." : "Fokus: Abstand, klare Grenze, keine Gegeneskalation und reale Hilfe bei Gefahr."} />
         <ResultBlock title="Empfohlene Lernkarte" text={average >= 70 ? "Vorfall dokumentieren" : "Bei Gefahr Sicherheit priorisieren"} />
-        <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-db-dark dark:bg-db-dark/80 p-5 text-white">
+        <div className="rounded-lg border border-line/10 bg-db-dark dark:bg-db-dark/80 p-5 text-white">
           <GraduationCap size={28} className="text-red-200" aria-hidden="true" />
           <p className="mt-4 text-sm font-bold uppercase tracking-wide text-white/60">Demo-Zertifikat</p>
           <h4 className="mt-2 text-2xl font-bold">Training abgeschlossen - Deeskalation Grundlagen</h4>
@@ -610,7 +610,7 @@ function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
         <button
           type="button"
           onClick={onRepeat}
-          className="inline-flex items-center justify-center gap-2 rounded border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/50 px-5 py-3 font-bold text-db-dark dark:text-white transition hover:border-db-red hover:text-db-red"
+          className="inline-flex items-center justify-center gap-2 rounded border border-line/15 bg-surface px-5 py-3 font-bold text-ink transition hover:border-db-red hover:text-db-red"
         >
           Wiederholen
           <RefreshCw size={18} aria-hidden="true" />
@@ -632,7 +632,7 @@ function ResultBlock({ text, title }) {
   return (
     <div className="rounded-lg bg-db-soft dark:bg-db-dark/30 p-5">
       <p className="text-sm font-bold uppercase tracking-wide text-db-red">{title}</p>
-      <p className="mt-2 font-semibold leading-7 text-db-dark dark:text-white">{text}</p>
+      <p className="mt-2 font-semibold leading-7 text-ink">{text}</p>
     </div>
   );
 }
@@ -655,7 +655,7 @@ function ScorePanel({ metrics }) {
 function ScoreBar({ dark = false, label, value }) {
   return (
     <div>
-      <div className={`mb-2 flex justify-between text-sm font-bold ${dark ? "text-white/80" : "text-db-rail dark:text-white/60"}`}>
+      <div className={`mb-2 flex justify-between text-sm font-bold ${dark ? "text-white/80" : "text-ink-muted"}`}>
         <span>{label}</span>
         <span>{value}%</span>
       </div>
@@ -670,7 +670,7 @@ function ScoreBar({ dark = false, label, value }) {
 
 function DifficultyBadge({ value }) {
   return (
-    <span className="rounded bg-white dark:bg-db-dark/50 px-2 py-1 text-xs font-bold text-db-rail dark:text-white/60 ring-1 ring-db-dark/10 dark:ring-white/10">
+    <span className="rounded bg-surface px-2 py-1 text-xs font-bold text-ink-muted ring-1 ring-db-dark/10 dark:ring-white/10">
       {value}
     </span>
   );
