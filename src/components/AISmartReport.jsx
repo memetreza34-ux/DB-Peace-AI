@@ -46,8 +46,8 @@ export function AISmartReport({ onReportGenerated }) {
   return (
     <div className="bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 overflow-hidden flex flex-col h-[500px]">
       {/* Header */}
-      <div className="bg-gradient-to-r from-db-dark to-db-rail p-4 flex items-center gap-3 text-white">
-        <div className="bg-white/10 p-2 rounded-full backdrop-blur-md">
+      <div className="bg-db-dark p-4 flex items-center gap-3 text-white">
+        <div className="bg-white/10 p-2 rounded-full ">
           <Bot className="w-5 h-5" />
         </div>
         <div>

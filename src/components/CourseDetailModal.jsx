@@ -95,7 +95,7 @@ export function CourseDetailModal({ course, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60  p-4 animate-fadeIn"
       onClick={onClose}
     >
       <div
@@ -117,11 +117,11 @@ export function CourseDetailModal({ course, onClose }) {
             <X className="h-5 w-5" />
           </button>
 
-          <span className="inline-block bg-db-red text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider mb-2">
+          <span className="inline-block bg-db-red text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-2">
             {course.provider}
           </span>
 
-          <h2 id="kurs-titel" className="text-xl font-extrabold text-white pr-8">
+          <h2 id="kurs-titel" className="text-xl font-bold text-white pr-8">
             {course.title}
           </h2>
         </div>
@@ -171,7 +171,7 @@ export function CourseDetailModal({ course, onClose }) {
               href={course.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-db-dark dark:bg-db-red px-4 py-2.5 text-sm font-extrabold text-white hover:opacity-90 transition"
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-db-dark dark:bg-db-red px-4 py-2.5 text-sm font-bold text-white hover:opacity-90 transition"
             >
               Zum Anbieter <ExternalLink className="h-4 w-4" />
             </a>

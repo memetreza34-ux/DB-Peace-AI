@@ -90,14 +90,14 @@ export function RecordAndReportView() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="rounded-md bg-gradient-to-r from-db-dark via-db-dark/90 to-db-rail p-6 text-white shadow-md relative overflow-hidden">
+      <div className="bg-db-dark p-6 text-white relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm backdrop-blur-md">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm ">
               <NotebookPen className="h-3.5 w-3.5 text-amber-400" />
               <span>Festhalten &amp; Melden</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
               Gedächtnisprotokoll & Vorfall-Meldung
             </h1>
             <p className="text-sm font-medium text-white/80 leading-relaxed">
@@ -111,7 +111,7 @@ export function RecordAndReportView() {
       {/* STEP 1: GRID SELECTION */}
       {!subTab && (
         <div className="text-center space-y-6 py-4">
-          <h2 className="text-2xl sm:text-3xl font-black text-db-dark dark:text-white">Was möchtest du tun?</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-db-dark dark:text-white">Was möchtest du tun?</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 text-left">
             <button
               onClick={() => setSubTab("protokoll")}
@@ -119,7 +119,7 @@ export function RecordAndReportView() {
             >
               <div className="flex items-center gap-3 mb-2">
                 <NotebookPen className="h-6 w-6 text-amber-500" />
-                <span className="font-black text-db-dark dark:text-white text-lg group-hover:text-amber-600 transition-colors">Vorfall festhalten</span>
+                <span className="font-bold text-db-dark dark:text-white text-lg group-hover:text-amber-600 transition-colors">Vorfall festhalten</span>
               </div>
               <p className="text-sm font-semibold text-db-rail dark:text-white/60">Privates Gedächtnisprotokoll anlegen, um Fakten sofort zu sichern.</p>
             </button>
@@ -130,7 +130,7 @@ export function RecordAndReportView() {
             >
               <div className="flex items-center gap-3 mb-2">
                 <Megaphone className="h-6 w-6 text-db-red" />
-                <span className="font-black text-db-dark dark:text-white text-lg group-hover:text-db-red transition-colors">Meldung verfassen</span>
+                <span className="font-bold text-db-dark dark:text-white text-lg group-hover:text-db-red transition-colors">Meldung verfassen</span>
               </div>
               <p className="text-sm font-semibold text-db-rail dark:text-white/60">Einen Vorfall offiziell, sachlich und auf Wunsch anonym melden.</p>
             </button>
@@ -140,7 +140,7 @@ export function RecordAndReportView() {
               className="group rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 hover:-translate-y-1 hover:border-blue-500 dark:hover:border-blue-500 transition shadow-sm"
             >
               <div className="flex items-center gap-3 mb-2">
-                <span className="font-black text-db-dark dark:text-white text-lg group-hover:text-blue-600 transition-colors">🤖 KI-Assistent</span>
+                <span className="font-bold text-db-dark dark:text-white text-lg group-hover:text-blue-600 transition-colors">🤖 KI-Assistent</span>
               </div>
               <p className="text-sm font-semibold text-db-rail dark:text-white/60">Schreibe oder diktiere frei, was passiert ist. Die KI füllt das Formular für dich aus.</p>
             </button>
@@ -183,7 +183,7 @@ export function RecordAndReportView() {
           <div className="rounded-md bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 p-6 shadow-sm">
             <div className="flex items-center justify-between pb-4 border-b border-db-dark/10 dark:border-white/10">
               <div>
-                <h2 className="text-lg font-black text-db-dark dark:text-white">Dein Gedächtnisprotokoll</h2>
+                <h2 className="text-lg font-bold text-db-dark dark:text-white">Dein Gedächtnisprotokoll</h2>
                 <p className="text-xs font-semibold text-db-rail dark:text-white/60">
                   Halte Fakten fest (Datum, Zeit, Ort), solange deine Erinnerung frisch ist.
                 </p>
@@ -202,7 +202,7 @@ export function RecordAndReportView() {
                 <button
                   type="button"
                   onClick={() => setShowForm(!showForm)}
-                  className="flex min-h-11 items-center gap-2 rounded-xl bg-db-red px-4 py-2 text-xs sm:text-sm font-extrabold text-white hover:bg-db-red/90 transition shadow-sm"
+                  className="flex min-h-11 items-center gap-2 rounded-xl bg-db-red px-4 py-2 text-xs sm:text-sm font-bold text-white hover:bg-db-red/90 transition shadow-sm"
                 >
                   <Plus className="h-4 w-4" />
                   <span>Eintrag hinzufügen</span>
@@ -229,7 +229,7 @@ export function RecordAndReportView() {
             {/* Quick Add Form */}
             {showForm && (
               <form onSubmit={handleAddRecord} className="mt-4 p-4 rounded-xl bg-db-warm/50 dark:bg-db-dark/30 border border-db-dark/10 dark:border-white/10 space-y-4">
-                <h3 className="text-sm font-black text-db-dark dark:text-white">Neuer Protokoll-Eintrag</h3>
+                <h3 className="text-sm font-bold text-db-dark dark:text-white">Neuer Protokoll-Eintrag</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
                     <label className="text-xs font-bold text-db-rail dark:text-white/60">Datum</label>
@@ -321,7 +321,7 @@ export function RecordAndReportView() {
                   </button>
                   <button
                     type="submit"
-                    className="rounded-lg bg-db-dark px-4 py-1.5 text-xs font-extrabold text-white hover:bg-db-dark/90"
+                    className="rounded-lg bg-db-dark px-4 py-1.5 text-xs font-bold text-white hover:bg-db-dark/90"
                   >
                     Speichern
                   </button>
@@ -342,13 +342,13 @@ export function RecordAndReportView() {
                     onClick={() => setSelectedRecord(r)}
                     className="cursor-pointer rounded-xl border border-db-dark/10 dark:border-white/10 p-4 bg-white dark:bg-db-dark/30 hover:border-db-red/30 dark:hover:border-db-red/50 transition shadow-xs"
                   >
-                    <div className="flex items-center justify-between text-xs font-extrabold text-db-rail dark:text-white/60">
+                    <div className="flex items-center justify-between text-xs font-bold text-db-rail dark:text-white/60">
                       <div className="flex items-center gap-3">
                         <span className="flex items-center gap-1 text-db-dark dark:text-white">
                           <Clock className="h-3.5 w-3.5 text-db-red" /> {r.date} um {r.time} Uhr
                         </span>
                         <span className="rounded bg-db-warm dark:bg-db-dark/50 px-2 py-0.5 text-db-dark dark:text-white">
-                          📍 {r.location}
+                          {r.location}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -401,7 +401,7 @@ export function RecordAndReportView() {
               <button
                 type="button"
                 onClick={() => setSubTab("meldung")}
-                className="shrink-0 rounded-xl bg-db-red px-4 py-2 text-xs font-black text-white hover:bg-db-red/90 transition shadow-sm"
+                className="shrink-0 rounded-xl bg-db-red px-4 py-2 text-xs font-bold text-white hover:bg-db-red/90 transition shadow-sm"
               >
                 Meldung in 5 Schritten verfassen →
               </button>
@@ -419,7 +419,7 @@ export function RecordAndReportView() {
       {/* Selected Record Modal */}
       {selectedRecord && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-db-dark/60 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-db-dark/60  p-4"
           onClick={schliesseDetail}
         >
           <div
@@ -440,17 +440,17 @@ export function RecordAndReportView() {
             </button>
             <h2
               id="protokoll-eintrag-titel"
-              className="text-xl font-black text-db-dark dark:text-white mb-4 flex items-center gap-2"
+              className="text-xl font-bold text-db-dark dark:text-white mb-4 flex items-center gap-2"
             >
               <NotebookPen className="h-6 w-6 text-db-red" />
               Protokoll-Eintrag
             </h2>
-            <div className="flex flex-wrap items-center gap-3 mb-6 text-sm font-extrabold text-db-rail dark:text-white/60">
+            <div className="flex flex-wrap items-center gap-3 mb-6 text-sm font-bold text-db-rail dark:text-white/60">
               <span className="flex items-center gap-1 text-db-dark dark:text-white">
                 <Clock className="h-4 w-4 text-db-red" /> {selectedRecord.date} um {selectedRecord.time} Uhr
               </span>
               <span className="rounded bg-db-warm dark:bg-db-dark/50 px-2 py-1 text-db-dark dark:text-white">
-                📍 {selectedRecord.location}
+                {selectedRecord.location}
               </span>
             </div>
             
@@ -493,14 +493,14 @@ export function RecordAndReportView() {
             <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
               <button
                 onClick={() => handleDeleteRecord(selectedRecord.id)}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-db-dark/15 dark:border-white/15 px-5 py-2.5 text-sm font-extrabold text-db-rail dark:text-white/70 transition hover:border-db-red hover:text-db-red"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-db-dark/15 dark:border-white/15 px-5 py-2.5 text-sm font-bold text-db-rail dark:text-white/70 transition hover:border-db-red hover:text-db-red"
               >
                 <Trash2 className="h-4 w-4" />
                 Eintrag löschen
               </button>
               <button
                 onClick={schliesseDetail}
-                className="min-h-11 rounded-lg bg-db-dark px-6 py-2.5 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-md"
+                className="min-h-11 rounded-lg bg-db-dark px-6 py-2.5 text-sm font-bold text-white hover:bg-db-dark/90 transition shadow-md"
               >
                 Schließen
               </button>

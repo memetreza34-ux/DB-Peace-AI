@@ -148,7 +148,7 @@ export function AppLock({ onUnlock }) {
           <Lock className="w-12 h-12 text-db-red" />
         </div>
 
-        <h1 className="text-2xl font-black mb-2 tracking-tight">{titel}</h1>
+        <h1 className="text-2xl font-bold mb-2 tracking-tight">{titel}</h1>
         <p className="text-slate-400 font-medium text-sm mb-8 text-center max-w-xs">{untertitel}</p>
 
         {/* PIN Indicators */}
@@ -247,7 +247,7 @@ function Geraetewahl({ onWahl }) {
           <Lock className="w-12 h-12 text-db-red" />
         </div>
 
-        <h1 className="text-2xl font-black mb-2 tracking-tight text-center">
+        <h1 className="text-2xl font-bold mb-2 tracking-tight text-center">
           Wer nutzt dieses Gerät?
         </h1>
         <p className="text-slate-400 font-medium text-sm mb-8 text-center max-w-sm leading-relaxed">
@@ -263,7 +263,7 @@ function Geraetewahl({ onWahl }) {
           >
             <span className="flex items-center gap-3">
               <Smartphone className="h-6 w-6 shrink-0 text-db-red" />
-              <span className="font-black">Nur ich nutze dieses Gerät</span>
+              <span className="font-bold">Nur ich nutze dieses Gerät</span>
             </span>
             <span className="mt-2 block text-sm font-medium leading-relaxed text-slate-400">
               Dein persönliches Diensthandy oder dein Laptop. Deine Notizen bleiben gespeichert und
@@ -278,7 +278,7 @@ function Geraetewahl({ onWahl }) {
           >
             <span className="flex items-center gap-3">
               <Users className="h-6 w-6 shrink-0 text-db-red" />
-              <span className="font-black">Mehrere nutzen dieses Gerät</span>
+              <span className="font-bold">Mehrere nutzen dieses Gerät</span>
             </span>
             <span className="mt-2 block text-sm font-medium leading-relaxed text-slate-400">
               Werkstatt-Tablet, Schulungsraum, Schichtgerät. Dann speichert die App nichts: Sobald

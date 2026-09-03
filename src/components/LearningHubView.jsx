@@ -51,14 +51,14 @@ export function LearningHubView() {
 
   // Header UI
   const renderHeader = () => (
-    <div className="rounded-md bg-gradient-to-r from-db-dark via-db-dark/90 to-db-rail p-6 text-white shadow-md relative overflow-hidden">
+    <div className="bg-db-dark p-6 text-white relative overflow-hidden">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2 max-w-2xl">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm backdrop-blur-md">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm ">
             <GraduationCap className="h-3.5 w-3.5 text-amber-400" />
             <span>Wissen &amp; Vorbeugen</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
             Kurs- & Seminar-Katalog
           </h1>
           <p className="text-sm font-medium text-white/80 leading-relaxed">
@@ -76,7 +76,7 @@ export function LearningHubView() {
             placeholder="Kurse durchsuchen..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/10 border border-white/20 rounded-xl py-3 pl-10 pr-4 text-sm font-semibold text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-db-red focus:bg-white/20 transition-all backdrop-blur-sm shadow-inner"
+            className="w-full bg-white/10 border border-white/20 rounded-xl py-3 pl-10 pr-4 text-sm font-semibold text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-db-red focus:bg-white/20 transition-all  shadow-inner"
           />
         </div>
       </div>
@@ -98,7 +98,7 @@ export function LearningHubView() {
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="space-y-3">
           <div>
-            <h3 className="text-lg font-black text-db-dark dark:text-white">{course.title}</h3>
+            <h3 className="text-lg font-bold text-db-dark dark:text-white">{course.title}</h3>
             <p className="text-xs font-bold text-db-rail dark:text-white/60 uppercase tracking-wider">{course.provider}</p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -122,13 +122,13 @@ export function LearningHubView() {
           <div className="shrink-0 pt-2 sm:pt-0 flex flex-col gap-2">
             <button
               onClick={() => setSelectedCourseDetail(course)}
-              className="inline-flex items-center gap-2 rounded-lg bg-db-dark px-4 py-2 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-sm w-full sm:w-auto justify-center"
+              className="inline-flex items-center gap-2 rounded-lg bg-db-dark px-4 py-2 text-sm font-bold text-white hover:bg-db-dark/90 transition shadow-sm w-full sm:w-auto justify-center"
             >
               Details ansehen <ExternalLink className="h-4 w-4" />
             </button>
             <button
               onClick={() => setSelectedCourseForLeave(course)}
-              className="inline-flex items-center gap-2 rounded-lg bg-teal-50 px-4 py-2 text-sm font-extrabold text-teal-700 hover:bg-teal-100 border border-teal-200 transition shadow-sm w-full sm:w-auto justify-center"
+              className="inline-flex items-center gap-2 rounded-lg bg-teal-50 px-4 py-2 text-sm font-bold text-teal-700 hover:bg-teal-100 border border-teal-200 transition shadow-sm w-full sm:w-auto justify-center"
             >
               <TentTree className="h-4 w-4" /> Bildungsurlaub
             </button>
@@ -145,7 +145,7 @@ export function LearningHubView() {
         {renderHeader()}
         
         <div className="mb-6 border-b border-db-dark/10 dark:border-white/10 pb-4">
-          <h2 className="text-xl font-black text-db-dark dark:text-white flex items-center gap-2">
+          <h2 className="text-xl font-bold text-db-dark dark:text-white flex items-center gap-2">
             <Search className="h-6 w-6 text-db-dark dark:text-white" />
             Suchergebnisse für "{searchQuery}"
           </h2>
@@ -194,7 +194,7 @@ export function LearningHubView() {
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <Icon className={`h-6 w-6 ${cat.textColor}`} />
-                    <span className="font-black text-db-dark dark:text-white text-lg group-hover:text-db-red dark:group-hover:text-db-red transition-colors">{cat.title}</span>
+                    <span className="font-bold text-db-dark dark:text-white text-lg group-hover:text-db-red dark:group-hover:text-db-red transition-colors">{cat.title}</span>
                   </div>
                   <p className="text-sm font-semibold text-db-rail dark:text-white/60">{cat.desc}</p>
                 </button>
@@ -242,7 +242,7 @@ export function LearningHubView() {
       </div>
 
       <div className="mb-6 border-b border-db-dark/10 dark:border-white/10 pb-4">
-        <h2 className="text-xl font-black text-db-dark dark:text-white flex items-center gap-2">
+        <h2 className="text-xl font-bold text-db-dark dark:text-white flex items-center gap-2">
           <currentCategoryObj.icon className={`h-6 w-6 ${currentCategoryObj.textColor}`} />
           {currentCategoryObj.title}
         </h2>

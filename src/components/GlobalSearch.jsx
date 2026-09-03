@@ -127,7 +127,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 bg-db-dark/40 dark:bg-black/60 backdrop-blur-sm"
+          className="absolute inset-0 bg-db-dark/40 dark:bg-black/60 "
         />
         
         {/* Search Panel */}

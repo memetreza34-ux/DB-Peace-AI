@@ -87,7 +87,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
     return (
       <div className="p-8">
         <p className="font-bold text-db-dark dark:text-white">Diese Rolle gibt es nicht.</p>
-        <button onClick={onExit} className="mt-4 font-black text-db-red underline">
+        <button onClick={onExit} className="mt-4 font-bold text-db-red underline">
           Zurück
         </button>
       </div>
@@ -146,10 +146,10 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-xs font-black uppercase tracking-wide text-db-red">
+              <p className="text-xs font-bold uppercase tracking-wide text-db-red">
                 {eigeneRolle ? "Deine Rolle" : "Vorschau"} · {gruppe?.name}
               </p>
-              <h1 className="mt-1 text-2xl font-black text-db-dark dark:text-white">{rolle.name}</h1>
+              <h1 className="mt-1 text-2xl font-bold text-db-dark dark:text-white">{rolle.name}</h1>
               <p className="mt-1 max-w-2xl text-sm font-semibold text-db-rail dark:text-white/60">
                 {rolle.beschreibung}
               </p>
@@ -168,7 +168,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
               <button
                 type="button"
                 onClick={onRolleWechseln}
-                className="flex min-h-11 items-center gap-2 rounded-xl border border-db-dark/15 dark:border-white/15 px-4 py-2 text-xs font-black text-db-dark dark:text-white transition hover:border-db-red hover:text-db-red"
+                className="flex min-h-11 items-center gap-2 rounded-xl border border-db-dark/15 dark:border-white/15 px-4 py-2 text-xs font-bold text-db-dark dark:text-white transition hover:border-db-red hover:text-db-red"
               >
                 <Repeat className="h-4 w-4" />
                 Andere Rolle
@@ -176,7 +176,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
               <button
                 type="button"
                 onClick={onExit}
-                className="flex min-h-11 items-center gap-2 rounded-xl bg-db-dark dark:bg-white px-4 py-2 text-xs font-black text-white dark:text-db-dark transition hover:opacity-90"
+                className="flex min-h-11 items-center gap-2 rounded-xl bg-db-dark dark:bg-white px-4 py-2 text-xs font-bold text-white dark:text-db-dark transition hover:opacity-90"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Zurück zur Azubi-Ansicht
@@ -263,11 +263,11 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
           {/* Liste */}
           <div className="lg:col-span-5 rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 overflow-hidden">
             <div className="flex items-center justify-between border-b border-db-dark/10 dark:border-white/10 px-4 py-3">
-              <h2 className="flex items-center gap-2 text-sm font-black text-db-dark dark:text-white">
+              <h2 className="flex items-center gap-2 text-sm font-bold text-db-dark dark:text-white">
                 <Inbox className="h-4 w-4 text-db-red" />
                 Posteingang
               </h2>
-              <span className="rounded-full bg-db-soft dark:bg-white/10 px-2.5 py-0.5 text-xs font-black text-db-rail dark:text-white/70">
+              <span className="rounded-full bg-db-soft dark:bg-white/10 px-2.5 py-0.5 text-xs font-bold text-db-rail dark:text-white/70">
                 {faelle.length}
               </span>
             </div>
@@ -293,7 +293,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-black text-db-dark dark:text-white">
+                        <span className="text-xs font-bold text-db-dark dark:text-white">
                           {fall.kategorie}
                         </span>
                         <StatusMarke status={fall.status} />
@@ -330,7 +330,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
               <div className="flex flex-col">
                 <div className="border-b border-db-dark/10 dark:border-white/10 p-5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h2 className="text-lg font-black text-db-dark dark:text-white">
+                    <h2 className="text-lg font-bold text-db-dark dark:text-white">
                       {gewaehlt.kategorie}
                     </h2>
                     <StatusMarke status={gewaehlt.status} />
@@ -379,7 +379,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
 
                 {aktionen.length > 0 && (
                   <div className="border-t border-db-dark/10 dark:border-white/10 p-4">
-                    <p className="mb-2 text-xs font-black uppercase tracking-wide text-db-rail dark:text-white/50">
+                    <p className="mb-2 text-xs font-bold uppercase tracking-wide text-db-rail dark:text-white/50">
                       Was {rolle.kurz} hier tun kann
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -389,7 +389,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                           type="button"
                           onClick={() => aktionAusfuehren(aktion)}
                           title={aktion.beschreibung}
-                          className="flex min-h-11 items-center gap-2 rounded-xl border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 px-3.5 text-xs font-black text-db-dark dark:text-white transition hover:border-db-red hover:text-db-red"
+                          className="flex min-h-11 items-center gap-2 rounded-xl border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 px-3.5 text-xs font-bold text-db-dark dark:text-white transition hover:border-db-red hover:text-db-red"
                         >
                           <UserCheck className="h-4 w-4" />
                           {aktion.label}
@@ -424,7 +424,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                     />
                     <button
                       type="submit"
-                      className="flex min-h-11 items-center gap-2 rounded-xl bg-db-red px-4 text-sm font-black text-white transition hover:bg-red-700"
+                      className="flex min-h-11 items-center gap-2 rounded-xl bg-db-red px-4 text-sm font-bold text-white transition hover:bg-red-700"
                     >
                       <Send className="h-4 w-4" />
                       <span className="hidden sm:inline">Senden</span>
@@ -436,7 +436,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                       <button
                         type="button"
                         onClick={() => setWeiterleitHinweis((offen) => !offen)}
-                        className="flex min-h-11 items-center gap-2 text-xs font-black text-db-rail dark:text-white/60 transition hover:text-db-red"
+                        className="flex min-h-11 items-center gap-2 text-xs font-bold text-db-rail dark:text-white/60 transition hover:text-db-red"
                       >
                         <UserCheck className="h-4 w-4" />
                         An eine andere Stelle weitergeben
@@ -498,7 +498,7 @@ function Hinweisleiste({ rolleId, fall }) {
             <div key={frist.id} className={`flex items-start gap-2.5 rounded-xl border p-3 ${farbe}`}>
               <AlarmClock className="mt-0.5 h-4 w-4 shrink-0" />
               <div>
-                <p className="text-xs font-black">
+                <p className="text-xs font-bold">
                   {frist.bezeichnung}: {stand.text}
                 </p>
                 <p className="mt-0.5 text-[11px] font-semibold leading-relaxed opacity-80">
@@ -516,11 +516,11 @@ function Hinweisleiste({ rolleId, fall }) {
         >
           <Scale className="mt-0.5 h-4 w-4 shrink-0 text-db-red" />
           <div>
-            <p className="text-xs font-black text-db-dark dark:text-white">{hinweis.titel}</p>
+            <p className="text-xs font-bold text-db-dark dark:text-white">{hinweis.titel}</p>
             <p className="mt-0.5 text-[11px] font-semibold leading-relaxed text-db-rail dark:text-white/60">
               {hinweis.text}
             </p>
-            <p className="mt-1 text-[11px] font-black uppercase tracking-wide text-db-rail/70 dark:text-white/40">
+            <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-db-rail/70 dark:text-white/40">
               {hinweis.grundlage} · keine Rechtsberatung
             </p>
           </div>
@@ -533,7 +533,7 @@ function Hinweisleiste({ rolleId, fall }) {
 function Auswertung({ ergebnis, rolleKurz }) {
   return (
     <div className="rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5">
-      <h2 className="flex items-center gap-2 text-sm font-black text-db-dark dark:text-white">
+      <h2 className="flex items-center gap-2 text-sm font-bold text-db-dark dark:text-white">
         <BarChart3 className="h-4 w-4 text-db-red" />
         Häufungen im Postfach von {rolleKurz}
       </h2>
@@ -546,7 +546,7 @@ function Auswertung({ ergebnis, rolleKurz }) {
               className="flex items-center justify-between rounded-xl bg-db-soft dark:bg-white/5 px-3.5 py-2.5"
             >
               <span className="text-sm font-bold text-db-dark dark:text-white">{eintrag.kategorie}</span>
-              <span className="text-sm font-black text-db-red">{eintrag.anzahl} Fälle</span>
+              <span className="text-sm font-bold text-db-red">{eintrag.anzahl} Fälle</span>
             </li>
           ))}
         </ul>
@@ -573,7 +573,7 @@ function StatusMarke({ status }) {
   };
   const marke = marken[status] ?? marken.offen;
   return (
-    <span className={`shrink-0 rounded px-2 py-0.5 text-[11px] font-black ${marke.klasse}`}>
+    <span className={`shrink-0 rounded px-2 py-0.5 text-[11px] font-bold ${marke.klasse}`}>
       {marke.text}
     </span>
   );
@@ -599,7 +599,7 @@ function Nachricht({ eintrag, rolleKurz }) {
             : "bg-db-soft dark:bg-white/10 text-db-dark dark:text-white"
         }`}
       >
-        <p className="text-[11px] font-black uppercase tracking-wide opacity-60">
+        <p className="text-[11px] font-bold uppercase tracking-wide opacity-60">
           {vonRolle ? rolleKurz : "meldende Person"}
         </p>
         <p className="mt-1 text-sm font-semibold leading-relaxed">{eintrag.text}</p>

@@ -14,8 +14,25 @@ export default {
           warm: "#ECEEF1", // DB Secondary Background
         },
       },
+      borderRadius: {
+        // Das DB-Erscheinungsbild lebt von Flächen und Kanten, nicht von
+        // abgerundeten Kacheln. Alle Klassen bleiben nutzbar, fallen aber
+        // deutlich flacher aus als die Tailwind-Voreinstellung.
+        DEFAULT: "2px",
+        sm: "2px",
+        md: "3px",
+        lg: "3px",
+        xl: "4px",
+        "2xl": "4px",
+        "3xl": "6px",
+      },
       boxShadow: {
-        panel: "0 2px 8px rgba(40, 45, 55, 0.08)", // Sharper, standard corporate shadow
+        panel: "0 1px 2px rgba(40, 45, 55, 0.10)",
+        sm: "0 1px 2px rgba(40, 45, 55, 0.08)",
+        DEFAULT: "0 1px 2px rgba(40, 45, 55, 0.10)",
+        md: "0 1px 3px rgba(40, 45, 55, 0.12)",
+        lg: "0 2px 6px rgba(40, 45, 55, 0.12)",
+        xl: "0 3px 10px rgba(40, 45, 55, 0.14)",
       },
     },
   },

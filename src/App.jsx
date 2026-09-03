@@ -124,7 +124,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setActiveTab("home")}
-                className="inline-flex items-center gap-2 rounded-xl bg-white dark:bg-db-dark/50 px-4 py-2 text-xs font-black text-db-dark dark:text-white border border-db-dark/10 dark:border-white/10 shadow-xs hover:border-db-red dark:hover:border-db-red hover:text-db-red dark:hover:text-db-red transition"
+                className="inline-flex items-center gap-2 rounded-xl bg-white dark:bg-db-dark/50 px-4 py-2 text-xs font-bold text-db-dark dark:text-white border border-db-dark/10 dark:border-white/10 shadow-xs hover:border-db-red dark:hover:border-db-red hover:text-db-red dark:hover:text-db-red transition"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span>Zurück zur Übersicht (Home)</span>

@@ -13,7 +13,7 @@ export function Footer({ onNavigate, onRollenAnsehen }) {
               <HeartHandshake className="h-5 w-5" />
             </div>
             <div>
-              <div className="font-extrabold text-db-dark dark:text-white">DB Peace AI — Lokaler Innovationsprototyp</div>
+              <div className="font-bold text-db-dark dark:text-white">DB Peace AI — Lokaler Innovationsprototyp</div>
               <div className="text-db-rail/70 dark:text-white/40">Nicht offizielle Anwendung der Deutsche Bahn AG.</div>
             </div>
           </div>
@@ -22,7 +22,7 @@ export function Footer({ onNavigate, onRollenAnsehen }) {
           <div className="rounded-xl bg-db-warm dark:bg-db-dark/50 px-4 py-2 text-center text-xs font-bold text-db-dark dark:text-white border border-db-dark/5 dark:border-white/5">
             {/* redInk statt db-red: kleiner Text auf hellgrauem Grund erreicht mit
                 der reinen Markenfarbe den Mindestkontrast nicht. */}
-            🛡️ <span className="text-db-redInk dark:text-red-400 font-black">„Menschen entscheiden, nicht die KI.“</span> — Keine Rechts- oder Medizinberatung.
+            <span className="text-db-redInk dark:text-red-400 font-bold">„Menschen entscheiden, nicht die KI.“</span> — Keine Rechts- oder Medizinberatung.
           </div>
 
           {/* Quick Access Links */}
@@ -59,7 +59,7 @@ export function Footer({ onNavigate, onRollenAnsehen }) {
                 <button
                   type="button"
                   onClick={onRollenAnsehen}
-                  className="flex items-center gap-1.5 text-purple-700 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 transition"
+                  className="flex items-center gap-1.5 hover:text-db-red transition"
                   title="Vorschau: So käme eine Meldung bei JAV, Betriebsrat, HR oder Compliance an"
                 >
                   <Eye className="h-3.5 w-3.5" />

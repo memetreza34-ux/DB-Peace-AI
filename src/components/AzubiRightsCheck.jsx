@@ -64,7 +64,7 @@ export function AzubiRightsCheck() {
         <div className="rounded-full bg-db-red/10 p-3 text-db-red mb-3">
           <Scale className="h-6 w-6" />
         </div>
-        <h2 className="text-2xl font-black text-db-dark dark:text-white">Azubi-Rechte auf einen Blick</h2>
+        <h2 className="text-2xl font-bold text-db-dark dark:text-white">Azubi-Rechte auf einen Blick</h2>
         <p className="text-sm font-medium text-db-rail dark:text-white/60 max-w-lg mt-2">
           Die vier Fragen, die am häufigsten kommen — kurz beantwortet. Die vollständigen
           Gesetzestexte stehen darunter.

@@ -4,7 +4,7 @@ import { ThemeToggle } from "./ThemeToggle.jsx";
 
 export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSearch }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-db-dark/10 dark:border-white/10 bg-white/95 dark:bg-db-dark/95 backdrop-blur-md shadow-sm transition-colors">
+    <header className="sticky top-0 z-40 border-b border-db-dark/10 dark:border-white/10 bg-white/95 dark:bg-db-dark/95  shadow-sm transition-colors">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-6">
         {/* Brand Logo & Tagline */}
         <div
@@ -19,10 +19,10 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="font-black text-lg sm:text-xl tracking-tight text-db-dark dark:text-white flex items-center gap-1.5 sm:gap-2">
+              <span className="font-bold text-lg sm:text-xl tracking-tight text-db-dark dark:text-white flex items-center gap-1.5 sm:gap-2">
                 Peace <Brain className="h-4 w-4 sm:h-5 sm:w-5 text-db-red dark:text-red-400 shrink-0" />
               </span>
-              <span className="hidden sm:inline rounded bg-db-red/10 dark:bg-db-red/20 px-2 py-0.5 text-xs font-black text-db-red dark:text-red-400">
+              <span className="hidden sm:inline rounded bg-db-red/10 dark:bg-db-red/20 px-2 py-0.5 text-xs font-bold text-db-red dark:text-red-400">
                 Prototyp
               </span>
             </div>
@@ -81,7 +81,7 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
             type="button"
             onClick={onOpenEmergency}
             aria-label="Notfall und Kontakte"
-            className={`flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-2.5 sm:px-3.5 py-2 text-xs sm:text-sm font-extrabold transition shadow-sm ${
+            className={`flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-2.5 sm:px-3.5 py-2 text-xs sm:text-sm font-bold transition shadow-sm ${
               activeTab === "contacts"
                 ? "bg-red-800 text-white dark:bg-red-900"
                 : "bg-red-600 dark:bg-db-red text-white hover:bg-red-700 dark:hover:bg-red-600"

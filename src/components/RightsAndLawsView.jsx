@@ -8,22 +8,11 @@ const iconMap = {
   Scale, BookOpen, Building2, AlertCircle, CheckCircle2, BookText
 };
 
-const colorMap = {
-  red: { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-200' },
-  blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200' },
-  amber: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200' },
-  emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200' },
-  purple: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200' },
-  rose: { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200' },
-  teal: { bg: 'bg-teal-50', text: 'text-teal-600', border: 'border-teal-200' },
-  indigo: { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200' },
-  orange: { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-200' },
-  cyan: { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-200' },
-  lime: { bg: 'bg-lime-50', text: 'text-lime-600', border: 'border-lime-200' },
-  sky: { bg: 'bg-sky-50', text: 'text-sky-600', border: 'border-sky-200' },
-  pink: { bg: 'bg-pink-50', text: 'text-pink-600', border: 'border-pink-200' },
-  violet: { bg: 'bg-violet-50', text: 'text-violet-600', border: 'border-violet-200' },
-};
+/*
+  Hier standen vierzehn Farbwelten für Gesetzeskarten. Die Farbe kodierte
+  nichts — welches Gesetz wäre „pink"? Im DB-Erscheinungsbild trägt Rot den
+  Akzent, alles andere ist Grau und Weiß.
+*/
 
 export function RightsAndLawsView({ onBack }) {
   const [activeTab, setActiveTab] = useState("bundesgesetze"); // bundesgesetze | dbRichtlinien
@@ -80,12 +69,12 @@ export function RightsAndLawsView({ onBack }) {
           className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left"
         >
           <div className="flex items-center gap-4">
-            <div className={`p-3 rounded-xl ${colorMap[law.color]?.bg || 'bg-gray-50 dark:bg-db-dark/50'} shrink-0`}>
-              <Icon className={`h-6 w-6 ${colorMap[law.color]?.text || 'text-gray-600 dark:text-white/60'}`} />
+            <div className="shrink-0 pt-0.5">
+              <Icon className="h-6 w-6 text-db-red" />
             </div>
             <div>
               <p className="text-sm font-bold text-db-rail dark:text-white/60">{law.subtitle}</p>
-              <h3 className="text-lg font-black text-db-dark dark:text-white">{law.paragraph}</h3>
+              <h3 className="text-lg font-bold text-db-dark dark:text-white">{law.paragraph}</h3>
             </div>
           </div>
           <ChevronDown className={`h-5 w-5 text-db-dark/50 dark:text-white/50 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
@@ -148,20 +137,20 @@ export function RightsAndLawsView({ onBack }) {
   return (
     <div className="space-y-6 animate-fadeIn pb-24">
       {/* Header */}
-      <div className="rounded-md bg-gradient-to-r from-db-dark via-db-dark/90 to-db-rail p-6 text-white shadow-md relative overflow-hidden">
+      <div className="bg-db-dark p-6 text-white relative overflow-hidden">
         <div className="space-y-2 max-w-2xl relative z-10">
           <button
             onClick={onBack}
-            className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/20 transition backdrop-blur-md"
+            className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/20 transition "
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Zurück zum Dashboard
           </button>
           
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm backdrop-blur-md">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm ">
             <Scale className="h-3.5 w-3.5 text-amber-400" />
             <span>Deine Rechte</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
             Deine Rechte & Gesetze
           </h1>
           {/* Kein Live-Abgleich: Die Texte liegen statisch in src/data/lawsData.json.
@@ -228,7 +217,7 @@ export function RightsAndLawsView({ onBack }) {
         {filteredLaws.length > 0 ? (
           Object.entries(groupedLaws).map(([title, laws]) => (
             <div key={title} className="space-y-4">
-              <h2 className="text-xl font-black text-db-dark dark:text-white pl-3 border-l-4 border-db-red/80">{title}</h2>
+              <h2 className="text-xl font-bold text-db-dark dark:text-white pl-3 border-l-4 border-db-red/80">{title}</h2>
               <div className="space-y-4 pl-4 border-l-2 border-db-dark/10 dark:border-white/10 ml-3">
                 {laws.map(renderCard)}
               </div>
@@ -237,7 +226,7 @@ export function RightsAndLawsView({ onBack }) {
         ) : (
           <div className="text-center py-12 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10">
             <Scale className="h-12 w-12 text-db-dark/10 dark:text-white/10 mx-auto mb-3" />
-            <h3 className="text-lg font-black text-db-dark dark:text-white">Keine Gesetze gefunden</h3>
+            <h3 className="text-lg font-bold text-db-dark dark:text-white">Keine Gesetze gefunden</h3>
             <p className="text-sm font-medium text-db-rail dark:text-white/60 mt-1">
               Wir konnten kein passendes Gesetz zu deiner Suche finden.
             </p>

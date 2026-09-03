@@ -18,7 +18,7 @@ export function EmergencyModal({ isOpen, onClose }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       onClick={onClose}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 "
     >
         <motion.div
           ref={dialogRef}
@@ -38,7 +38,7 @@ export function EmergencyModal({ isOpen, onClose }) {
                 <ShieldAlert className="h-7 w-7 animate-pulse" />
               </div>
               <div>
-                <h2 id="notfall-titel" className="text-xl font-black text-db-dark dark:text-white">Akuter Notfall</h2>
+                <h2 id="notfall-titel" className="text-xl font-bold text-db-dark dark:text-white">Akuter Notfall</h2>
                 <p className="text-xs font-semibold text-db-rail dark:text-white/60">
                   Schnelle Hilfe, ohne Versehen auszulösen.
                 </p>

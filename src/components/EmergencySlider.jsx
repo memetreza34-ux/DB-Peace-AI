@@ -92,10 +92,10 @@ export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500",
   }
 
   return (
-    <div ref={containerRef} className={`relative w-full h-16 rounded-full overflow-hidden flex items-center p-1 shadow-inner ${colorClass} bg-opacity-20 backdrop-blur-md`}>
+    <div ref={containerRef} className={`relative w-full h-16 rounded-full overflow-hidden flex items-center p-1 shadow-inner ${colorClass} bg-opacity-20 `}>
       <motion.div 
         style={{ opacity: textOpacity }}
-        className="absolute w-full text-center pointer-events-none text-sm font-black tracking-wide text-db-dark mix-blend-overlay opacity-70 uppercase"
+        className="absolute w-full text-center pointer-events-none text-sm font-bold tracking-wide text-db-dark mix-blend-overlay opacity-70 uppercase"
       >
         {label}
       </motion.div>

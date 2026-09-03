@@ -70,7 +70,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-db-dark/60 backdrop-blur-sm p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-db-dark/60  p-4 animate-fadeIn">
       <div className="bg-white rounded-lg p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative shadow-lg">
         <button
           onClick={onClose}
@@ -80,10 +80,10 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
         </button>
 
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-3 bg-teal-50 rounded-xl">
-            <TentTree className="h-6 w-6 text-teal-600" />
+          <div className="p-3 bg-db-soft rounded-xl">
+            <TentTree className="h-6 w-6 text-db-red" />
           </div>
-          <h2 className="text-2xl font-black text-db-dark">Antrag auf Bildungsurlaub</h2>
+          <h2 className="text-2xl font-bold text-db-dark">Antrag auf Bildungsurlaub</h2>
         </div>
         <p className="text-sm font-semibold text-db-rail mb-8">
           Für den Kurs: <span className="font-bold text-db-dark">{course.title}</span>
@@ -130,7 +130,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
 
             <button
               type="submit"
-              className="w-full rounded-xl bg-teal-600 px-6 py-3.5 text-sm font-extrabold text-white hover:bg-teal-700 transition shadow-lg flex items-center justify-center gap-2"
+              className="w-full rounded-xl bg-db-dark px-6 py-3.5 text-sm font-bold text-white hover:bg-db-dark transition shadow-lg flex items-center justify-center gap-2"
             >
               <FileText className="h-4 w-4" />
               Antrag jetzt generieren
@@ -152,7 +152,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
                 </button>
                 <button
                   onClick={handleDownloadPDF}
-                  className="p-2 bg-teal-600 text-white rounded-lg shadow-sm hover:bg-teal-700 transition flex items-center gap-1.5 text-xs font-bold"
+                  className="p-2 bg-db-dark text-white rounded-lg shadow-sm hover:bg-db-dark transition flex items-center gap-1.5 text-xs font-bold"
                 >
                   <Download className="h-4 w-4" />
                   PDF Herunterladen
@@ -160,18 +160,18 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
               </div>
             </div>
             
-            <div className="bg-teal-50 rounded-xl p-4 border border-teal-200">
+            <div className="bg-db-soft rounded-xl p-4 border border-db-dark/10">
               <p className="text-sm font-bold text-teal-800">
                 Nächster Schritt:
               </p>
-              <p className="text-xs font-semibold text-teal-700 mt-1">
+              <p className="text-xs font-semibold text-db-dark mt-1">
                 Kopiere diesen Text und schicke ihn per E-Mail an deine Führungskraft. Vergiss nicht, später die offizielle Anmeldebestätigung des Kursanbieters nachzureichen.
               </p>
             </div>
 
             <button
               onClick={onClose}
-              className="w-full rounded-xl bg-db-dark px-6 py-3 text-sm font-extrabold text-white hover:bg-db-dark/90 transition shadow-lg"
+              className="w-full rounded-xl bg-db-dark px-6 py-3 text-sm font-bold text-white hover:bg-db-dark/90 transition shadow-lg"
             >
               Fenster schließen
             </button>

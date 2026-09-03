@@ -19,8 +19,8 @@ export function MeldewegeKarte({ entwurf }) {
 
   return (
     <div className="rounded-lg border-2 border-db-red/30 bg-white dark:bg-db-dark/50 p-5 shadow-panel">
-      <p className="text-sm font-black uppercase tracking-wide text-db-red">Nächster Schritt</p>
-      <h3 className="mt-1 text-2xl font-black dark:text-white">Wohin mit deiner Meldung?</h3>
+      <p className="text-sm font-bold uppercase tracking-wide text-db-red">Nächster Schritt</p>
+      <h3 className="mt-1 text-2xl font-bold dark:text-white">Wohin mit deiner Meldung?</h3>
       <p className="mt-2 text-sm font-semibold text-db-rail dark:text-white/70 leading-relaxed">
         Diese App verschickt nichts von allein. Wähle einen offiziellen Meldeweg der DB — dein
         Entwurf wird dabei übernommen, und du entscheidest, ob und was du abschickst.
@@ -47,7 +47,7 @@ function StandortHinweis() {
   if (!standort) {
     return (
       <div className="mt-5 rounded-xl bg-db-soft dark:bg-white/5 p-4 border border-db-dark/10 dark:border-white/10">
-        <p className="text-xs font-black text-db-dark dark:text-white flex items-center gap-2 mb-2">
+        <p className="text-xs font-bold text-db-dark dark:text-white flex items-center gap-2 mb-2">
           <MapPin className="w-4 h-4 text-db-red" /> An deinem Standort
         </p>
         <p className="text-xs font-medium text-db-rail dark:text-white/60 leading-relaxed">
@@ -68,7 +68,7 @@ function StandortHinweis() {
 
   return (
     <div className="mt-5 rounded-xl bg-db-soft dark:bg-white/5 p-4 border border-db-dark/10 dark:border-white/10">
-      <p className="text-xs font-black text-db-dark dark:text-white flex items-center gap-2 mb-2">
+      <p className="text-xs font-bold text-db-dark dark:text-white flex items-center gap-2 mb-2">
         <MapPin className="w-4 h-4 text-db-red" /> An deinem Standort
         {standort.beispiel && (
           <span className="rounded bg-amber-100 dark:bg-amber-950/40 px-2 py-0.5 text-[10px] text-amber-800 dark:text-amber-300">
@@ -79,7 +79,7 @@ function StandortHinweis() {
       <ul className="space-y-1.5">
         {besetzt.map(({ rolle, personen }) => (
           <li key={rolle.id} className="text-xs font-medium text-db-rail dark:text-white/60">
-            <span className="font-black text-db-dark dark:text-white">{rolle.kurz}:</span>{" "}
+            <span className="font-bold text-db-dark dark:text-white">{rolle.kurz}:</span>{" "}
             {personen.map((person) => person.name).join(", ")}
           </li>
         ))}
@@ -136,7 +136,7 @@ function Weg({ weg, betreff, text }) {
 function Zeile({ name, beschreibung, aktion, hinweis }) {
   return (
     <div className="rounded-xl border border-db-dark/10 dark:border-white/10 bg-db-soft/50 dark:bg-white/5 p-4">
-      <h4 className="font-black text-sm text-db-dark dark:text-white">{name}</h4>
+      <h4 className="font-bold text-sm text-db-dark dark:text-white">{name}</h4>
       <p className="mt-1 text-xs font-medium text-db-rail dark:text-white/60 leading-relaxed">
         {beschreibung}
       </p>
@@ -145,7 +145,7 @@ function Zeile({ name, beschreibung, aktion, hinweis }) {
         <a
           href={aktion.href}
           {...(aktion.extern ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          className="mt-3 inline-flex items-center gap-2 rounded-lg bg-db-dark dark:bg-db-red px-4 py-2 text-xs font-black text-white transition hover:opacity-90 break-all"
+          className="mt-3 inline-flex items-center gap-2 rounded-lg bg-db-dark dark:bg-db-red px-4 py-2 text-xs font-bold text-white transition hover:opacity-90 break-all"
         >
           <aktion.Icon className="w-4 h-4 shrink-0" />
           {aktion.label}

@@ -58,7 +58,7 @@ export function QuizWidget() {
 
   if (isLoading) {
     return (
-      <div className="w-full h-64 rounded-lg bg-white dark:bg-db-dark/80 backdrop-blur-md border border-db-dark/10 dark:border-white/10 shadow-md flex flex-col items-center justify-center gap-4 transition-colors">
+      <div className="w-full h-64 rounded-lg bg-white dark:bg-db-dark/80  border border-db-dark/10 dark:border-white/10 shadow-md flex flex-col items-center justify-center gap-4 transition-colors">
         <Loader2 className="h-8 w-8 text-db-red animate-spin" />
         <p className="text-sm font-semibold text-db-rail dark:text-white/70">
           KI generiert neue Quiz-Fragen...
@@ -78,10 +78,10 @@ export function QuizWidget() {
           <ShieldCheck className="w-40 h-40" />
         </div>
         <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-amber-500/20">
+          <div className="mx-auto w-16 h-16 bg-db-dark flex items-center justify-center mb-4">
             <ShieldCheck className="w-8 h-8 text-white" />
           </div>
-          <h3 className="text-2xl font-black mb-2">Quiz beendet!</h3>
+          <h3 className="text-2xl font-bold mb-2">Quiz beendet!</h3>
           <p className="text-white/80 font-medium mb-6">
             Du hast {score} von {questions.length} Fragen richtig beantwortet.
           </p>
@@ -112,7 +112,7 @@ export function QuizWidget() {
   const currentQ = questions[currentQIndex];
 
   return (
-    <div className="w-full rounded-lg bg-white dark:bg-db-dark/80 backdrop-blur-md border border-db-dark/10 dark:border-white/10 shadow-md p-6 relative overflow-hidden transition-colors">
+    <div className="w-full rounded-lg bg-white dark:bg-db-dark/80  border border-db-dark/10 dark:border-white/10 shadow-md p-6 relative overflow-hidden transition-colors">
       
       {/* Progress */}
       <div className="flex items-center gap-1 mb-6">
@@ -124,11 +124,11 @@ export function QuizWidget() {
         ))}
       </div>
 
-      <div className="mb-2 text-xs font-extrabold text-db-red uppercase tracking-wider">
+      <div className="mb-2 text-xs font-bold text-db-red uppercase tracking-wider">
         Wissens-Quiz • Frage {currentQIndex + 1}
       </div>
       
-      <h3 className="text-lg font-black text-db-dark dark:text-white leading-snug min-h-[4rem]">
+      <h3 className="text-lg font-bold text-db-dark dark:text-white leading-snug min-h-[4rem]">
         {currentQ.question}
       </h3>
 

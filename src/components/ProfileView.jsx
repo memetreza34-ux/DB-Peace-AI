@@ -20,7 +20,10 @@ import {
   Eye,
   Lock,
   ArrowRight,
-  Star
+  Star,
+  Smile,
+  Meh,
+  Frown,
 } from "lucide-react";
 import { abonnieren, alleFaelle, verlaufErgaenzen } from "../lib/faelle.js";
 import { eigeneFaelle, rolleFinden } from "../lib/rolle.js";
@@ -57,14 +60,14 @@ export function ProfileView() {
 
   // Die echten Einträge aus dem Stimmungs-Tracker auf der Startseite.
   const stimmungsBezeichnung = {
-    good: { mood: "Gut", icon: "🙂", color: "text-emerald-500" },
-    neutral: { mood: "Okay", icon: "😐", color: "text-amber-500" },
-    bad: { mood: "Gestresst", icon: "😞", color: "text-red-500" },
+    good: { mood: "Gut", Icon: Smile, color: "text-emerald-600 dark:text-emerald-400" },
+    neutral: { mood: "Okay", Icon: Meh, color: "text-db-rail dark:text-white/60" },
+    bad: { mood: "Gestresst", Icon: Frown, color: "text-db-red" },
   };
   const moodHistory = stimmungLaden().map((eintrag) => ({
     date: tagesbezeichnung(eintrag.datum),
     notiz: eintrag.notiz,
-    ...(stimmungsBezeichnung[eintrag.stimmung] ?? { mood: eintrag.stimmung, icon: "•", color: "text-db-rail" }),
+    ...(stimmungsBezeichnung[eintrag.stimmung] ?? { mood: eintrag.stimmung, Icon: Meh, color: "text-db-rail" }),
   }));
 
   const savedCourses = [
@@ -87,7 +90,7 @@ export function ProfileView() {
         const selectedTicket = tickets.find(t => t.id === selectedTicketId);
         return (
           <div className="space-y-4">
-            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Meine Meldungen & Postfach</h3>
+            <h3 className="font-bold text-xl text-db-dark dark:text-white mb-2">Meine Meldungen & Postfach</h3>
             <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-6">
               Hier siehst du deine eingereichten, anonymen Meldungen und kannst sicher mit den Bearbeitern (JAV, HR) schreiben.
             </p>
@@ -103,7 +106,7 @@ export function ProfileView() {
                        className={`w-full text-left p-4 rounded-xl border transition-all ${selectedTicketId === ticket.id ? 'border-db-red bg-db-red/5 dark:bg-db-red/10' : 'border-transparent hover:bg-db-dark/5 dark:hover:bg-white/5'}`}
                      >
                        <div className="flex justify-between items-start mb-1">
-                          <span className="font-black text-db-dark dark:text-white text-sm">{ticket.id}</span>
+                          <span className="font-bold text-db-dark dark:text-white text-sm">{ticket.id}</span>
                           <span className="shrink-0 whitespace-nowrap rounded bg-db-dark/5 dark:bg-white/10 px-2 py-0.5 text-[10px] font-bold text-db-dark dark:text-white">
                             {{ offen: "offen", "in-bearbeitung": "läuft", abgeschlossen: "erledigt" }[ticket.status] ?? ticket.status}
                           </span>
@@ -165,7 +168,7 @@ export function ProfileView() {
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center text-db-rail dark:text-white/40 p-8 text-center">
                      <Inbox className="w-12 h-12 mb-4 opacity-20" />
-                     <h3 className="text-sm font-black">Wähle eine Meldung aus</h3>
+                     <h3 className="text-sm font-bold">Wähle eine Meldung aus</h3>
                   </div>
                 )}
               </div>
@@ -175,7 +178,7 @@ export function ProfileView() {
       case "protokolle":
         return (
           <div className="space-y-4">
-            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Meine Gedächtnisprotokolle</h3>
+            <h3 className="font-bold text-xl text-db-dark dark:text-white mb-2">Meine Gedächtnisprotokolle</h3>
             <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-6">
               Diese Einträge bleiben auf diesem Gerät und werden nirgendwo hochgeladen.
             </p>
@@ -185,7 +188,7 @@ export function ProfileView() {
                   <Clock className="w-3 h-3" />
                   {record.date} • {record.time}
                 </div>
-                <h4 className="font-black text-db-dark dark:text-white text-lg mb-1">{record.category || "Protokoll-Eintrag"}</h4>
+                <h4 className="font-bold text-db-dark dark:text-white text-lg mb-1">{record.category || "Protokoll-Eintrag"}</h4>
                 <p className="text-sm text-db-dark/80 dark:text-white/80">{record.description}</p>
                 {/* Beide Funktionen sind im Prototyp nicht angebunden. Sichtbar
                     deaktiviert statt mit einem Hinweisfenster beim Klick. */}
@@ -217,7 +220,7 @@ export function ProfileView() {
       case "stimmung":
         return (
           <div className="space-y-4">
-            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Stimmungs-Verlauf</h3>
+            <h3 className="font-bold text-xl text-db-dark dark:text-white mb-2">Stimmungs-Verlauf</h3>
             <div className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-6 shadow-sm">
               <div className="space-y-6">
                 {moodHistory.length === 0 ? (
@@ -229,12 +232,12 @@ export function ProfileView() {
                     <div key={idx} className="flex items-center justify-between gap-4 border-b border-db-dark/5 dark:border-white/5 pb-4 last:border-0 last:pb-0">
                       <div className="min-w-0">
                         <div className="text-xs font-bold text-db-rail dark:text-white/60 mb-1">{item.date}</div>
-                        <div className="font-black text-db-dark dark:text-white">{item.mood}</div>
+                        <div className="font-bold text-db-dark dark:text-white">{item.mood}</div>
                         {item.notiz && (
                           <p className="mt-1 text-xs font-semibold text-db-rail dark:text-white/60">{item.notiz}</p>
                         )}
                       </div>
-                      <div className={`shrink-0 text-4xl ${item.color}`}>{item.icon}</div>
+                      {item.Icon && <item.Icon className={`h-8 w-8 shrink-0 ${item.color}`} />}
                     </div>
                   ))
                 )}
@@ -245,7 +248,7 @@ export function ProfileView() {
       case "kurse":
         return (
           <div className="space-y-4">
-            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Gemerkte Kurse</h3>
+            <h3 className="font-bold text-xl text-db-dark dark:text-white mb-2">Gemerkte Kurse</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {savedCourses.map((course, idx) => (
                 <div key={idx} className="group bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm hover:border-db-red dark:hover:border-db-red transition cursor-pointer flex flex-col justify-between">
@@ -254,7 +257,7 @@ export function ProfileView() {
                       <Video className="w-3 h-3" />
                       {course.type}
                     </div>
-                    <h4 className="font-black text-db-dark dark:text-white text-lg group-hover:text-db-red transition">{course.title}</h4>
+                    <h4 className="font-bold text-db-dark dark:text-white text-lg group-hover:text-db-red transition">{course.title}</h4>
                   </div>
                   <div className="mt-6 flex items-center justify-between">
                     <span className="text-xs font-bold text-db-dark/70 dark:text-white/70">{course.duration}</span>
@@ -286,7 +289,7 @@ export function ProfileView() {
           <User className="w-12 h-12 text-white" />
         </div>
         <div className="relative z-10 text-white flex-1">
-          <h1 className="text-3xl font-black mb-1">Mein DB Peace</h1>
+          <h1 className="text-3xl font-bold mb-1">Mein DB Peace</h1>
           <p className="text-white/70 font-medium mb-2">Dein sicherer, privater Raum.</p>
           <p className="text-white/60 text-xs font-semibold mb-4 max-w-xl leading-relaxed">
             Postfach und gemerkte Kurse zeigen im Prototyp erfundene Beispiele. Deine
@@ -297,7 +300,7 @@ export function ProfileView() {
               weil er gemobbt wird, sammelt keine Abzeichen. Belohnungslogik wäre
               hier zynisch — und die Zahlen wären ohnehin erfunden. */}
           <div className="flex gap-4">
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 flex items-center gap-3 max-w-md">
+            <div className="bg-white/10  rounded-xl p-3 border border-white/10 flex items-center gap-3 max-w-md">
               <div className="bg-white/10 p-2 rounded-lg text-white/80">
                 <Lock className="w-5 h-5" />
               </div>
@@ -416,7 +419,7 @@ function FristenFuerMich({ fall }) {
             }`}
           >
             <p
-              className={`text-xs font-black ${
+              className={`text-xs font-bold ${
                 ueberfaellig ? "text-db-redInk dark:text-red-300" : "text-db-dark dark:text-white"
               }`}
             >

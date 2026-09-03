@@ -94,7 +94,7 @@ export default function ProjectOverview() {
         </div>
 
         <div className="relative z-10 max-w-2xl">
-          <h2 className="text-3xl font-black text-db-dark dark:text-white mb-2">
+          <h2 className="text-3xl font-bold text-db-dark dark:text-white mb-2">
             Initiativen & Projekte
           </h2>
           <p className="text-lg text-db-rail dark:text-white/70 font-medium">
@@ -124,7 +124,7 @@ export default function ProjectOverview() {
             >
               <div>
                 <div className="flex justify-between items-start mb-4">
-                  <span className="text-xs font-black uppercase tracking-wider bg-db-dark/5 dark:bg-white/10 text-db-dark dark:text-white px-3 py-1 rounded-full">
+                  <span className="text-xs font-bold uppercase tracking-wider bg-db-dark/5 dark:bg-white/10 text-db-dark dark:text-white px-3 py-1 rounded-full">
                     {project.category}
                   </span>
                   <div className="flex items-center gap-3">
@@ -139,7 +139,7 @@ export default function ProjectOverview() {
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-black text-db-dark dark:text-white mb-3 leading-tight group-hover:text-db-red transition-colors">
+                <h3 className="text-xl font-bold text-db-dark dark:text-white mb-3 leading-tight group-hover:text-db-red transition-colors">
                   {project.title}
                 </h3>
                 <p className="text-db-dark/80 dark:text-white/70 text-sm font-medium mb-6">
@@ -195,7 +195,7 @@ export default function ProjectOverview() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-db-dark/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-db-dark/60 "
             />
             
             <motion.div
@@ -216,14 +216,14 @@ export default function ProjectOverview() {
                   <LayoutDashboard className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-db-dark dark:text-white">Neue Projekt-Idee</h3>
+                  <h3 className="text-2xl font-bold text-db-dark dark:text-white">Neue Projekt-Idee</h3>
                   <p className="text-sm font-semibold text-db-rail dark:text-white/70">Finde Mitstreiter für dein Projekt.</p>
                 </div>
               </div>
 
               <form onSubmit={handleSubmitIdea} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-black text-db-dark dark:text-white mb-1.5">Titel des Projekts</label>
+                  <label className="block text-sm font-bold text-db-dark dark:text-white mb-1.5">Titel des Projekts</label>
                   <input
                     type="text"
                     required
@@ -235,7 +235,7 @@ export default function ProjectOverview() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-black text-db-dark dark:text-white mb-1.5">Kategorie</label>
+                  <label className="block text-sm font-bold text-db-dark dark:text-white mb-1.5">Kategorie</label>
                   <select
                     value={newIdea.category}
                     onChange={e => setNewIdea({...newIdea, category: e.target.value})}
@@ -249,7 +249,7 @@ export default function ProjectOverview() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-black text-db-dark dark:text-white mb-1.5">Worum geht es?</label>
+                  <label className="block text-sm font-bold text-db-dark dark:text-white mb-1.5">Worum geht es?</label>
                   <textarea
                     required
                     rows="4"
@@ -263,7 +263,7 @@ export default function ProjectOverview() {
                 <div className="pt-4">
                   <button
                     type="submit"
-                    className="w-full bg-db-red hover:bg-red-700 text-white py-3.5 rounded-xl font-black transition flex justify-center items-center gap-2 shadow-sm"
+                    className="w-full bg-db-red hover:bg-red-700 text-white py-3.5 rounded-xl font-bold transition flex justify-center items-center gap-2 shadow-sm"
                   >
                     Projekt veröffentlichen
                   </button>

@@ -79,8 +79,8 @@ function EntryHeader() {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_0.78fr] lg:items-end">
       <div>
-        <p className="text-sm font-black uppercase tracking-wider text-db-red">Datenschutz</p>
-        <h2 className="mt-3 text-4xl font-black leading-tight tracking-normal text-db-dark sm:text-5xl">
+        <p className="text-sm font-bold uppercase tracking-wider text-db-red">Datenschutz</p>
+        <h2 className="mt-3 text-4xl font-bold leading-tight tracking-normal text-db-dark sm:text-5xl">
           Datenschutz & Standards
         </h2>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-db-rail">
@@ -88,7 +88,7 @@ function EntryHeader() {
         </p>
       </div>
       <div className="rounded-lg border border-db-dark/10 bg-db-soft p-4 shadow-sm">
-        <p className="flex items-start gap-3 text-sm font-black text-db-dark">
+        <p className="flex items-start gap-3 text-sm font-bold text-db-dark">
           <Scale className="mt-0.5 shrink-0 text-db-red" size={18} aria-hidden="true" />
           Diese Demo ersetzt keine rechtliche Prüfung durch Datenschutz, Compliance oder Betriebsrat.
         </p>
@@ -104,7 +104,7 @@ function Principles() {
         {principles.map(([title, text, Icon]) => (
           <article key={title} className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-sm">
             <Icon className="text-db-red" size={24} aria-hidden="true" />
-            <h3 className="mt-4 text-lg font-black">{title}</h3>
+            <h3 className="mt-4 text-lg font-bold">{title}</h3>
             <p className="mt-2 text-sm font-semibold leading-6 text-db-rail">{text}</p>
           </article>
         ))}
@@ -127,7 +127,7 @@ function AiBoundaries() {
 function BoundaryColumn({ allowed = false, items, title }) {
   return (
     <div className={`rounded-lg p-5 shadow-panel ${allowed ? "bg-white" : "bg-db-dark text-white"}`}>
-      <h3 className="text-2xl font-black">{title}</h3>
+      <h3 className="text-2xl font-bold">{title}</h3>
       <div className="mt-5 space-y-3">
         {items.map((item) => (
           <p key={item} className={`flex gap-3 font-semibold ${allowed ? "text-db-rail" : "text-white/80"}`}>
@@ -216,7 +216,7 @@ function Geraeteeinstellung() {
 
   return (
     <div className="mt-10 rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
-      <h3 className="text-2xl font-black">Dieses Gerät</h3>
+      <h3 className="text-2xl font-bold">Dieses Gerät</h3>
       <p className="mt-3 max-w-3xl font-semibold leading-7 text-db-rail">
         {modus === PERSOENLICH
           ? "Eingestellt als persönliches Gerät: Deine Einträge bleiben gespeichert und die App ist mit einer PIN geschützt."
@@ -225,7 +225,7 @@ function Geraeteeinstellung() {
       <button
         type="button"
         onClick={umstellen}
-        className="mt-5 inline-flex min-h-11 items-center rounded-xl border border-db-dark/15 px-5 py-2.5 text-sm font-black text-db-dark transition hover:border-db-red hover:text-db-red"
+        className="mt-5 inline-flex min-h-11 items-center rounded-xl border border-db-dark/15 px-5 py-2.5 text-sm font-bold text-db-dark transition hover:border-db-red hover:text-db-red"
       >
         {modus === PERSOENLICH ? "Auf geteiltes Gerät umstellen" : "Auf persönliches Gerät umstellen"}
       </button>
@@ -239,7 +239,7 @@ function Geraeteeinstellung() {
 function FinalDisclaimer() {
   return (
     <div className="mt-10 rounded-lg border border-db-dark/10 bg-db-dark p-6 text-white shadow-panel">
-      <h3 className="text-2xl font-black">Hinweis</h3>
+      <h3 className="text-2xl font-bold">Hinweis</h3>
       <p className="mt-3 max-w-4xl font-semibold leading-7 text-white/80">
         DB Peace AI ist ein Innovations- und Demonstrationsprototyp. Für eine echte Einführung wären
         Datenschutzprüfung, Compliance-Bewertung, IT-Sicherheitsprüfung und Beteiligung zuständiger
@@ -253,7 +253,7 @@ function Section({ children, text, title }) {
   return (
     <div className="mt-10">
       <div className="max-w-3xl">
-        <h3 className="text-3xl font-black text-db-dark">{title}</h3>
+        <h3 className="text-3xl font-bold text-db-dark">{title}</h3>
         {text && <p className="mt-3 font-semibold leading-7 text-db-rail">{text}</p>}
       </div>
       <div className="mt-6">{children}</div>

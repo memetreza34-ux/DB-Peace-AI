@@ -40,7 +40,7 @@ export function MoodTracker() {
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full rounded-lg bg-white/70 dark:bg-db-dark/80 backdrop-blur-md border border-db-dark/10 dark:border-white/10 p-6 shadow-md shadow-db-dark/5 dark:shadow-black/50"
+      className="w-full border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-6"
     >
       {/* Ohne AnimatePresence mode="wait": Das wartet auf die Exit-Animation des
           alten Zustands. Läuft die nicht zu Ende, erscheint die Bestätigung nie. */}
@@ -52,7 +52,7 @@ export function MoodTracker() {
             className="flex flex-col gap-4"
           >
             <div>
-              <h2 className="text-lg font-black text-db-dark dark:text-white">Wie war deine Schicht heute?</h2>
+              <h2 className="text-lg font-bold text-db-dark dark:text-white">Wie war deine Schicht heute?</h2>
               <p className="text-sm font-medium text-db-rail dark:text-white/70">Dein privates Stimmungs-Tagebuch. Niemand außer dir sieht das.</p>
             </div>
 
@@ -145,7 +145,7 @@ export function MoodTracker() {
             <div className="rounded-full bg-emerald-100 dark:bg-emerald-500/20 p-4 text-emerald-600 dark:text-emerald-400 mb-3">
               <CheckCircle2 className="h-8 w-8" />
             </div>
-            <h2 className="text-lg font-black text-db-dark dark:text-white">Gespeichert!</h2>
+            <h2 className="text-lg font-bold text-db-dark dark:text-white">Gespeichert!</h2>
             <p className="text-sm font-medium text-db-rail dark:text-white/70 max-w-xs">
               Dein Eintrag wurde in dein privates Tagebuch aufgenommen. Gute Erholung!
             </p>

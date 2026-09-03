@@ -19,7 +19,7 @@ function TextMitRufnummern({ text }) {
           <a
             key={i}
             href={`tel:${teil.replace(/\s/g, "")}`}
-            className="font-black underline decoration-2 underline-offset-2 hover:text-db-red"
+            className="font-bold underline decoration-2 underline-offset-2 hover:text-db-red"
           >
             {teil}
           </a>
@@ -168,16 +168,16 @@ export function FloatingChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="absolute bottom-20 right-0 w-[360px] h-[540px] max-h-[80vh] rounded-lg bg-white/90 dark:bg-db-dark/95 backdrop-blur-xl border border-db-dark/10 dark:border-white/10 shadow-lg flex flex-col overflow-hidden transition-colors"
+            className="absolute bottom-20 right-0 w-[360px] h-[540px] max-h-[80vh] rounded-lg bg-white/90 dark:bg-db-dark/95  border border-db-dark/10 dark:border-white/10 shadow-lg flex flex-col overflow-hidden transition-colors"
           >
             {/* Header */}
             <div className="flex items-center justify-between bg-db-dark dark:bg-black/50 px-5 py-4 text-white">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 ">
                   <Bot className="h-6 w-6 text-db-red" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black tracking-wide">Dein Peace-Assistent</h3>
+                  <h3 className="text-sm font-bold tracking-wide">Dein Peace-Assistent</h3>
                   <p className="text-[11px] font-medium text-white/70">Sicher & vertraulich</p>
                 </div>
               </div>

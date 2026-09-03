@@ -27,7 +27,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60  p-4"
       onClick={onClose}
     >
       <motion.div
@@ -53,7 +53,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
           <div className="mx-auto mb-4 w-fit rounded-xl bg-db-dark dark:bg-white p-3 text-white dark:text-db-dark shadow-sm">
             <Eye className="h-8 w-8" />
           </div>
-          <h2 id="rollenwahl-titel" className="text-xl font-black text-db-dark dark:text-white">
+          <h2 id="rollenwahl-titel" className="text-xl font-bold text-db-dark dark:text-white">
             Rolle wechseln
           </h2>
           <p className="mt-1 text-sm font-medium text-db-rail dark:text-white/60">
@@ -63,7 +63,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
 
         <div className="space-y-5 p-6">
           <div>
-            <p className="text-xs font-black uppercase tracking-wide text-db-red">Meine Rollen</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-db-red">Meine Rollen</p>
             <p className="mb-3 text-xs font-semibold text-db-rail dark:text-white/50">
               Viele JAV-Mitglieder sind selbst Azubis. Du wechselst den Hut, nicht die Person —
               was du selbst gemeldet hast, siehst du in der Bearbeitungsrolle nicht.
@@ -83,9 +83,9 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
                     }`}
                   >
                     <span className="flex items-center justify-between gap-2">
-                      <span className="text-sm font-black text-db-dark dark:text-white">{rolle.kurz}</span>
+                      <span className="text-sm font-bold text-db-dark dark:text-white">{rolle.kurz}</span>
                       {istAktiv && (
-                        <span className="rounded bg-db-red px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-white">
+                        <span className="rounded bg-db-red px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
                           aktiv
                         </span>
                       )}
@@ -100,7 +100,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
           </div>
 
           <div className="border-t border-db-dark/10 dark:border-white/10 pt-5">
-            <p className="text-xs font-black uppercase tracking-wide text-db-rail dark:text-white/50">
+            <p className="text-xs font-bold uppercase tracking-wide text-db-rail dark:text-white/50">
               Andere Stellen ansehen
             </p>
             <p className="text-xs font-semibold text-db-rail dark:text-white/50">
@@ -119,7 +119,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
 
           {gruppen.map((gruppe) => (
             <div key={gruppe.id}>
-              <p className="text-xs font-black uppercase tracking-wide text-db-red">
+              <p className="text-xs font-bold uppercase tracking-wide text-db-red">
                 {gruppe.name}
               </p>
               <p className="mb-3 text-xs font-semibold text-db-rail dark:text-white/50">
@@ -137,7 +137,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
                         : "border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50"
                     }`}
                   >
-                    <span className="block text-sm font-black text-db-dark dark:text-white">
+                    <span className="block text-sm font-bold text-db-dark dark:text-white">
                       {rolle.kurz}
                     </span>
                     {rolle.name !== rolle.kurz && (
