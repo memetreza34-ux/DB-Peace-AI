@@ -4,6 +4,10 @@ export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        // Beschilderung schmal, Lesetext normal — die Aufteilung vom Bahnsteig.
+        schild: ['"Fira Sans Condensed"', '"Fira Sans"', "system-ui", "sans-serif"],
+      },
       colors: {
         // Semantische Ebene — siehe src/styles/tokens.css. Diese Namen sagen,
         // wofür eine Farbe da ist; hell und dunkel klären die Tokens.
