@@ -204,7 +204,7 @@ export function FloatingChatWidget() {
                       m.role === "user"
                         ? "bg-db-red text-white rounded-br-sm shadow-md shadow-db-red/20"
                         : m.kritisch
-                        ? "bg-red-50 dark:bg-red-950/40 text-ink rounded-bl-sm border-2 border-db-red shadow-sm"
+                        ? "bg-danger text-ink rounded-bl-sm border-2 border-db-red shadow-sm"
                         : "bg-white dark:bg-db-rail text-ink rounded-bl-sm border border-line/5  shadow-sm"
                     }`}
                   >

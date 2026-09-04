@@ -158,9 +158,9 @@ export default function ProjectOverview() {
                   disabled={project.enrollmentStatus === "accepted"}
                   className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-sm ${
                     project.enrollmentStatus === "accepted" 
-                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 cursor-default" 
+                      ? "bg-emerald-500/10 text-ok-ink border border-emerald-500/20 cursor-default" 
                       : project.enrollmentStatus === "pending"
-                      ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20"
+                      ? "bg-amber-500/10 text-warn-ink border border-amber-500/20 hover:bg-amber-500/20"
                       : "bg-contrast  text-contrast-ink  hover:scale-[1.02]"
                   }`}
                 >

@@ -60,7 +60,7 @@ export function ProfileView() {
 
   // Die echten Einträge aus dem Stimmungs-Tracker auf der Startseite.
   const stimmungsBezeichnung = {
-    good: { mood: "Gut", Icon: Smile, color: "text-emerald-600 dark:text-emerald-400" },
+    good: { mood: "Gut", Icon: Smile, color: "text-ok-ink" },
     neutral: { mood: "Okay", Icon: Meh, color: "text-ink-muted" },
     bad: { mood: "Gestresst", Icon: Frown, color: "text-db-red" },
   };
@@ -414,7 +414,7 @@ function FristenFuerMich({ fall }) {
             key={frist.id}
             className={`rounded-xl border p-3 ${
               ueberfaellig
-                ? "border-db-red/40 bg-red-50 dark:bg-red-950/20"
+                ? "border-db-red/40 bg-danger"
                 : "border-line/10 bg-surface"
             }`}
           >

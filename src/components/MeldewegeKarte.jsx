@@ -71,7 +71,7 @@ function StandortHinweis() {
       <p className="text-sm font-bold text-ink flex items-center gap-2 mb-2">
         <MapPin className="w-4 h-4 text-db-red" /> An deinem Standort
         {standort.beispiel && (
-          <span className="rounded bg-amber-100 dark:bg-amber-950/40 px-2 py-0.5 text-sm text-amber-800 dark:text-amber-300">
+          <span className="rounded bg-warn px-2 py-0.5 text-sm text-warn-ink">
             Beispiel
           </span>
         )}

@@ -19,6 +19,15 @@ export default {
         "accent-ink": "rgb(var(--accent-ink) / <alpha-value>)",
         contrast: "rgb(var(--contrast) / <alpha-value>)",
         "contrast-ink": "rgb(var(--contrast-ink) / <alpha-value>)",
+        warn: "rgb(var(--warn) / <alpha-value>)",
+        "warn-line": "rgb(var(--warn-line) / <alpha-value>)",
+        "warn-ink": "rgb(var(--warn-ink) / <alpha-value>)",
+        danger: "rgb(var(--danger) / <alpha-value>)",
+        "danger-line": "rgb(var(--danger-line) / <alpha-value>)",
+        "danger-ink": "rgb(var(--danger-ink) / <alpha-value>)",
+        ok: "rgb(var(--ok) / <alpha-value>)",
+        "ok-line": "rgb(var(--ok-line) / <alpha-value>)",
+        "ok-ink": "rgb(var(--ok-ink) / <alpha-value>)",
         db: {
           red: "#E2001A", // Official DB Red — für Flächen und Text ab 18px
           redInk: "#A40013", // abgedunkelt für kleinen Text auf hellem Grund (Kontrast)

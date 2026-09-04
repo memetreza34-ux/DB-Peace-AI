@@ -218,7 +218,7 @@ export function RecordAndReportView() {
             </div>
 
             {speicherFehler && (
-              <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-db-red/30 bg-red-50 dark:bg-red-950/20 p-3">
+              <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-db-red/30 bg-danger p-3">
                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-db-red" />
                 <p className="text-sm font-bold leading-relaxed text-db-red dark:text-red-300">
                   {speicherFehler}
@@ -353,7 +353,7 @@ export function RecordAndReportView() {
                       </div>
                       <div className="flex items-center gap-2">
                         {r.beispiel && (
-                          <span className="rounded bg-amber-100 dark:bg-amber-950/40 px-2 py-0.5 text-amber-800 dark:text-amber-300">
+                          <span className="rounded bg-warn px-2 py-0.5 text-warn-ink">
                             Beispiel
                           </span>
                         )}

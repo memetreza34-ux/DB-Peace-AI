@@ -259,7 +259,7 @@ function EntryHeader() {
 
 function SafetyNotice() {
   return (
-    <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/30 p-5 shadow-sm">
+    <div className="rounded-lg border border-danger-line bg-danger p-5 shadow-sm">
       <div className="flex items-start gap-3">
         <ShieldAlert className="mt-1 shrink-0 text-db-red" size={24} aria-hidden="true" />
         <div>
@@ -577,8 +577,8 @@ function ContactStep({ form, update }) {
       </label>
 
       {!form.anonymous && (
-        <div className="rounded-lg border border-emerald-500/20 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/30 p-4 text-sm font-bold leading-6 text-emerald-900 dark:text-emerald-300 flex items-start sm:items-center gap-3 mt-4">
-          <BadgeCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5 sm:mt-0" />
+        <div className="rounded-lg border border-emerald-500/20 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/30 p-4 text-sm font-bold leading-6 text-ok-ink flex items-start sm:items-center gap-3 mt-4">
+          <BadgeCheck className="w-5 h-5 text-ok-ink shrink-0 mt-0.5 sm:mt-0" />
           <span>Dein Entwurf bekommt eine Absenderzeile zum Ausfüllen. Die App kennt deinen Namen nicht — du trägst ihn selbst ein, bevor du die Meldung weitergibst.</span>
         </div>
       )}

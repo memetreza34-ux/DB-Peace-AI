@@ -107,7 +107,7 @@ export function ContactsView() {
           className="bg-surface  rounded-lg p-5 border border-line/10 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 p-3 rounded-xl">
+            <div className="bg-emerald-500/10 text-ok-ink dark:bg-emerald-500/20 p-3 rounded-xl">
               <HeartHandshake className="w-6 h-6" />
             </div>
             <h2 className="text-xl font-bold text-ink">Beratung</h2>
@@ -165,7 +165,7 @@ export function ContactsView() {
         </div>
 
         {standort?.beispiel && (
-          <p className="mb-5 flex items-start gap-2 rounded-xl border border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20 p-3 text-sm font-semibold leading-relaxed text-amber-900 dark:text-amber-200">
+          <p className="mb-5 flex items-start gap-2 rounded-xl border border-warn-line bg-warn p-3 text-sm font-semibold leading-relaxed text-warn-ink">
             <Info className="mt-px h-4 w-4 shrink-0" />
             <span>
               Beispiel-Standort mit erfundenen Personen — so sieht es aus, wenn echte Daten
@@ -251,10 +251,10 @@ export function ContactsView() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.35 }}
-        className="mt-6 rounded-lg border-2 border-amber-200 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20 p-5"
+        className="mt-6 rounded-lg border-2 border-warn-line bg-amber-50/60 dark:bg-amber-950/20 p-5"
       >
         <div className="flex items-center gap-3 mb-2">
-          <ShieldPlus className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+          <ShieldPlus className="w-5 h-5 text-warn-ink" />
           <h2 className="text-lg font-bold text-ink">
             Noch keine 18? Dann gilt für dich mehr
           </h2>
@@ -284,13 +284,13 @@ function TelefonKarte({ name, nummer, desc, dringend }) {
     <div
       className={`p-4 rounded-xl border ${
         dringend
-          ? "bg-red-50 dark:bg-red-950/20 border-red-100 dark:border-red-900/30"
+          ? "bg-danger border-red-100 dark:border-red-900/30"
           : "bg-line/5  border-transparent"
       } transition hover:border-line/20 `}
     >
       <h3
         className={`font-bold mb-1 ${
-          dringend ? "text-red-700 dark:text-red-400" : "text-ink"
+          dringend ? "text-danger-ink" : "text-ink"
         }`}
       >
         {name}
