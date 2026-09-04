@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Scale, ArrowLeft, BookOpen, AlertCircle, ChevronDown, CheckCircle2, Info, Building2, BookText, Search, Activity } from "lucide-react";
+import { Scale, BookOpen, AlertCircle, ChevronDown, CheckCircle2, Info, Building2, BookText, Search, Activity } from "lucide-react";
 import lawsData from "../data/lawsData.json";
 import { QuizWidget } from "./QuizWidget";
 import { AzubiRightsCheck } from "./AzubiRightsCheck.jsx";
@@ -139,13 +139,6 @@ export function RightsAndLawsView({ onBack }) {
       {/* Header */}
       <div className="border-l-4 border-db-red pl-4">
         <div className="space-y-2 max-w-2xl relative z-10">
-          <button
-            onClick={onBack}
-            className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold text-white hover:bg-white/20 transition "
-          >
-            <ArrowLeft className="h-3.5 w-3.5" /> Zurück zum Dashboard
-          </button>
-          
           <div className="flex items-center gap-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink-muted">
             <Scale className="h-4 w-4 text-db-red" />
             <span>Deine Rechte</span>
@@ -156,7 +149,7 @@ export function RightsAndLawsView({ onBack }) {
           {/* Kein Live-Abgleich: Die Texte liegen statisch in src/data/lawsData.json.
               Ein "Live Sync API"-Siegel hätte Aktualität vorgetäuscht, die es nicht gibt. */}
           <div className="flex items-center gap-2 mb-2">
-            <span className="flex items-center gap-1.5 text-sm font-medium text-white/70 bg-white/10 px-2 py-0.5 rounded border border-white/20">
+            <span className="flex items-center gap-1.5 border border-line/20 px-2 py-0.5 text-sm font-normal text-ink-muted">
               <Activity className="w-3 h-3" />
               Orientierung, keine Rechtsberatung
             </span>
