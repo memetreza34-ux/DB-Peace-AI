@@ -30,7 +30,7 @@ export function PanicButton() {
     <button
       onClick={sofortRaus}
       aria-label="Schnell verlassen: schließt die App, löscht den Chatverlauf und öffnet eine Wetter-Suche"
-      className="fixed bottom-6 left-6 z-[100] flex items-center justify-center w-12 h-12 bg-db-rail text-white hover:bg-slate-800 rounded-full shadow-xl ring-2 ring-white/70 dark:ring-black/40 transition-all group"
+      className="fixed bottom-6 left-6 z-[100] flex items-center justify-center h-14 w-14 bg-db-rail text-white hover:bg-db-dark shadow-schwebend transition-all group"
       title="Schnell verlassen (Chatverlauf wird gelöscht)"
     >
       <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" aria-hidden="true" />

@@ -38,11 +38,11 @@ export function ContactsView() {
 
   return (
     <div className="w-full">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-ink mb-2">
+      <div className="mb-8 border-l-4 border-db-red pl-4">
+        <h1 className="font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
           Wichtige Kontakte & SOS
         </h1>
-        <p className="text-lg text-ink-muted font-medium">
+        <p className="mt-3 max-w-[46ch] text-base font-normal leading-relaxed text-ink-muted">
           Bei akuter Gefahr die Nummern ganz oben. Alles andere ist für später.
         </p>
       </div>
@@ -52,16 +52,14 @@ export function ContactsView() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-surface  rounded-lg p-5 border-2 border-red-500/20 shadow-sm flex flex-col h-full"
+          className="flex h-full flex-col"
         >
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-red-500 text-white p-3 rounded-xl">
-              <ShieldAlert className="w-6 h-6" />
-            </div>
-            <h2 className="text-xl font-bold text-ink">Akute Gefahr</h2>
-          </div>
+          <h2 className="flex items-center gap-2 border-b-2 border-db-red pb-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-db-redInk">
+            <ShieldAlert className="h-4 w-4" />
+            Akute Gefahr
+          </h2>
 
-          <div className="space-y-4 flex-grow">
+          <div className="flex-grow">
             {notrufe.map((k) => (
               <TelefonKarte
                 key={k.id}
@@ -79,20 +77,18 @@ export function ContactsView() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-surface  rounded-lg p-5 border border-line/10 shadow-sm flex flex-col h-full"
+          className="flex h-full flex-col"
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="bg-contrast text-contrast-ink   p-3 rounded-xl">
-              <Building2 className="w-6 h-6" />
-            </div>
-            <h2 className="text-xl font-bold text-ink">Meldewege der DB</h2>
-          </div>
+          <h2 className="flex items-center gap-2 border-b-2 border-ink pb-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink">
+            <Building2 className="h-4 w-4" />
+            Meldewege der DB
+          </h2>
 
-          <p className="text-sm font-medium text-ink-muted mb-5 leading-relaxed">
+          <p className="mt-3 text-sm font-normal leading-relaxed text-ink-muted">
             Offizielle Meldestellen des DB-Konzerns. Du entscheidest, ob du deinen Namen nennst.
           </p>
 
-          <div className="space-y-4 flex-grow">
+          <div className="mt-2 flex-grow">
             {DB_MELDEWEGE.map((w) => (
               <MeldewegKarte key={w.id} weg={w} />
             ))}
@@ -104,20 +100,18 @@ export function ContactsView() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-surface  rounded-lg p-5 border border-line/10 shadow-sm flex flex-col h-full"
+          className="flex h-full flex-col"
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="bg-emerald-500/10 text-ok-ink dark:bg-emerald-500/20 p-3 rounded-xl">
-              <HeartHandshake className="w-6 h-6" />
-            </div>
-            <h2 className="text-xl font-bold text-ink">Beratung</h2>
-          </div>
+          <h2 className="flex items-center gap-2 border-b-2 border-ink pb-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink">
+            <HeartHandshake className="h-4 w-4" />
+            Beratung
+          </h2>
 
-          <p className="text-sm font-medium text-ink-muted mb-5 leading-relaxed">
+          <p className="mt-3 text-sm font-normal leading-relaxed text-ink-muted">
             Zum Reden und Sortieren — ohne dass daraus eine Meldung wird.
           </p>
 
-          <div className="space-y-4 flex-grow">
+          <div className="mt-2 flex-grow">
             {DB_BERATUNG.map((b) => (
               <BeratungKarte key={b.id} eintrag={b} />
             ))}
@@ -133,13 +127,13 @@ export function ContactsView() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="mt-6 bg-surface-sunk rounded-lg p-5 border border-line/10"
+        className="mt-10"
       >
-        <div className="flex items-center gap-3 mb-2">
-          <MapPin className="w-5 h-5 text-db-red" />
-          <h2 className="text-lg font-bold text-ink">An deinem Standort</h2>
-        </div>
-        <p className="text-sm font-medium text-ink-muted mb-4 max-w-3xl leading-relaxed">
+        <h2 className="flex items-center gap-2 border-b-2 border-ink pb-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink">
+          <MapPin className="h-4 w-4" />
+          An deinem Standort
+        </h2>
+        <p className="mb-4 mt-3 max-w-3xl text-sm font-normal leading-relaxed text-ink-muted">
           Diese Stellen sind je nach Standort und Ausbildungsbereich unterschiedlich. Wähle deinen
           Standort, dann siehst du, wer dort hinter den Rollen steht.
         </p>
@@ -255,7 +249,7 @@ export function ContactsView() {
       >
         <div className="flex items-center gap-3 mb-2">
           <ShieldPlus className="w-5 h-5 text-warn-ink" />
-          <h2 className="text-lg font-bold text-ink">
+          <h2 className="text-lg font-schild font-bold text-ink">
             Noch keine 18? Dann gilt für dich mehr
           </h2>
         </div>
@@ -279,104 +273,133 @@ export function ContactsView() {
   );
 }
 
-function TelefonKarte({ name, nummer, desc, dringend }) {
+/*
+ * Eine Zeile für alle drei Listen. Vorher gab es drei fast gleiche Karten-
+ * Komponenten, die sich nur in der Aktion unterschieden.
+ *
+ * Links steht die Art des Wegs — „Notruf", „Online", „E-Mail". Das ist keine
+ * Beschriftung, sondern die Entscheidung, die vor dem Antippen ansteht: kann
+ * ich jetzt anrufen, oder muss ich tippen?
+ */
+function Weg({ marker, name, beschreibung, dringend, kinder }) {
   return (
     <div
-      className={`p-4 rounded-xl border ${
-        dringend
-          ? "bg-danger border-red-100 dark:border-red-900/30"
-          : "bg-line/5  border-transparent"
-      } transition hover:border-line/20 `}
+      className={`grid grid-cols-[84px_1fr] items-baseline gap-x-3 border-b py-4 sm:grid-cols-[104px_1fr] sm:gap-x-4 ${
+        dringend ? "border-danger-line" : "border-line/15"
+      }`}
     >
-      <h3
-        className={`font-bold mb-1 ${
-          dringend ? "text-danger-ink" : "text-ink"
+      <span
+        className={`font-schild text-xs font-semibold uppercase leading-tight tracking-[0.12em] ${
+          dringend ? "text-danger-ink" : "text-ink-muted"
         }`}
       >
-        {name}
-      </h3>
-      <p className="text-sm font-medium text-ink-muted mb-3 leading-relaxed">
-        {desc}
-      </p>
-      <a
-        href={telLink(nummer)}
-        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition ${
-          dringend
-            ? "bg-red-600 text-white hover:bg-red-700"
-            : "bg-surface  text-ink border border-line/10 hover:shadow-sm"
-        }`}
-      >
-        <PhoneCall className="w-4 h-4" />
-        {nummer}
-      </a>
+        {marker}
+      </span>
+      <div>
+        <h3
+          className={`font-schild text-xl font-bold leading-tight tracking-tight ${
+            dringend ? "text-danger-ink" : "text-ink"
+          }`}
+        >
+          {name}
+        </h3>
+        {beschreibung && (
+          <p className="mt-1 text-sm font-normal leading-snug text-ink-muted">{beschreibung}</p>
+        )}
+        {kinder}
+      </div>
     </div>
+  );
+}
+
+/* Der Knopf am Ende einer Zeile: bei einem Notruf rot und gross, sonst ruhig. */
+function WegAktion({ href, extern, dringend, icon: Icon, children }) {
+  return (
+    <a
+      href={href}
+      {...(extern ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className={`mt-3 inline-flex min-h-11 items-center gap-2 break-all px-4 font-schild text-base font-bold transition ${
+        dringend
+          ? "bg-db-red text-white hover:bg-db-redInk"
+          : "border border-line/20 text-ink hover:border-db-red hover:text-db-red"
+      }`}
+    >
+      <Icon className="h-4 w-4 shrink-0" />
+      {children}
+    </a>
+  );
+}
+
+function TelefonKarte({ name, nummer, desc, dringend }) {
+  return (
+    <Weg
+      marker={dringend ? "Notruf" : "Telefon"}
+      name={name}
+      beschreibung={desc}
+      dringend={dringend}
+      kinder={
+        <WegAktion href={telLink(nummer)} dringend={dringend} icon={PhoneCall}>
+          {nummer}
+        </WegAktion>
+      }
+    />
   );
 }
 
 function MeldewegKarte({ weg }) {
   const ziel =
     weg.art === "online"
-      ? { href: weg.url, label: "Zum Meldesystem", icon: ExternalLink, extern: true }
+      ? { href: weg.url, label: "Zum Meldesystem", icon: ExternalLink, extern: true, marker: "Online" }
       : weg.art === "email"
-      ? { href: `mailto:${weg.email}`, label: weg.email, icon: Mail }
+      ? { href: `mailto:${weg.email}`, label: weg.email, icon: Mail, marker: "E-Mail" }
       : weg.art === "telefon"
-      ? { href: telLink(weg.telefon), label: weg.telefon, icon: PhoneCall }
+      ? { href: telLink(weg.telefon), label: weg.telefon, icon: PhoneCall, marker: "Telefon" }
       : null;
 
   return (
-    <div className="p-4 rounded-xl bg-line/5  border border-transparent transition hover:border-line/20 ">
-      <h3 className="font-bold mb-1 text-ink">{weg.name}</h3>
-      <p className="text-sm font-medium text-ink-muted mb-3 leading-relaxed">
-        {weg.beschreibung}
-      </p>
-
-      {ziel ? (
-        <a
-          href={ziel.href}
-          {...(ziel.extern ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-surface  text-ink border border-line/10 hover:shadow-sm transition break-all"
-        >
-          <ziel.icon className="w-4 h-4 shrink-0" />
-          {ziel.label}
-        </a>
-      ) : (
-        <p className="text-sm font-normal text-ink-muted">{weg.adresse}</p>
-      )}
-
-      {weg.erreichbarkeit && (
-        <p className="mt-2 text-sm font-normal text-ink-muted ">
-          {weg.erreichbarkeit}
-        </p>
-      )}
-    </div>
+    <Weg
+      marker={ziel?.marker ?? "Per Post"}
+      name={weg.name}
+      beschreibung={weg.beschreibung}
+      kinder={
+        <>
+          {ziel ? (
+            <WegAktion href={ziel.href} extern={ziel.extern} icon={ziel.icon}>
+              {ziel.label}
+            </WegAktion>
+          ) : (
+            <p className="mt-2 text-sm font-normal text-ink-muted">{weg.adresse}</p>
+          )}
+          {weg.erreichbarkeit && (
+            <p className="mt-2 text-sm font-normal text-ink-muted">{weg.erreichbarkeit}</p>
+          )}
+        </>
+      }
+    />
   );
 }
 
 function BeratungKarte({ eintrag }) {
   return (
-    <div className="p-4 rounded-xl bg-line/5  border border-transparent transition hover:border-line/20 ">
-      <h3 className="font-bold mb-1 text-ink">{eintrag.name}</h3>
-      <p className="text-sm font-medium text-ink-muted mb-3 leading-relaxed">
-        {eintrag.beschreibung}
-      </p>
-
-      {eintrag.url && (
-        <a
-          href={eintrag.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-surface  text-ink border border-line/10 hover:shadow-sm transition"
-        >
-          <ExternalLink className="w-4 h-4" /> Zur Seite
-        </a>
-      )}
-
-      {eintrag.intranet && (
-        <p className="mt-2 text-sm font-normal text-ink-muted  flex items-start gap-1.5">
-          <Info className="w-3.5 h-3.5 shrink-0 mt-px" />
-          <span>Im DB-Intranet: {eintrag.intranet}</span>
-        </p>
-      )}
-    </div>
+    <Weg
+      marker={eintrag.url ? "Im Netz" : "Intranet"}
+      name={eintrag.name}
+      beschreibung={eintrag.beschreibung}
+      kinder={
+        <>
+          {eintrag.url && (
+            <WegAktion href={eintrag.url} extern icon={ExternalLink}>
+              Zur Seite
+            </WegAktion>
+          )}
+          {eintrag.intranet && (
+            <p className="mt-2 flex items-start gap-1.5 text-sm font-normal text-ink-muted">
+              <Info className="mt-px h-3.5 w-3.5 shrink-0" />
+              <span>Im DB-Intranet: {eintrag.intranet}</span>
+            </p>
+          )}
+        </>
+      }
+    />
   );
 }

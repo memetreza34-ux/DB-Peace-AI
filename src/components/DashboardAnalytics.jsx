@@ -128,7 +128,7 @@ function EntryHeader() {
     <div className="grid gap-6 lg:grid-cols-[1fr_0.78fr] lg:items-end">
       <div>
         <p className="text-sm font-bold uppercase tracking-wider text-db-red">Dashboard</p>
-        <h2 className="mt-3 text-4xl font-bold leading-tight tracking-normal text-db-dark sm:text-5xl">
+        <h2 className="mt-3 text-4xl font-schild font-bold leading-tight tracking-normal text-db-dark sm:text-5xl">
           Dashboard & Präventionsübersicht
         </h2>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-db-rail">
@@ -156,7 +156,7 @@ function KpiGrid() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-sm font-medium text-db-rail">{title}</p>
-              <p className="mt-2 text-4xl font-bold text-db-dark">{value}</p>
+              <p className="mt-2 text-4xl font-schild font-bold text-db-dark">{value}</p>
             </div>
             <span className="flex h-11 w-11 items-center justify-center rounded bg-red-50 text-db-red">
               <Icon size={24} aria-hidden="true" />
@@ -183,7 +183,7 @@ function CategoryBreakdown() {
 
   return (
     <div className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-panel">
-      <h3 className="text-2xl font-bold">Meldungen nach Kategorie</h3>
+      <h3 className="text-2xl font-schild font-bold">Meldungen nach Kategorie</h3>
       <p className="mt-2 font-normal leading-7 text-db-rail">
         Anonymisierte Mock-Kategorien im Demo-Zeitraum. Ausgewiesen wird erst ab {SCHWELLE} Fällen.
       </p>
@@ -215,7 +215,7 @@ function CategoryBreakdown() {
 function RiskOverview() {
   return (
     <div className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-panel">
-      <h3 className="text-2xl font-bold">Risikoverteilung</h3>
+      <h3 className="text-2xl font-schild font-bold">Risikoverteilung</h3>
       <p className="mt-2 font-normal leading-7 text-db-rail">
         Die Risiko-Einschätzung dient nur zur Priorisierung für menschliche Prüfung.
       </p>
@@ -224,7 +224,7 @@ function RiskOverview() {
           <div key={label} className={`rounded p-4 ${bg}`}>
             <div className="flex items-center justify-between">
               <p className={`font-bold ${text}`}>{label}</p>
-              <p className={`text-2xl font-bold ${text}`}>{value}%</p>
+              <p className={`text-2xl font-schild font-bold ${text}`}>{value}%</p>
             </div>
             <div className="mt-3 h-2 overflow-hidden rounded bg-white">
               <div className={`h-full rounded ${bar}`} style={{ width: `${value}%` }} />
@@ -252,7 +252,7 @@ function Calculator(props) {
   return (
     <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_0.92fr]">
       <div className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-panel">
-        <h3 className="text-2xl font-bold">Kostenersparnis-Rechner</h3>
+        <h3 className="text-2xl font-schild font-bold">Kostenersparnis-Rechner</h3>
         <p className="mt-2 font-normal leading-7 text-db-rail">
           Dies ist eine konservative Demo-Schätzung. Reale Werte müssten intern validiert werden.
         </p>
@@ -287,7 +287,7 @@ function NumberInput({ label, onChange, suffix, value }) {
           min="0"
           value={value}
           onChange={(event) => onChange(Number(event.target.value))}
-          className="min-h-12 w-full px-4 text-lg font-bold outline-none"
+          className="min-h-12 w-full px-4 text-lg font-schild font-bold outline-none"
         />
         <span className="flex min-w-20 items-center justify-center bg-db-soft px-3 text-sm font-medium text-db-rail">
           {suffix}
@@ -301,7 +301,7 @@ function Output({ label, value }) {
   return (
     <div className="rounded bg-white/10 p-4">
       <p className="text-sm font-bold text-white/65">{label}</p>
-      <p className="mt-2 text-2xl font-bold">{value}</p>
+      <p className="mt-2 text-2xl font-schild font-bold">{value}</p>
     </div>
   );
 }
@@ -315,12 +315,12 @@ function SavingsExplanation() {
 
   return (
     <div className="mt-6 rounded-lg border border-db-dark/10 bg-white p-5 shadow-panel">
-      <h3 className="text-2xl font-bold">Wo die DB Zeit sparen könnte</h3>
+      <h3 className="text-2xl font-schild font-bold">Wo die DB Zeit sparen könnte</h3>
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         {points.map(([title, text]) => (
           <article key={title} className="rounded bg-db-soft p-5">
             <CheckCircle2 className="text-emerald-600" size={20} aria-hidden="true" />
-            <h4 className="mt-3 text-lg font-bold">{title}</h4>
+            <h4 className="mt-3 text-lg font-schild font-bold">{title}</h4>
             <p className="mt-2 text-sm font-normal leading-6 text-db-rail">{text}</p>
           </article>
         ))}

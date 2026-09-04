@@ -394,7 +394,7 @@ function EntryHeader() {
     <div className="grid gap-6 lg:grid-cols-[1fr_0.78fr] lg:items-end">
       <div>
         <p className="text-sm font-bold uppercase tracking-wider text-db-red">Trainingsmodus</p>
-        <h2 className="mt-3 text-4xl font-bold leading-tight tracking-normal text-ink sm:text-5xl">
+        <h2 className="mt-3 text-4xl font-schild font-bold leading-tight tracking-normal text-ink sm:text-5xl">
           KI-Trainingsmodus
         </h2>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-ink-muted">
@@ -427,7 +427,7 @@ function ScenarioSelection({ activeIndex, onSelect }) {
     <div className="rounded-lg border border-line/10 bg-surface p-5 shadow-panel">
       <div className="flex items-center gap-3">
         <GraduationCap className="text-db-red" size={24} aria-hidden="true" />
-        <h3 className="text-xl font-bold dark:text-white">Szenario auswählen</h3>
+        <h3 className="text-xl font-schild font-bold dark:text-white">Szenario auswählen</h3>
       </div>
       <div className="mt-5 grid gap-3">
         {scenarios.map((scenario, index) => {
@@ -474,7 +474,7 @@ function SimulationPanel({ onChoose, onNext, progress, round, roundIndex, scenar
             <p className="text-sm font-bold uppercase tracking-wide text-red-200">
               Runde {roundIndex + 1} von {scenario.rounds.length}
             </p>
-            <h3 className="mt-2 text-3xl font-bold">{scenario.title}</h3>
+            <h3 className="mt-2 text-3xl font-schild font-bold">{scenario.title}</h3>
             <p className="mt-3 max-w-2xl font-semibold leading-7 text-white/75">{scenario.context}</p>
           </div>
           <RiskBadge value={scenario.risk} />
@@ -487,7 +487,7 @@ function SimulationPanel({ onChoose, onNext, progress, round, roundIndex, scenar
       <div className="p-5">
         <div className="rounded-lg bg-surface-sunk  p-5">
           <p className="text-sm font-bold uppercase tracking-wide text-db-red">{round.title}</p>
-          <h4 className="mt-2 text-2xl font-bold text-ink">Was würdest du tun?</h4>
+          <h4 className="mt-2 text-2xl font-schild font-bold text-ink">Was würdest du tun?</h4>
           <p className="mt-3 text-lg font-normal leading-8 text-ink-muted">{round.description}</p>
           <p className="mt-4 rounded bg-surface p-3 text-sm font-bold text-ink">
             Lernziel: {scenario.goal}
@@ -526,7 +526,7 @@ function FeedbackCard({ isLast, onNext, option }) {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-bold uppercase tracking-wide text-db-red">Sofortiges Feedback</p>
-          <h4 className="mt-1 text-2xl font-bold dark:text-white">Auswertung deiner Antwort</h4>
+          <h4 className="mt-1 text-2xl font-schild font-bold dark:text-white">Auswertung deiner Antwort</h4>
         </div>
         <span className={`w-fit rounded px-3 py-1 text-sm font-bold ${qualityStyles[option.quality].className}`}>
           {qualityStyles[option.quality].label}
@@ -582,7 +582,7 @@ function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
     <div className="rounded-lg border border-line/10 bg-surface p-5 shadow-panel">
       <p className="text-sm font-bold uppercase tracking-wide text-db-red">Abschluss</p>
       <div className="flex items-center gap-4 mt-6">
-        <h3 className="text-3xl font-bold dark:text-white">Gesamtbewertung: {average}%</h3>
+        <h3 className="text-3xl font-schild font-bold dark:text-white">Gesamtbewertung: {average}%</h3>
         {average > 50 && (
           <div className="bg-amber-100 border border-amber-300 text-amber-700 px-4 py-2 rounded-full font-bold flex items-center gap-2 animate-bounce">
             <Star className="w-5 h-5 fill-amber-500 text-amber-500" />
@@ -602,7 +602,7 @@ function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
         <div className="rounded-lg border border-line/10 bg-db-dark dark:bg-db-dark/80 p-5 text-white">
           <GraduationCap size={28} className="text-red-200" aria-hidden="true" />
           <p className="mt-4 text-sm font-bold uppercase tracking-wide text-white/60">Demo-Zertifikat</p>
-          <h4 className="mt-2 text-2xl font-bold">Training abgeschlossen - Deeskalation Grundlagen</h4>
+          <h4 className="mt-2 text-2xl font-schild font-bold">Training abgeschlossen - Deeskalation Grundlagen</h4>
         </div>
       </div>
 
@@ -641,7 +641,7 @@ function ScorePanel({ metrics }) {
   return (
     <div className="rounded-lg bg-db-dark dark:bg-db-dark/80 p-5 text-white shadow-panel">
       <Gauge size={26} className="text-red-200" aria-hidden="true" />
-      <h3 className="mt-4 text-xl font-bold">Kompetenzprofil</h3>
+      <h3 className="mt-4 text-xl font-schild font-bold">Kompetenzprofil</h3>
       <div className="mt-5 space-y-4">
         <ScoreBar label="Deeskalation" value={metrics.deescalation} dark />
         <ScoreBar label="Sicherheit" value={metrics.safety} dark />

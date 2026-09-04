@@ -121,7 +121,7 @@ export function CourseDetailModal({ course, onClose }) {
             {course.provider}
           </span>
 
-          <h2 id="kurs-titel" className="text-xl font-bold text-white pr-8">
+          <h2 id="kurs-titel" className="text-xl font-schild font-bold text-white pr-8">
             {course.title}
           </h2>
         </div>

@@ -94,7 +94,7 @@ export default function ProjectOverview() {
         </div>
 
         <div className="relative z-10 max-w-2xl">
-          <h2 className="text-3xl font-bold text-ink mb-2">
+          <h2 className="text-3xl font-schild font-bold text-ink mb-2">
             Initiativen & Projekte
           </h2>
           <p className="text-lg text-ink-muted font-medium">
@@ -139,7 +139,7 @@ export default function ProjectOverview() {
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-ink mb-3 leading-tight group-hover:text-db-red transition-colors">
+                <h3 className="text-xl font-schild font-bold text-ink mb-3 leading-tight group-hover:text-db-red transition-colors">
                   {project.title}
                 </h3>
                 <p className="text-db-dark/80 dark:text-white/70 text-sm font-medium mb-6">
@@ -216,7 +216,7 @@ export default function ProjectOverview() {
                   <LayoutDashboard className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-ink">Neue Projekt-Idee</h3>
+                  <h3 className="text-2xl font-schild font-bold text-ink">Neue Projekt-Idee</h3>
                   <p className="text-sm font-normal text-ink-muted">Finde Mitstreiter für dein Projekt.</p>
                 </div>
               </div>

@@ -74,7 +74,7 @@ export function RightsAndLawsView({ onBack }) {
             </div>
             <div>
               <p className="text-sm font-medium text-ink-muted">{law.subtitle}</p>
-              <h3 className="text-lg font-bold text-ink">{law.paragraph}</h3>
+              <h3 className="text-lg font-schild font-bold text-ink">{law.paragraph}</h3>
             </div>
           </div>
           <ChevronDown className={`h-5 w-5 text-db-dark/50 dark:text-white/50 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
@@ -137,7 +137,7 @@ export function RightsAndLawsView({ onBack }) {
   return (
     <div className="space-y-6 animate-fadeIn pb-24">
       {/* Header */}
-      <div className="bg-surface-inverse p-5 text-ink-inverse relative overflow-hidden">
+      <div className="border-l-4 border-db-red pl-4">
         <div className="space-y-2 max-w-2xl relative z-10">
           <button
             onClick={onBack}
@@ -146,11 +146,11 @@ export function RightsAndLawsView({ onBack }) {
             <ArrowLeft className="h-3.5 w-3.5" /> Zurück zum Dashboard
           </button>
           
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-db-warm ">
-            <Scale className="h-3.5 w-3.5 text-amber-400" />
+          <div className="flex items-center gap-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink-muted">
+            <Scale className="h-4 w-4 text-db-red" />
             <span>Deine Rechte</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+          <h1 className="mt-2 font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
             Deine Rechte & Gesetze
           </h1>
           {/* Kein Live-Abgleich: Die Texte liegen statisch in src/data/lawsData.json.
@@ -161,7 +161,7 @@ export function RightsAndLawsView({ onBack }) {
               Orientierung, keine Rechtsberatung
             </span>
           </div>
-          <p className="text-sm font-medium text-white/80 leading-relaxed">
+          <p className="mt-3 max-w-[52ch] text-base font-normal leading-relaxed text-ink-muted">
             Lass dir nichts gefallen. Hier findest du übersetzt auf "gut Deutsch", welche Gesetze und internen DB-Richtlinien dich vor Ausbeutung und Diskriminierung schützen.
           </p>
         </div>
@@ -217,7 +217,7 @@ export function RightsAndLawsView({ onBack }) {
         {filteredLaws.length > 0 ? (
           Object.entries(groupedLaws).map(([title, laws]) => (
             <div key={title} className="space-y-4">
-              <h2 className="text-xl font-bold text-ink pl-3 border-l-4 border-db-red/80">{title}</h2>
+              <h2 className="text-xl font-schild font-bold text-ink pl-3 border-l-4 border-db-red/80">{title}</h2>
               <div className="space-y-4 pl-4 border-l-2 border-line/10 ml-3">
                 {laws.map(renderCard)}
               </div>
@@ -226,7 +226,7 @@ export function RightsAndLawsView({ onBack }) {
         ) : (
           <div className="text-center py-12 bg-surface rounded-md border border-line/10">
             <Scale className="h-12 w-12 text-db-dark/10 dark:text-white/10 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-ink">Keine Gesetze gefunden</h3>
+            <h3 className="text-lg font-schild font-bold text-ink">Keine Gesetze gefunden</h3>
             <p className="text-sm font-medium text-ink-muted mt-1">
               Wir konnten kein passendes Gesetz zu deiner Suche finden.
             </p>

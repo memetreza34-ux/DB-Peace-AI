@@ -83,7 +83,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
           <div className="p-3 bg-db-soft rounded-xl">
             <TentTree className="h-6 w-6 text-db-red" />
           </div>
-          <h2 className="text-2xl font-bold text-db-dark">Antrag auf Bildungsurlaub</h2>
+          <h2 className="text-2xl font-schild font-bold text-db-dark">Antrag auf Bildungsurlaub</h2>
         </div>
         <p className="text-sm font-normal text-db-rail mb-8">
           Für den Kurs: <span className="font-bold text-db-dark">{course.title}</span>

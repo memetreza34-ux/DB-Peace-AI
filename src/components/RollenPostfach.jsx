@@ -149,7 +149,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
               <p className="text-xs font-bold uppercase tracking-wide text-db-red">
                 {eigeneRolle ? "Deine Rolle" : "Vorschau"} · {gruppe?.name}
               </p>
-              <h1 className="mt-1 text-2xl font-bold text-ink">{rolle.name}</h1>
+              <h1 className="mt-1 text-2xl font-schild font-bold text-ink">{rolle.name}</h1>
               <p className="mt-1 max-w-2xl text-sm font-normal text-ink-muted">
                 {rolle.beschreibung}
               </p>
@@ -330,7 +330,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
               <div className="flex flex-col">
                 <div className="border-b border-line/10 p-5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h2 className="text-lg font-bold text-ink">
+                    <h2 className="text-lg font-schild font-bold text-ink">
                       {gewaehlt.kategorie}
                     </h2>
                     <StatusMarke status={gewaehlt.status} />

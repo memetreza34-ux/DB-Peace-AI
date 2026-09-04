@@ -174,7 +174,7 @@ export default function SupportPage({ onNavigate }) {
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-md bg-green-500/10 text-green-600 mb-2">
             <PhoneCall className="h-6 w-6" />
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-ink">Finde die richtige Unterstützung</h2>
+          <h2 className="text-2xl sm:text-3xl font-schild font-bold text-ink">Finde die richtige Unterstützung</h2>
           <p className="text-sm font-normal text-ink-muted max-w-lg mx-auto">
             Wähle aus, in welcher Situation du dich befindest. Wir zeigen dir sofort, welche Anlaufstellen bei der DB und extern für dich da sind.
           </p>
@@ -213,7 +213,7 @@ export default function SupportPage({ onNavigate }) {
           <div className="rounded-md bg-ok border border-ok-line p-5 sm:p-6 space-y-6">
              <div className="flex items-center gap-4 border-b border-green-200/50 dark:border-green-800/50 pb-4">
                <selected.icon className="h-8 w-8 text-ok-ink" />
-               <h3 className="text-xl sm:text-2xl font-bold text-ok-ink">{selected.title}</h3>
+               <h3 className="text-xl sm:text-2xl font-schild font-bold text-ok-ink">{selected.title}</h3>
              </div>
              
              <div>

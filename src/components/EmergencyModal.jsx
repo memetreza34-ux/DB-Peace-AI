@@ -37,7 +37,7 @@ export function EmergencyModal({ isOpen, onClose }) {
               <p className="text-xs font-semibold uppercase tracking-[0.1em] text-db-redInk dark:text-red-400">
                 Notfall
               </p>
-              <h2 id="notfall-titel" className="mt-1.5 text-2xl font-bold tracking-tight text-ink">
+              <h2 id="notfall-titel" className="mt-1.5 text-2xl font-schild font-bold tracking-tight text-ink">
                 Jetzt Hilfe holen
               </h2>
               <div className="mt-3 h-1 w-10 bg-db-red" />

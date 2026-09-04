@@ -81,7 +81,7 @@ export function QuizWidget() {
           <div className="mx-auto w-16 h-16 bg-db-dark flex items-center justify-center mb-4">
             <ShieldCheck className="w-8 h-8 text-white" />
           </div>
-          <h3 className="text-2xl font-bold mb-2">Quiz beendet!</h3>
+          <h3 className="text-2xl font-schild font-bold mb-2">Quiz beendet!</h3>
           <p className="text-white/80 font-medium mb-6">
             Du hast {score} von {questions.length} Fragen richtig beantwortet.
           </p>
@@ -128,7 +128,7 @@ export function QuizWidget() {
         Wissens-Quiz • Frage {currentQIndex + 1}
       </div>
       
-      <h3 className="text-lg font-bold text-ink leading-snug min-h-[4rem]">
+      <h3 className="text-lg font-schild font-bold text-ink leading-snug min-h-[4rem]">
         {currentQ.question}
       </h3>
 

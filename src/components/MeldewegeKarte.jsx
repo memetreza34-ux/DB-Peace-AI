@@ -20,7 +20,7 @@ export function MeldewegeKarte({ entwurf }) {
   return (
     <div className="rounded-lg border-2 border-db-red/30 bg-surface p-5 shadow-panel">
       <p className="text-sm font-bold uppercase tracking-wide text-db-red">Nächster Schritt</p>
-      <h3 className="mt-1 text-2xl font-bold dark:text-white">Wohin mit deiner Meldung?</h3>
+      <h3 className="mt-1 text-2xl font-schild font-bold dark:text-white">Wohin mit deiner Meldung?</h3>
       <p className="mt-2 text-sm font-normal text-ink-muted leading-relaxed">
         Diese App verschickt nichts von allein. Wähle einen offiziellen Meldeweg der DB — dein
         Entwurf wird dabei übernommen, und du entscheidest, ob und was du abschickst.

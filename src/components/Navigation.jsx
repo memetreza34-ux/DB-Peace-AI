@@ -19,7 +19,7 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-lg sm:text-xl tracking-tight text-ink flex items-center gap-1.5 sm:gap-2">
+              <span className="font-schild font-bold text-lg sm:text-xl tracking-tight text-ink flex items-center gap-1.5 sm:gap-2">
                 Peace <Brain className="h-4 w-4 sm:h-5 sm:w-5 text-db-red dark:text-red-400 shrink-0" />
               </span>
               <span className="hidden sm:inline rounded bg-db-red/10 dark:bg-db-red/20 px-2 py-0.5 text-sm font-bold text-db-red dark:text-red-400">

@@ -90,7 +90,7 @@ export function ProfileView() {
         const selectedTicket = tickets.find(t => t.id === selectedTicketId);
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-ink mb-2">Meine Meldungen & Postfach</h3>
+            <h3 className="font-schild font-bold text-xl text-ink mb-2">Meine Meldungen & Postfach</h3>
             <p className="text-sm font-medium text-ink-muted mb-6">
               Hier siehst du deine eingereichten, anonymen Meldungen und kannst sicher mit den Bearbeitern (JAV, HR) schreiben.
             </p>
@@ -178,7 +178,7 @@ export function ProfileView() {
       case "protokolle":
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-ink mb-2">Meine Gedächtnisprotokolle</h3>
+            <h3 className="font-schild font-bold text-xl text-ink mb-2">Meine Gedächtnisprotokolle</h3>
             <p className="text-sm font-medium text-ink-muted mb-6">
               Diese Einträge bleiben auf diesem Gerät und werden nirgendwo hochgeladen.
             </p>
@@ -188,7 +188,7 @@ export function ProfileView() {
                   <Clock className="w-3 h-3" />
                   {record.date} • {record.time}
                 </div>
-                <h4 className="font-bold text-ink text-lg mb-1">{record.category || "Protokoll-Eintrag"}</h4>
+                <h4 className="font-schild font-bold text-ink text-lg mb-1">{record.category || "Protokoll-Eintrag"}</h4>
                 <p className="text-sm text-db-dark/80 dark:text-white/80">{record.description}</p>
                 {/* Beide Funktionen sind im Prototyp nicht angebunden. Sichtbar
                     deaktiviert statt mit einem Hinweisfenster beim Klick. */}
@@ -220,7 +220,7 @@ export function ProfileView() {
       case "stimmung":
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-ink mb-2">Stimmungs-Verlauf</h3>
+            <h3 className="font-schild font-bold text-xl text-ink mb-2">Stimmungs-Verlauf</h3>
             <div className="bg-surface border border-line/10 rounded-md p-5 shadow-sm">
               <div className="space-y-6">
                 {moodHistory.length === 0 ? (
@@ -248,7 +248,7 @@ export function ProfileView() {
       case "kurse":
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-ink mb-2">Gemerkte Kurse</h3>
+            <h3 className="font-schild font-bold text-xl text-ink mb-2">Gemerkte Kurse</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {savedCourses.map((course, idx) => (
                 <div key={idx} className="group bg-surface border border-line/10 rounded-md p-5 shadow-sm hover:border-db-red dark:hover:border-db-red transition cursor-pointer flex flex-col justify-between">
@@ -257,7 +257,7 @@ export function ProfileView() {
                       <Video className="w-3 h-3" />
                       {course.type}
                     </div>
-                    <h4 className="font-bold text-ink text-lg group-hover:text-db-red transition">{course.title}</h4>
+                    <h4 className="font-schild font-bold text-ink text-lg group-hover:text-db-red transition">{course.title}</h4>
                   </div>
                   <div className="mt-6 flex items-center justify-between">
                     <span className="text-sm font-medium text-ink/70 ">{course.duration}</span>
@@ -289,7 +289,7 @@ export function ProfileView() {
           <User className="w-12 h-12 text-white" />
         </div>
         <div className="relative z-10 text-white flex-1">
-          <h1 className="text-3xl font-bold mb-1">Mein DB Peace</h1>
+          <h1 className="text-3xl font-schild font-bold mb-1">Mein DB Peace</h1>
           <p className="text-white/70 font-medium mb-2">Dein sicherer, privater Raum.</p>
           <p className="text-white/60 text-sm font-normal mb-4 max-w-xl leading-relaxed">
             Postfach und gemerkte Kurse zeigen im Prototyp erfundene Beispiele. Deine
