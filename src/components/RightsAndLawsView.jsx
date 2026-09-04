@@ -84,7 +84,7 @@ export function RightsAndLawsView({ onBack }) {
         {isOpen && (
           <div className="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 animate-fadeIn border-t border-db-dark/5 dark:border-white/5 mt-2">
             
-            <div className="space-y-5 mt-4">
+            <div className="space-y-4 mt-4">
               {/* Official Text */}
               <div className="bg-db-dark/5 dark:bg-white/5 rounded-xl p-4 border-l-4 border-db-rail">
                 <p className="text-xs font-bold text-ink uppercase tracking-wider mb-2 flex items-center gap-1.5">
@@ -137,7 +137,7 @@ export function RightsAndLawsView({ onBack }) {
   return (
     <div className="space-y-6 animate-fadeIn pb-24">
       {/* Header */}
-      <div className="bg-surface-inverse p-6 text-ink-inverse relative overflow-hidden">
+      <div className="bg-surface-inverse p-5 text-ink-inverse relative overflow-hidden">
         <div className="space-y-2 max-w-2xl relative z-10">
           <button
             onClick={onBack}
@@ -213,7 +213,7 @@ export function RightsAndLawsView({ onBack }) {
       </div>
 
       {/* List */}
-      <div className="space-y-10 max-w-3xl mx-auto mt-8">
+      <div className="space-y-8 max-w-3xl mx-auto mt-8">
         {filteredLaws.length > 0 ? (
           Object.entries(groupedLaws).map(([title, laws]) => (
             <div key={title} className="space-y-4">

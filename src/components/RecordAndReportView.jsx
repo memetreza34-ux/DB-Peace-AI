@@ -90,7 +90,7 @@ export function RecordAndReportView() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-surface-inverse p-6 text-ink-inverse relative overflow-hidden">
+      <div className="bg-surface-inverse p-5 text-ink-inverse relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-db-warm ">
@@ -180,7 +180,7 @@ export function RecordAndReportView() {
       {/* Sub-Tab 1: Vorfall Festhalten (Gedächtnisprotokoll) */}
       {subTab === "protokoll" && (
         <div className="space-y-6">
-          <div className="rounded-md bg-surface border border-line/10 p-6 shadow-sm">
+          <div className="rounded-md bg-surface border border-line/10 p-5 shadow-sm">
             <div className="flex items-center justify-between pb-4 border-b border-line/10">
               <div>
                 <h2 className="text-lg font-bold text-ink">Dein Gedächtnisprotokoll</h2>
@@ -412,7 +412,7 @@ export function RecordAndReportView() {
 
       {/* Sub-Tab 2: Melden (5-Schritte-Assistent) */}
       {subTab === "meldung" && (
-        <div className="rounded-md bg-surface border border-line/10 p-4 sm:p-6 shadow-sm">
+        <div className="rounded-md bg-surface border border-line/10 p-4 sm:p-5 shadow-sm">
           <AnonymousReport />
         </div>
       )}
@@ -429,7 +429,7 @@ export function RecordAndReportView() {
             aria-labelledby="protokoll-eintrag-titel"
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-db-dark rounded-lg p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg relative border dark:border-white/10 outline-none"
+            className="bg-white dark:bg-db-dark rounded-lg p-5 sm:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg relative border dark:border-white/10 outline-none"
           >
             <button
               aria-label="Schließen"
@@ -500,7 +500,7 @@ export function RecordAndReportView() {
               </button>
               <button
                 onClick={schliesseDetail}
-                className="min-h-11 rounded-lg bg-db-dark px-6 py-2.5 text-sm font-bold text-white hover:bg-db-dark/90 transition shadow-md"
+                className="min-h-11 rounded-lg bg-db-dark px-5 py-2.5 text-sm font-bold text-white hover:bg-db-dark/90 transition shadow-md"
               >
                 Schließen
               </button>

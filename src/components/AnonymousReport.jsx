@@ -159,15 +159,15 @@ function AnonymousReport() {
 
   return (
     <section id="meldung" className="bg-surface py-16 lg:py-20">
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <EntryHeader />
         <div className="mt-8 grid gap-6 xl:grid-cols-[0.86fr_1.44fr_0.9fr]">
-          <aside className="space-y-5">
+          <aside className="space-y-4">
             <SafetyNotice />
             <TimeSavingCard />
           </aside>
 
-          <div className="space-y-5">
+          <div className="space-y-4">
             <FormShell progress={progress} step={step}>
               {step === 1 && <IncidentStep form={form} update={update} />}
               {step === 2 && <ContextStep form={form} update={update} />}
@@ -204,7 +204,7 @@ function AnonymousReport() {
             )}
           </div>
 
-          <aside className="space-y-5">
+          <aside className="space-y-4">
             <div className="rounded-lg bg-db-dark p-5 text-white shadow-panel">
               <MessageSquareText size={24} className="text-red-200" aria-hidden="true" />
               <h3 className="mt-3 text-lg font-bold">Lieber erst reden?</h3>
@@ -429,7 +429,7 @@ function DescriptionStep({ form, togglePerspective, update }) {
         <p className="mb-2 font-bold text-ink text-sm">Beweise hochladen (Optional)</p>
         <div 
           onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-db-dark/20 dark:border-white/20 bg-surface p-6 flex flex-col items-center justify-center text-center hover:border-db-red hover:bg-db-soft dark:hover:bg-white/5 transition-all cursor-pointer group"
+          className="border-2 border-dashed border-db-dark/20 dark:border-white/20 bg-surface p-5 flex flex-col items-center justify-center text-center hover:border-db-red hover:bg-db-soft dark:hover:bg-white/5 transition-all cursor-pointer group"
         >
           <input type="file" ref={fileInputRef} className="hidden" />
           <div className="w-12 h-12 bg-db-dark/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-3 group-hover:bg-db-red/10 transition-colors">
@@ -588,7 +588,7 @@ function ContactStep({ form, update }) {
 
 function StepPanel({ children, text, title }) {
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <div>
         <h4 className="text-2xl font-bold text-ink">{title}</h4>
         <p className="mt-2 font-normal leading-7 text-ink-muted">{text}</p>

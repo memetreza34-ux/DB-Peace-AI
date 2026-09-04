@@ -345,14 +345,14 @@ function TrainingMode() {
 
   return (
     <section id="training" className="py-16 lg:py-20">
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <EntryHeader />
         <div className="mt-8 grid gap-6 xl:grid-cols-[0.98fr_1.35fr_0.82fr]">
-          <aside className="space-y-5">
+          <aside className="space-y-4">
             <ScenarioSelection activeIndex={scenarioIndex} onSelect={chooseScenario} />
           </aside>
 
-          <div className="space-y-5">
+          <div className="space-y-4">
             {!completed ? (
               <SimulationPanel
                 onChoose={chooseOption}
@@ -374,7 +374,7 @@ function TrainingMode() {
             )}
           </div>
 
-          <aside className="space-y-5">
+          <aside className="space-y-4">
             <ScorePanel metrics={metrics} />
           </aside>
         </div>
@@ -579,7 +579,7 @@ function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
   );
 
   return (
-    <div className="rounded-lg border border-line/10 bg-surface p-6 shadow-panel">
+    <div className="rounded-lg border border-line/10 bg-surface p-5 shadow-panel">
       <p className="text-sm font-bold uppercase tracking-wide text-db-red">Abschluss</p>
       <div className="flex items-center gap-4 mt-6">
         <h3 className="text-3xl font-bold dark:text-white">Gesamtbewertung: {average}%</h3>

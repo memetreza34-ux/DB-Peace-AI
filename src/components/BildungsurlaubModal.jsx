@@ -71,7 +71,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-db-dark/60  p-4 animate-fadeIn">
-      <div className="bg-white rounded-lg p-6 sm:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative shadow-lg">
+      <div className="bg-white rounded-lg p-5 sm:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative shadow-lg">
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 rounded-full hover:bg-db-dark/5 transition"
@@ -130,7 +130,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
 
             <button
               type="submit"
-              className="w-full rounded-xl bg-db-dark px-6 py-3.5 text-sm font-bold text-white hover:bg-db-dark transition shadow-lg flex items-center justify-center gap-2"
+              className="w-full rounded-xl bg-db-dark px-5 py-3.5 text-sm font-bold text-white hover:bg-db-dark transition shadow-lg flex items-center justify-center gap-2"
             >
               <FileText className="h-4 w-4" />
               Antrag jetzt generieren
@@ -138,7 +138,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
           </form>
         ) : (
           <div className="space-y-6 animate-fadeIn">
-            <div className="bg-db-dark/5 rounded-xl p-4 sm:p-6 border border-db-dark/10 relative group">
+            <div className="bg-db-dark/5 rounded-xl p-4 sm:p-5 border border-db-dark/10 relative group">
               <pre className="whitespace-pre-wrap text-sm font-medium text-db-dark font-sans leading-relaxed">
                 {generatedText}
               </pre>
@@ -171,7 +171,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
 
             <button
               onClick={onClose}
-              className="w-full rounded-xl bg-db-dark px-6 py-3 text-sm font-bold text-white hover:bg-db-dark/90 transition shadow-lg"
+              className="w-full rounded-xl bg-db-dark px-5 py-3 text-sm font-bold text-white hover:bg-db-dark/90 transition shadow-lg"
             >
               Fenster schließen
             </button>

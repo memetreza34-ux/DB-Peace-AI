@@ -120,7 +120,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
   if (!isOpen) return null;
 
   return (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 sm:px-6">
+        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 sm:px-5">
         {/* Backdrop */}
         <motion.div 
           initial={{ opacity: 0 }}
@@ -166,7 +166,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
             )}
             
             {query.trim() !== "" && displayResults.length === 0 && (
-              <div className="px-6 py-12 text-center">
+              <div className="px-5 py-12 text-center">
                 <Search className="w-12 h-12 text-db-rail dark:text-white/30 mx-auto mb-4 opacity-50" />
                 <h3 className="text-lg font-bold text-ink">Keine Ergebnisse gefunden</h3>
                 <p className="text-ink-muted mt-1">Versuche andere Suchbegriffe wie "Hilfe" oder "Kontakt".</p>
@@ -196,7 +196,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           </div>
           
           {/* Footer */}
-          <div className="px-6 py-3 bg-db-dark/5 dark:bg-white/5 border-t border-line/10 text-sm font-normal text-db-rail dark:text-white/50 flex justify-between items-center">
+          <div className="px-5 py-3 bg-db-dark/5 dark:bg-white/5 border-t border-line/10 text-sm font-normal text-db-rail dark:text-white/50 flex justify-between items-center">
             <span>Die Suche hilft dir, schneller zum Ziel zu kommen.</span>
             <span className="flex items-center gap-1"><kbd className="bg-white dark:bg-db-dark px-1.5 py-0.5 rounded border border-db-dark/20 dark:border-white/20 shadow-sm font-sans font-bold">ESC</kbd> zum Schließen</span>
           </div>

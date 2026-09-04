@@ -119,7 +119,7 @@ export default function App() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mx-auto max-w-7xl px-4 sm:px-6 pt-4"
+              className="mx-auto max-w-7xl px-4 sm:px-5 pt-4"
             >
               <button
                 type="button"
@@ -134,7 +134,7 @@ export default function App() {
         </AnimatePresence>
 
         {/* Main Content Area */}
-        <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8 pb-24">
+        <main className="mx-auto max-w-7xl px-4 sm:px-5 py-5 sm:py-8 pb-24">
           {/* Bewusst ohne AnimatePresence mode="wait": Das wartet auf die Exit-
               Animation der alten Ansicht. Läuft die nicht zu Ende, erscheint die
               neue Ansicht nie und die Navigation hängt. */}

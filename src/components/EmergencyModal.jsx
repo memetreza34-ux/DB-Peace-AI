@@ -29,7 +29,7 @@ export function EmergencyModal({ isOpen, onClose }) {
           onClick={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-lg bg-white dark:bg-db-dark p-6 shadow-lg border border-line/10 outline-none"
+          className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-lg bg-white dark:bg-db-dark p-5 shadow-lg border border-line/10 outline-none"
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-line/10">

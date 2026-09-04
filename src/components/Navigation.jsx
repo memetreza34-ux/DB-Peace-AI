@@ -5,7 +5,7 @@ import { ThemeToggle } from "./ThemeToggle.jsx";
 export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSearch }) {
   return (
     <header className="sticky top-0 z-40 border-b border-line/10 bg-white/95 dark:bg-db-dark/95  shadow-sm transition-colors">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-6">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-5">
         {/* Brand Logo & Tagline */}
         <div
           className="flex min-w-0 items-center gap-2 sm:gap-3 cursor-pointer group"

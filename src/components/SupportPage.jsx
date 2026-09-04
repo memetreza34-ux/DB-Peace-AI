@@ -210,7 +210,7 @@ export default function SupportPage({ onNavigate }) {
             <ArrowLeft className="h-4 w-4" /> Zurück zur Übersicht
           </button>
 
-          <div className="rounded-md bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 p-6 sm:p-8 space-y-6">
+          <div className="rounded-md bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 p-5 sm:p-6 space-y-6">
              <div className="flex items-center gap-4 border-b border-green-200/50 dark:border-green-800/50 pb-4">
                <selected.icon className="h-8 w-8 text-green-700 dark:text-green-400" />
                <h3 className="text-xl sm:text-2xl font-bold text-green-900 dark:text-green-300">{selected.title}</h3>

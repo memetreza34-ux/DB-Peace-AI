@@ -73,7 +73,7 @@ export function QuizWidget() {
 
   if (isFinished) {
     return (
-      <div className="w-full rounded-lg bg-db-dark text-white p-8 text-center shadow-md shadow-db-dark/20 relative overflow-hidden">
+      <div className="w-full rounded-lg bg-db-dark text-white p-6 text-center shadow-md shadow-db-dark/20 relative overflow-hidden">
         <div className="absolute -top-10 -right-10 opacity-10">
           <ShieldCheck className="w-40 h-40" />
         </div>
@@ -99,7 +99,7 @@ export function QuizWidget() {
                 setShowResult(false);
                 fetchQuestions(); 
               }}
-              className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 mx-auto"
+              className="px-5 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 mx-auto"
             >
               Neue, endlose Fragen laden
             </button>
@@ -112,7 +112,7 @@ export function QuizWidget() {
   const currentQ = questions[currentQIndex];
 
   return (
-    <div className="w-full rounded-lg bg-white dark:bg-db-dark/80  border border-line/10 shadow-md p-6 relative overflow-hidden transition-colors">
+    <div className="w-full rounded-lg bg-white dark:bg-db-dark/80  border border-line/10 shadow-md p-5 relative overflow-hidden transition-colors">
       
       {/* Progress */}
       <div className="flex items-center gap-1 mb-6">

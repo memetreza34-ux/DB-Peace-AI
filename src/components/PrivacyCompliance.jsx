@@ -62,7 +62,7 @@ function PrivacyCompliance() {
 
   return (
     <section id="datenschutz" className="py-16 lg:py-20">
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <EntryHeader />
         <Principles />
         <AiBoundaries />
@@ -215,7 +215,7 @@ function Geraeteeinstellung() {
   };
 
   return (
-    <div className="mt-10 rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
+    <div className="mt-10 rounded-lg border border-db-dark/10 bg-white p-5 shadow-panel">
       <h3 className="text-2xl font-bold">Dieses Gerät</h3>
       <p className="mt-3 max-w-3xl font-normal leading-7 text-db-rail">
         {modus === PERSOENLICH
@@ -238,7 +238,7 @@ function Geraeteeinstellung() {
 
 function FinalDisclaimer() {
   return (
-    <div className="mt-10 rounded-lg border border-db-dark/10 bg-db-dark p-6 text-white shadow-panel">
+    <div className="mt-10 rounded-lg border border-db-dark/10 bg-db-dark p-5 text-white shadow-panel">
       <h3 className="text-2xl font-bold">Hinweis</h3>
       <p className="mt-3 max-w-4xl font-semibold leading-7 text-white/80">
         DB Peace AI ist ein Innovations- und Demonstrationsprototyp. Für eine echte Einführung wären

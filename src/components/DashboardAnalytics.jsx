@@ -96,7 +96,7 @@ function DashboardAnalytics() {
 
   return (
     <section id="dashboard" className="py-16 lg:py-20">
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <EntryHeader />
         <KpiGrid />
 
@@ -182,7 +182,7 @@ function CategoryBreakdown() {
   const max = Math.max(...ausgewiesen.map(([, value]) => value), 1);
 
   return (
-    <div className="rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
+    <div className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-panel">
       <h3 className="text-2xl font-bold">Meldungen nach Kategorie</h3>
       <p className="mt-2 font-normal leading-7 text-db-rail">
         Anonymisierte Mock-Kategorien im Demo-Zeitraum. Ausgewiesen wird erst ab {SCHWELLE} Fällen.
@@ -214,7 +214,7 @@ function CategoryBreakdown() {
 
 function RiskOverview() {
   return (
-    <div className="rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
+    <div className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-panel">
       <h3 className="text-2xl font-bold">Risikoverteilung</h3>
       <p className="mt-2 font-normal leading-7 text-db-rail">
         Die Risiko-Einschätzung dient nur zur Priorisierung für menschliche Prüfung.
@@ -251,7 +251,7 @@ function Calculator(props) {
 
   return (
     <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_0.92fr]">
-      <div className="rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
+      <div className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-panel">
         <h3 className="text-2xl font-bold">Kostenersparnis-Rechner</h3>
         <p className="mt-2 font-normal leading-7 text-db-rail">
           Dies ist eine konservative Demo-Schätzung. Reale Werte müssten intern validiert werden.
@@ -263,7 +263,7 @@ function Calculator(props) {
           <NumberInput label="Zeitersparnis durch KI-Vorbereitung" value={savingPercent} onChange={setSavingPercent} suffix="%" />
         </div>
       </div>
-      <div className="rounded-lg bg-db-dark p-6 text-white shadow-panel">
+      <div className="rounded-lg bg-db-dark p-5 text-white shadow-panel">
         <BadgeEuro size={30} className="text-red-200" aria-hidden="true" />
         <p className="mt-5 text-sm font-bold uppercase tracking-wide text-white/60">Demo-Ergebnis</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -314,7 +314,7 @@ function SavingsExplanation() {
   ];
 
   return (
-    <div className="mt-6 rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
+    <div className="mt-6 rounded-lg border border-db-dark/10 bg-white p-5 shadow-panel">
       <h3 className="text-2xl font-bold">Wo die DB Zeit sparen könnte</h3>
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         {points.map(([title, text]) => (

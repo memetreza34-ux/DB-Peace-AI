@@ -5,7 +5,7 @@ export function Footer({ onNavigate, onRollenAnsehen }) {
   return (
     // pb-28 hält den Fußbereich frei von den schwebenden Schaltflächen (Quick Exit, Chat)
     <footer className="mt-16 border-t border-line/10 bg-white dark:bg-db-dark pt-8 pb-28 sm:pb-8 text-sm font-normal text-ink-muted">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-5 space-y-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           {/* Left: Brand & Disclaimer */}
           <div className="flex items-center gap-3">

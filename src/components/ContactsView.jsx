@@ -52,7 +52,7 @@ export function ContactsView() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border-2 border-red-500/20 shadow-sm flex flex-col h-full"
+          className="bg-white dark:bg-db-dark/80 rounded-lg p-5 border-2 border-red-500/20 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-red-500 text-white p-3 rounded-xl">
@@ -79,7 +79,7 @@ export function ContactsView() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border border-line/10 shadow-sm flex flex-col h-full"
+          className="bg-white dark:bg-db-dark/80 rounded-lg p-5 border border-line/10 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-db-dark text-white dark:bg-white dark:text-db-dark p-3 rounded-xl">
@@ -104,7 +104,7 @@ export function ContactsView() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border border-line/10 shadow-sm flex flex-col h-full"
+          className="bg-white dark:bg-db-dark/80 rounded-lg p-5 border border-line/10 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 p-3 rounded-xl">
@@ -133,7 +133,7 @@ export function ContactsView() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="mt-6 bg-surface-sunk rounded-lg p-6 border border-line/10"
+        className="mt-6 bg-surface-sunk rounded-lg p-5 border border-line/10"
       >
         <div className="flex items-center gap-3 mb-2">
           <MapPin className="w-5 h-5 text-db-red" />
@@ -251,7 +251,7 @@ export function ContactsView() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.35 }}
-        className="mt-6 rounded-lg border-2 border-amber-200 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20 p-6"
+        className="mt-6 rounded-lg border-2 border-amber-200 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20 p-5"
       >
         <div className="flex items-center gap-3 mb-2">
           <ShieldPlus className="w-5 h-5 text-amber-600 dark:text-amber-400" />

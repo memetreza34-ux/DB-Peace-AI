@@ -40,7 +40,7 @@ export function MoodTracker() {
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full border border-line/10 bg-surface p-6"
+      className="w-full border border-line/10 bg-surface p-5"
     >
       {/* Ohne AnimatePresence mode="wait": Das wartet auf die Exit-Animation des
           alten Zustands. Läuft die nicht zu Ende, erscheint die Bestätigung nie. */}
@@ -140,7 +140,7 @@ export function MoodTracker() {
             key="success"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center py-6 text-center"
+            className="flex flex-col items-center justify-center py-5 text-center"
           >
             <div className="rounded-full bg-emerald-100 dark:bg-emerald-500/20 p-4 text-emerald-600 dark:text-emerald-400 mb-3">
               <CheckCircle2 className="h-8 w-8" />

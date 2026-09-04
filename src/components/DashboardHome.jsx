@@ -70,7 +70,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
   ];
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-6">
       <section className="motion-card">
         <h1 className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight text-ink">
           Du bist hier richtig.

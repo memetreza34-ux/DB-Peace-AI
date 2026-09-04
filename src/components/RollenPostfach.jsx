@@ -85,7 +85,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
 
   if (!rolle) {
     return (
-      <div className="p-8">
+      <div className="p-6">
         <p className="font-bold text-ink">Diese Rolle gibt es nicht.</p>
         <button onClick={onExit} className="mt-4 font-bold text-db-red underline">
           Zurück
@@ -143,7 +143,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
   return (
     <div className="min-h-screen bg-db-soft dark:bg-db-dark">
       <header className="border-b border-line/10 bg-surface">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-5 py-4">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-xs font-bold uppercase tracking-wide text-db-red">
@@ -189,7 +189,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
       {/* pb-28 hält den unteren Rand frei von den schwebenden Schaltflächen
           (Quick Exit). Auf dem Handy verdeckte der Knopf sonst den letzten
           Absatz — und Dienstgeräte sind genau der Fall, für den das zählt. */}
-      <div className="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 py-6 pb-28 sm:pb-8">
+      <div className="mx-auto max-w-7xl space-y-4 px-4 sm:px-5 py-5 pb-28 sm:pb-8">
         {/* Zwei Aussagen, die immer gelten: erfundene Fälle, und die Trennung.
             Bewusst in einer Zeile statt in zwei Absätzen — davor stehen im
             Ernstfall noch Fristenwarnung und Befangenheitshinweis. */}
@@ -273,7 +273,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
             </div>
 
             {faelle.length === 0 ? (
-              <p className="p-6 text-center text-sm font-normal text-db-rail dark:text-white/50">
+              <p className="p-5 text-center text-sm font-normal text-db-rail dark:text-white/50">
                 Keine Fälle für diese Rolle.
               </p>
             ) : (
@@ -323,7 +323,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
           {/* Detail */}
           <div className="lg:col-span-7 rounded-xl border border-line/10 bg-surface">
             {!gewaehlt ? (
-              <p className="p-8 text-center text-sm font-normal text-db-rail dark:text-white/50">
+              <p className="p-6 text-center text-sm font-normal text-db-rail dark:text-white/50">
                 Wähle links einen Fall aus.
               </p>
             ) : (

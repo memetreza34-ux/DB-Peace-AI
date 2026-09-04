@@ -49,7 +49,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
           <X className="h-5 w-5" />
         </button>
 
-        <div className="border-b border-line/10 bg-surface-sunk p-6 text-center">
+        <div className="border-b border-line/10 bg-surface-sunk p-5 text-center">
           <div className="mx-auto mb-4 w-fit rounded-xl bg-db-dark dark:bg-white p-3 text-white dark:text-db-dark shadow-sm">
             <Eye className="h-8 w-8" />
           </div>
@@ -61,7 +61,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
           </p>
         </div>
 
-        <div className="space-y-5 p-6">
+        <div className="space-y-4 p-5">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-db-red">Meine Rollen</p>
             <p className="mb-3 text-sm font-normal text-db-rail dark:text-white/50">

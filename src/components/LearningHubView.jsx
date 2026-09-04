@@ -51,7 +51,7 @@ export function LearningHubView() {
 
   // Header UI
   const renderHeader = () => (
-    <div className="bg-surface-inverse p-6 text-ink-inverse relative overflow-hidden">
+    <div className="bg-surface-inverse p-5 text-ink-inverse relative overflow-hidden">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2 max-w-2xl">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-db-warm ">
@@ -94,7 +94,7 @@ export function LearningHubView() {
     : [];
 
   const renderCourse = (course) => (
-    <div key={course.id} className="rounded-md border border-line/10 bg-surface p-5 sm:p-6 shadow-sm hover:shadow-md transition group">
+    <div key={course.id} className="rounded-md border border-line/10 bg-surface p-5 sm:p-5 shadow-sm hover:shadow-md transition group">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         <div className="space-y-3">
           <div>
@@ -217,7 +217,7 @@ export function LearningHubView() {
         >
           <ArrowLeft className="h-4 w-4" /> Zurück zum Katalog
         </button>
-        <div className="rounded-md bg-surface border border-line/10 p-4 sm:p-6 shadow-sm">
+        <div className="rounded-md bg-surface border border-line/10 p-4 sm:p-5 shadow-sm">
           <TrainingMode />
         </div>
       </div>

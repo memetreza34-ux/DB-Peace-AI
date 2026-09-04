@@ -138,7 +138,7 @@ export function AppLock({ onUnlock }) {
     : "Dein geschützter Bereich. Bitte gib deine PIN ein.";
 
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-white selection:bg-db-red">
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-5 text-white selection:bg-db-red">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -237,7 +237,7 @@ export function AppLock({ onUnlock }) {
  */
 function Geraetewahl({ onWahl }) {
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-white selection:bg-db-red">
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-5 text-white selection:bg-db-red">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

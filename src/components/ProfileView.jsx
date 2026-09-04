@@ -166,7 +166,7 @@ export function ProfileView() {
                     </div>
                   </>
                 ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center text-db-rail dark:text-white/40 p-8 text-center">
+                  <div className="flex-1 flex flex-col items-center justify-center text-db-rail dark:text-white/40 p-6 text-center">
                      <Inbox className="w-12 h-12 mb-4 opacity-20" />
                      <h3 className="text-sm font-bold">Wähle eine Meldung aus</h3>
                   </div>
@@ -221,10 +221,10 @@ export function ProfileView() {
         return (
           <div className="space-y-4">
             <h3 className="font-bold text-xl text-ink mb-2">Stimmungs-Verlauf</h3>
-            <div className="bg-surface border border-line/10 rounded-md p-6 shadow-sm">
+            <div className="bg-surface border border-line/10 rounded-md p-5 shadow-sm">
               <div className="space-y-6">
                 {moodHistory.length === 0 ? (
-                  <p className="py-6 text-center text-sm font-normal text-db-rail dark:text-white/50">
+                  <p className="py-5 text-center text-sm font-normal text-db-rail dark:text-white/50">
                     Noch kein Eintrag. Auf der Startseite kannst du festhalten, wie deine Schicht war.
                   </p>
                 ) : (
@@ -278,10 +278,10 @@ export function ProfileView() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-4xl mx-auto py-8 px-4 sm:px-6"
+      className="max-w-4xl mx-auto py-8 px-4 sm:px-5"
     >
       {/* Profile Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-10 bg-db-dark p-8 rounded-lg shadow-md shadow-db-dark/10 relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-10 bg-db-dark p-6 rounded-lg shadow-md shadow-db-dark/10 relative overflow-hidden">
         <div className="absolute -top-20 -right-20 opacity-5 pointer-events-none">
           <User className="w-80 h-80 text-white" />
         </div>

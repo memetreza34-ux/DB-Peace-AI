@@ -108,7 +108,7 @@ export function CourseDetailModal({ course, onClose }) {
         className="bg-white dark:bg-db-dark rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden relative border border-slate-200 dark:border-white/10 outline-none"
       >
         {/* Header */}
-        <div className="bg-slate-900 text-white p-6 relative shrink-0">
+        <div className="bg-slate-900 text-white p-5 relative shrink-0">
           <button
             onClick={onClose}
             aria-label="Schließen"
@@ -127,7 +127,7 @@ export function CourseDetailModal({ course, onClose }) {
         </div>
 
         {/* Inhalt */}
-        <div className="p-6 flex-1 overflow-y-auto space-y-6">
+        <div className="p-5 flex-1 overflow-y-auto space-y-6">
           <div>
             <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
               <BookOpen className="w-4 h-4" /> Worum es geht
