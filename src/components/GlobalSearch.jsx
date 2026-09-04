@@ -136,11 +136,11 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -20 }}
           transition={{ duration: 0.15, ease: "easeOut" }}
-          className="relative w-full max-w-2xl bg-white dark:bg-db-dark rounded-lg shadow-lg border border-line/10 overflow-hidden flex flex-col max-h-[80vh]"
+          className="relative w-full max-w-2xl bg-surface  rounded-lg shadow-lg border border-line/10 overflow-hidden flex flex-col max-h-[80vh]"
         >
           {/* Search Input Area */}
-          <div className="flex items-center px-4 py-4 border-b border-line/10 bg-db-dark/5 dark:bg-white/5">
-            <Search className="w-6 h-6 text-db-rail dark:text-white/50 ml-2 shrink-0" />
+          <div className="flex items-center px-4 py-4 border-b border-line/10 bg-line/5 ">
+            <Search className="w-6 h-6 text-ink-muted  ml-2 shrink-0" />
             <input
               ref={inputRef}
               type="text"
@@ -151,7 +151,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
             />
             <button 
               onClick={onClose}
-              className="p-2 text-db-rail hover:text-ink/50 dark:hover:text-white bg-db-dark/5 dark:bg-white/5 hover:bg-db-dark/10 dark:hover:bg-white/10 rounded-full transition shrink-0"
+              className="p-2 text-db-rail hover:text-ink/50 dark:hover:text-white bg-line/5  hover:bg-db-dark/10 dark:hover:bg-white/10 rounded-full transition shrink-0"
             >
               <X className="w-5 h-5" />
             </button>
@@ -160,7 +160,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           {/* Results Area */}
           <div className="overflow-y-auto p-2 db-scrollbar">
             {query.trim() === "" && (
-              <div className="px-4 py-3 text-xs font-bold text-db-rail dark:text-white/50 uppercase tracking-wider">
+              <div className="px-4 py-3 text-xs font-bold text-ink-muted  uppercase tracking-wider">
                 Häufig gesucht
               </div>
             )}
@@ -181,7 +181,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
                   className="w-full flex items-center justify-between p-4 rounded-md hover:bg-db-dark/5 dark:hover:bg-white/5 transition-colors group text-left"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-db-dark border border-line/10 flex items-center justify-center shadow-sm shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-surface  border border-line/10 flex items-center justify-center shadow-sm shrink-0">
                       {item.icon}
                     </div>
                     <div>
@@ -196,9 +196,9 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           </div>
           
           {/* Footer */}
-          <div className="px-5 py-3 bg-db-dark/5 dark:bg-white/5 border-t border-line/10 text-sm font-normal text-db-rail dark:text-white/50 flex justify-between items-center">
+          <div className="px-5 py-3 bg-line/5  border-t border-line/10 text-sm font-normal text-ink-muted  flex justify-between items-center">
             <span>Die Suche hilft dir, schneller zum Ziel zu kommen.</span>
-            <span className="flex items-center gap-1"><kbd className="bg-white dark:bg-db-dark px-1.5 py-0.5 rounded border border-db-dark/20 dark:border-white/20 shadow-sm font-sans font-bold">ESC</kbd> zum Schließen</span>
+            <span className="flex items-center gap-1"><kbd className="bg-surface  px-1.5 py-0.5 rounded border border-line/20  shadow-sm font-sans font-bold">ESC</kbd> zum Schließen</span>
           </div>
         </motion.div>
         </div>

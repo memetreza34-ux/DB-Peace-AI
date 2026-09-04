@@ -108,7 +108,7 @@ export function AISmartReport({ onReportGenerated }) {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 bg-white dark:bg-db-dark border-t border-gray-100 dark:border-white/10">
+      <div className="p-4 bg-surface  border-t border-gray-100 dark:border-white/10">
         <div className="flex gap-2 relative">
           <input 
             type="text"

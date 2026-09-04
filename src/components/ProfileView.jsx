@@ -112,7 +112,7 @@ export function ProfileView() {
                           </span>
                        </div>
                        <p className="text-sm font-medium text-ink-muted mb-1 truncate">{ticket.kategorie}</p>
-                       <p className="text-sm font-normal text-db-rail/70 dark:text-white/40 truncate">
+                       <p className="text-sm font-normal text-ink-muted  truncate">
                          an {rolleFinden(ticket.empfaenger)?.kurz ?? "unbekannt"}
                        </p>
                      </button>
@@ -130,7 +130,7 @@ export function ProfileView() {
                           <div key={msg.id} className={`flex ${msg.von === 'melder' ? 'justify-end' : 'justify-start'}`}>
                             {msg.von === 'system' ? (
                               <div className="w-full text-center py-2">
-                                 <span className="text-xs font-bold uppercase text-db-rail dark:text-white/40 bg-db-dark/5 dark:bg-white/5 px-3 py-1 rounded-full">{msg.text}</span>
+                                 <span className="text-xs font-bold uppercase text-db-rail dark:text-white/40 bg-line/5  px-3 py-1 rounded-full">{msg.text}</span>
                               </div>
                             ) : (
                               <div className={`max-w-[85%] rounded-md p-4 ${msg.von === 'melder' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-surface-sunk text-ink rounded-tl-sm border border-line/10'}`}>
@@ -153,7 +153,7 @@ export function ProfileView() {
                             value={replyText}
                             onChange={(e) => setReplyText(e.target.value)}
                             placeholder="Anonym antworten..."
-                            className="flex-1 bg-db-dark/5 dark:bg-white/5 border border-line/10 rounded-xl px-4 py-3 text-sm font-medium text-ink focus:outline-none focus:border-db-red"
+                            className="flex-1 bg-line/5  border border-line/10 rounded-xl px-4 py-3 text-sm font-medium text-ink focus:outline-none focus:border-db-red"
                           />
                           <button 
                             type="submit"
@@ -197,7 +197,7 @@ export function ProfileView() {
                     type="button"
                     disabled
                     title="Im Prototyp noch nicht verfügbar"
-                    className="text-sm font-medium bg-db-dark/5 dark:bg-white/5 px-3 py-1.5 rounded-lg text-db-dark/40 dark:text-white/40 cursor-not-allowed"
+                    className="text-sm font-medium bg-line/5  px-3 py-1.5 rounded-lg text-db-dark/40 dark:text-white/40 cursor-not-allowed"
                   >
                     Bearbeiten
                   </button>
@@ -209,7 +209,7 @@ export function ProfileView() {
                   >
                     Meldung daraus erstellen
                   </button>
-                  <span className="text-sm font-normal text-db-rail/70 dark:text-white/40">
+                  <span className="text-sm font-normal text-ink-muted ">
                     im Prototyp noch nicht angebunden
                   </span>
                 </div>
@@ -224,12 +224,12 @@ export function ProfileView() {
             <div className="bg-surface border border-line/10 rounded-md p-5 shadow-sm">
               <div className="space-y-6">
                 {moodHistory.length === 0 ? (
-                  <p className="py-5 text-center text-sm font-normal text-db-rail dark:text-white/50">
+                  <p className="py-5 text-center text-sm font-normal text-ink-muted ">
                     Noch kein Eintrag. Auf der Startseite kannst du festhalten, wie deine Schicht war.
                   </p>
                 ) : (
                   moodHistory.map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between gap-4 border-b border-db-dark/5 dark:border-white/5 pb-4 last:border-0 last:pb-0">
+                    <div key={idx} className="flex items-center justify-between gap-4 border-b border-line/5  pb-4 last:border-0 last:pb-0">
                       <div className="min-w-0">
                         <div className="text-sm font-medium text-ink-muted mb-1">{item.date}</div>
                         <div className="font-bold text-ink">{item.mood}</div>
@@ -260,7 +260,7 @@ export function ProfileView() {
                     <h4 className="font-bold text-ink text-lg group-hover:text-db-red transition">{course.title}</h4>
                   </div>
                   <div className="mt-6 flex items-center justify-between">
-                    <span className="text-sm font-medium text-db-dark/70 dark:text-white/70">{course.duration}</span>
+                    <span className="text-sm font-medium text-ink/70 ">{course.duration}</span>
                     <ChevronRight className="w-5 h-5 text-db-dark/30 dark:text-white/30 group-hover:text-db-red transition translate-x-0 group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -327,7 +327,7 @@ export function ProfileView() {
             className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === "postfach" 
                 ? "bg-db-red text-white shadow-md" 
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
+                : "text-ink/70  hover:bg-line/5 "
             }`}
           >
             <div className="flex items-center gap-3">
@@ -340,8 +340,8 @@ export function ProfileView() {
             onClick={() => setActiveTab("protokolle")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === "protokolle" 
-                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-md" 
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
+                ? "bg-contrast  text-contrast-ink  shadow-md" 
+                : "text-ink/70  hover:bg-line/5 "
             }`}
           >
             <FolderLock className="w-5 h-5" /> Gedächtnisprotokolle
@@ -351,8 +351,8 @@ export function ProfileView() {
             onClick={() => setActiveTab("stimmung")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === "stimmung" 
-                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-md" 
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
+                ? "bg-contrast  text-contrast-ink  shadow-md" 
+                : "text-ink/70  hover:bg-line/5 "
             }`}
           >
             <LineChart className="w-5 h-5" /> Stimmungs-Verlauf
@@ -362,8 +362,8 @@ export function ProfileView() {
             onClick={() => setActiveTab("kurse")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === "kurse" 
-                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-md" 
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
+                ? "bg-contrast  text-contrast-ink  shadow-md" 
+                : "text-ink/70  hover:bg-line/5 "
             }`}
           >
             <Bookmark className="w-5 h-5" /> Gemerkte Kurse
@@ -405,7 +405,7 @@ function FristenFuerMich({ fall }) {
   const stelle = rolleFinden(fall.empfaenger)?.kurz ?? "die zuständige Stelle";
 
   return (
-    <div className="border-b border-line/10 bg-db-soft/60 dark:bg-white/5 p-4 space-y-2">
+    <div className="border-b border-line/10 bg-surface-sunk  p-4 space-y-2">
       {fristen.map((frist) => {
         const stand = fristStand(frist, eingang);
         const ueberfaellig = stand.stand === "ueberfaellig";

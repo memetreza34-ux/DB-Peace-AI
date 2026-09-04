@@ -35,6 +35,12 @@
   --line: var(--db-gray-900); /* Kanten, immer mit Alpha genutzt */
   --accent: var(--db-red); /* Flächen und großer Text */
   --accent-ink: var(--db-red-ink); /* kleiner Text auf hellem Grund */
+  /* Die umgekehrte Fläche: dunkel im Hellmodus, hell im Dunkelmodus. Für
+     Knöpfe, die sich gegen alles andere stellen sollen. Nicht dasselbe wie
+     --surface-inverse: die ist ein Kopfbereich und bleibt in beiden Modi
+     dunkel. */
+  --contrast: var(--db-gray-900);
+  --contrast-ink: var(--db-white);
 }
 
 .dark {
@@ -48,4 +54,6 @@
   /* Im Dunkelmodus muss der Kopfbereich heller sein als die Karten, sonst
      verschwindet er im Untergrund. */
   --surface-inverse: var(--db-gray-700);
+  --contrast: var(--db-white);
+  --contrast-ink: var(--db-gray-900);
 }

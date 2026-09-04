@@ -332,7 +332,7 @@ export function RecordAndReportView() {
             {/* List of Entries */}
             <div className="mt-4 space-y-3">
               {records.length === 0 ? (
-                <div className="text-center py-8 text-db-rail/70 dark:text-white/40 text-sm font-medium">
+                <div className="text-center py-8 text-ink-muted  text-sm font-medium">
                   Noch keine Protokoll-Einträge vorhanden.
                 </div>
               ) : (
@@ -379,7 +379,7 @@ export function RecordAndReportView() {
                     
                     {/* Render attached files if any */}
                     {r.files && r.files.length > 0 && (
-                      <div className="mt-3 flex flex-wrap gap-2 pt-2 border-t border-db-dark/5 dark:border-white/5">
+                      <div className="mt-3 flex flex-wrap gap-2 pt-2 border-t border-line/5 ">
                         {r.files.map((file, idx) => (
                           <div key={idx} className="flex items-center gap-1.5 rounded-lg bg-db-warm/50 dark:bg-db-dark/50 border border-line/10 px-2 py-1">
                             <Camera className="h-3.5 w-3.5 text-ink-muted" />
@@ -429,7 +429,7 @@ export function RecordAndReportView() {
             aria-labelledby="protokoll-eintrag-titel"
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-db-dark rounded-lg p-5 sm:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg relative border dark:border-white/10 outline-none"
+            className="bg-surface  rounded-lg p-5 sm:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-lg relative border dark:border-white/10 outline-none"
           >
             <button
               aria-label="Schließen"
@@ -454,7 +454,7 @@ export function RecordAndReportView() {
               </span>
             </div>
             
-            <div className="bg-db-soft dark:bg-db-dark/30 rounded-xl p-4 border border-db-dark/5 dark:border-white/5 mb-6">
+            <div className="bg-surface-sunk  rounded-xl p-4 border border-line/5  mb-6">
               <h3 className="text-xs font-bold text-ink-muted uppercase tracking-wider mb-2">Beschreibung</h3>
               <p className="text-sm font-semibold text-ink whitespace-pre-wrap leading-relaxed">
                 {selectedRecord.description}
@@ -468,18 +468,18 @@ export function RecordAndReportView() {
                   {selectedRecord.files.map((file, idx) => (
                     <div key={idx} className="rounded-xl border border-line/10 bg-db-warm/10 dark:bg-db-dark/30 overflow-hidden group">
                       {file.url ? (
-                        <div className="relative aspect-video bg-db-dark/5 dark:bg-white/5">
+                        <div className="relative aspect-video bg-line/5 ">
                           <img src={file.url} alt={file.name} className="w-full h-full object-cover" />
                         </div>
                       ) : (
-                        <div className="flex items-center justify-center aspect-video bg-db-dark/5 dark:bg-white/5">
+                        <div className="flex items-center justify-center aspect-video bg-line/5 ">
                           <FileText className="h-8 w-8 text-db-rail/50 dark:text-white/30" />
                         </div>
                       )}
                       <div className="bg-surface p-2">
                         <p className="truncate text-sm font-bold text-ink">{file.name}</p>
                         {!file.gespeichert && (
-                          <p className="mt-0.5 text-sm font-normal leading-tight text-db-rail dark:text-white/50">
+                          <p className="mt-0.5 text-sm font-normal leading-tight text-ink-muted ">
                             Nur der Name gemerkt — die Datei liegt weiter auf deinem Gerät.
                           </p>
                         )}

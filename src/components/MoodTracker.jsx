@@ -122,7 +122,7 @@ export function MoodTracker() {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     placeholder="Optional: Ein kurzes Stichwort (z.B. 'Ärger mit Meister', 'Gute Fahrt')"
-                    className="w-full rounded-xl border border-db-dark/20 dark:border-white/20 bg-surface dark:text-white px-4 py-3 text-sm focus:border-db-red focus:outline-none focus:ring-1 focus:ring-db-red transition placeholder:text-db-rail/50 dark:placeholder:text-white/40"
+                    className="w-full rounded-xl border border-line/20  bg-surface dark:text-white px-4 py-3 text-sm focus:border-db-red focus:outline-none focus:ring-1 focus:ring-db-red transition placeholder:text-db-rail/50 dark:placeholder:text-white/40"
                   />
                   <button
                     type="submit"

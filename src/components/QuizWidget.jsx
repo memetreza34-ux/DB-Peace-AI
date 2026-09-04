@@ -58,7 +58,7 @@ export function QuizWidget() {
 
   if (isLoading) {
     return (
-      <div className="w-full h-64 rounded-lg bg-white dark:bg-db-dark/80  border border-line/10 shadow-md flex flex-col items-center justify-center gap-4 transition-colors">
+      <div className="w-full h-64 rounded-lg bg-surface  border border-line/10 shadow-md flex flex-col items-center justify-center gap-4 transition-colors">
         <Loader2 className="h-8 w-8 text-db-red animate-spin" />
         <p className="text-sm font-normal text-ink-muted">
           KI generiert neue Quiz-Fragen...
@@ -112,7 +112,7 @@ export function QuizWidget() {
   const currentQ = questions[currentQIndex];
 
   return (
-    <div className="w-full rounded-lg bg-white dark:bg-db-dark/80  border border-line/10 shadow-md p-5 relative overflow-hidden transition-colors">
+    <div className="w-full rounded-lg bg-surface  border border-line/10 shadow-md p-5 relative overflow-hidden transition-colors">
       
       {/* Progress */}
       <div className="flex items-center gap-1 mb-6">

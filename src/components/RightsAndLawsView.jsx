@@ -61,7 +61,7 @@ export function RightsAndLawsView({ onBack }) {
     return (
       <div 
         key={law.id} 
-        className={`rounded-md border transition-all duration-300 overflow-hidden ${isOpen ? 'border-db-dark/20 dark:border-white/20 bg-white dark:bg-db-dark shadow-lg' : 'border-line/10 bg-surface hover:border-db-dark/20 dark:hover:border-white/20 hover:shadow-md'}`}
+        className={`rounded-md border transition-all duration-300 overflow-hidden ${isOpen ? 'border-line/20  bg-surface  shadow-lg' : 'border-line/10 bg-surface hover:border-line/20  hover:shadow-md'}`}
       >
         {/* Card Header (Clickable) */}
         <button 
@@ -82,17 +82,17 @@ export function RightsAndLawsView({ onBack }) {
 
         {/* Card Content (Expandable) */}
         {isOpen && (
-          <div className="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 animate-fadeIn border-t border-db-dark/5 dark:border-white/5 mt-2">
+          <div className="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 animate-fadeIn border-t border-line/5  mt-2">
             
             <div className="space-y-4 mt-4">
               {/* Official Text */}
-              <div className="bg-db-dark/5 dark:bg-white/5 rounded-xl p-4 border-l-4 border-db-rail">
+              <div className="bg-line/5  rounded-xl p-4 border-l-4 border-db-rail">
                 <p className="text-xs font-bold text-ink uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <BookOpen className="h-3.5 w-3.5" /> Offizieller Text
                 </p>
                 <p className="text-sm font-medium text-ink italic">"{law.officialText}"</p>
                 {law.quelle && (
-                  <p className="mt-2 text-sm font-normal text-db-rail dark:text-white/50">
+                  <p className="mt-2 text-sm font-normal text-ink-muted ">
                     Quelle:{" "}
                     {law.quelleUrl ? (
                       <a
@@ -119,7 +119,7 @@ export function RightsAndLawsView({ onBack }) {
               </div>
 
               {/* Action Tip */}
-              <div className="flex items-start gap-3 p-3 bg-db-soft dark:bg-db-dark/30 rounded-lg">
+              <div className="flex items-start gap-3 p-3 bg-surface-sunk  rounded-lg">
                 <Info className="h-5 w-5 text-db-red shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-bold text-ink">Tipp für die Praxis:</p>
@@ -178,16 +178,16 @@ export function RightsAndLawsView({ onBack }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex bg-db-dark/5 dark:bg-white/5 p-1 rounded-xl w-full max-w-md mx-auto">
+      <div className="flex bg-line/5  p-1 rounded-xl w-full max-w-md mx-auto">
         <button
           onClick={() => { setActiveTab("bundesgesetze"); setOpenCard(null); setSearchQuery(""); }}
-          className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition ${activeTab === 'bundesgesetze' ? 'bg-white dark:bg-db-dark text-ink shadow-sm' : 'text-ink-muted hover:text-db-dark dark:hover:text-white'}`}
+          className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition ${activeTab === 'bundesgesetze' ? 'bg-surface  text-ink shadow-sm' : 'text-ink-muted hover:text-ink '}`}
         >
           Bundesgesetze
         </button>
         <button
           onClick={() => { setActiveTab("dbRichtlinien"); setOpenCard(null); setSearchQuery(""); }}
-          className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition ${activeTab === 'dbRichtlinien' ? 'bg-white dark:bg-db-dark text-ink shadow-sm' : 'text-ink-muted hover:text-db-dark dark:hover:text-white'}`}
+          className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition ${activeTab === 'dbRichtlinien' ? 'bg-surface  text-ink shadow-sm' : 'text-ink-muted hover:text-ink '}`}
         >
           DB Richtlinien
         </button>

@@ -91,7 +91,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-db-soft dark:bg-db-dark flex flex-col justify-between selection:bg-db-red selection:text-white relative">
+    <div className="min-h-screen bg-surface-sunk  flex flex-col justify-between selection:bg-db-red selection:text-white relative">
       <div>
         {/* Global Search Overlay */}
         <GlobalSearch 

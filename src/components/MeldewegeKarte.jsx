@@ -153,7 +153,7 @@ function Zeile({ name, beschreibung, aktion, hinweis }) {
       )}
 
       {hinweis && (
-        <p className="mt-2 text-sm font-normal text-db-rail/80 dark:text-white/50 flex items-start gap-1.5">
+        <p className="mt-2 text-sm font-normal text-ink-muted  flex items-start gap-1.5">
           <Info className="w-3.5 h-3.5 shrink-0 mt-px" />
           <span>{hinweis}</span>
         </p>

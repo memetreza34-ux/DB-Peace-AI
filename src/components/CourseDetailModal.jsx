@@ -105,7 +105,7 @@ export function CourseDetailModal({ course, onClose }) {
         aria-labelledby="kurs-titel"
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white dark:bg-db-dark rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden relative border border-slate-200 dark:border-white/10 outline-none"
+        className="bg-surface  rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden relative border border-slate-200 dark:border-white/10 outline-none"
       >
         {/* Header */}
         <div className="bg-slate-900 text-white p-5 relative shrink-0">
@@ -165,7 +165,7 @@ export function CourseDetailModal({ course, onClose }) {
         </div>
 
         {/* Fußzeile */}
-        <div className="border-t border-slate-200 dark:border-white/10 p-4 flex flex-col sm:flex-row gap-2 shrink-0 bg-white dark:bg-db-dark">
+        <div className="border-t border-slate-200 dark:border-white/10 p-4 flex flex-col sm:flex-row gap-2 shrink-0 bg-surface ">
           {hatLink ? (
             <a
               href={course.link}

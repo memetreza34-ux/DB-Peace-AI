@@ -301,7 +301,7 @@ function TimeSavingCard() {
 function FormShell({ children, progress, step }) {
   return (
     <div className="overflow-hidden rounded-lg border border-line/10 bg-db-soft dark:bg-db-dark/50 shadow-panel">
-      <div className="border-b border-line/10 bg-white dark:bg-db-dark/80 p-5">
+      <div className="border-b border-line/10 bg-surface  p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-bold uppercase tracking-wide text-db-red">Schritt {step} von 5</p>
@@ -309,7 +309,7 @@ function FormShell({ children, progress, step }) {
           </div>
           <p className="text-sm font-medium text-ink-muted">{progress}%</p>
         </div>
-        <div className="mt-4 h-2 overflow-hidden rounded bg-db-soft dark:bg-db-dark">
+        <div className="mt-4 h-2 overflow-hidden rounded bg-surface-sunk ">
           <div className="h-full bg-db-red transition-all duration-300" style={{ width: `${progress}%` }} />
         </div>
       </div>
@@ -416,7 +416,7 @@ function DescriptionStep({ form, togglePerspective, update }) {
           className={`absolute bottom-4 right-4 p-2 rounded-full transition-all shadow-sm ${
             isRecording 
               ? 'bg-red-500 text-white animate-pulse' 
-              : 'bg-db-soft dark:bg-db-dark text-ink hover:bg-db-dark/10 dark:hover:bg-white/10'
+              : 'bg-surface-sunk  text-ink hover:bg-db-dark/10 dark:hover:bg-white/10'
           }`}
           title="Diktierfunktion (Speech-to-Text)"
         >
@@ -429,10 +429,10 @@ function DescriptionStep({ form, togglePerspective, update }) {
         <p className="mb-2 font-bold text-ink text-sm">Beweise hochladen (Optional)</p>
         <div 
           onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-db-dark/20 dark:border-white/20 bg-surface p-5 flex flex-col items-center justify-center text-center hover:border-db-red hover:bg-db-soft dark:hover:bg-white/5 transition-all cursor-pointer group"
+          className="border-2 border-dashed border-line/20  bg-surface p-5 flex flex-col items-center justify-center text-center hover:border-db-red hover:bg-db-soft dark:hover:bg-white/5 transition-all cursor-pointer group"
         >
           <input type="file" ref={fileInputRef} className="hidden" />
-          <div className="w-12 h-12 bg-db-dark/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-3 group-hover:bg-db-red/10 transition-colors">
+          <div className="w-12 h-12 bg-line/5  rounded-full flex items-center justify-center mb-3 group-hover:bg-db-red/10 transition-colors">
             <Upload className="w-5 h-5 text-db-dark/60 dark:text-white/60 group-hover:text-db-red" />
           </div>
           <p className="font-bold text-sm text-ink">Screenshots, Chat-Verläufe oder Bilder</p>
@@ -772,7 +772,7 @@ function AnalysisCard({ analysis, onImprove, onPreview, onReset, form }) {
 
 function SummaryBlock({ label, value, wide = false }) {
   return (
-    <div className={`rounded bg-db-soft dark:bg-db-dark/30 p-4 ${wide ? "md:col-span-2" : ""}`}>
+    <div className={`rounded bg-surface-sunk  p-4 ${wide ? "md:col-span-2" : ""}`}>
       <p className="text-xs font-bold uppercase tracking-wide text-db-red">{label}</p>
       <p className="mt-2 whitespace-pre-line font-semibold leading-7 text-ink">{value}</p>
     </div>
@@ -808,7 +808,7 @@ function WorkflowCard() {
   ];
 
   return (
-    <div className="rounded-lg border border-line/10 bg-db-soft dark:bg-db-dark/30 p-5 shadow-sm">
+    <div className="rounded-lg border border-line/10 bg-surface-sunk  p-5 shadow-sm">
       <ClipboardList size={26} className="text-db-red" aria-hidden="true" />
       <h3 className="mt-4 text-lg font-bold dark:text-white">Workflow in der Demo</h3>
       <div className="mt-4 space-y-3">

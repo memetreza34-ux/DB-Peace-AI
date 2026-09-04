@@ -86,7 +86,7 @@ export default function ProjectOverview() {
   return (
     <div className="w-full">
       {/* Header Area */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 bg-surface p-5 sm:p-6 rounded-lg border border-db-dark/5 dark:border-white/10 shadow-sm relative overflow-hidden">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 bg-surface p-5 sm:p-6 rounded-lg border border-line/5  shadow-sm relative overflow-hidden">
         
         {/* Background Graphic */}
         <div className="absolute -right-20 -top-20 opacity-5 pointer-events-none">
@@ -120,7 +120,7 @@ export default function ProjectOverview() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               layout
-              className="bg-white dark:bg-db-dark/80 rounded-lg p-5 border border-line/10 shadow-sm flex flex-col justify-between group hover:shadow-md hover:border-db-red/30 transition-all"
+              className="bg-surface  rounded-lg p-5 border border-line/10 shadow-sm flex flex-col justify-between group hover:shadow-md hover:border-db-red/30 transition-all"
             >
               <div>
                 <div className="flex justify-between items-start mb-4">
@@ -128,11 +128,11 @@ export default function ProjectOverview() {
                     {project.category}
                   </span>
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1.5 text-ink-muted font-medium text-sm bg-db-dark/5 dark:bg-white/5 px-2 py-1 rounded-lg" title="Aufrufe">
+                    <div className="flex items-center gap-1.5 text-ink-muted font-medium text-sm bg-line/5  px-2 py-1 rounded-lg" title="Aufrufe">
                       <Eye className="w-4 h-4" />
                       <span>{project.views}</span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-ink-muted font-medium text-sm bg-db-dark/5 dark:bg-white/5 px-2 py-1 rounded-lg" title="Teilnehmer">
+                    <div className="flex items-center gap-1.5 text-ink-muted font-medium text-sm bg-line/5  px-2 py-1 rounded-lg" title="Teilnehmer">
                       <Users className="w-4 h-4" />
                       <span>{project.participants}</span>
                     </div>
@@ -148,7 +148,7 @@ export default function ProjectOverview() {
               </div>
 
               <div>
-                <div className="text-sm font-medium text-db-rail dark:text-white/50 mb-3 bg-db-dark/5 dark:bg-white/5 p-3 rounded-xl border border-db-dark/5 dark:border-white/5">
+                <div className="text-sm font-medium text-ink-muted  mb-3 bg-line/5  p-3 rounded-xl border border-line/5 ">
                   <span className="block mb-1 opacity-70">Initiiert von:</span> 
                   <span className="text-ink text-sm">{project.initiator}</span>
                 </div>
@@ -161,7 +161,7 @@ export default function ProjectOverview() {
                       ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 cursor-default" 
                       : project.enrollmentStatus === "pending"
                       ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20"
-                      : "bg-db-dark dark:bg-white text-white dark:text-db-dark hover:scale-[1.02]"
+                      : "bg-contrast  text-contrast-ink  hover:scale-[1.02]"
                   }`}
                 >
                   {project.enrollmentStatus === "accepted" && (
@@ -202,11 +202,11 @@ export default function ProjectOverview() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg bg-white dark:bg-db-dark rounded-lg p-5 md:p-6 shadow-lg border border-line/10"
+              className="relative w-full max-w-lg bg-surface  rounded-lg p-5 md:p-6 shadow-lg border border-line/10"
             >
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-4 right-4 p-2 text-db-rail hover:text-db-dark dark:hover:text-white hover:bg-db-dark/5 dark:hover:bg-white/10 rounded-full transition"
+                className="absolute top-4 right-4 p-2 text-db-rail hover:text-ink  hover:bg-line/5  rounded-full transition"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -230,7 +230,7 @@ export default function ProjectOverview() {
                     value={newIdea.title}
                     onChange={e => setNewIdea({...newIdea, title: e.target.value})}
                     placeholder="z.B. Stammtisch für Vielfalt"
-                    className="w-full bg-db-dark/5 dark:bg-white/5 border border-line/10 rounded-xl px-4 py-3 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-db-red focus:border-transparent transition"
+                    className="w-full bg-line/5  border border-line/10 rounded-xl px-4 py-3 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-db-red focus:border-transparent transition"
                   />
                 </div>
 
@@ -239,7 +239,7 @@ export default function ProjectOverview() {
                   <select
                     value={newIdea.category}
                     onChange={e => setNewIdea({...newIdea, category: e.target.value})}
-                    className="w-full bg-db-dark/5 dark:bg-white/5 border border-line/10 rounded-xl px-4 py-3 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-db-red focus:border-transparent transition appearance-none"
+                    className="w-full bg-line/5  border border-line/10 rounded-xl px-4 py-3 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-db-red focus:border-transparent transition appearance-none"
                   >
                     <option value="Workshop">Workshop</option>
                     <option value="Event">Event</option>
@@ -256,7 +256,7 @@ export default function ProjectOverview() {
                     value={newIdea.description}
                     onChange={e => setNewIdea({...newIdea, description: e.target.value})}
                     placeholder="Beschreibe kurz deine Idee und warum sie wichtig ist..."
-                    className="w-full bg-db-dark/5 dark:bg-white/5 border border-line/10 rounded-xl px-4 py-3 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-db-red focus:border-transparent transition resize-none"
+                    className="w-full bg-line/5  border border-line/10 rounded-xl px-4 py-3 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-db-red focus:border-transparent transition resize-none"
                   />
                 </div>
 

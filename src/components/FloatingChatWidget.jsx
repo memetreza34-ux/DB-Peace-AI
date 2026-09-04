@@ -205,7 +205,7 @@ export function FloatingChatWidget() {
                         ? "bg-db-red text-white rounded-br-sm shadow-md shadow-db-red/20"
                         : m.kritisch
                         ? "bg-red-50 dark:bg-red-950/40 text-ink rounded-bl-sm border-2 border-db-red shadow-sm"
-                        : "bg-white dark:bg-db-rail text-ink rounded-bl-sm border border-db-dark/5 dark:border-white/10 shadow-sm"
+                        : "bg-white dark:bg-db-rail text-ink rounded-bl-sm border border-line/5  shadow-sm"
                     }`}
                   >
                     {m.role === "assistant" ? <TextMitRufnummern text={m.text} /> : m.text}
@@ -219,7 +219,7 @@ export function FloatingChatWidget() {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-white dark:bg-db-rail border border-db-dark/5 dark:border-white/10 rounded-md rounded-bl-sm px-4 py-3 flex gap-1 items-center shadow-sm">
+                  <div className="bg-white dark:bg-db-rail border border-line/5  rounded-md rounded-bl-sm px-4 py-3 flex gap-1 items-center shadow-sm">
                     <span className="w-2 h-2 rounded-full bg-db-dark/30 dark:bg-white/30 animate-bounce" style={{ animationDelay: '0ms' }} />
                     <span className="w-2 h-2 rounded-full bg-db-dark/30 dark:bg-white/30 animate-bounce" style={{ animationDelay: '150ms' }} />
                     <span className="w-2 h-2 rounded-full bg-db-dark/30 dark:bg-white/30 animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -229,7 +229,7 @@ export function FloatingChatWidget() {
             </div>
 
             {/* Input Area */}
-            <form onSubmit={handleSubmit} className="border-t border-line/10 bg-white dark:bg-db-dark p-4 transition-colors">
+            <form onSubmit={handleSubmit} className="border-t border-line/10 bg-surface  p-4 transition-colors">
               <div className="flex gap-2">
                 <input
                   type="text"

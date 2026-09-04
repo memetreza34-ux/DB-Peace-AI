@@ -233,13 +233,13 @@ export default function SupportPage({ onNavigate }) {
                         <div>
                           <div className="flex items-center gap-2">
                              <span className={`font-bold text-sm ${details?.isUrgent ? 'text-red-700 dark:text-red-400' : 'text-ink'}`}>{contactName}</span>
-                             <span className={`px-2 py-0.5 rounded text-xs font-bold uppercase ${details?.isUrgent ? 'bg-red-100 text-red-800' : 'bg-db-warm dark:bg-white/10 text-db-dark/70 dark:text-white/70'}`}>
+                             <span className={`px-2 py-0.5 rounded text-xs font-bold uppercase ${details?.isUrgent ? 'bg-red-100 text-red-800' : 'bg-db-warm dark:bg-white/10 text-ink/70 '}`}>
                                 {details?.role || 'Intern'}
                              </span>
                           </div>
                           <p className="text-sm font-normal text-ink-muted mt-1">{details?.desc}</p>
                           {!details?.ziel && details?.hinweis && (
-                            <p className="text-sm font-normal text-db-rail/80 dark:text-white/50 mt-1.5">
+                            <p className="text-sm font-normal text-ink-muted  mt-1.5">
                               {details.hinweis}
                             </p>
                           )}

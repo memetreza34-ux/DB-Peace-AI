@@ -485,7 +485,7 @@ function SimulationPanel({ onChoose, onNext, progress, round, roundIndex, scenar
       </div>
 
       <div className="p-5">
-        <div className="rounded-lg bg-db-soft dark:bg-db-dark/30 p-5">
+        <div className="rounded-lg bg-surface-sunk  p-5">
           <p className="text-sm font-bold uppercase tracking-wide text-db-red">{round.title}</p>
           <h4 className="mt-2 text-2xl font-bold text-ink">Was würdest du tun?</h4>
           <p className="mt-3 text-lg font-normal leading-8 text-ink-muted">{round.description}</p>
@@ -522,7 +522,7 @@ function SimulationPanel({ onChoose, onNext, progress, round, roundIndex, scenar
 
 function FeedbackCard({ isLast, onNext, option }) {
   return (
-    <div className="mt-6 rounded-lg border border-line/10 bg-db-soft dark:bg-db-dark/30 p-5 shadow-sm transition">
+    <div className="mt-6 rounded-lg border border-line/10 bg-surface-sunk  p-5 shadow-sm transition">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-bold uppercase tracking-wide text-db-red">Sofortiges Feedback</p>
@@ -630,7 +630,7 @@ function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
 
 function ResultBlock({ text, title }) {
   return (
-    <div className="rounded-lg bg-db-soft dark:bg-db-dark/30 p-5">
+    <div className="rounded-lg bg-surface-sunk  p-5">
       <p className="text-sm font-bold uppercase tracking-wide text-db-red">{title}</p>
       <p className="mt-2 font-semibold leading-7 text-ink">{text}</p>
     </div>

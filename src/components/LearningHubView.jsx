@@ -103,7 +103,7 @@ export function LearningHubView() {
           </div>
           <div className="flex flex-wrap gap-2">
             {course.tags.map(tag => (
-              <span key={tag} className="px-2.5 py-1 rounded bg-db-warm/50 dark:bg-db-dark/30 border border-db-dark/5 dark:border-white/5 text-sm font-bold text-ink">
+              <span key={tag} className="px-2.5 py-1 rounded bg-db-warm/50 dark:bg-db-dark/30 border border-line/5  text-sm font-bold text-ink">
                 {tag}
               </span>
             ))}
@@ -112,7 +112,7 @@ export function LearningHubView() {
             {course.desc}
           </p>
           {course.requirements && (
-            <div className="mt-3 rounded-lg bg-db-soft dark:bg-db-dark/30 p-3 border border-db-dark/5 dark:border-white/5">
+            <div className="mt-3 rounded-lg bg-surface-sunk  p-3 border border-line/5 ">
               <p className="text-sm font-bold text-ink mb-1">Was du dafür brauchst:</p>
               <p className="text-sm font-normal text-ink-muted">{course.requirements}</p>
             </div>

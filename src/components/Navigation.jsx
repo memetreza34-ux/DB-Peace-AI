@@ -39,7 +39,7 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
           <button
             type="button"
             onClick={onOpenSearch}
-            className="flex items-center justify-center w-11 h-11 sm:w-10 sm:h-10 rounded-xl text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10 hover:text-db-dark dark:hover:text-white transition-all bg-db-dark/5 dark:bg-white/5"
+            className="flex items-center justify-center w-11 h-11 sm:w-10 sm:h-10 rounded-xl text-ink/70  hover:bg-line/5  hover:text-ink  transition-all bg-line/5 "
             title="Suchen (Cmd+K)"
             aria-label="Suchen"
           >
@@ -52,8 +52,8 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
             aria-label="Startseite"
             className={`flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-2.5 sm:px-4 py-2 text-sm font-bold transition-all ${
               activeTab === "home"
-                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-sm"
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10 hover:text-db-dark dark:hover:text-white"
+                ? "bg-contrast  text-contrast-ink  shadow-sm"
+                : "text-ink/70  hover:bg-line/5  hover:text-ink "
             }`}
           >
             <Home className="h-4 w-4 shrink-0" />
@@ -66,8 +66,8 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
             aria-label="Sammlung"
             className={`flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-2.5 sm:px-4 py-2 text-sm font-bold transition-all ${
               activeTab === "profile"
-                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-sm"
-                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10 hover:text-db-dark dark:hover:text-white"
+                ? "bg-contrast  text-contrast-ink  shadow-sm"
+                : "text-ink/70  hover:bg-line/5  hover:text-ink "
             }`}
           >
             <User className="h-4 w-4 shrink-0" />

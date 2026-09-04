@@ -29,7 +29,7 @@ export function EmergencyModal({ isOpen, onClose }) {
           onClick={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-lg bg-white dark:bg-db-dark p-5 shadow-lg border border-line/10 outline-none"
+          className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-lg bg-surface  p-5 shadow-lg border border-line/10 outline-none"
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-line/10">
@@ -77,33 +77,33 @@ export function EmergencyModal({ isOpen, onClose }) {
             <div className="pt-4 border-t border-line/10 space-y-3">
                <h3 className="text-sm font-bold text-ink">Weitere Ansprechpartner</h3>
                
-               <a href="tel:08001110111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-db-dark/5 dark:border-white/5 hover:border-db-dark/20 dark:hover:border-white/20 transition">
+               <a href="tel:08001110111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-line/5  hover:border-line/20  transition">
                   <div>
                     <div className="font-bold text-sm text-ink">Telefonseelsorge (24/7)</div>
                     <div className="text-sm font-medium text-ink-muted">0800 111 0 111 (Kostenfrei, anonym)</div>
                   </div>
-                  <div className="rounded-full bg-white dark:bg-db-dark/80 p-2 shadow-sm border dark:border-white/10">
+                  <div className="rounded-full bg-surface  p-2 shadow-sm border dark:border-white/10">
                     <PhoneCall className="h-4 w-4 text-ink" />
                   </div>
                </a>
 
-               <a href="tel:116111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-db-dark/5 dark:border-white/5 hover:border-db-dark/20 dark:hover:border-white/20 transition">
+               <a href="tel:116111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-line/5  hover:border-line/20  transition">
                   <div>
                     <div className="font-bold text-sm text-ink">Nummer gegen Kummer</div>
                     <div className="text-sm font-medium text-ink-muted">116 111 (Kostenfrei, bis 25 Jahre)</div>
                   </div>
-                  <div className="rounded-full bg-white dark:bg-db-dark/80 p-2 shadow-sm border dark:border-white/10">
+                  <div className="rounded-full bg-surface  p-2 shadow-sm border dark:border-white/10">
                     <PhoneCall className="h-4 w-4 text-ink" />
                   </div>
                </a>
-               <div className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-db-dark/5 dark:border-white/5">
+               <div className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-line/5 ">
                   <div>
                     <div className="font-bold text-sm text-ink">DB Sicherheitszentrale</div>
                     <div className="text-sm font-medium text-ink-muted">
                       Die Nummer steht auf deinem Dienstausweis.
                     </div>
                   </div>
-                  <div className="rounded-full bg-white dark:bg-db-dark/80 p-2 shadow-sm border dark:border-white/10">
+                  <div className="rounded-full bg-surface  p-2 shadow-sm border dark:border-white/10">
                     <ShieldAlert className="h-4 w-4 text-ink" />
                   </div>
                </div>

@@ -17,6 +17,8 @@ export default {
         line: "rgb(var(--line) / <alpha-value>)",
         accent: "rgb(var(--accent) / <alpha-value>)",
         "accent-ink": "rgb(var(--accent-ink) / <alpha-value>)",
+        contrast: "rgb(var(--contrast) / <alpha-value>)",
+        "contrast-ink": "rgb(var(--contrast-ink) / <alpha-value>)",
         db: {
           red: "#E2001A", // Official DB Red — für Flächen und Text ab 18px
           redInk: "#A40013", // abgedunkelt für kleinen Text auf hellem Grund (Kontrast)

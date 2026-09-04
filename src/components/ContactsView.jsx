@@ -52,7 +52,7 @@ export function ContactsView() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-db-dark/80 rounded-lg p-5 border-2 border-red-500/20 shadow-sm flex flex-col h-full"
+          className="bg-surface  rounded-lg p-5 border-2 border-red-500/20 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-red-500 text-white p-3 rounded-xl">
@@ -79,10 +79,10 @@ export function ContactsView() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white dark:bg-db-dark/80 rounded-lg p-5 border border-line/10 shadow-sm flex flex-col h-full"
+          className="bg-surface  rounded-lg p-5 border border-line/10 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-db-dark text-white dark:bg-white dark:text-db-dark p-3 rounded-xl">
+            <div className="bg-contrast text-contrast-ink   p-3 rounded-xl">
               <Building2 className="w-6 h-6" />
             </div>
             <h2 className="text-xl font-bold text-ink">Meldewege der DB</h2>
@@ -104,7 +104,7 @@ export function ContactsView() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white dark:bg-db-dark/80 rounded-lg p-5 border border-line/10 shadow-sm flex flex-col h-full"
+          className="bg-surface  rounded-lg p-5 border border-line/10 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 p-3 rounded-xl">
@@ -188,7 +188,7 @@ export function ContactsView() {
                   className="rounded-xl bg-surface p-4 border border-line/10"
                 >
                   <h3 className="font-bold text-sm text-ink">{rolle?.kurz}</h3>
-                  <p className="mb-3 text-sm font-normal text-db-rail dark:text-white/50">
+                  <p className="mb-3 text-sm font-normal text-ink-muted ">
                     {rolle?.name}
                   </p>
                   {personen.length > 0 ? (
@@ -199,14 +199,14 @@ export function ContactsView() {
                           <p className="text-sm font-normal text-ink-muted">
                             {person.funktion}
                           </p>
-                          <p className="text-sm font-medium text-db-rail/80 dark:text-white/50">
+                          <p className="text-sm font-medium text-ink-muted ">
                             {person.erreichbar}
                           </p>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="flex items-start gap-1.5 text-sm font-normal text-db-rail/80 dark:text-white/50">
+                    <p className="flex items-start gap-1.5 text-sm font-normal text-ink-muted ">
                       <Info className="mt-px h-3.5 w-3.5 shrink-0" />
                       <span>Für diesen Standort noch nicht hinterlegt.</span>
                     </p>
@@ -234,7 +234,7 @@ export function ContactsView() {
                     <PhoneCall className="w-3.5 h-3.5" /> {eintrag.wert}
                   </a>
                 ) : (
-                  <p className="text-sm font-normal text-db-rail/80 dark:text-white/50 flex items-start gap-1.5">
+                  <p className="text-sm font-normal text-ink-muted  flex items-start gap-1.5">
                     <Info className="w-3.5 h-3.5 shrink-0 mt-px" />
                     <span>{eintrag.hinweis}</span>
                   </p>
@@ -271,7 +271,7 @@ export function ContactsView() {
         </div>
       </motion.div>
 
-      <p className="mt-6 text-center text-sm font-normal text-db-rail/70 dark:text-white/40">
+      <p className="mt-6 text-center text-sm font-normal text-ink-muted ">
         Kontaktdaten zuletzt geprüft am {new Date(GEPRUEFT_AM).toLocaleDateString("de-DE")} ·
         Quellen: deutschebahn.com (Compliance – Hinweise geben), railbow.deutschebahn.com
       </p>
@@ -285,8 +285,8 @@ function TelefonKarte({ name, nummer, desc, dringend }) {
       className={`p-4 rounded-xl border ${
         dringend
           ? "bg-red-50 dark:bg-red-950/20 border-red-100 dark:border-red-900/30"
-          : "bg-db-dark/5 dark:bg-white/5 border-transparent"
-      } transition hover:border-db-dark/20 dark:hover:border-white/20`}
+          : "bg-line/5  border-transparent"
+      } transition hover:border-line/20 `}
     >
       <h3
         className={`font-bold mb-1 ${
@@ -303,7 +303,7 @@ function TelefonKarte({ name, nummer, desc, dringend }) {
         className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition ${
           dringend
             ? "bg-red-600 text-white hover:bg-red-700"
-            : "bg-white dark:bg-db-dark text-ink border border-line/10 hover:shadow-sm"
+            : "bg-surface  text-ink border border-line/10 hover:shadow-sm"
         }`}
       >
         <PhoneCall className="w-4 h-4" />
@@ -324,7 +324,7 @@ function MeldewegKarte({ weg }) {
       : null;
 
   return (
-    <div className="p-4 rounded-xl bg-db-dark/5 dark:bg-white/5 border border-transparent transition hover:border-db-dark/20 dark:hover:border-white/20">
+    <div className="p-4 rounded-xl bg-line/5  border border-transparent transition hover:border-line/20 ">
       <h3 className="font-bold mb-1 text-ink">{weg.name}</h3>
       <p className="text-sm font-medium text-ink-muted mb-3 leading-relaxed">
         {weg.beschreibung}
@@ -334,7 +334,7 @@ function MeldewegKarte({ weg }) {
         <a
           href={ziel.href}
           {...(ziel.extern ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-white dark:bg-db-dark text-ink border border-line/10 hover:shadow-sm transition break-all"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-surface  text-ink border border-line/10 hover:shadow-sm transition break-all"
         >
           <ziel.icon className="w-4 h-4 shrink-0" />
           {ziel.label}
@@ -344,7 +344,7 @@ function MeldewegKarte({ weg }) {
       )}
 
       {weg.erreichbarkeit && (
-        <p className="mt-2 text-sm font-normal text-db-rail/80 dark:text-white/50">
+        <p className="mt-2 text-sm font-normal text-ink-muted ">
           {weg.erreichbarkeit}
         </p>
       )}
@@ -354,7 +354,7 @@ function MeldewegKarte({ weg }) {
 
 function BeratungKarte({ eintrag }) {
   return (
-    <div className="p-4 rounded-xl bg-db-dark/5 dark:bg-white/5 border border-transparent transition hover:border-db-dark/20 dark:hover:border-white/20">
+    <div className="p-4 rounded-xl bg-line/5  border border-transparent transition hover:border-line/20 ">
       <h3 className="font-bold mb-1 text-ink">{eintrag.name}</h3>
       <p className="text-sm font-medium text-ink-muted mb-3 leading-relaxed">
         {eintrag.beschreibung}
@@ -365,14 +365,14 @@ function BeratungKarte({ eintrag }) {
           href={eintrag.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-white dark:bg-db-dark text-ink border border-line/10 hover:shadow-sm transition"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-surface  text-ink border border-line/10 hover:shadow-sm transition"
         >
           <ExternalLink className="w-4 h-4" /> Zur Seite
         </a>
       )}
 
       {eintrag.intranet && (
-        <p className="mt-2 text-sm font-normal text-db-rail/80 dark:text-white/50 flex items-start gap-1.5">
+        <p className="mt-2 text-sm font-normal text-ink-muted  flex items-start gap-1.5">
           <Info className="w-3.5 h-3.5 shrink-0 mt-px" />
           <span>Im DB-Intranet: {eintrag.intranet}</span>
         </p>

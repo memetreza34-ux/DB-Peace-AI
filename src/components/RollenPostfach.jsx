@@ -141,7 +141,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
   };
 
   return (
-    <div className="min-h-screen bg-db-soft dark:bg-db-dark">
+    <div className="min-h-screen bg-surface-sunk ">
       <header className="border-b border-line/10 bg-surface">
         <div className="mx-auto max-w-7xl px-4 sm:px-5 py-4">
           <div className="flex flex-wrap items-start justify-between gap-4">
@@ -153,7 +153,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
               <p className="mt-1 max-w-2xl text-sm font-normal text-ink-muted">
                 {rolle.beschreibung}
               </p>
-              <p className="mt-2 flex flex-wrap items-center gap-x-2 text-sm font-normal text-db-rail/80 dark:text-white/50">
+              <p className="mt-2 flex flex-wrap items-center gap-x-2 text-sm font-normal text-ink-muted ">
                 {(rolle.grundlage || rolle.grundlageOffen) && (
                   <span className="flex items-center gap-1.5 font-bold">
                     <Scale className="h-3.5 w-3.5" />
@@ -176,7 +176,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
               <button
                 type="button"
                 onClick={onExit}
-                className="flex min-h-11 items-center gap-2 rounded-xl bg-db-dark dark:bg-white px-4 py-2 text-sm font-bold text-white dark:text-db-dark transition hover:opacity-90"
+                className="flex min-h-11 items-center gap-2 rounded-xl bg-contrast  px-4 py-2 text-sm font-bold text-contrast-ink  transition hover:opacity-90"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Zurück zur Azubi-Ansicht
@@ -267,13 +267,13 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                 <Inbox className="h-4 w-4 text-db-red" />
                 Posteingang
               </h2>
-              <span className="rounded-full bg-db-soft dark:bg-white/10 px-2.5 py-0.5 text-sm font-medium text-ink-muted">
+              <span className="rounded-full bg-surface-sunk  px-2.5 py-0.5 text-sm font-medium text-ink-muted">
                 {faelle.length}
               </span>
             </div>
 
             {faelle.length === 0 ? (
-              <p className="p-5 text-center text-sm font-normal text-db-rail dark:text-white/50">
+              <p className="p-5 text-center text-sm font-normal text-ink-muted ">
                 Keine Fälle für diese Rolle.
               </p>
             ) : (
@@ -301,7 +301,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                       <p className="mt-1.5 line-clamp-2 text-sm font-normal text-ink-muted">
                         {fall.zusammenfassung}
                       </p>
-                      <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-medium text-db-rail/70 dark:text-white/40">
+                      <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-medium text-ink-muted ">
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {fall.eingegangen}
@@ -323,7 +323,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
           {/* Detail */}
           <div className="lg:col-span-7 rounded-xl border border-line/10 bg-surface">
             {!gewaehlt ? (
-              <p className="p-6 text-center text-sm font-normal text-db-rail dark:text-white/50">
+              <p className="p-6 text-center text-sm font-normal text-ink-muted ">
                 Wähle links einen Fall aus.
               </p>
             ) : (
@@ -353,7 +353,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                     {zeigtFristen && gewaehlt.frist && (
                       <>
                         <span>·</span>
-                        <span className="rounded bg-db-soft dark:bg-white/10 px-2 py-0.5">
+                        <span className="rounded bg-surface-sunk  px-2 py-0.5">
                           {gewaehlt.frist}
                         </span>
                       </>
@@ -362,7 +362,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                 </div>
 
                 {gewaehlt.status === "abgeschlossen" && (
-                  <p className="border-t border-line/10 bg-db-soft/60 dark:bg-white/5 px-5 py-3 text-sm font-normal leading-relaxed text-ink-muted">
+                  <p className="border-t border-line/10 bg-surface-sunk  px-5 py-3 text-sm font-normal leading-relaxed text-ink-muted">
                     Abgeschlossen. Wie lange ein abgeschlossener Vorgang sichtbar bleibt und wer
                     ihn löscht, ist vor einem Pilotbetrieb zu klären — die App legt das nicht
                     eigenmächtig fest.
@@ -379,7 +379,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
 
                 {aktionen.length > 0 && (
                   <div className="border-t border-line/10 p-4">
-                    <p className="mb-2 text-xs font-bold uppercase tracking-wide text-db-rail dark:text-white/50">
+                    <p className="mb-2 text-xs font-bold uppercase tracking-wide text-ink-muted ">
                       Was {rolle.kurz} hier tun kann
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -394,7 +394,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                           <UserCheck className="h-4 w-4" />
                           {aktion.label}
                           {aktion.grundlage && (
-                            <span className="font-medium text-db-rail/70 dark:text-white/40">
+                            <span className="font-medium text-ink-muted ">
                               {aktion.grundlage}
                             </span>
                           )}
@@ -484,7 +484,7 @@ function Hinweisleiste({ rolleId, fall }) {
   if (hinweise.length === 0 && (fristen.length === 0 || !eingang)) return null;
 
   return (
-    <div className="space-y-2 border-t border-line/10 bg-db-soft/60 dark:bg-white/5 p-4">
+    <div className="space-y-2 border-t border-line/10 bg-surface-sunk  p-4">
       {eingang &&
         fristen.map((frist) => {
           const stand = fristStand(frist, eingang);
@@ -520,7 +520,7 @@ function Hinweisleiste({ rolleId, fall }) {
             <p className="mt-0.5 text-sm font-normal leading-relaxed text-ink-muted">
               {hinweis.text}
             </p>
-            <p className="mt-1 text-xs font-bold uppercase tracking-wide text-db-rail/70 dark:text-white/40">
+            <p className="mt-1 text-xs font-bold uppercase tracking-wide text-ink-muted ">
               {hinweis.grundlage} · keine Rechtsberatung
             </p>
           </div>
@@ -582,7 +582,7 @@ function StatusMarke({ status }) {
 function Nachricht({ eintrag, rolleKurz }) {
   if (eintrag.von === "system") {
     return (
-      <p className="flex items-center justify-center gap-2 text-center text-sm font-medium text-db-rail/70 dark:text-white/40">
+      <p className="flex items-center justify-center gap-2 text-center text-sm font-medium text-ink-muted ">
         <ShieldCheck className="h-3.5 w-3.5" />
         {eintrag.text} · {eintrag.zeit}
       </p>
@@ -595,8 +595,8 @@ function Nachricht({ eintrag, rolleKurz }) {
       <div
         className={`max-w-[85%] rounded-xl px-3.5 py-2.5 ${
           vonRolle
-            ? "bg-db-dark dark:bg-white text-white dark:text-db-dark"
-            : "bg-db-soft dark:bg-white/10 text-ink"
+            ? "bg-contrast  text-contrast-ink "
+            : "bg-surface-sunk  text-ink"
         }`}
       >
         <p className="text-xs font-bold uppercase tracking-wide opacity-60">

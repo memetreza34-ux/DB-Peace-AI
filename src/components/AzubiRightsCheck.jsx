@@ -81,8 +81,8 @@ export function AzubiRightsCheck() {
               key={right.id}
               className={`rounded-md border transition-colors ${
                 isExpanded
-                  ? "bg-surface border-db-dark/20 dark:border-white/20 shadow-md"
-                  : "bg-white/60 dark:bg-db-dark/30 border-db-dark/5 dark:border-white/10 hover:border-db-dark/10 dark:hover:border-white/20 hover:bg-white dark:hover:bg-db-dark/50"
+                  ? "bg-surface border-line/20  shadow-md"
+                  : "bg-white/60 dark:bg-db-dark/30 border-line/5  hover:border-db-dark/10 dark:hover:border-white/20 hover:bg-white dark:hover:bg-db-dark/50"
               }`}
             >
               <button
