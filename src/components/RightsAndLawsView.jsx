@@ -73,7 +73,7 @@ export function RightsAndLawsView({ onBack }) {
               <Icon className="h-6 w-6 text-db-red" />
             </div>
             <div>
-              <p className="text-sm font-bold text-ink-muted">{law.subtitle}</p>
+              <p className="text-sm font-medium text-ink-muted">{law.subtitle}</p>
               <h3 className="text-lg font-bold text-ink">{law.paragraph}</h3>
             </div>
           </div>
@@ -92,7 +92,7 @@ export function RightsAndLawsView({ onBack }) {
                 </p>
                 <p className="text-sm font-medium text-ink italic">"{law.officialText}"</p>
                 {law.quelle && (
-                  <p className="mt-2 text-[11px] font-semibold text-db-rail dark:text-white/50">
+                  <p className="mt-2 text-sm font-normal text-db-rail dark:text-white/50">
                     Quelle:{" "}
                     {law.quelleUrl ? (
                       <a
@@ -122,8 +122,8 @@ export function RightsAndLawsView({ onBack }) {
               <div className="flex items-start gap-3 p-3 bg-db-soft dark:bg-db-dark/30 rounded-lg">
                 <Info className="h-5 w-5 text-db-red shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-xs font-bold text-ink">Tipp für die Praxis:</p>
-                  <p className="text-xs font-semibold text-ink-muted">{law.actionTip}</p>
+                  <p className="text-sm font-bold text-ink">Tipp für die Praxis:</p>
+                  <p className="text-sm font-normal text-ink-muted">{law.actionTip}</p>
                 </div>
               </div>
             </div>
@@ -141,12 +141,12 @@ export function RightsAndLawsView({ onBack }) {
         <div className="space-y-2 max-w-2xl relative z-10">
           <button
             onClick={onBack}
-            className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/20 transition "
+            className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold text-white hover:bg-white/20 transition "
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Zurück zum Dashboard
           </button>
           
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm ">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-db-warm ">
             <Scale className="h-3.5 w-3.5 text-amber-400" />
             <span>Deine Rechte</span>
           </div>
@@ -156,7 +156,7 @@ export function RightsAndLawsView({ onBack }) {
           {/* Kein Live-Abgleich: Die Texte liegen statisch in src/data/lawsData.json.
               Ein "Live Sync API"-Siegel hätte Aktualität vorgetäuscht, die es nicht gibt. */}
           <div className="flex items-center gap-2 mb-2">
-            <span className="flex items-center gap-1.5 text-xs font-bold text-white/70 bg-white/10 px-2 py-0.5 rounded border border-white/20">
+            <span className="flex items-center gap-1.5 text-sm font-medium text-white/70 bg-white/10 px-2 py-0.5 rounded border border-white/20">
               <Activity className="w-3 h-3" />
               Orientierung, keine Rechtsberatung
             </span>
@@ -181,13 +181,13 @@ export function RightsAndLawsView({ onBack }) {
       <div className="flex bg-db-dark/5 dark:bg-white/5 p-1 rounded-xl w-full max-w-md mx-auto">
         <button
           onClick={() => { setActiveTab("bundesgesetze"); setOpenCard(null); setSearchQuery(""); }}
-          className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition ${activeTab === 'bundesgesetze' ? 'bg-white dark:bg-db-dark text-ink shadow-sm' : 'text-ink-muted hover:text-db-dark dark:hover:text-white'}`}
+          className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition ${activeTab === 'bundesgesetze' ? 'bg-white dark:bg-db-dark text-ink shadow-sm' : 'text-ink-muted hover:text-db-dark dark:hover:text-white'}`}
         >
           Bundesgesetze
         </button>
         <button
           onClick={() => { setActiveTab("dbRichtlinien"); setOpenCard(null); setSearchQuery(""); }}
-          className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition ${activeTab === 'dbRichtlinien' ? 'bg-white dark:bg-db-dark text-ink shadow-sm' : 'text-ink-muted hover:text-db-dark dark:hover:text-white'}`}
+          className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition ${activeTab === 'dbRichtlinien' ? 'bg-white dark:bg-db-dark text-ink shadow-sm' : 'text-ink-muted hover:text-db-dark dark:hover:text-white'}`}
         >
           DB Richtlinien
         </button>
@@ -206,7 +206,7 @@ export function RightsAndLawsView({ onBack }) {
           className="w-full bg-surface border border-line/10 rounded-xl py-3.5 pl-11 pr-4 text-sm font-medium text-ink placeholder:text-db-dark/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-db-red/20 focus:border-db-red shadow-sm transition-all"
         />
         {searchQuery && (
-          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-xs font-bold text-db-dark/40 dark:text-white/40">
+          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-sm font-medium text-db-dark/40 dark:text-white/40">
             {filteredLaws.length} Treffer
           </div>
         )}

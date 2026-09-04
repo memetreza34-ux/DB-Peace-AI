@@ -175,7 +175,7 @@ export default function SupportPage({ onNavigate }) {
             <PhoneCall className="h-6 w-6" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-ink">Finde die richtige Unterstützung</h2>
-          <p className="text-sm font-semibold text-ink-muted max-w-lg mx-auto">
+          <p className="text-sm font-normal text-ink-muted max-w-lg mx-auto">
             Wähle aus, in welcher Situation du dich befindest. Wir zeigen dir sofort, welche Anlaufstellen bei der DB und extern für dich da sind.
           </p>
 
@@ -192,7 +192,7 @@ export default function SupportPage({ onNavigate }) {
                     <Icon className="h-5 w-5 text-green-600" />
                     <span className="font-bold text-ink group-hover:text-green-700">{sit.title}</span>
                   </div>
-                  <p className="text-xs font-semibold text-ink-muted">{sit.explanation}</p>
+                  <p className="text-sm font-normal text-ink-muted">{sit.explanation}</p>
                 </button>
               );
             })}
@@ -205,7 +205,7 @@ export default function SupportPage({ onNavigate }) {
         <div className="space-y-6">
           <button
             onClick={goBack}
-            className="flex items-center gap-2 text-sm font-bold text-ink-muted hover:text-green-600 transition"
+            className="flex items-center gap-2 text-sm font-medium text-ink-muted hover:text-green-600 transition"
           >
             <ArrowLeft className="h-4 w-4" /> Zurück zur Übersicht
           </button>
@@ -233,13 +233,13 @@ export default function SupportPage({ onNavigate }) {
                         <div>
                           <div className="flex items-center gap-2">
                              <span className={`font-bold text-sm ${details?.isUrgent ? 'text-red-700 dark:text-red-400' : 'text-ink'}`}>{contactName}</span>
-                             <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${details?.isUrgent ? 'bg-red-100 text-red-800' : 'bg-db-warm dark:bg-white/10 text-db-dark/70 dark:text-white/70'}`}>
+                             <span className={`px-2 py-0.5 rounded text-xs font-bold uppercase ${details?.isUrgent ? 'bg-red-100 text-red-800' : 'bg-db-warm dark:bg-white/10 text-db-dark/70 dark:text-white/70'}`}>
                                 {details?.role || 'Intern'}
                              </span>
                           </div>
-                          <p className="text-xs font-semibold text-ink-muted mt-1">{details?.desc}</p>
+                          <p className="text-sm font-normal text-ink-muted mt-1">{details?.desc}</p>
                           {!details?.ziel && details?.hinweis && (
-                            <p className="text-[11px] font-semibold text-db-rail/80 dark:text-white/50 mt-1.5">
+                            <p className="text-sm font-normal text-db-rail/80 dark:text-white/50 mt-1.5">
                               {details.hinweis}
                             </p>
                           )}
@@ -250,12 +250,12 @@ export default function SupportPage({ onNavigate }) {
                             {...(details.ziel.extern
                               ? { target: "_blank", rel: "noopener noreferrer" }
                               : {})}
-                            className={`shrink-0 rounded-lg px-4 py-2 text-xs font-bold transition text-center ${details?.isUrgent ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-db-dark text-white hover:bg-black'}`}
+                            className={`shrink-0 rounded-lg px-4 py-2 text-sm font-bold transition text-center ${details?.isUrgent ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-db-dark text-white hover:bg-black'}`}
                           >
                             {details.ziel.label}
                           </a>
                         ) : (
-                          <span className="shrink-0 rounded-lg border border-line/15 px-4 py-2 text-xs font-bold text-ink-muted text-center">
+                          <span className="shrink-0 rounded-lg border border-line/15 px-4 py-2 text-sm font-medium text-ink-muted text-center">
                             Vor Ort erfragen
                           </span>
                         )}
@@ -267,7 +267,7 @@ export default function SupportPage({ onNavigate }) {
           </div>
           
           <div className="rounded-xl border border-line/10 bg-db-soft dark:bg-db-dark/50 p-5 text-center">
-             <p className="text-xs font-semibold text-ink-muted">
+             <p className="text-sm font-normal text-ink-muted">
                Noch unsicher, was du tun sollst? Du kannst den Vorfall erst mal nur für dich <strong className="text-ink cursor-pointer underline" onClick={() => onNavigate && onNavigate("record-report")}>aufschreiben</strong> – ohne dass jemand davon erfährt. Später entscheidest du, ob etwas daraus wird.
              </p>
           </div>

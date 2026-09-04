@@ -105,7 +105,7 @@ function Principles() {
           <article key={title} className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-sm">
             <Icon className="text-db-red" size={24} aria-hidden="true" />
             <h3 className="mt-4 text-lg font-bold">{title}</h3>
-            <p className="mt-2 text-sm font-semibold leading-6 text-db-rail">{text}</p>
+            <p className="mt-2 text-sm font-normal leading-6 text-db-rail">{text}</p>
           </article>
         ))}
       </div>
@@ -130,7 +130,7 @@ function BoundaryColumn({ allowed = false, items, title }) {
       <h3 className="text-2xl font-bold">{title}</h3>
       <div className="mt-5 space-y-3">
         {items.map((item) => (
-          <p key={item} className={`flex gap-3 font-semibold ${allowed ? "text-db-rail" : "text-white/80"}`}>
+          <p key={item} className={`flex gap-3 font-normal ${allowed ? "text-db-rail" : "text-white/80"}`}>
             {allowed ? (
               <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-600" size={18} />
             ) : (
@@ -156,7 +156,7 @@ function UserControl() {
     <Section title="Nutzerkontrolle" text="Nutzende behalten die Kontrolle über ihre Eingaben.">
       <div className="grid gap-3 md:grid-cols-2">
         {items.map((item) => (
-          <div key={item} className="flex gap-3 rounded-lg border border-db-dark/10 bg-white p-4 font-semibold text-db-rail shadow-sm">
+          <div key={item} className="flex gap-3 rounded-lg border border-db-dark/10 bg-white p-4 font-normal text-db-rail shadow-sm">
             <BadgeCheck className="mt-0.5 shrink-0 text-db-red" size={18} />
             {item}
           </div>
@@ -217,7 +217,7 @@ function Geraeteeinstellung() {
   return (
     <div className="mt-10 rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
       <h3 className="text-2xl font-bold">Dieses Gerät</h3>
-      <p className="mt-3 max-w-3xl font-semibold leading-7 text-db-rail">
+      <p className="mt-3 max-w-3xl font-normal leading-7 text-db-rail">
         {modus === PERSOENLICH
           ? "Eingestellt als persönliches Gerät: Deine Einträge bleiben gespeichert und die App ist mit einer PIN geschützt."
           : "Eingestellt als geteiltes Gerät: Die App speichert nichts dauerhaft. Sobald das Fenster geschlossen wird, ist alles weg — auch für die nächste Person."}
@@ -229,7 +229,7 @@ function Geraeteeinstellung() {
       >
         {modus === PERSOENLICH ? "Auf geteiltes Gerät umstellen" : "Auf persönliches Gerät umstellen"}
       </button>
-      <p className="mt-3 text-xs font-semibold text-db-rail">
+      <p className="mt-3 text-sm font-normal text-db-rail">
         Beim Umstellen werden alle gespeicherten Inhalte gelöscht.
       </p>
     </div>
@@ -254,7 +254,7 @@ function Section({ children, text, title }) {
     <div className="mt-10">
       <div className="max-w-3xl">
         <h3 className="text-3xl font-bold text-db-dark">{title}</h3>
-        {text && <p className="mt-3 font-semibold leading-7 text-db-rail">{text}</p>}
+        {text && <p className="mt-3 font-normal leading-7 text-db-rail">{text}</p>}
       </div>
       <div className="mt-6">{children}</div>
     </div>

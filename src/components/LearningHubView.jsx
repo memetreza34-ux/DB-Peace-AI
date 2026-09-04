@@ -54,7 +54,7 @@ export function LearningHubView() {
     <div className="bg-surface-inverse p-6 text-ink-inverse relative overflow-hidden">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2 max-w-2xl">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-db-warm ">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-db-warm ">
             <GraduationCap className="h-3.5 w-3.5 text-amber-400" />
             <span>Wissen &amp; Vorbeugen</span>
           </div>
@@ -103,7 +103,7 @@ export function LearningHubView() {
           </div>
           <div className="flex flex-wrap gap-2">
             {course.tags.map(tag => (
-              <span key={tag} className="px-2.5 py-1 rounded bg-db-warm/50 dark:bg-db-dark/30 border border-db-dark/5 dark:border-white/5 text-[10px] font-bold text-ink">
+              <span key={tag} className="px-2.5 py-1 rounded bg-db-warm/50 dark:bg-db-dark/30 border border-db-dark/5 dark:border-white/5 text-sm font-bold text-ink">
                 {tag}
               </span>
             ))}
@@ -113,8 +113,8 @@ export function LearningHubView() {
           </p>
           {course.requirements && (
             <div className="mt-3 rounded-lg bg-db-soft dark:bg-db-dark/30 p-3 border border-db-dark/5 dark:border-white/5">
-              <p className="text-xs font-bold text-ink mb-1">Was du dafür brauchst:</p>
-              <p className="text-xs font-semibold text-ink-muted">{course.requirements}</p>
+              <p className="text-sm font-bold text-ink mb-1">Was du dafür brauchst:</p>
+              <p className="text-sm font-normal text-ink-muted">{course.requirements}</p>
             </div>
           )}
         </div>
@@ -149,7 +149,7 @@ export function LearningHubView() {
             <Search className="h-6 w-6 text-ink" />
             Suchergebnisse für "{searchQuery}"
           </h2>
-          <p className="text-sm font-semibold text-ink-muted mt-1">
+          <p className="text-sm font-normal text-ink-muted mt-1">
             {filteredCourses.length} {filteredCourses.length === 1 ? "Kurs" : "Kurse"} gefunden
           </p>
         </div>
@@ -196,7 +196,7 @@ export function LearningHubView() {
                     <Icon className={`h-6 w-6 ${cat.textColor}`} />
                     <span className="font-bold text-ink text-lg group-hover:text-db-red dark:group-hover:text-db-red transition-colors">{cat.title}</span>
                   </div>
-                  <p className="text-sm font-semibold text-ink-muted">{cat.desc}</p>
+                  <p className="text-sm font-normal text-ink-muted">{cat.desc}</p>
                 </button>
               );
             })}
@@ -213,7 +213,7 @@ export function LearningHubView() {
         {renderHeader()}
         <button
           onClick={() => setActiveCategory(null)}
-          className="flex items-center gap-2 text-sm font-bold text-ink-muted hover:text-db-red dark:hover:text-db-red transition"
+          className="flex items-center gap-2 text-sm font-medium text-ink-muted hover:text-db-red dark:hover:text-db-red transition"
         >
           <ArrowLeft className="h-4 w-4" /> Zurück zum Katalog
         </button>
@@ -235,7 +235,7 @@ export function LearningHubView() {
       <div className="flex items-center justify-between">
         <button
           onClick={() => setActiveCategory(null)}
-          className="flex items-center gap-2 text-sm font-bold text-ink-muted hover:text-db-red dark:hover:text-db-red transition"
+          className="flex items-center gap-2 text-sm font-medium text-ink-muted hover:text-db-red dark:hover:text-db-red transition"
         >
           <ArrowLeft className="h-4 w-4" /> Zurück zum Katalog
         </button>
@@ -246,7 +246,7 @@ export function LearningHubView() {
           <currentCategoryObj.icon className={`h-6 w-6 ${currentCategoryObj.textColor}`} />
           {currentCategoryObj.title}
         </h2>
-        <p className="text-sm font-semibold text-ink-muted mt-1">
+        <p className="text-sm font-normal text-ink-muted mt-1">
           {currentCategoryObj.desc}
         </p>
       </div>

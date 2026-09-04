@@ -52,7 +52,7 @@ export function AISmartReport({ onReportGenerated }) {
         </div>
         <div>
           <h3 className="font-bold">KI-Meldeassistent</h3>
-          <p className="text-xs text-white/70">Automatische Datenextraktion aus Freitext</p>
+          <p className="text-sm text-white/70">Automatische Datenextraktion aus Freitext</p>
         </div>
       </div>
 
@@ -85,7 +85,7 @@ export function AISmartReport({ onReportGenerated }) {
                 <CheckCircle2 className="w-5 h-5" />
                 Protokoll erfolgreich generiert
               </div>
-              <div className="space-y-2 text-green-900 dark:text-green-300 mb-4 text-xs bg-white/50 dark:bg-black/20 p-3 rounded-lg">
+              <div className="space-y-2 text-green-900 dark:text-green-300 mb-4 text-sm bg-white/50 dark:bg-black/20 p-3 rounded-lg">
                 <p><strong>Datum:</strong> {generatedReport.date}</p>
                 <p><strong>Uhrzeit:</strong> {generatedReport.time}</p>
                 <p><strong>Ort:</strong> {generatedReport.location}</p>

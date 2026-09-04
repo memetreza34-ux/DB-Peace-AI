@@ -60,7 +60,7 @@ export function QuizWidget() {
     return (
       <div className="w-full h-64 rounded-lg bg-white dark:bg-db-dark/80  border border-line/10 shadow-md flex flex-col items-center justify-center gap-4 transition-colors">
         <Loader2 className="h-8 w-8 text-db-red animate-spin" />
-        <p className="text-sm font-semibold text-ink-muted">
+        <p className="text-sm font-normal text-ink-muted">
           KI generiert neue Quiz-Fragen...
         </p>
       </div>

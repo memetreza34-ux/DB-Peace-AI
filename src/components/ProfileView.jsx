@@ -107,12 +107,12 @@ export function ProfileView() {
                      >
                        <div className="flex justify-between items-start mb-1">
                           <span className="font-bold text-ink text-sm">{ticket.id}</span>
-                          <span className="shrink-0 whitespace-nowrap rounded bg-db-dark/5 dark:bg-white/10 px-2 py-0.5 text-[10px] font-bold text-ink">
+                          <span className="shrink-0 whitespace-nowrap rounded bg-db-dark/5 dark:bg-white/10 px-2 py-0.5 text-sm font-bold text-ink">
                             {{ offen: "offen", "in-bearbeitung": "läuft", abgeschlossen: "erledigt" }[ticket.status] ?? ticket.status}
                           </span>
                        </div>
-                       <p className="text-xs font-bold text-ink-muted mb-1 truncate">{ticket.kategorie}</p>
-                       <p className="text-[11px] font-semibold text-db-rail/70 dark:text-white/40 truncate">
+                       <p className="text-sm font-medium text-ink-muted mb-1 truncate">{ticket.kategorie}</p>
+                       <p className="text-sm font-normal text-db-rail/70 dark:text-white/40 truncate">
                          an {rolleFinden(ticket.empfaenger)?.kurz ?? "unbekannt"}
                        </p>
                      </button>
@@ -130,11 +130,11 @@ export function ProfileView() {
                           <div key={msg.id} className={`flex ${msg.von === 'melder' ? 'justify-end' : 'justify-start'}`}>
                             {msg.von === 'system' ? (
                               <div className="w-full text-center py-2">
-                                 <span className="text-[10px] font-bold uppercase text-db-rail dark:text-white/40 bg-db-dark/5 dark:bg-white/5 px-3 py-1 rounded-full">{msg.text}</span>
+                                 <span className="text-xs font-bold uppercase text-db-rail dark:text-white/40 bg-db-dark/5 dark:bg-white/5 px-3 py-1 rounded-full">{msg.text}</span>
                               </div>
                             ) : (
                               <div className={`max-w-[85%] rounded-md p-4 ${msg.von === 'melder' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-surface-sunk text-ink rounded-tl-sm border border-line/10'}`}>
-                                 <div className="flex items-center gap-2 mb-1 opacity-70 text-[10px] font-bold uppercase tracking-wider">
+                                 <div className="flex items-center gap-2 mb-1 opacity-70 text-xs font-bold uppercase tracking-wider">
                                     {msg.von === 'melder'
                                       ? 'Du'
                                       : rolleFinden(selectedTicket.empfaenger)?.kurz ?? 'Bearbeitung'}{' '}
@@ -184,7 +184,7 @@ export function ProfileView() {
             </p>
             {savedRecords.map(record => (
               <div key={record.id} className="bg-surface border border-line/10 rounded-md p-5 shadow-sm hover:shadow-md transition">
-                <div className="flex items-center gap-2 text-xs font-bold text-ink-muted mb-2">
+                <div className="flex items-center gap-2 text-sm font-medium text-ink-muted mb-2">
                   <Clock className="w-3 h-3" />
                   {record.date} • {record.time}
                 </div>
@@ -197,7 +197,7 @@ export function ProfileView() {
                     type="button"
                     disabled
                     title="Im Prototyp noch nicht verfügbar"
-                    className="text-xs font-bold bg-db-dark/5 dark:bg-white/5 px-3 py-1.5 rounded-lg text-db-dark/40 dark:text-white/40 cursor-not-allowed"
+                    className="text-sm font-medium bg-db-dark/5 dark:bg-white/5 px-3 py-1.5 rounded-lg text-db-dark/40 dark:text-white/40 cursor-not-allowed"
                   >
                     Bearbeiten
                   </button>
@@ -205,11 +205,11 @@ export function ProfileView() {
                     type="button"
                     disabled
                     title="Im Prototyp noch nicht verfügbar"
-                    className="text-xs font-bold bg-db-red/5 px-3 py-1.5 rounded-lg text-db-red/40 cursor-not-allowed"
+                    className="text-sm font-bold bg-db-red/5 px-3 py-1.5 rounded-lg text-db-red/40 cursor-not-allowed"
                   >
                     Meldung daraus erstellen
                   </button>
-                  <span className="text-[11px] font-semibold text-db-rail/70 dark:text-white/40">
+                  <span className="text-sm font-normal text-db-rail/70 dark:text-white/40">
                     im Prototyp noch nicht angebunden
                   </span>
                 </div>
@@ -224,17 +224,17 @@ export function ProfileView() {
             <div className="bg-surface border border-line/10 rounded-md p-6 shadow-sm">
               <div className="space-y-6">
                 {moodHistory.length === 0 ? (
-                  <p className="py-6 text-center text-sm font-semibold text-db-rail dark:text-white/50">
+                  <p className="py-6 text-center text-sm font-normal text-db-rail dark:text-white/50">
                     Noch kein Eintrag. Auf der Startseite kannst du festhalten, wie deine Schicht war.
                   </p>
                 ) : (
                   moodHistory.map((item, idx) => (
                     <div key={idx} className="flex items-center justify-between gap-4 border-b border-db-dark/5 dark:border-white/5 pb-4 last:border-0 last:pb-0">
                       <div className="min-w-0">
-                        <div className="text-xs font-bold text-ink-muted mb-1">{item.date}</div>
+                        <div className="text-sm font-medium text-ink-muted mb-1">{item.date}</div>
                         <div className="font-bold text-ink">{item.mood}</div>
                         {item.notiz && (
-                          <p className="mt-1 text-xs font-semibold text-ink-muted">{item.notiz}</p>
+                          <p className="mt-1 text-sm font-normal text-ink-muted">{item.notiz}</p>
                         )}
                       </div>
                       {item.Icon && <item.Icon className={`h-8 w-8 shrink-0 ${item.color}`} />}
@@ -260,7 +260,7 @@ export function ProfileView() {
                     <h4 className="font-bold text-ink text-lg group-hover:text-db-red transition">{course.title}</h4>
                   </div>
                   <div className="mt-6 flex items-center justify-between">
-                    <span className="text-xs font-bold text-db-dark/70 dark:text-white/70">{course.duration}</span>
+                    <span className="text-sm font-medium text-db-dark/70 dark:text-white/70">{course.duration}</span>
                     <ChevronRight className="w-5 h-5 text-db-dark/30 dark:text-white/30 group-hover:text-db-red transition translate-x-0 group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -291,7 +291,7 @@ export function ProfileView() {
         <div className="relative z-10 text-white flex-1">
           <h1 className="text-3xl font-bold mb-1">Mein DB Peace</h1>
           <p className="text-white/70 font-medium mb-2">Dein sicherer, privater Raum.</p>
-          <p className="text-white/60 text-xs font-semibold mb-4 max-w-xl leading-relaxed">
+          <p className="text-white/60 text-sm font-normal mb-4 max-w-xl leading-relaxed">
             Postfach und gemerkte Kurse zeigen im Prototyp erfundene Beispiele. Deine
             Gedächtnisprotokolle und dein Stimmungs-Tagebuch sind echt — sie liegen auf diesem
             Gerät.
@@ -333,7 +333,7 @@ export function ProfileView() {
             <div className="flex items-center gap-3">
               <Inbox className="w-5 h-5" /> Postfach
             </div>
-            <div className="bg-db-dark/20 text-xs px-2 py-0.5 rounded-full">{tickets.length}</div>
+            <div className="bg-db-dark/20 text-sm px-2 py-0.5 rounded-full">{tickets.length}</div>
           </button>
           
           <button 
@@ -419,13 +419,13 @@ function FristenFuerMich({ fall }) {
             }`}
           >
             <p
-              className={`text-xs font-bold ${
+              className={`text-sm font-bold ${
                 ueberfaellig ? "text-db-redInk dark:text-red-300" : "text-ink"
               }`}
             >
               {frist.bezeichnung}: {stand.text}
             </p>
-            <p className="mt-1 text-[11px] font-semibold leading-relaxed text-ink-muted">
+            <p className="mt-1 text-sm font-normal leading-relaxed text-ink-muted">
               {ueberfaellig
                 ? `${stelle} hätte sich längst melden müssen. Du darfst nachfragen — und dich an eine andere Stelle wenden, wenn nichts passiert.`
                 : frist.erklaerung}{" "}

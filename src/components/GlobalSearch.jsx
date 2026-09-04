@@ -196,7 +196,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           </div>
           
           {/* Footer */}
-          <div className="px-6 py-3 bg-db-dark/5 dark:bg-white/5 border-t border-line/10 text-xs font-semibold text-db-rail dark:text-white/50 flex justify-between items-center">
+          <div className="px-6 py-3 bg-db-dark/5 dark:bg-white/5 border-t border-line/10 text-sm font-normal text-db-rail dark:text-white/50 flex justify-between items-center">
             <span>Die Suche hilft dir, schneller zum Ziel zu kommen.</span>
             <span className="flex items-center gap-1"><kbd className="bg-white dark:bg-db-dark px-1.5 py-0.5 rounded border border-db-dark/20 dark:border-white/20 shadow-sm font-sans font-bold">ESC</kbd> zum Schließen</span>
           </div>

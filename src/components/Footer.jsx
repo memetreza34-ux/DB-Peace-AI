@@ -4,7 +4,7 @@ import { HeartHandshake, BarChart3, Info, ShieldCheck, Eye } from "lucide-react"
 export function Footer({ onNavigate, onRollenAnsehen }) {
   return (
     // pb-28 hält den Fußbereich frei von den schwebenden Schaltflächen (Quick Exit, Chat)
-    <footer className="mt-16 border-t border-line/10 bg-white dark:bg-db-dark pt-8 pb-28 sm:pb-8 text-xs font-semibold text-ink-muted">
+    <footer className="mt-16 border-t border-line/10 bg-white dark:bg-db-dark pt-8 pb-28 sm:pb-8 text-sm font-normal text-ink-muted">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           {/* Left: Brand & Disclaimer */}
@@ -19,14 +19,14 @@ export function Footer({ onNavigate, onRollenAnsehen }) {
           </div>
 
           {/* Core Safety Statement */}
-          <div className="rounded-xl bg-db-warm dark:bg-db-dark/50 px-4 py-2 text-center text-xs font-bold text-ink border border-db-dark/5 dark:border-white/5">
+          <div className="rounded-xl bg-db-warm dark:bg-db-dark/50 px-4 py-2 text-center text-sm font-bold text-ink border border-db-dark/5 dark:border-white/5">
             {/* redInk statt db-red: kleiner Text auf hellgrauem Grund erreicht mit
                 der reinen Markenfarbe den Mindestkontrast nicht. */}
             <span className="text-db-redInk dark:text-red-400 font-bold">„Menschen entscheiden, nicht die KI.“</span> — Keine Rechts- oder Medizinberatung.
           </div>
 
           {/* Quick Access Links */}
-          <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-ink-muted">
+          <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-ink-muted">
             <button
               type="button"
               onClick={() => onNavigate("analytics")}

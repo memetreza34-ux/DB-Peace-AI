@@ -128,11 +128,11 @@ export default function ProjectOverview() {
                     {project.category}
                   </span>
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1.5 text-ink-muted font-bold text-sm bg-db-dark/5 dark:bg-white/5 px-2 py-1 rounded-lg" title="Aufrufe">
+                    <div className="flex items-center gap-1.5 text-ink-muted font-medium text-sm bg-db-dark/5 dark:bg-white/5 px-2 py-1 rounded-lg" title="Aufrufe">
                       <Eye className="w-4 h-4" />
                       <span>{project.views}</span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-ink-muted font-bold text-sm bg-db-dark/5 dark:bg-white/5 px-2 py-1 rounded-lg" title="Teilnehmer">
+                    <div className="flex items-center gap-1.5 text-ink-muted font-medium text-sm bg-db-dark/5 dark:bg-white/5 px-2 py-1 rounded-lg" title="Teilnehmer">
                       <Users className="w-4 h-4" />
                       <span>{project.participants}</span>
                     </div>
@@ -148,7 +148,7 @@ export default function ProjectOverview() {
               </div>
 
               <div>
-                <div className="text-xs font-bold text-db-rail dark:text-white/50 mb-3 bg-db-dark/5 dark:bg-white/5 p-3 rounded-xl border border-db-dark/5 dark:border-white/5">
+                <div className="text-sm font-medium text-db-rail dark:text-white/50 mb-3 bg-db-dark/5 dark:bg-white/5 p-3 rounded-xl border border-db-dark/5 dark:border-white/5">
                   <span className="block mb-1 opacity-70">Initiiert von:</span> 
                   <span className="text-ink text-sm">{project.initiator}</span>
                 </div>
@@ -217,7 +217,7 @@ export default function ProjectOverview() {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-ink">Neue Projekt-Idee</h3>
-                  <p className="text-sm font-semibold text-ink-muted">Finde Mitstreiter für dein Projekt.</p>
+                  <p className="text-sm font-normal text-ink-muted">Finde Mitstreiter für dein Projekt.</p>
                 </div>
               </div>
 

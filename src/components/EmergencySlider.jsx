@@ -82,7 +82,7 @@ export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500",
         {!gpsStatus && (
           <button 
             onClick={handleCancel}
-            className="w-full py-2 text-sm font-bold text-db-rail hover:text-db-dark transition"
+            className="w-full py-2 text-sm font-medium text-db-rail hover:text-db-dark transition"
           >
             Abbrechen
           </button>

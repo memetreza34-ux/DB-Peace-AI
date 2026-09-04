@@ -222,7 +222,7 @@ function AnonymousReport() {
             >
               <span>
                 Direkt zum DB-Hinweisgebersystem
-                <span className="mt-1 block text-xs font-semibold text-ink-muted">
+                <span className="mt-1 block text-sm font-normal text-ink-muted">
                   Anonym, in zwölf Sprachen
                 </span>
               </span>
@@ -264,7 +264,7 @@ function SafetyNotice() {
         <ShieldAlert className="mt-1 shrink-0 text-db-red" size={24} aria-hidden="true" />
         <div>
           <h3 className="text-lg font-bold text-ink">Wichtiger Hinweis</h3>
-          <p className="mt-2 text-sm font-semibold leading-6 text-ink-muted">
+          <p className="mt-2 text-sm font-normal leading-6 text-ink-muted">
             Bei akuter Gefahr bitte sofort reale Hilfe kontaktieren. Diese Demo speichert nichts und sendet nichts an ein Backend.
           </p>
         </div>
@@ -307,7 +307,7 @@ function FormShell({ children, progress, step }) {
             <p className="text-sm font-bold uppercase tracking-wide text-db-red">Schritt {step} von 5</p>
             <h3 className="mt-1 text-2xl font-bold dark:text-white">Meldung strukturieren</h3>
           </div>
-          <p className="text-sm font-bold text-ink-muted">{progress}%</p>
+          <p className="text-sm font-medium text-ink-muted">{progress}%</p>
         </div>
         <div className="mt-4 h-2 overflow-hidden rounded bg-db-soft dark:bg-db-dark">
           <div className="h-full bg-db-red transition-all duration-300" style={{ width: `${progress}%` }} />
@@ -337,7 +337,7 @@ function IncidentStep({ form, update }) {
             >
               <Icon size={23} className={active ? "text-db-red" : "text-ink-muted group-hover:text-db-red"} />
               <span className="mt-3 block font-bold">{value}</span>
-              <span className="mt-1 block text-sm font-semibold leading-6 text-ink-muted">{description}</span>
+              <span className="mt-1 block text-sm font-normal leading-6 text-ink-muted">{description}</span>
             </button>
           );
         })}
@@ -436,7 +436,7 @@ function DescriptionStep({ form, togglePerspective, update }) {
             <Upload className="w-5 h-5 text-db-dark/60 dark:text-white/60 group-hover:text-db-red" />
           </div>
           <p className="font-bold text-sm text-ink">Screenshots, Chat-Verläufe oder Bilder</p>
-          <p className="text-xs text-ink-muted font-medium mt-1">Bleibt auf diesem Gerät (max. 50 MB)</p>
+          <p className="text-sm text-ink-muted font-medium mt-1">Bleibt auf diesem Gerät (max. 50 MB)</p>
         </div>
       </div>
 
@@ -490,7 +490,7 @@ function RiskStep({ form, update }) {
           onChange={(event) => update("stress", Number(event.target.value))}
           className="mt-5 w-full accent-db-red"
         />
-        <div className="mt-2 flex justify-between text-xs font-bold text-ink-muted">
+        <div className="mt-2 flex justify-between text-sm font-medium text-ink-muted">
           <span>gering</span>
           <span>sehr belastend</span>
         </div>
@@ -515,7 +515,7 @@ function ContactStep({ form, update }) {
       title="An wen soll die Meldung gehen?"
       text="Die App verschickt nichts von selbst — sie bereitet einen Entwurf vor, den du danach selbst weitergibst."
     >
-      <p className="text-sm font-semibold leading-6 text-ink-muted">
+      <p className="text-sm font-normal leading-6 text-ink-muted">
         {empfehlungsGrund(form.type)}
       </p>
 
@@ -527,7 +527,7 @@ function ContactStep({ form, update }) {
             onClick={() => update("contact", rolle.id)}
           >
             {rolle.kurz}
-            <span className="mt-1 block text-sm font-semibold leading-6 text-ink-muted">
+            <span className="mt-1 block text-sm font-normal leading-6 text-ink-muted">
               {rolle.beschreibung.split(".")[0]}.
             </span>
           </ChoiceButton>
@@ -543,7 +543,7 @@ function ContactStep({ form, update }) {
               onClick={() => update("contact", rolle.id)}
             >
               {rolle.kurz}
-              <span className="mt-1 block text-sm font-semibold leading-6 text-ink-muted">
+              <span className="mt-1 block text-sm font-normal leading-6 text-ink-muted">
                 {rolle.ueberoertlich ? "Nicht an deinem Standort" : rolle.beschreibung.split(".")[0] + "."}
               </span>
             </ChoiceButton>
@@ -570,7 +570,7 @@ function ContactStep({ form, update }) {
         />
         <span>
           Ich möchte komplett anonym bleiben
-          <span className="block text-sm font-semibold leading-6 text-ink-muted mt-1">
+          <span className="block text-sm font-normal leading-6 text-ink-muted mt-1">
             Dein Entwurf bekommt dann keine Absenderzeile. Achte auch im Text darauf, keine Angaben zu nennen, an denen man dich erkennt.
           </span>
         </span>
@@ -591,7 +591,7 @@ function StepPanel({ children, text, title }) {
     <div className="space-y-5">
       <div>
         <h4 className="text-2xl font-bold text-ink">{title}</h4>
-        <p className="mt-2 font-semibold leading-7 text-ink-muted">{text}</p>
+        <p className="mt-2 font-normal leading-7 text-ink-muted">{text}</p>
       </div>
       {children}
     </div>
@@ -787,7 +787,7 @@ function ReportPreview({ draft }) {
         <div>
           <p className="text-sm font-bold uppercase tracking-wide text-db-red">Meldungsvorschau</p>
           <h3 className="mt-1 text-2xl font-bold dark:text-white">Strukturierter interner Demo-Entwurf</h3>
-          <p className="mt-2 text-sm font-bold text-ink-muted">Diese Meldung wurde nicht übermittelt.</p>
+          <p className="mt-2 text-sm font-medium text-ink-muted">Diese Meldung wurde nicht übermittelt.</p>
         </div>
       </div>
       <div className="mt-5 grid gap-3 md:grid-cols-2">
@@ -814,7 +814,7 @@ function WorkflowCard() {
       <div className="mt-4 space-y-3">
         {steps.map((step, index) => (
           <div key={step} className="flex items-center gap-3 rounded bg-surface p-3">
-            <span className="flex h-7 w-7 items-center justify-center rounded bg-db-red text-xs font-bold text-white">
+            <span className="flex h-7 w-7 items-center justify-center rounded bg-db-red text-sm font-bold text-white">
               {index + 1}
             </span>
             <span className="text-sm font-bold text-ink">{step}</span>

@@ -64,7 +64,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
         <div className="space-y-5 p-6">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-db-red">Meine Rollen</p>
-            <p className="mb-3 text-xs font-semibold text-db-rail dark:text-white/50">
+            <p className="mb-3 text-sm font-normal text-db-rail dark:text-white/50">
               Viele JAV-Mitglieder sind selbst Azubis. Du wechselst den Hut, nicht die Person —
               was du selbst gemeldet hast, siehst du in der Bearbeitungsrolle nicht.
             </p>
@@ -85,12 +85,12 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
                     <span className="flex items-center justify-between gap-2">
                       <span className="text-sm font-bold text-ink">{rolle.kurz}</span>
                       {istAktiv && (
-                        <span className="rounded bg-db-red px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+                        <span className="rounded bg-db-red px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white">
                           aktiv
                         </span>
                       )}
                     </span>
-                    <span className="mt-0.5 block text-xs font-semibold text-ink-muted">
+                    <span className="mt-0.5 block text-sm font-normal text-ink-muted">
                       {rolle.id === "azubi" ? "Eigene Sachen festhalten und melden" : "Fälle bearbeiten"}
                     </span>
                   </button>
@@ -103,7 +103,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
             <p className="text-xs font-bold uppercase tracking-wide text-db-rail dark:text-white/50">
               Andere Stellen ansehen
             </p>
-            <p className="text-xs font-semibold text-db-rail dark:text-white/50">
+            <p className="text-sm font-normal text-db-rail dark:text-white/50">
               Gehören dir nicht — hier nur als Vorschau, damit sichtbar wird, wo eine Meldung
               ankommt und wo nicht.
             </p>
@@ -122,7 +122,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
               <p className="text-xs font-bold uppercase tracking-wide text-db-red">
                 {gruppe.name}
               </p>
-              <p className="mb-3 text-xs font-semibold text-db-rail dark:text-white/50">
+              <p className="mb-3 text-sm font-normal text-db-rail dark:text-white/50">
                 {gruppe.zweck}
               </p>
               <div className="grid gap-2 sm:grid-cols-2">
@@ -141,12 +141,12 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
                       {rolle.kurz}
                     </span>
                     {rolle.name !== rolle.kurz && (
-                      <span className="mt-0.5 block text-xs font-semibold text-ink-muted">
+                      <span className="mt-0.5 block text-sm font-normal text-ink-muted">
                         {rolle.name}
                       </span>
                     )}
                     {(rolle.grundlage || rolle.grundlageOffen) && (
-                      <span className="mt-2 flex items-start gap-1 text-[11px] font-bold text-db-rail/70 dark:text-white/40">
+                      <span className="mt-2 flex items-start gap-1 text-sm font-medium text-db-rail/70 dark:text-white/40">
                         <Scale className="mt-px h-3 w-3 shrink-0" />
                         {rolle.grundlage || rolle.grundlageOffen}
                       </span>

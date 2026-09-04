@@ -216,7 +216,7 @@ export function AppLock({ onUnlock }) {
           </button>
         </div>
 
-        <div className="mt-10 flex items-start gap-2 text-xs font-medium text-slate-500 max-w-xs text-center">
+        <div className="mt-10 flex items-start gap-2 text-sm font-medium text-slate-500 max-w-xs text-center">
           <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
           <span className="text-left">
             Deine Eingaben bleiben auf diesem Gerät. Die PIN wird nur als Prüfsumme gespeichert,
@@ -288,7 +288,7 @@ function Geraetewahl({ onWahl }) {
           </button>
         </div>
 
-        <p className="mt-8 flex items-start gap-2 text-xs font-medium leading-relaxed text-slate-500 max-w-sm">
+        <p className="mt-8 flex items-start gap-2 text-sm font-medium leading-relaxed text-slate-500 max-w-sm">
           <ShieldCheck className="mt-px h-4 w-4 shrink-0 text-emerald-500" />
           <span>
             Eine vierstellige PIN kann Inhalte nicht verschlüsseln. Auf einem geteilten Gerät wäre

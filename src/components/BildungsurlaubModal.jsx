@@ -85,19 +85,19 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
           </div>
           <h2 className="text-2xl font-bold text-db-dark">Antrag auf Bildungsurlaub</h2>
         </div>
-        <p className="text-sm font-semibold text-db-rail mb-8">
+        <p className="text-sm font-normal text-db-rail mb-8">
           Für den Kurs: <span className="font-bold text-db-dark">{course.title}</span>
         </p>
 
         {step === 1 ? (
           <form onSubmit={handleGenerate} className="space-y-6 animate-fadeIn">
-            <div className="bg-db-soft rounded-xl p-4 border border-db-dark/5 text-xs font-semibold text-db-rail leading-relaxed">
+            <div className="bg-db-soft rounded-xl p-4 border border-db-dark/5 text-sm font-normal text-db-rail leading-relaxed">
               <span className="font-bold text-db-dark">Datenschutz-Hinweis:</span> Alle Eingaben sind zu 100% freiwillig. Die Daten werden nicht gespeichert, sondern dienen nur dazu, den Antragstext für dich im Browser zu generieren. Du kannst die Felder auch leer lassen und später selbst im Text ergänzen.
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-db-dark flex items-center gap-1.5"><User className="h-3.5 w-3.5"/> Dein Name (optional)</label>
+                <label className="text-sm font-bold text-db-dark flex items-center gap-1.5"><User className="h-3.5 w-3.5"/> Dein Name (optional)</label>
                 <input
                   type="text"
                   value={formData.name}
@@ -107,7 +107,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-bold text-db-dark flex items-center gap-1.5"><Building2 className="h-3.5 w-3.5"/> Abteilung / Bereich (optional)</label>
+                <label className="text-sm font-bold text-db-dark flex items-center gap-1.5"><Building2 className="h-3.5 w-3.5"/> Abteilung / Bereich (optional)</label>
                 <input
                   type="text"
                   value={formData.department}
@@ -117,7 +117,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
                 />
               </div>
               <div className="space-y-1 sm:col-span-2">
-                <label className="text-xs font-bold text-db-dark flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5"/> Kurs-Datum / Zeitraum (optional)</label>
+                <label className="text-sm font-bold text-db-dark flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5"/> Kurs-Datum / Zeitraum (optional)</label>
                 <input
                   type="text"
                   value={formData.dates}
@@ -145,14 +145,14 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
               <div className="absolute top-4 right-4 flex gap-2">
                 <button
                   onClick={copyToClipboard}
-                  className="p-2 bg-white rounded-lg shadow-sm border border-db-dark/10 hover:bg-db-warm transition flex items-center gap-1.5 text-xs font-bold text-db-dark"
+                  className="p-2 bg-white rounded-lg shadow-sm border border-db-dark/10 hover:bg-db-warm transition flex items-center gap-1.5 text-sm font-bold text-db-dark"
                 >
                   {copied ? <CheckCircle2 className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
                   {copied ? "Kopiert!" : "Kopieren"}
                 </button>
                 <button
                   onClick={handleDownloadPDF}
-                  className="p-2 bg-db-dark text-white rounded-lg shadow-sm hover:bg-db-dark transition flex items-center gap-1.5 text-xs font-bold"
+                  className="p-2 bg-db-dark text-white rounded-lg shadow-sm hover:bg-db-dark transition flex items-center gap-1.5 text-sm font-bold"
                 >
                   <Download className="h-4 w-4" />
                   PDF Herunterladen
@@ -164,7 +164,7 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
               <p className="text-sm font-bold text-teal-800">
                 Nächster Schritt:
               </p>
-              <p className="text-xs font-semibold text-db-dark mt-1">
+              <p className="text-sm font-semibold text-db-dark mt-1">
                 Kopiere diesen Text und schicke ihn per E-Mail an deine Führungskraft. Vergiss nicht, später die offizielle Anmeldebestätigung des Kursanbieters nachzureichen.
               </p>
             </div>

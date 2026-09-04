@@ -72,7 +72,7 @@ export function MoodTracker() {
                     }`}
                   >
                     <Icon className={`h-8 w-8 ${isActive ? 'text-white' : mood.color}`} />
-                    <span className={`text-xs font-bold ${isActive ? 'text-white' : 'text-ink/80'}`}>
+                    <span className={`text-sm font-bold ${isActive ? 'text-white' : 'text-ink/80'}`}>
                       {mood.label}
                     </span>
                   </button>
@@ -104,7 +104,7 @@ export function MoodTracker() {
                             key={r}
                             type="button"
                             onClick={() => setReason(r)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                            className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${
                               reason === r 
                                 ? "bg-red-500 text-white" 
                                 : "bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 border border-red-500/20"

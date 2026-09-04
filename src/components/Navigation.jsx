@@ -22,11 +22,11 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
               <span className="font-bold text-lg sm:text-xl tracking-tight text-ink flex items-center gap-1.5 sm:gap-2">
                 Peace <Brain className="h-4 w-4 sm:h-5 sm:w-5 text-db-red dark:text-red-400 shrink-0" />
               </span>
-              <span className="hidden sm:inline rounded bg-db-red/10 dark:bg-db-red/20 px-2 py-0.5 text-xs font-bold text-db-red dark:text-red-400">
+              <span className="hidden sm:inline rounded bg-db-red/10 dark:bg-db-red/20 px-2 py-0.5 text-sm font-bold text-db-red dark:text-red-400">
                 Prototyp
               </span>
             </div>
-            <p className="hidden md:block text-xs font-medium text-db-rail/70 dark:text-white/60">
+            <p className="hidden md:block text-sm font-medium text-db-rail/70 dark:text-white/60">
               Dein digitaler Begleiter für Respekt & Sicherheit
             </p>
           </div>
@@ -81,7 +81,7 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
             type="button"
             onClick={onOpenEmergency}
             aria-label="Notfall und Kontakte"
-            className={`flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-2.5 sm:px-3.5 py-2 text-xs sm:text-sm font-bold transition shadow-sm ${
+            className={`flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-2.5 sm:px-3.5 py-2 text-sm sm:text-sm font-bold transition shadow-sm ${
               activeTab === "contacts"
                 ? "bg-red-800 text-white dark:bg-red-900"
                 : "bg-red-600 dark:bg-db-red text-white hover:bg-red-700 dark:hover:bg-red-600"

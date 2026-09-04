@@ -140,7 +140,7 @@ function EntryHeader() {
           <LockKeyhole className="mt-0.5 shrink-0 text-db-red" size={18} aria-hidden="true" />
           Alle Daten in dieser Demo sind anonymisiert und fiktiv.
         </p>
-        <p className="mt-3 text-sm font-semibold leading-6 text-db-rail">
+        <p className="mt-3 text-sm font-normal leading-6 text-db-rail">
           Keine automatische Bestrafung, keine Überwachung. KI unterstützt Analyse und Sortierung, Menschen entscheiden.
         </p>
       </div>
@@ -155,15 +155,15 @@ function KpiGrid() {
         <article key={title} className="rounded-lg border border-db-dark/10 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-panel">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm font-bold text-db-rail">{title}</p>
+              <p className="text-sm font-medium text-db-rail">{title}</p>
               <p className="mt-2 text-4xl font-bold text-db-dark">{value}</p>
             </div>
             <span className="flex h-11 w-11 items-center justify-center rounded bg-red-50 text-db-red">
               <Icon size={24} aria-hidden="true" />
             </span>
           </div>
-          <p className="mt-4 text-sm font-semibold leading-6 text-db-rail">{explanation}</p>
-          <p className={`mt-3 inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-bold ${index === 3 ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>
+          <p className="mt-4 text-sm font-normal leading-6 text-db-rail">{explanation}</p>
+          <p className={`mt-3 inline-flex items-center gap-1 rounded px-2 py-1 text-sm font-bold ${index === 3 ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>
             {index === 3 ? <AlertTriangle size={14} /> : <TrendingUp size={14} />}
             {trend}
           </p>
@@ -184,13 +184,13 @@ function CategoryBreakdown() {
   return (
     <div className="rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
       <h3 className="text-2xl font-bold">Meldungen nach Kategorie</h3>
-      <p className="mt-2 font-semibold leading-7 text-db-rail">
+      <p className="mt-2 font-normal leading-7 text-db-rail">
         Anonymisierte Mock-Kategorien im Demo-Zeitraum. Ausgewiesen wird erst ab {SCHWELLE} Fällen.
       </p>
       <div className="mt-6 space-y-4">
         {ausgewiesen.map(([label, value]) => (
           <div key={label}>
-            <div className="mb-2 flex justify-between text-sm font-bold text-db-rail">
+            <div className="mb-2 flex justify-between text-sm font-medium text-db-rail">
               <span>{label}</span>
               <span>{value}</span>
             </div>
@@ -202,7 +202,7 @@ function CategoryBreakdown() {
       </div>
 
       {gesperrt > 0 && (
-        <p className="mt-6 rounded-xl border border-db-dark/10 bg-db-soft p-4 text-sm font-semibold leading-relaxed text-db-rail">
+        <p className="mt-6 rounded-xl border border-db-dark/10 bg-db-soft p-4 text-sm font-normal leading-relaxed text-db-rail">
           {gesperrt === 1 ? "Eine weitere Kategorie liegt" : `${gesperrt} weitere Kategorien liegen`}{" "}
           unter der Schwelle und {gesperrt === 1 ? "wird" : "werden"} bewusst nicht ausgewiesen —
           auch nicht mit Namen. {sperrBegruendung()}
@@ -216,7 +216,7 @@ function RiskOverview() {
   return (
     <div className="rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
       <h3 className="text-2xl font-bold">Risikoverteilung</h3>
-      <p className="mt-2 font-semibold leading-7 text-db-rail">
+      <p className="mt-2 font-normal leading-7 text-db-rail">
         Die Risiko-Einschätzung dient nur zur Priorisierung für menschliche Prüfung.
       </p>
       <div className="mt-6 grid gap-3">
@@ -253,7 +253,7 @@ function Calculator(props) {
     <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_0.92fr]">
       <div className="rounded-lg border border-db-dark/10 bg-white p-6 shadow-panel">
         <h3 className="text-2xl font-bold">Kostenersparnis-Rechner</h3>
-        <p className="mt-2 font-semibold leading-7 text-db-rail">
+        <p className="mt-2 font-normal leading-7 text-db-rail">
           Dies ist eine konservative Demo-Schätzung. Reale Werte müssten intern validiert werden.
         </p>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -289,7 +289,7 @@ function NumberInput({ label, onChange, suffix, value }) {
           onChange={(event) => onChange(Number(event.target.value))}
           className="min-h-12 w-full px-4 text-lg font-bold outline-none"
         />
-        <span className="flex min-w-20 items-center justify-center bg-db-soft px-3 text-sm font-bold text-db-rail">
+        <span className="flex min-w-20 items-center justify-center bg-db-soft px-3 text-sm font-medium text-db-rail">
           {suffix}
         </span>
       </div>
@@ -321,7 +321,7 @@ function SavingsExplanation() {
           <article key={title} className="rounded bg-db-soft p-5">
             <CheckCircle2 className="text-emerald-600" size={20} aria-hidden="true" />
             <h4 className="mt-3 text-lg font-bold">{title}</h4>
-            <p className="mt-2 text-sm font-semibold leading-6 text-db-rail">{text}</p>
+            <p className="mt-2 text-sm font-normal leading-6 text-db-rail">{text}</p>
           </article>
         ))}
       </div>

@@ -80,7 +80,7 @@ export function EmergencyModal({ isOpen, onClose }) {
                <a href="tel:08001110111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-db-dark/5 dark:border-white/5 hover:border-db-dark/20 dark:hover:border-white/20 transition">
                   <div>
                     <div className="font-bold text-sm text-ink">Telefonseelsorge (24/7)</div>
-                    <div className="text-xs font-medium text-ink-muted">0800 111 0 111 (Kostenfrei, anonym)</div>
+                    <div className="text-sm font-medium text-ink-muted">0800 111 0 111 (Kostenfrei, anonym)</div>
                   </div>
                   <div className="rounded-full bg-white dark:bg-db-dark/80 p-2 shadow-sm border dark:border-white/10">
                     <PhoneCall className="h-4 w-4 text-ink" />
@@ -90,7 +90,7 @@ export function EmergencyModal({ isOpen, onClose }) {
                <a href="tel:116111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-db-dark/5 dark:border-white/5 hover:border-db-dark/20 dark:hover:border-white/20 transition">
                   <div>
                     <div className="font-bold text-sm text-ink">Nummer gegen Kummer</div>
-                    <div className="text-xs font-medium text-ink-muted">116 111 (Kostenfrei, bis 25 Jahre)</div>
+                    <div className="text-sm font-medium text-ink-muted">116 111 (Kostenfrei, bis 25 Jahre)</div>
                   </div>
                   <div className="rounded-full bg-white dark:bg-db-dark/80 p-2 shadow-sm border dark:border-white/10">
                     <PhoneCall className="h-4 w-4 text-ink" />
@@ -99,7 +99,7 @@ export function EmergencyModal({ isOpen, onClose }) {
                <div className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-db-dark/5 dark:border-white/5">
                   <div>
                     <div className="font-bold text-sm text-ink">DB Sicherheitszentrale</div>
-                    <div className="text-xs font-medium text-ink-muted">
+                    <div className="text-sm font-medium text-ink-muted">
                       Die Nummer steht auf deinem Dienstausweis.
                     </div>
                   </div>

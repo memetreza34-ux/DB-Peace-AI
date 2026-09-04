@@ -88,7 +88,7 @@ export function ContactsView() {
             <h2 className="text-xl font-bold text-ink">Meldewege der DB</h2>
           </div>
 
-          <p className="text-xs font-medium text-ink-muted mb-5 leading-relaxed">
+          <p className="text-sm font-medium text-ink-muted mb-5 leading-relaxed">
             Offizielle Meldestellen des DB-Konzerns. Du entscheidest, ob du deinen Namen nennst.
           </p>
 
@@ -113,7 +113,7 @@ export function ContactsView() {
             <h2 className="text-xl font-bold text-ink">Beratung</h2>
           </div>
 
-          <p className="text-xs font-medium text-ink-muted mb-5 leading-relaxed">
+          <p className="text-sm font-medium text-ink-muted mb-5 leading-relaxed">
             Zum Reden und Sortieren — ohne dass daraus eine Meldung wird.
           </p>
 
@@ -145,7 +145,7 @@ export function ContactsView() {
         </p>
 
         <div className="mb-5 flex flex-wrap items-center gap-2">
-          <label htmlFor="standortwahl" className="text-xs font-bold text-ink">
+          <label htmlFor="standortwahl" className="text-sm font-bold text-ink">
             Dein Standort
           </label>
           <select
@@ -165,7 +165,7 @@ export function ContactsView() {
         </div>
 
         {standort?.beispiel && (
-          <p className="mb-5 flex items-start gap-2 rounded-xl border border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20 p-3 text-xs font-semibold leading-relaxed text-amber-900 dark:text-amber-200">
+          <p className="mb-5 flex items-start gap-2 rounded-xl border border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20 p-3 text-sm font-semibold leading-relaxed text-amber-900 dark:text-amber-200">
             <Info className="mt-px h-4 w-4 shrink-0" />
             <span>
               Beispiel-Standort mit erfundenen Personen — so sieht es aus, wenn echte Daten
@@ -188,25 +188,25 @@ export function ContactsView() {
                   className="rounded-xl bg-surface p-4 border border-line/10"
                 >
                   <h3 className="font-bold text-sm text-ink">{rolle?.kurz}</h3>
-                  <p className="mb-3 text-[11px] font-semibold text-db-rail dark:text-white/50">
+                  <p className="mb-3 text-sm font-normal text-db-rail dark:text-white/50">
                     {rolle?.name}
                   </p>
                   {personen.length > 0 ? (
                     <ul className="space-y-2.5">
                       {personen.map((person) => (
                         <li key={person.name}>
-                          <p className="text-xs font-bold text-ink">{person.name}</p>
-                          <p className="text-[11px] font-semibold text-ink-muted">
+                          <p className="text-sm font-bold text-ink">{person.name}</p>
+                          <p className="text-sm font-normal text-ink-muted">
                             {person.funktion}
                           </p>
-                          <p className="text-[11px] font-medium text-db-rail/80 dark:text-white/50">
+                          <p className="text-sm font-medium text-db-rail/80 dark:text-white/50">
                             {person.erreichbar}
                           </p>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="flex items-start gap-1.5 text-[11px] font-semibold text-db-rail/80 dark:text-white/50">
+                    <p className="flex items-start gap-1.5 text-sm font-normal text-db-rail/80 dark:text-white/50">
                       <Info className="mt-px h-3.5 w-3.5 shrink-0" />
                       <span>Für diesen Standort noch nicht hinterlegt.</span>
                     </p>
@@ -223,18 +223,18 @@ export function ContactsView() {
                 className="rounded-xl bg-surface p-4 border border-line/10"
               >
                 <h3 className="font-bold text-sm text-ink mb-1">{eintrag.name}</h3>
-                <p className="text-xs font-medium text-ink-muted mb-3 leading-relaxed">
+                <p className="text-sm font-medium text-ink-muted mb-3 leading-relaxed">
                   {eintrag.beschreibung}
                 </p>
                 {eintrag.wert ? (
                   <a
                     href={telLink(eintrag.wert)}
-                    className="inline-flex items-center gap-2 text-xs font-bold text-db-red hover:underline"
+                    className="inline-flex items-center gap-2 text-sm font-bold text-db-red hover:underline"
                   >
                     <PhoneCall className="w-3.5 h-3.5" /> {eintrag.wert}
                   </a>
                 ) : (
-                  <p className="text-[11px] font-semibold text-db-rail/80 dark:text-white/50 flex items-start gap-1.5">
+                  <p className="text-sm font-normal text-db-rail/80 dark:text-white/50 flex items-start gap-1.5">
                     <Info className="w-3.5 h-3.5 shrink-0 mt-px" />
                     <span>{eintrag.hinweis}</span>
                   </p>
@@ -263,7 +263,7 @@ export function ContactsView() {
           {UNTER_18.map((h) => (
             <div key={h.id}>
               <h3 className="font-bold text-sm text-ink mb-1">{h.titel}</h3>
-              <p className="text-xs font-medium text-ink-muted leading-relaxed">
+              <p className="text-sm font-medium text-ink-muted leading-relaxed">
                 {h.text}
               </p>
             </div>
@@ -271,7 +271,7 @@ export function ContactsView() {
         </div>
       </motion.div>
 
-      <p className="mt-6 text-center text-[11px] font-semibold text-db-rail/70 dark:text-white/40">
+      <p className="mt-6 text-center text-sm font-normal text-db-rail/70 dark:text-white/40">
         Kontaktdaten zuletzt geprüft am {new Date(GEPRUEFT_AM).toLocaleDateString("de-DE")} ·
         Quellen: deutschebahn.com (Compliance – Hinweise geben), railbow.deutschebahn.com
       </p>
@@ -334,17 +334,17 @@ function MeldewegKarte({ weg }) {
         <a
           href={ziel.href}
           {...(ziel.extern ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs bg-white dark:bg-db-dark text-ink border border-line/10 hover:shadow-sm transition break-all"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-white dark:bg-db-dark text-ink border border-line/10 hover:shadow-sm transition break-all"
         >
           <ziel.icon className="w-4 h-4 shrink-0" />
           {ziel.label}
         </a>
       ) : (
-        <p className="text-xs font-semibold text-ink-muted">{weg.adresse}</p>
+        <p className="text-sm font-normal text-ink-muted">{weg.adresse}</p>
       )}
 
       {weg.erreichbarkeit && (
-        <p className="mt-2 text-[11px] font-semibold text-db-rail/80 dark:text-white/50">
+        <p className="mt-2 text-sm font-normal text-db-rail/80 dark:text-white/50">
           {weg.erreichbarkeit}
         </p>
       )}
@@ -365,14 +365,14 @@ function BeratungKarte({ eintrag }) {
           href={eintrag.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs bg-white dark:bg-db-dark text-ink border border-line/10 hover:shadow-sm transition"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-white dark:bg-db-dark text-ink border border-line/10 hover:shadow-sm transition"
         >
           <ExternalLink className="w-4 h-4" /> Zur Seite
         </a>
       )}
 
       {eintrag.intranet && (
-        <p className="mt-2 text-[11px] font-semibold text-db-rail/80 dark:text-white/50 flex items-start gap-1.5">
+        <p className="mt-2 text-sm font-normal text-db-rail/80 dark:text-white/50 flex items-start gap-1.5">
           <Info className="w-3.5 h-3.5 shrink-0 mt-px" />
           <span>Im DB-Intranet: {eintrag.intranet}</span>
         </p>

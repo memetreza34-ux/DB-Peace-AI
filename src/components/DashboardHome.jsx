@@ -143,7 +143,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
         <MoodTracker />
       </div>
 
-      <p className="text-xs font-normal leading-relaxed text-ink-muted">
+      <p className="text-sm font-normal leading-relaxed text-ink-muted">
         Prototyp für die Ausbildung. Keine Rechtsberatung. Menschen entscheiden, nicht die App.
       </p>
     </div>

@@ -400,7 +400,7 @@ function EntryHeader() {
         <p className="mt-4 max-w-3xl text-lg leading-8 text-ink-muted">
           Übe schwierige Situationen sicher in einer Simulation - bevor sie im Alltag eskalieren.
         </p>
-        <p className="mt-4 max-w-3xl text-base font-semibold leading-7 text-ink-muted">
+        <p className="mt-4 max-w-3xl text-base font-normal leading-7 text-ink-muted">
           Die KI-Simulation hilft dabei, deeskalierende Antworten, klare Grenzen und sichere
           nächste Schritte zu trainieren.
         </p>
@@ -412,7 +412,7 @@ function EntryHeader() {
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           {badges.map((badge) => (
-            <span key={badge} className="rounded bg-db-soft dark:bg-db-dark/80 px-3 py-2 text-xs font-bold text-ink-muted">
+            <span key={badge} className="rounded bg-db-soft dark:bg-db-dark/80 px-3 py-2 text-sm font-medium text-ink-muted">
               {badge}
             </span>
           ))}
@@ -451,7 +451,7 @@ function ScenarioSelection({ activeIndex, onSelect }) {
                     <p className="font-bold text-ink">{scenario.title}</p>
                     <DifficultyBadge value={scenario.difficulty} />
                   </div>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-ink-muted">{scenario.context}</p>
+                  <p className="mt-2 text-sm font-normal leading-6 text-ink-muted">{scenario.context}</p>
                   <p className="mt-2 text-xs font-bold uppercase tracking-wide text-db-red">
                     Lernziel: {scenario.goal}
                   </p>
@@ -488,7 +488,7 @@ function SimulationPanel({ onChoose, onNext, progress, round, roundIndex, scenar
         <div className="rounded-lg bg-db-soft dark:bg-db-dark/30 p-5">
           <p className="text-sm font-bold uppercase tracking-wide text-db-red">{round.title}</p>
           <h4 className="mt-2 text-2xl font-bold text-ink">Was würdest du tun?</h4>
-          <p className="mt-3 text-lg font-semibold leading-8 text-ink-muted">{round.description}</p>
+          <p className="mt-3 text-lg font-normal leading-8 text-ink-muted">{round.description}</p>
           <p className="mt-4 rounded bg-surface p-3 text-sm font-bold text-ink">
             Lernziel: {scenario.goal}
           </p>
@@ -566,7 +566,7 @@ function FeedbackBlock({ icon: Icon, text, title, wide = false }) {
         <Icon className="mt-1 shrink-0 text-db-red" size={18} aria-hidden="true" />
         <div>
           <p className="font-bold text-ink">{title}</p>
-          <p className="mt-1 text-sm font-semibold leading-6 text-ink-muted">{text}</p>
+          <p className="mt-1 text-sm font-normal leading-6 text-ink-muted">{text}</p>
         </div>
       </div>
     </div>
@@ -590,7 +590,7 @@ function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
           </div>
         )}
       </div>
-      <p className="mt-3 text-lg font-semibold leading-8 text-ink-muted">
+      <p className="mt-3 text-lg font-normal leading-8 text-ink-muted">
         Du hast das Szenario "{scenario.title}" abgeschlossen. Die Auswertung basiert nur auf
         lokaler Demo-Logik.
       </p>
@@ -655,7 +655,7 @@ function ScorePanel({ metrics }) {
 function ScoreBar({ dark = false, label, value }) {
   return (
     <div>
-      <div className={`mb-2 flex justify-between text-sm font-bold ${dark ? "text-white/80" : "text-ink-muted"}`}>
+      <div className={`mb-2 flex justify-between text-sm font-medium ${dark ? "text-white/80" : "text-ink-muted"}`}>
         <span>{label}</span>
         <span>{value}%</span>
       </div>
@@ -670,7 +670,7 @@ function ScoreBar({ dark = false, label, value }) {
 
 function DifficultyBadge({ value }) {
   return (
-    <span className="rounded bg-surface px-2 py-1 text-xs font-bold text-ink-muted ring-1 ring-db-dark/10 dark:ring-white/10">
+    <span className="rounded bg-surface px-2 py-1 text-sm font-medium text-ink-muted ring-1 ring-db-dark/10 dark:ring-white/10">
       {value}
     </span>
   );

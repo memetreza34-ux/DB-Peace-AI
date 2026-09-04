@@ -124,7 +124,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setActiveTab("home")}
-                className="inline-flex items-center gap-2 rounded-xl bg-surface px-4 py-2 text-xs font-bold text-ink border border-line/10 shadow-xs hover:border-db-red dark:hover:border-db-red hover:text-db-red dark:hover:text-db-red transition"
+                className="inline-flex items-center gap-2 rounded-xl bg-surface px-4 py-2 text-sm font-bold text-ink border border-line/10 shadow-xs hover:border-db-red dark:hover:border-db-red hover:text-db-red dark:hover:text-db-red transition"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span>Zurück zur Übersicht (Home)</span>
@@ -216,7 +216,7 @@ export default function App() {
 
       {/* Offline Banner */}
       {isOffline && (
-        <div className="bg-db-red text-white text-xs font-bold py-1.5 px-4 flex items-center justify-center gap-2 z-50">
+        <div className="bg-db-red text-white text-sm font-bold py-1.5 px-4 flex items-center justify-center gap-2 z-50">
           <WifiOff className="w-3 h-3" />
           Keine Internetverbindung. Deine Eingaben bleiben ohnehin auf diesem Gerät – nur der
           KI-Assistent antwortet solange eingeschränkt.

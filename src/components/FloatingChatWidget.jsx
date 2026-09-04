@@ -178,7 +178,7 @@ export function FloatingChatWidget() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold tracking-wide">Dein Peace-Assistent</h3>
-                  <p className="text-[11px] font-medium text-white/70">Sicher & vertraulich</p>
+                  <p className="text-sm font-medium text-white/70">Sicher & vertraulich</p>
                 </div>
               </div>
               <button

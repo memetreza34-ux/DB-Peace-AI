@@ -117,7 +117,7 @@ export function CourseDetailModal({ course, onClose }) {
             <X className="h-5 w-5" />
           </button>
 
-          <span className="inline-block bg-db-red text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-2">
+          <span className="inline-block bg-db-red text-white text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-2">
             {course.provider}
           </span>
 
@@ -137,8 +137,8 @@ export function CourseDetailModal({ course, onClose }) {
 
           {course.requirements && (
             <div className="rounded-lg bg-slate-50 dark:bg-white/5 p-4 border border-slate-200 dark:border-white/10">
-              <h3 className="text-xs font-bold text-slate-900 dark:text-white mb-1">Was du dafür brauchst</h3>
-              <p className="text-xs font-medium text-slate-600 dark:text-white/70">{course.requirements}</p>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1">Was du dafür brauchst</h3>
+              <p className="text-sm font-medium text-slate-600 dark:text-white/70">{course.requirements}</p>
             </div>
           )}
 
@@ -147,7 +147,7 @@ export function CourseDetailModal({ course, onClose }) {
               {course.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-2.5 py-1 rounded bg-slate-100 dark:bg-white/10 text-[10px] font-bold text-slate-700 dark:text-white"
+                  className="px-2.5 py-1 rounded bg-slate-100 dark:bg-white/10 text-sm font-bold text-slate-700 dark:text-white"
                 >
                   {tag}
                 </span>
@@ -157,7 +157,7 @@ export function CourseDetailModal({ course, onClose }) {
 
           <div className="rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900/40 p-4 flex gap-3">
             <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-            <p className="text-xs font-medium text-amber-900 dark:text-amber-200 leading-relaxed">
+            <p className="text-sm font-medium text-amber-900 dark:text-amber-200 leading-relaxed">
               Dieses Angebot wird von der genannten Organisation durchgeführt, nicht von dieser App.
               Anmeldung, Inhalte, Termine und mögliche Nachweise laufen direkt über den Anbieter.
             </p>
@@ -176,7 +176,7 @@ export function CourseDetailModal({ course, onClose }) {
               Zum Anbieter <ExternalLink className="h-4 w-4" />
             </a>
           ) : (
-            <p className="flex-1 text-xs font-medium text-slate-500 dark:text-white/60 self-center text-center sm:text-left">
+            <p className="flex-1 text-sm font-medium text-slate-500 dark:text-white/60 self-center text-center sm:text-left">
               Für dieses Angebot ist noch kein Link hinterlegt.
             </p>
           )}
