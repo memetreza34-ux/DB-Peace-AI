@@ -33,16 +33,14 @@ export function EmergencyModal({ isOpen, onClose }) {
         >
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-line/10">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-md bg-red-100 text-red-600">
-                <ShieldAlert className="h-7 w-7 animate-pulse" />
-              </div>
-              <div>
-                <h2 id="notfall-titel" className="text-xl font-bold text-ink">Akuter Notfall</h2>
-                <p className="text-xs font-semibold text-ink-muted">
-                  Schnelle Hilfe, ohne Versehen auszulösen.
-                </p>
-              </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-db-redInk dark:text-red-400">
+                Notfall
+              </p>
+              <h2 id="notfall-titel" className="mt-1.5 text-2xl font-bold tracking-tight text-ink">
+                Jetzt Hilfe holen
+              </h2>
+              <div className="mt-3 h-1 w-10 bg-db-red" />
             </div>
             <button
               onClick={onClose}
@@ -98,7 +96,22 @@ export function EmergencyModal({ isOpen, onClose }) {
                     <PhoneCall className="h-4 w-4 text-ink" />
                   </div>
                </a>
+               <div className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-db-dark/5 dark:border-white/5">
+                  <div>
+                    <div className="font-bold text-sm text-ink">DB Sicherheitszentrale</div>
+                    <div className="text-xs font-medium text-ink-muted">
+                      Die Nummer steht auf deinem Dienstausweis.
+                    </div>
+                  </div>
+                  <div className="rounded-full bg-white dark:bg-db-dark/80 p-2 shadow-sm border dark:border-white/10">
+                    <ShieldAlert className="h-4 w-4 text-ink" />
+                  </div>
+               </div>
             </div>
+
+            <p className="border-t border-line/10 pt-4 text-sm font-normal leading-relaxed text-ink-muted">
+              Hilfe holen ist kein Verrat. Du musst nichts entscheiden, was du nicht willst.
+            </p>
 
           </div>
       </motion.div>
