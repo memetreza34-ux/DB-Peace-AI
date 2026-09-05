@@ -143,13 +143,15 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
   return (
     <div className="min-h-screen bg-surface-sunk ">
       <header className="border-b border-line/10 bg-surface">
-        <div className="mx-auto max-w-7xl px-4 sm:px-5 py-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-5 py-5">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-wide text-db-red">
+            <div className="min-w-0 border-l-4 border-db-red pl-4">
+              <p className="font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink-muted">
                 {eigeneRolle ? "Deine Rolle" : "Vorschau"} · {gruppe?.name}
               </p>
-              <h1 className="mt-1 text-2xl font-schild font-bold text-ink">{rolle.name}</h1>
+              <h1 className="mt-1 hyphens-auto break-words font-schild text-3xl font-bold leading-[1.02] tracking-tight text-ink sm:text-4xl">
+                {rolle.name}
+              </h1>
               <p className="mt-1 max-w-2xl text-sm font-normal text-ink-muted">
                 {rolle.beschreibung}
               </p>
@@ -292,13 +294,11 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                           : "border-l-4 border-transparent hover:bg-db-soft dark:hover:bg-white/5"
                       }`}
                     >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-sm font-bold text-ink">
-                          {fall.kategorie}
-                        </span>
-                        <StatusMarke status={fall.status} />
-                      </div>
-                      <p className="mt-1.5 line-clamp-2 text-sm font-normal text-ink-muted">
+                      <StatusMarke status={fall.status} />
+                      <span className="mt-1 block font-schild text-xl font-bold leading-tight tracking-tight text-ink">
+                        {fall.kategorie}
+                      </span>
+                      <p className="mt-1 line-clamp-2 text-sm font-normal text-ink-muted">
                         {fall.zusammenfassung}
                       </p>
                       <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-medium text-ink-muted ">
@@ -561,19 +561,21 @@ function Auswertung({ ergebnis, rolleKurz }) {
 
 function StatusMarke({ status }) {
   const marken = {
-    offen: { text: "offen", klasse: "bg-danger text-danger-ink" },
+    offen: { text: "offen", klasse: "text-danger-ink" },
     "in-bearbeitung": {
-      text: "in Bearbeitung",
-      klasse: "bg-warn text-warn-ink",
+      text: "in Arbeit",
+      klasse: "text-warn-ink",
     },
     abgeschlossen: {
-      text: "abgeschlossen",
-      klasse: "bg-ok text-ok-ink",
+      text: "erledigt",
+      klasse: "text-ok-ink",
     },
   };
   const marke = marken[status] ?? marken.offen;
   return (
-    <span className={`shrink-0 rounded px-2 py-0.5 text-sm font-bold ${marke.klasse}`}>
+    <span
+      className={`shrink-0 font-schild text-xs font-semibold uppercase tracking-[0.12em] ${marke.klasse}`}
+    >
       {marke.text}
     </span>
   );

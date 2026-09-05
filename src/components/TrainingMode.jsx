@@ -393,16 +393,13 @@ function EntryHeader() {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_0.78fr] lg:items-end">
       <div>
-        <p className="text-sm font-bold uppercase tracking-wider text-db-red">Trainingsmodus</p>
-        <h2 className="mt-3 text-4xl font-schild font-bold leading-tight tracking-normal text-ink sm:text-5xl">
+        <h2 className="border-b-2 border-ink pb-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink">
           KI-Trainingsmodus
         </h2>
-        <p className="mt-4 max-w-3xl text-lg leading-8 text-ink-muted">
-          Übe schwierige Situationen sicher in einer Simulation - bevor sie im Alltag eskalieren.
-        </p>
-        <p className="mt-4 max-w-3xl text-base font-normal leading-7 text-ink-muted">
-          Die KI-Simulation hilft dabei, deeskalierende Antworten, klare Grenzen und sichere
-          nächste Schritte zu trainieren.
+        <p className="mt-3 max-w-[52ch] text-base font-normal leading-relaxed text-ink-muted">
+          Übe schwierige Situationen sicher in einer Simulation — bevor sie im Alltag eskalieren.
+          Die KI hilft, deeskalierende Antworten, klare Grenzen und sichere nächste Schritte zu
+          trainieren.
         </p>
       </div>
       <div className="rounded-lg border border-line/10 bg-surface p-4 shadow-sm">
@@ -424,12 +421,12 @@ function EntryHeader() {
 
 function ScenarioSelection({ activeIndex, onSelect }) {
   return (
-    <div className="rounded-lg border border-line/10 bg-surface p-5 shadow-panel">
-      <div className="flex items-center gap-3">
-        <GraduationCap className="text-db-red" size={24} aria-hidden="true" />
-        <h3 className="text-xl font-schild font-bold dark:text-white">Szenario auswählen</h3>
-      </div>
-      <div className="mt-5 grid gap-3">
+    <div>
+      <h3 className="flex items-center gap-2 border-b-2 border-ink pb-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink">
+        <GraduationCap className="h-4 w-4" aria-hidden="true" />
+        Szenario auswählen
+      </h3>
+      <div>
         {scenarios.map((scenario, index) => {
           const Icon = scenario.icon;
           const active = activeIndex === index;
@@ -438,25 +435,38 @@ function ScenarioSelection({ activeIndex, onSelect }) {
               key={scenario.id}
               type="button"
               onClick={() => onSelect(index)}
-              className={`group rounded-lg border p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:shadow-sm ${
-                active
-                  ? "border-db-red bg-red-50"
-                  : "border-db-dark/10 bg-db-soft hover:border-db-red"
+              className={`group grid w-full grid-cols-[92px_1fr] items-baseline gap-x-3 border-b border-line/15 py-4 text-left transition sm:grid-cols-[104px_1fr] sm:gap-x-4 ${
+                active ? "border-l-4 border-l-db-red bg-line/5 pl-3" : "hover:bg-line/5"
               }`}
             >
-              <div className="flex items-start gap-3">
-                <Icon className={active ? "text-db-red" : "text-ink-muted group-hover:text-db-red"} size={24} />
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-bold text-ink">{scenario.title}</p>
-                    <DifficultyBadge value={scenario.difficulty} />
-                  </div>
-                  <p className="mt-2 text-sm font-normal leading-6 text-ink-muted">{scenario.context}</p>
-                  <p className="mt-2 text-xs font-bold uppercase tracking-wide text-db-red">
-                    Lernziel: {scenario.goal}
-                  </p>
-                </div>
-              </div>
+              <span
+                className={`font-schild text-xs font-semibold uppercase leading-tight tracking-[0.12em] ${
+                  active ? "text-db-red" : "text-ink-muted group-hover:text-db-red"
+                }`}
+              >
+                {scenario.difficulty}
+              </span>
+              <span>
+                <span className="flex items-center gap-2">
+                  <Icon
+                    className={active ? "shrink-0 text-db-red" : "shrink-0 text-ink"}
+                    size={20}
+                    aria-hidden="true"
+                  />
+                  <span className="font-schild text-xl font-bold leading-tight tracking-tight text-ink sm:text-2xl">
+                    {scenario.title}
+                  </span>
+                </span>
+                <span className="mt-1 block text-sm font-normal leading-snug text-ink-muted">
+                  {scenario.context}
+                </span>
+                <span className="mt-2 block text-sm font-normal leading-snug text-ink-muted">
+                  <span className="font-schild text-xs font-semibold uppercase tracking-[0.12em]">
+                    Lernziel:{" "}
+                  </span>
+                  {scenario.goal}
+                </span>
+              </span>
             </button>
           );
         })}
@@ -584,7 +594,7 @@ function FinalResult({ metrics, onNewScenario, onRepeat, scenario }) {
       <div className="flex items-center gap-4 mt-6">
         <h3 className="text-3xl font-schild font-bold dark:text-white">Gesamtbewertung: {average}%</h3>
         {average > 50 && (
-          <div className="bg-amber-100 border border-amber-300 text-amber-700 px-4 py-2 rounded-full font-bold flex items-center gap-2 animate-bounce">
+          <div className="bg-warn border border-warn-line text-warn-ink px-4 py-2 font-bold flex items-center gap-2 animate-bounce">
             <Star className="w-5 h-5 fill-amber-500 text-amber-500" />
             +50 DB Peace Points
           </div>
@@ -668,17 +678,13 @@ function ScoreBar({ dark = false, label, value }) {
 
 
 
-function DifficultyBadge({ value }) {
+function RiskBadge({ value }) {
+  const className = value === "Hoch" ? "bg-danger text-danger-ink" : "bg-warn text-warn-ink";
   return (
-    <span className="rounded bg-surface px-2 py-1 text-sm font-medium text-ink-muted ring-1 ring-db-dark/10 dark:ring-white/10">
-      {value}
+    <span className={`w-fit px-3 py-1 font-schild text-xs font-semibold uppercase tracking-[0.12em] ${className}`}>
+      Risiko: {value}
     </span>
   );
-}
-
-function RiskBadge({ value }) {
-  const className = value === "Hoch" ? "bg-red-100 text-red-800" : "bg-amber-100 text-amber-800";
-  return <span className={`w-fit rounded px-3 py-1 text-sm font-bold ${className}`}>Risiko: {value}</span>;
 }
 
 function makeOptions(escalating, avoidant, good, professional) {

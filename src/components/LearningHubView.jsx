@@ -58,7 +58,7 @@ export function LearningHubView() {
             <GraduationCap className="h-4 w-4 text-db-red" />
             <span>Wissen &amp; Vorbeugen</span>
           </div>
-          <h1 className="mt-2 font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
+          <h1 className="mt-2 hyphens-auto break-words font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
             Kurs- & Seminar-Katalog
           </h1>
           <p className="mt-3 max-w-[52ch] text-base font-normal leading-relaxed text-ink-muted">
@@ -245,9 +245,7 @@ export function LearningHubView() {
         >
           <ArrowLeft className="h-4 w-4" /> Zurück zum Katalog
         </button>
-        <div className="rounded-md bg-surface border border-line/10 p-4 sm:p-5 shadow-sm">
-          <TrainingMode />
-        </div>
+        <TrainingMode />
       </div>
     );
   }

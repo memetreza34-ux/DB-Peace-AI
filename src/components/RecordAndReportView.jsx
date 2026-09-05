@@ -97,7 +97,7 @@ export function RecordAndReportView() {
               <NotebookPen className="h-4 w-4 text-db-red" />
               <span>Festhalten &amp; Melden</span>
             </div>
-            <h1 className="mt-2 font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
+            <h1 className="mt-2 hyphens-auto break-words font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
               Gedächtnisprotokoll & Vorfall-Meldung
             </h1>
             <p className="mt-3 max-w-[52ch] text-base font-normal leading-relaxed text-ink-muted">
@@ -177,9 +177,9 @@ export function RecordAndReportView() {
       {subTab && (
         <button
           onClick={() => setSubTab(null)}
-          className="flex items-center gap-2 text-sm font-medium text-ink-muted hover:text-db-red dark:hover:text-db-red transition"
+          className="flex min-h-11 items-center gap-2 text-sm font-bold text-ink-muted transition hover:text-db-red"
         >
-          <ArrowLeft className="h-4 w-4" /> Zurück zur Übersicht
+          <ArrowLeft className="h-4 w-4" /> Zurück zur Auswahl
         </button>
       )}
 
@@ -437,9 +437,7 @@ export function RecordAndReportView() {
 
       {/* Sub-Tab 2: Melden (5-Schritte-Assistent) */}
       {subTab === "meldung" && (
-        <div className="rounded-md bg-surface border border-line/10 p-4 sm:p-5 shadow-sm">
-          <AnonymousReport />
-        </div>
+        <AnonymousReport />
       )}
       {/* Selected Record Modal */}
       {selectedRecord && (

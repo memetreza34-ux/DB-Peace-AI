@@ -143,7 +143,7 @@ export function RightsAndLawsView({ onBack }) {
             <Scale className="h-4 w-4 text-db-red" />
             <span>Deine Rechte</span>
           </div>
-          <h1 className="mt-2 font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
+          <h1 className="mt-2 hyphens-auto break-words font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
             Deine Rechte & Gesetze
           </h1>
           {/* Kein Live-Abgleich: Die Texte liegen statisch in src/data/lawsData.json.

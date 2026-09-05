@@ -74,7 +74,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
       {/* Die rote Kante links ist das DB-Erscheinungsbild, nicht Zierrat: sie
           trägt den Titel, statt ihn zu unterstreichen. */}
       <section className="motion-card border-l-4 border-db-red pl-4">
-        <h1 className="font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink sm:text-5xl">
+        <h1 className="hyphens-auto break-words font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink sm:text-5xl">
           Du bist
           <br />
           hier richtig.

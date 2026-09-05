@@ -175,7 +175,7 @@ export default function SupportPage({ onNavigate }) {
       {step === 1 && (
         <div className="py-4">
           <div className="border-l-4 border-db-red pl-4">
-            <h2 className="font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
+            <h2 className="hyphens-auto break-words font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
               Finde die richtige Unterstützung
             </h2>
             <p className="mt-3 max-w-[52ch] text-base font-normal leading-relaxed text-ink-muted">

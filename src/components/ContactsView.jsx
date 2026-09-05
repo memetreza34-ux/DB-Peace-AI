@@ -39,7 +39,7 @@ export function ContactsView() {
   return (
     <div className="w-full">
       <div className="mb-8 border-l-4 border-db-red pl-4">
-        <h1 className="font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
+        <h1 className="hyphens-auto break-words font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
           Wichtige Kontakte & SOS
         </h1>
         <p className="mt-3 max-w-[46ch] text-base font-normal leading-relaxed text-ink-muted">
