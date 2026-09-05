@@ -121,6 +121,31 @@ export const AKTIONEN = {
     vermerk: "Örtliche JAV mit Zustimmung der meldenden Person einbezogen.",
     brauchtZustimmung: true,
   },
+  auf_unternehmensebene: {
+    id: "auf_unternehmensebene",
+    label: "Auf Unternehmensebene klären",
+    beschreibung:
+      "Das Thema hier bearbeiten, ohne den Standort einzuschalten. Genau dafür gibt es diese Ebene — an kleinen Standorten ist das oft der Unterschied zwischen melden und schweigen.",
+    vermerk: "Auf Unternehmensebene übernommen. Der Standort bleibt aussen vor.",
+    grundlage: "§ 72 BetrVG",
+  },
+  an_gesamt_jav: {
+    id: "an_gesamt_jav",
+    label: "An die Gesamt-JAV geben",
+    beschreibung:
+      "Betrifft das Thema nur ein Unternehmen, ist die Gesamt-JAV die zuständige Ebene. Die Konzern-JAV bleibt informiert.",
+    vermerk: "An die Gesamt-JAV des Unternehmens abgegeben.",
+    grundlage: "§ 73a BetrVG",
+    brauchtZustimmung: true,
+  },
+  konzernweit_pruefen: {
+    id: "konzernweit_pruefen",
+    label: "Konzernweit prüfen",
+    beschreibung:
+      "Prüfen, ob dasselbe Thema in anderen Unternehmen des Konzerns auftritt. Ohne Namen — es geht um das Muster, nicht um den Fall.",
+    vermerk: "Zur konzernweiten Prüfung vorgemerkt.",
+    grundlage: "§ 73a BetrVG",
+  },
   vier_augen: {
     id: "vier_augen",
     label: "Vier-Augen-Gespräch vorschlagen",
@@ -159,8 +184,8 @@ export const AKTIONEN = {
 /** Welche Aktionen hat welche Rolle? Rollen ohne Eintrag behalten das Grundpostfach. */
 export const ROLLEN_AKTIONEN = {
   jav: ["sprechstunde", "begleitung", "br_einbringen"],
-  gjav: ["sprechstunde", "oertliche_jav_einbeziehen"],
-  kjav: ["sprechstunde", "oertliche_jav_einbeziehen"],
+  gjav: ["sprechstunde", "auf_unternehmensebene", "oertliche_jav_einbeziehen"],
+  kjav: ["sprechstunde", "konzernweit_pruefen", "an_gesamt_jav"],
   betriebsrat: ["beschwerde_aufnehmen", "monatsgespraech"],
   sbv: ["nachteilsausgleich", "beteiligung_einfordern"],
   gleichstellung: ["weg_waehlen", "frist_erklaeren"],

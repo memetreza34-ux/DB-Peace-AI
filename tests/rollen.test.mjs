@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { ROLLEN, RECHTE, POSTFACH_ROLLEN } from "../src/config/rollen.js";
+import { aktionenFuer } from "../src/config/aktionen.js";
 import {
   darf,
   hatPostfach,
@@ -98,4 +99,39 @@ test("die meldende Person sieht ihre eigenen Fälle, egal an wen sie gingen", as
   assert.ok(eigenerJavFall, "für die Vorführung braucht es einen eigenen JAV-Fall");
   const beiHR = sichtbareFaelle("hr", DEMO_FAELLE);
   assert.equal(beiHR.some((fall) => fall.id === eigenerJavFall.id), false);
+});
+
+test("jede Rolle mit Postfach hat eigene Aktionen — keine zwei sind gleich", () => {
+  // Wenn zwei Rollen dieselben Knöpfe haben, ist eine davon nur ein anderes
+  // Etikett. Gesamt-JAV und Konzern-JAV waren genau das, bis jede Ebene
+  // bekam, wofür es sie gibt: die eine klärt ohne den Standort, die andere
+  // schaut über Unternehmensgrenzen.
+  const mitPostfach = ROLLEN.filter((rolle) => RECHTE[rolle.gruppe]?.postfach);
+  const gesehen = new Map();
+
+  for (const rolle of mitPostfach) {
+    const aktionen = aktionenFuer(rolle.id).map((a) => a.id);
+    if (aktionen.length === 0) continue; // Vertrauensleute: bewusst ohne
+    const schluessel = aktionen.slice().sort().join("|");
+    const schon = gesehen.get(schluessel);
+    assert.ok(
+      !schon,
+      `"${rolle.kurz}" hat dieselben Aktionen wie "${schon}" — dann ist eine der beiden nur ein Etikett`,
+    );
+    gesehen.set(schluessel, rolle.kurz);
+  }
+});
+
+test("jede Rolle mit Postfach hat entweder eigene Aktionen oder einen Grund dagegen", () => {
+  const ohneAktionen = ROLLEN.filter(
+    (rolle) => RECHTE[rolle.gruppe]?.postfach && aktionenFuer(rolle.id).length === 0,
+  ).map((r) => r.id);
+
+  // Nur die Vertrauensleute dürfen leer sein: wer dort meldet, will reden und
+  // keinen Vorgang auslösen. Das steht so auch in aktionen.js.
+  assert.deepEqual(
+    ohneAktionen,
+    ["vertrauensleute"],
+    "Eine Rolle hat ein Postfach, aber nichts, was sie damit tun kann",
+  );
 });
