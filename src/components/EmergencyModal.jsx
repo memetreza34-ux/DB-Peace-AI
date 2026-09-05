@@ -37,7 +37,7 @@ export function EmergencyModal({ isOpen, onClose }) {
               <p className="text-xs font-semibold uppercase tracking-[0.1em] text-db-redInk dark:text-red-400">
                 Notfall
               </p>
-              <h2 id="notfall-titel" className="mt-1.5 text-2xl font-schild font-bold tracking-tight text-ink">
+              <h2 id="notfall-titel" className="mt-1.5 font-schild text-3xl font-bold leading-tight tracking-tight text-ink">
                 Jetzt Hilfe holen
               </h2>
               <div className="mt-3 h-1 w-10 bg-db-red" />
@@ -45,7 +45,7 @@ export function EmergencyModal({ isOpen, onClose }) {
             <button
               onClick={onClose}
               aria-label="Notfall-Dialog schließen"
-              className="rounded-full p-2 bg-db-warm/50 dark:bg-white/10 text-ink hover:bg-db-dark dark:hover:bg-white hover:text-white dark:hover:text-db-dark transition"
+              className="p-2 bg-db-warm/50 dark:bg-white/10 text-ink hover:bg-db-dark dark:hover:bg-white hover:text-white dark:hover:text-db-dark transition"
             >
               <X className="h-5 w-5" />
             </button>
@@ -82,7 +82,7 @@ export function EmergencyModal({ isOpen, onClose }) {
                     <div className="font-bold text-sm text-ink">Telefonseelsorge (24/7)</div>
                     <div className="text-sm font-medium text-ink-muted">0800 111 0 111 (Kostenfrei, anonym)</div>
                   </div>
-                  <div className="rounded-full bg-surface  p-2 shadow-sm border dark:border-white/10">
+                  <div className="bg-surface p-2 border border-line/15">
                     <PhoneCall className="h-4 w-4 text-ink" />
                   </div>
                </a>
@@ -92,7 +92,7 @@ export function EmergencyModal({ isOpen, onClose }) {
                     <div className="font-bold text-sm text-ink">Nummer gegen Kummer</div>
                     <div className="text-sm font-medium text-ink-muted">116 111 (Kostenfrei, bis 25 Jahre)</div>
                   </div>
-                  <div className="rounded-full bg-surface  p-2 shadow-sm border dark:border-white/10">
+                  <div className="bg-surface p-2 border border-line/15">
                     <PhoneCall className="h-4 w-4 text-ink" />
                   </div>
                </a>
@@ -103,7 +103,7 @@ export function EmergencyModal({ isOpen, onClose }) {
                       Die Nummer steht auf deinem Dienstausweis.
                     </div>
                   </div>
-                  <div className="rounded-full bg-surface  p-2 shadow-sm border dark:border-white/10">
+                  <div className="bg-surface p-2 border border-line/15">
                     <ShieldAlert className="h-4 w-4 text-ink" />
                   </div>
                </div>

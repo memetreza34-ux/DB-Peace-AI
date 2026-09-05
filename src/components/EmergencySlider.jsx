@@ -64,7 +64,7 @@ export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500",
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className={`w-full h-16 rounded-full flex items-center justify-center text-white font-bold shadow-lg transition-colors duration-500 ${gpsStatus ? 'bg-emerald-500' : 'bg-db-dark'}`}
+          className={`w-full h-16 flex items-center justify-center text-white font-bold shadow-schwebend transition-colors duration-500 ${gpsStatus ? 'bg-emerald-500' : 'bg-db-dark'}`}
         >
           {!gpsStatus ? (
             <>
@@ -92,10 +92,10 @@ export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500",
   }
 
   return (
-    <div ref={containerRef} className={`relative w-full h-16 rounded-full overflow-hidden flex items-center p-1 shadow-inner ${colorClass} bg-opacity-20 `}>
+    <div ref={containerRef} className={`relative w-full h-16 overflow-hidden flex items-center p-1 ${colorClass} bg-opacity-20 `}>
       <motion.div 
         style={{ opacity: textOpacity }}
-        className="absolute w-full text-center pointer-events-none text-sm font-bold tracking-wide text-db-dark mix-blend-overlay opacity-70 uppercase"
+        className="absolute w-full pointer-events-none pl-16 text-center font-schild text-base font-bold uppercase tracking-[0.14em] text-ink"
       >
         {label}
       </motion.div>
@@ -109,7 +109,7 @@ export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500",
         style={{ x }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className={`h-14 w-14 rounded-full bg-white flex items-center justify-center shadow-md cursor-grab active:cursor-grabbing z-10 ${iconColor}`}
+        className={`h-14 w-14 bg-white flex items-center justify-center shadow-schwebend cursor-grab active:cursor-grabbing z-10 ${iconColor}`}
       >
         <Phone className="h-6 w-6" />
       </motion.div>

@@ -62,7 +62,9 @@
   --surface: var(--db-gray-900);
   --surface-sunk: var(--db-gray-700);
   --ink: var(--db-white);
-  --ink-muted: 155 163 174;
+  /* Aufgehellt, bis der Nebentext auch auf der eingelassenen Fläche 4.5:1
+     erreicht — dort lag er bei 3.8 und damit unter dem Mindestwert. */
+  --ink-muted: 169 178 190;
   --line: var(--db-white);
   --accent-ink: var(--db-red-light);
   /* Im Dunkelmodus muss der Kopfbereich heller sein als die Karten, sonst

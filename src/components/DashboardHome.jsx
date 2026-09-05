@@ -101,7 +101,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
         <span className="mt-3 block font-schild text-2xl font-bold leading-tight">
           Wenn es jetzt nicht mehr geht
         </span>
-        <span className="mt-1.5 block text-base font-normal leading-snug text-white/85">
+        <span className="mt-1.5 block text-base font-normal leading-snug text-white">
           Notrufe, anonyme Hilfe, Vertrauenspersonen.
         </span>
         <span className="mt-4 inline-flex min-h-[52px] items-center gap-3 bg-white px-5 font-schild text-lg font-bold text-db-redInk">
