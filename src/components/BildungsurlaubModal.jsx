@@ -26,7 +26,7 @@ hiermit beantrage ich gem. Bildungszeitgesetz / Anspruch auf Bildungsurlaub die 
 
 Titel des Seminars: ${course.title}
 Anbieter: ${course.provider}
-${formData.dates ? `Geplanter Zeitraum: ${formData.dates}\n` : ""}
+${course.link ? `Zum Angebot: ${course.link}\n` : ""}${formData.dates ? `Geplanter Zeitraum: ${formData.dates}\n` : ""}
 Die Veranstaltung ist eine anerkannte Weiterbildung und dient meiner beruflichen sowie persönlichen Qualifizierung, insbesondere im Bereich Konfliktmanagement und Deeskalation.
 
 Bitte lassen Sie mich wissen, welche weiteren Unterlagen (z.B. Anmeldebestätigung, Ablaufplan) Sie für die finale Genehmigung benötigen.
