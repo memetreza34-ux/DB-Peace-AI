@@ -502,7 +502,7 @@ function SimulationPanel({ onChoose, onNext, progress, round, roundIndex, scenar
               onClick={() => onChoose(index)}
               className={`rounded-lg border p-4 text-left font-semibold leading-7 transition ${
                 selectedOption === index
-                  ? "border-db-red bg-danger text-ink"
+                  ? "border-db-red bg-red-50 dark:bg-red-900/30 text-ink"
                   : "border-line/10 bg-surface hover:-translate-y-0.5 hover:border-db-red hover:shadow-sm"
               }`}
             >

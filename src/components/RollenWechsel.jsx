@@ -109,9 +109,9 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
             </p>
           </div>
 
-          <div className="flex gap-3 rounded-xl border border-warn-line bg-warn p-4">
-            <Info className="mt-0.5 h-5 w-5 shrink-0 text-warn-ink" />
-            <p className="text-sm font-medium leading-relaxed text-warn-ink">
+          <div className="flex gap-3 rounded-xl border border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20 p-4">
+            <Info className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
+            <p className="text-sm font-medium leading-relaxed text-amber-900 dark:text-amber-200">
               Keine Anmeldung und keine Berechtigungsprüfung — die Rollen sind zum Ansehen. Jedes
               Postfach zeigt erfundene Beispielfälle, und die Stellen sehen einander nicht.
             </p>

@@ -107,7 +107,7 @@ export function MoodTracker() {
                             className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${
                               reason === r 
                                 ? "bg-red-500 text-white" 
-                                : "bg-red-500/10 text-danger-ink hover:bg-red-500/20 border border-red-500/20"
+                                : "bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 border border-red-500/20"
                             }`}
                           >
                             {r}
@@ -142,7 +142,7 @@ export function MoodTracker() {
             animate={{ opacity: 1, scale: 1 }}
             className="flex flex-col items-center justify-center py-5 text-center"
           >
-            <div className="rounded-full bg-ok p-4 text-ok-ink mb-3">
+            <div className="rounded-full bg-emerald-100 dark:bg-emerald-500/20 p-4 text-emerald-600 dark:text-emerald-400 mb-3">
               <CheckCircle2 className="h-8 w-8" />
             </div>
             <h2 className="text-lg font-bold text-ink">Gespeichert!</h2>

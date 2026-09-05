@@ -194,7 +194,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
             Bewusst in einer Zeile statt in zwei Absätzen — davor stehen im
             Ernstfall noch Fristenwarnung und Befangenheitshinweis. */}
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border border-line/10 bg-surface px-4 py-3">
-          <span className="flex items-center gap-2 text-sm font-bold text-warn-ink">
+          <span className="flex items-center gap-2 text-sm font-bold text-amber-800 dark:text-amber-300">
             <Info className="h-4 w-4 shrink-0" />
             Erfundene Beispielfälle — nichts davon erreicht jemanden
           </span>
@@ -208,20 +208,20 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
           <div
             className={`flex items-start gap-3 rounded-xl border p-4 ${
               fristenLage.ueberfaellig > 0
-                ? "border-db-red/40 bg-danger"
-                : "border-warn-line bg-warn"
+                ? "border-db-red/40 bg-red-50 dark:bg-red-950/20"
+                : "border-amber-300 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/20"
             }`}
           >
             <AlarmClock
               className={`mt-0.5 h-5 w-5 shrink-0 ${
-                fristenLage.ueberfaellig > 0 ? "text-db-red" : "text-warn-ink"
+                fristenLage.ueberfaellig > 0 ? "text-db-red" : "text-amber-600 dark:text-amber-400"
               }`}
             />
             <p
               className={`text-sm font-semibold leading-relaxed ${
                 fristenLage.ueberfaellig > 0
                   ? "text-db-redInk dark:text-red-300"
-                  : "text-warn-ink"
+                  : "text-amber-900 dark:text-amber-200"
               }`}
             >
               {fristenLage.ueberfaellig > 0 && (
@@ -490,9 +490,9 @@ function Hinweisleiste({ rolleId, fall }) {
           const stand = fristStand(frist, eingang);
           const farbe =
             stand.stand === "ueberfaellig"
-              ? "border-db-red/40 bg-danger text-db-redInk dark:text-red-300"
+              ? "border-db-red/40 bg-red-50 dark:bg-red-950/20 text-db-redInk dark:text-red-300"
               : stand.stand === "knapp"
-                ? "border-amber-300 bg-warn text-warn-ink"
+                ? "border-amber-300 bg-amber-50 dark:bg-amber-950/20 text-amber-900 dark:text-amber-300"
                 : "border-line/10 bg-surface text-ink-muted";
           return (
             <div key={frist.id} className={`flex items-start gap-2.5 rounded-xl border p-3 ${farbe}`}>
@@ -561,14 +561,14 @@ function Auswertung({ ergebnis, rolleKurz }) {
 
 function StatusMarke({ status }) {
   const marken = {
-    offen: { text: "offen", klasse: "bg-danger text-danger-ink" },
+    offen: { text: "offen", klasse: "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300" },
     "in-bearbeitung": {
       text: "in Bearbeitung",
-      klasse: "bg-warn text-warn-ink",
+      klasse: "bg-amber-100 text-amber-900 dark:bg-amber-950/40 dark:text-amber-300",
     },
     abgeschlossen: {
       text: "abgeschlossen",
-      klasse: "bg-ok text-ok-ink",
+      klasse: "bg-emerald-100 text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300",
     },
   };
   const marke = marken[status] ?? marken.offen;

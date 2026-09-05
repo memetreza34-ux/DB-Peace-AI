@@ -41,20 +41,6 @@
      dunkel. */
   --contrast: var(--db-gray-900);
   --contrast-ink: var(--db-white);
-
-  /* Ebene 2b — Zustände. Drei Bedeutungen, nicht sieben Farbtöne: die App
-     mischte bisher amber, red, emerald, green, blue und yellow durcheinander.
-     Das DB-Rot bleibt davon getrennt: --accent ist die Marke, --danger ist
-     eine Warnung. */
-  --warn: 255 251 235; /* Hinweis, Frist läuft */
-  --warn-line: 253 230 138;
-  --warn-ink: 120 53 15;
-  --danger: 254 242 242; /* dringend, überfällig */
-  --danger-line: 254 202 202;
-  --danger-ink: 185 28 28;
-  --ok: 236 253 245; /* erledigt, bestätigt */
-  --ok-line: 167 243 208;
-  --ok-ink: 6 78 59;
 }
 
 .dark {
@@ -72,17 +58,4 @@
   --surface-inverse: var(--db-gray-700);
   --contrast: var(--db-white);
   --contrast-ink: var(--db-gray-900);
-
-  /* Die Flächen lagen im Dunkelmodus halbdurchsichtig über dem Nachtgrund.
-     Als Token brauchen sie einen Vollton — das hier ist derselbe Eindruck,
-     ausgerechnet statt geschätzt. */
-  --warn: 39 34 36;
-  --warn-line: 67 43 32;
-  --warn-ink: 253 230 138;
-  --danger: 39 31 37;
-  --danger-line: 153 27 27;
-  --danger-ink: 248 113 113;
-  --ok: 24 49 48;
-  --ok-line: 22 101 52;
-  --ok-ink: 110 231 183;
 }

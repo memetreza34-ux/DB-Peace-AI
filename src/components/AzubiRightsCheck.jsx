@@ -28,7 +28,7 @@ export function AzubiRightsCheck() {
       id: "tasks",
       icon: ShieldAlert,
       title: "Ausbildungsfremde Aufgaben",
-      color: "text-warn-ink",
+      color: "text-amber-600 dark:text-amber-400",
       bg: "bg-amber-500/10",
       content:
         "Aufgaben, die nichts mit deiner Ausbildung zu tun haben, musst du nicht übernehmen — das Privatauto der Meisterin waschen zum Beispiel. Du bist zum Lernen da. Du darfst das höflich, aber deutlich ablehnen.",
@@ -48,7 +48,7 @@ export function AzubiRightsCheck() {
       id: "school",
       icon: Scale,
       title: "Berufsschule & Freistellung",
-      color: "text-ok-ink",
+      color: "text-emerald-600 dark:text-emerald-400",
       bg: "bg-emerald-500/10",
       content:
         "Für die Berufsschule musst du freigestellt werden. Nach einem Schultag mit mehr als fünf Unterrichtsstunden darf dich der Betrieb nicht mehr rufen — der Tag zählt als voller Arbeitstag.",

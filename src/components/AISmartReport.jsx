@@ -80,12 +80,12 @@ export function AISmartReport({ onReportGenerated }) {
 
         {generatedReport && !isTyping && (
           <div className="flex justify-start mt-4 animate-fadeIn">
-            <div className="bg-ok border border-ok-line rounded-2xl px-4 py-4 text-sm shadow-sm w-full">
-              <div className="flex items-center gap-2 text-ok-ink font-bold mb-3">
+            <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-2xl px-4 py-4 text-sm shadow-sm w-full">
+              <div className="flex items-center gap-2 text-green-700 dark:text-green-400 font-bold mb-3">
                 <CheckCircle2 className="w-5 h-5" />
                 Protokoll erfolgreich generiert
               </div>
-              <div className="space-y-2 text-ok-ink mb-4 text-sm bg-white/50 dark:bg-black/20 p-3 rounded-lg">
+              <div className="space-y-2 text-green-900 dark:text-green-300 mb-4 text-sm bg-white/50 dark:bg-black/20 p-3 rounded-lg">
                 <p><strong>Datum:</strong> {generatedReport.date}</p>
                 <p><strong>Uhrzeit:</strong> {generatedReport.time}</p>
                 <p><strong>Ort:</strong> {generatedReport.location}</p>

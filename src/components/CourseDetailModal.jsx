@@ -155,9 +155,9 @@ export function CourseDetailModal({ course, onClose }) {
             </div>
           )}
 
-          <div className="rounded-lg border border-warn-line bg-warn p-4 flex gap-3">
-            <Info className="w-4 h-4 text-warn-ink shrink-0 mt-0.5" />
-            <p className="text-sm font-medium text-warn-ink leading-relaxed">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900/40 p-4 flex gap-3">
+            <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+            <p className="text-sm font-medium text-amber-900 dark:text-amber-200 leading-relaxed">
               Dieses Angebot wird von der genannten Organisation durchgeführt, nicht von dieser App.
               Anmeldung, Inhalte, Termine und mögliche Nachweise laufen direkt über den Anbieter.
             </p>

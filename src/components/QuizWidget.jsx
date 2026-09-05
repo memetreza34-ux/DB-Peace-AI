@@ -172,7 +172,7 @@ export function QuizWidget() {
                 <XCircle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
               )}
               <div>
-                <h4 className={`font-bold ${isCorrect ? 'text-emerald-700 dark:text-emerald-400' : 'text-danger-ink'}`}>
+                <h4 className={`font-bold ${isCorrect ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'}`}>
                   {isCorrect ? 'Richtig!' : 'Leider falsch.'}
                 </h4>
                 <p className="text-sm mt-1 text-db-dark/80 dark:text-white/80 leading-relaxed">
