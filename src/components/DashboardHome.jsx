@@ -141,9 +141,29 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
         </div>
       </div>
 
-      <div className="motion-card max-w-md mx-auto w-full z-20 relative" style={einblendVerzoegerung(1)}>
-        <MoodTracker />
+      {/*
+        Der Notfall stand als „Secondary Action" hinter fünf Kacheln ganz unten.
+        Wer ihn braucht, soll nicht daran vorbeiscrollen müssen — er steht jetzt
+        direkt unter der Begrüssung.
+      */}
+      <div className="motion-card" style={einblendVerzoegerung(6)}>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={onOpenEmergency}
+          className="flex items-center gap-4 rounded-md border border-red-200/50 dark:border-red-500/20 bg-white/70 dark:bg-red-500/5 backdrop-blur-md p-5 text-left transition hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 dark:hover:border-red-500/30 hover:shadow-lg hover:shadow-red-500/10 group"
+        >
+          <div className="rounded-xl bg-red-100 dark:bg-red-500/20 p-3 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
+            <Siren className="h-6 w-6" />
+          </div>
+          <div>
+            <h4 className="font-black text-db-dark dark:text-white">Akuter Notfall</h4>
+            <p className="text-xs font-semibold text-db-rail dark:text-white/70 mt-0.5">Sofortige Hilfe & Kontakte</p>
+          </div>
+        </motion.button>
+
       </div>
+
 
       {/* Grid Menu */}
       {/* Eigene Überschrift statt Sprung von h1 direkt auf h3 — hilft beim
@@ -184,25 +204,13 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
         })}
       </div>
 
-      {/* Secondary Actions / Footer of Dashboard */}
-      <div className="motion-card" style={einblendVerzoegerung(6)}>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={onOpenEmergency}
-          className="flex items-center gap-4 rounded-md border border-red-200/50 dark:border-red-500/20 bg-white/70 dark:bg-red-500/5 backdrop-blur-md p-5 text-left transition hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 dark:hover:border-red-500/30 hover:shadow-lg hover:shadow-red-500/10 group"
-        >
-          <div className="rounded-xl bg-red-100 dark:bg-red-500/20 p-3 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
-            <Siren className="h-6 w-6" />
-          </div>
-          <div>
-            <h4 className="font-black text-db-dark dark:text-white">Akuter Notfall</h4>
-            <p className="text-xs font-semibold text-db-rail dark:text-white/70 mt-0.5">Sofortige Hilfe & Kontakte</p>
-          </div>
-        </motion.button>
 
+
+      {/* Das Stimmungs-Tagebuch ist das Unwichtigste auf dieser Seite und
+          stand trotzdem vor allen Hilfe-Wegen. */}
+      <div className="motion-card max-w-md mx-auto w-full z-20 relative" style={einblendVerzoegerung(1)}>
+        <MoodTracker />
       </div>
-
     </div>
   );
 }
