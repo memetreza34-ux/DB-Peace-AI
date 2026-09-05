@@ -3,6 +3,7 @@ import { GETEILT, PERSOENLICH, geraetemodus, geraetemodusSetzen } from "../lib/g
 import {
   BadgeCheck,
   CheckCircle2,
+  ChevronDown,
   EyeOff,
   FileText,
   KeyRound,
@@ -64,12 +65,12 @@ function PrivacyCompliance() {
     <section id="datenschutz" className="py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <EntryHeader />
+        <Geraeteeinstellung />
         <Principles />
         <AiBoundaries />
         <UserControl />
         <ComplianceChecklist checked={checked} toggle={toggle} />
-        <Geraeteeinstellung />
-      <FinalDisclaimer />
+        <FinalDisclaimer />
       </div>
     </section>
   );
@@ -251,13 +252,16 @@ function FinalDisclaimer() {
 
 function Section({ children, text, title }) {
   return (
-    <div className="mt-10">
-      <div className="max-w-3xl">
-        <h3 className="text-3xl font-black text-db-dark">{title}</h3>
-        {text && <p className="mt-3 font-semibold leading-7 text-db-rail">{text}</p>}
-      </div>
-      <div className="mt-6">{children}</div>
-    </div>
+    <details className="group mt-6 rounded-lg border border-db-dark/10 bg-white shadow-sm">
+      <summary className="flex min-h-11 cursor-pointer list-none items-start gap-3 p-6">
+        <div className="max-w-3xl flex-grow">
+          <h3 className="text-2xl font-black text-db-dark">{title}</h3>
+          {text && <p className="mt-2 font-semibold leading-7 text-db-rail">{text}</p>}
+        </div>
+        <ChevronDown className="mt-1 h-5 w-5 shrink-0 text-db-rail transition-transform group-open:rotate-180" />
+      </summary>
+      <div className="px-6 pb-6">{children}</div>
+    </details>
   );
 }
 
