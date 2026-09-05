@@ -33,6 +33,7 @@ function TextMitRufnummern({ text }) {
 
 export function FloatingChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [beimLesen, setBeimLesen] = useState(false);
   
   const INITIAL_MESSAGES = [
     {
@@ -156,8 +157,26 @@ export function FloatingChatWidget() {
     }
   };
 
+  // Beim Runterscrollen weicht der Knopf, beim Hochscrollen ist er wieder da.
+  useEffect(() => {
+    let letzte = window.scrollY;
+    const beiScroll = () => {
+      const jetzt = window.scrollY;
+      setBeimLesen(jetzt > letzte && jetzt > 120);
+      letzte = jetzt;
+    };
+    window.addEventListener("scroll", beiScroll, { passive: true });
+    return () => window.removeEventListener("scroll", beiScroll);
+  }, []);
+
+  const weggeblendet = beimLesen && !isOpen;
+
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div
+      className={`fixed bottom-6 right-6 z-50 flex flex-col items-end transition-[transform,opacity] duration-200 focus-within:translate-y-0 focus-within:opacity-100 ${
+        weggeblendet ? "translate-y-24 opacity-0" : "translate-y-0 opacity-100"
+      }`}
+    >
       
       {/* Chat Window */}
       <AnimatePresence>

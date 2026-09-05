@@ -85,7 +85,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
     <div className="space-y-10">
       
       {/* Welcome Banner */}
-      <div className="motion-card rounded-lg bg-db-dark px-6 py-10 sm:px-10 sm:py-14 text-center shadow-lg shadow-db-dark/20 relative overflow-hidden group">
+      <div className="motion-card rounded-lg bg-db-dark px-6 py-7 sm:px-10 sm:py-9 text-center shadow-lg shadow-db-dark/20 relative overflow-hidden group">
         {/* Background Glow */}
         <motion.div 
           animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
@@ -132,7 +132,7 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
         </motion.div>
 
         <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-6 max-w-2xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight drop-shadow-lg">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white leading-tight drop-shadow-lg">
             Willkommen bei DB Peace
           </h1>
           <p className="text-base sm:text-lg font-medium text-white/80 max-w-xl">

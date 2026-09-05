@@ -80,7 +80,7 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
           <button
             type="button"
             onClick={onOpenEmergency}
-            aria-label="Notfall und Kontakte"
+            aria-label="Notfall — sofort Hilfe holen"
             className={`flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-2.5 sm:px-3.5 py-2 text-xs sm:text-sm font-extrabold transition shadow-sm ${
               activeTab === "contacts"
                 ? "bg-red-800 text-white dark:bg-red-900"
@@ -88,7 +88,7 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
             }`}
           >
             <ShieldAlert className="h-4 w-4 shrink-0" />
-            <span className="hidden sm:inline">Notfall &amp; Kontakte</span>
+            <span className="hidden sm:inline">Notfall</span>
           </button>
         </nav>
       </div>
