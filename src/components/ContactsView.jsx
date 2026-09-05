@@ -13,7 +13,8 @@ import {
   ExternalLink,
   Info,
   MapPin,
-  ShieldPlus
+  ShieldPlus,
+  ChevronDown
 } from "lucide-react";
 import {
   DB_MELDEWEGE,
@@ -47,21 +48,15 @@ export function ContactsView() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Akute Nothilfe */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border-2 border-red-500/20 shadow-sm flex flex-col h-full"
+      <div className="space-y-4">
+        <Abschnitt
+          titel="Akute Gefahr"
+          symbol={<ShieldAlert className="w-6 h-6" />}
+          symbolKlasse="bg-red-500 text-white"
+          anzahl={notrufe.length}
+          offen
         >
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-red-500 text-white p-3 rounded-xl">
-              <ShieldAlert className="w-6 h-6" />
-            </div>
-            <h2 className="text-xl font-black text-db-dark dark:text-white">Akute Gefahr</h2>
-          </div>
-
-          <div className="space-y-4 flex-grow">
+          <div className="space-y-4">
             {notrufe.map((k) => (
               <TelefonKarte
                 key={k.id}
@@ -72,52 +67,32 @@ export function ContactsView() {
               />
             ))}
           </div>
-        </motion.div>
+        </Abschnitt>
 
         {/* Offizielle Meldewege der DB */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border border-db-dark/10 dark:border-white/10 shadow-sm flex flex-col h-full"
+        <Abschnitt
+          titel="Meldewege der DB"
+          hinweis="Offizielle Meldestellen des Konzerns. Du entscheidest, ob du deinen Namen nennst."
+          symbol={<Building2 className="w-6 h-6" />}
+          symbolKlasse="bg-db-dark text-white dark:bg-white dark:text-db-dark"
+          anzahl={DB_MELDEWEGE.length}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="bg-db-dark text-white dark:bg-white dark:text-db-dark p-3 rounded-xl">
-              <Building2 className="w-6 h-6" />
-            </div>
-            <h2 className="text-xl font-black text-db-dark dark:text-white">Meldewege der DB</h2>
-          </div>
-
-          <p className="text-xs font-medium text-db-rail dark:text-white/60 mb-5 leading-relaxed">
-            Offizielle Meldestellen des DB-Konzerns. Du entscheidest, ob du deinen Namen nennst.
-          </p>
-
-          <div className="space-y-4 flex-grow">
+          <div className="space-y-4">
             {DB_MELDEWEGE.map((w) => (
               <MeldewegKarte key={w.id} weg={w} />
             ))}
           </div>
-        </motion.div>
+        </Abschnitt>
 
         {/* Vertrauliche Beratung */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border border-db-dark/10 dark:border-white/10 shadow-sm flex flex-col h-full"
+        <Abschnitt
+          titel="Beratung"
+          hinweis="Zum Reden und Sortieren — ohne dass daraus eine Meldung wird."
+          symbol={<HeartHandshake className="w-6 h-6" />}
+          symbolKlasse="bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400"
+          anzahl={DB_BERATUNG.length + beratung.length}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 p-3 rounded-xl">
-              <HeartHandshake className="w-6 h-6" />
-            </div>
-            <h2 className="text-xl font-black text-db-dark dark:text-white">Beratung</h2>
-          </div>
-
-          <p className="text-xs font-medium text-db-rail dark:text-white/60 mb-5 leading-relaxed">
-            Zum Reden und Sortieren — ohne dass daraus eine Meldung wird.
-          </p>
-
-          <div className="space-y-4 flex-grow">
+          <div className="space-y-4">
             {DB_BERATUNG.map((b) => (
               <BeratungKarte key={b.id} eintrag={b} />
             ))}
@@ -125,24 +100,16 @@ export function ContactsView() {
               <TelefonKarte key={k.id} name={k.name} nummer={k.telefon} desc={k.beschreibung} />
             ))}
           </div>
-        </motion.div>
-      </div>
+        </Abschnitt>
 
       {/* Standortabhängige Stellen */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="mt-6 bg-db-soft dark:bg-white/5 rounded-lg p-6 border border-db-dark/10 dark:border-white/10"
-      >
-        <div className="flex items-center gap-3 mb-2">
-          <MapPin className="w-5 h-5 text-db-red" />
-          <h2 className="text-lg font-black text-db-dark dark:text-white">An deinem Standort</h2>
-        </div>
-        <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-4 max-w-3xl leading-relaxed">
-          Diese Stellen sind je nach Standort und Ausbildungsbereich unterschiedlich. Wähle deinen
-          Standort, dann siehst du, wer dort hinter den Rollen steht.
-        </p>
+        <Abschnitt
+          titel="An deinem Standort"
+          hinweis="Je nach Standort und Ausbildungsbereich unterschiedlich — erst auswählen."
+          symbol={<MapPin className="w-6 h-6" />}
+          symbolKlasse="bg-db-red/10 text-db-red"
+          anzahl={STANDORT_ROLLEN.length}
+        >
 
         <div className="mb-5 flex flex-wrap items-center gap-2">
           <label htmlFor="standortwahl" className="text-xs font-black text-db-dark dark:text-white">
@@ -243,23 +210,18 @@ export function ContactsView() {
             ))}
           </div>
         )}
-      </motion.div>
+        </Abschnitt>
 
       {/* Viele Azubis im ersten Lehrjahr sind noch keine 18 — für sie gelten
           zusätzliche Rechte, die kaum jemand kennt. */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35 }}
-        className="mt-6 rounded-lg border-2 border-amber-200 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20 p-6"
-      >
-        <div className="flex items-center gap-3 mb-2">
-          <ShieldPlus className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-          <h2 className="text-lg font-black text-db-dark dark:text-white">
-            Noch keine 18? Dann gilt für dich mehr
-          </h2>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-3 mt-4">
+        <Abschnitt
+          titel="Noch keine 18? Dann gilt für dich mehr"
+          hinweis="Zusätzliche Rechte, die kaum jemand kennt."
+          symbol={<ShieldPlus className="w-6 h-6" />}
+          symbolKlasse="bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
+          anzahl={UNTER_18.length}
+        >
+          <div className="grid gap-4 sm:grid-cols-3">
           {UNTER_18.map((h) => (
             <div key={h.id}>
               <h3 className="font-black text-sm text-db-dark dark:text-white mb-1">{h.titel}</h3>
@@ -269,13 +231,50 @@ export function ContactsView() {
             </div>
           ))}
         </div>
-      </motion.div>
+        </Abschnitt>
+      </div>
 
       <p className="mt-6 text-center text-[11px] font-semibold text-db-rail/70 dark:text-white/40">
         Kontaktdaten zuletzt geprüft am {new Date(GEPRUEFT_AM).toLocaleDateString("de-DE")} ·
         Quellen: deutschebahn.com (Compliance – Hinweise geben), railbow.deutschebahn.com
       </p>
     </div>
+  );
+}
+
+/*
+ * Ein zugeklappter Abschnitt. Die Seite war 6000 Pixel lang und warf siebzehn
+ * Anlaufstellen auf einmal aus — wer in Not ist, scrollt daran vorbei.
+ * „Akute Gefahr" bleibt offen, alles andere klappt auf Wunsch auf. Das ist
+ * genau das, was der Untertitel ohnehin verspricht: die Nummern ganz oben,
+ * alles andere ist für später.
+ *
+ * <details> statt eigener Zustand, damit Tastatur und Screenreader das
+ * Verhalten vom Browser bekommen.
+ */
+function Abschnitt({ titel, hinweis, symbol, symbolKlasse, anzahl, offen = false, children }) {
+  return (
+    <details
+      open={offen}
+      className="group bg-white dark:bg-db-dark/80 rounded-lg border border-db-dark/10 dark:border-white/10 shadow-sm"
+    >
+      <summary className="flex cursor-pointer list-none items-center gap-3 p-6 min-h-[44px]">
+        <div className={`p-3 rounded-xl shrink-0 ${symbolKlasse}`}>{symbol}</div>
+        <div className="min-w-0 flex-grow">
+          <h2 className="text-xl font-black text-db-dark dark:text-white">{titel}</h2>
+          {hinweis && (
+            <p className="text-xs font-medium text-db-rail dark:text-white/60 mt-0.5 leading-relaxed">
+              {hinweis}
+            </p>
+          )}
+        </div>
+        <span className="flex shrink-0 items-center gap-2 text-sm font-bold text-db-rail dark:text-white/60">
+          {anzahl}
+          <ChevronDown className="h-5 w-5 transition-transform group-open:rotate-180" />
+        </span>
+      </summary>
+      <div className="px-6 pb-6 space-y-4">{children}</div>
+    </details>
   );
 }
 

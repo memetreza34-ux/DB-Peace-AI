@@ -1,5 +1,5 @@
 import React from "react";
-import { HeartHandshake, BarChart3, Info, ShieldCheck, Eye } from "lucide-react";
+import { HeartHandshake, BarChart3, Info, ShieldCheck, Eye, Presentation, ChevronDown } from "lucide-react";
 
 export function Footer({ onNavigate, onRollenAnsehen }) {
   return (
@@ -25,48 +25,59 @@ export function Footer({ onNavigate, onRollenAnsehen }) {
             🛡️ <span className="text-db-redInk dark:text-red-400 font-black">„Menschen entscheiden, nicht die KI.“</span> — Keine Rechts- oder Medizinberatung.
           </div>
 
-          {/* Quick Access Links */}
+          {/*
+            Von den vier Einträgen hier war nur einer für die nutzende Person
+            gedacht. Analytics, Projekt-Pitch und der Rollenwechsel sind
+            Vorführ-Funktionen — sie standen trotzdem auf jeder Seite, auch
+            wenn jemand die App gerade in einer Notlage öffnet. Datenschutz
+            bleibt sichtbar, der Rest liegt eine Klick tiefer.
+          */}
           <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-db-rail dark:text-white/60">
             <button
               type="button"
-              onClick={() => onNavigate("analytics")}
-              className="flex items-center gap-1.5 hover:text-db-red transition"
-            >
-              <BarChart3 className="h-3.5 w-3.5" />
-              <span>Analytics</span>
-            </button>
-            <span>•</span>
-            <button
-              type="button"
-              onClick={() => onNavigate("project")}
-              className="flex items-center gap-1.5 hover:text-db-red transition"
-            >
-              <Info className="h-3.5 w-3.5" />
-              <span>Projekt-Pitch</span>
-            </button>
-            <span>•</span>
-            <button
-              type="button"
               onClick={() => onNavigate("privacy")}
-              className="flex items-center gap-1.5 hover:text-db-red transition"
+              className="flex min-h-11 items-center gap-1.5 hover:text-db-red transition"
             >
               <ShieldCheck className="h-3.5 w-3.5 text-green-600" />
               <span>Datenschutz & Compliance</span>
             </button>
-            {onRollenAnsehen && (
-              <>
-                <span>•</span>
+
+            <details className="group relative">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 hover:text-db-red transition">
+                <Presentation className="h-3.5 w-3.5" />
+                <span>Für die Vorführung</span>
+                <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
+              </summary>
+              <div className="mt-2 flex flex-col gap-1 rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark p-2 shadow-sm sm:absolute sm:bottom-full sm:right-0 sm:mb-2 sm:w-64">
                 <button
                   type="button"
-                  onClick={onRollenAnsehen}
-                  className="flex items-center gap-1.5 text-purple-700 dark:text-purple-400 hover:text-purple-900 dark:hover:text-purple-300 transition"
-                  title="Vorschau: So käme eine Meldung bei JAV, Betriebsrat, HR oder Compliance an"
+                  onClick={() => onNavigate("analytics")}
+                  className="flex min-h-11 items-center gap-2 rounded px-2 text-left hover:bg-db-dark/5 dark:hover:bg-white/5 hover:text-db-red transition"
                 >
-                  <Eye className="h-3.5 w-3.5" />
-                  <span>Andere Perspektive ansehen</span>
+                  <BarChart3 className="h-3.5 w-3.5 shrink-0" />
+                  <span>Analytics</span>
                 </button>
-              </>
-            )}
+                <button
+                  type="button"
+                  onClick={() => onNavigate("project")}
+                  className="flex min-h-11 items-center gap-2 rounded px-2 text-left hover:bg-db-dark/5 dark:hover:bg-white/5 hover:text-db-red transition"
+                >
+                  <Info className="h-3.5 w-3.5 shrink-0" />
+                  <span>Projekt-Pitch</span>
+                </button>
+                {onRollenAnsehen && (
+                  <button
+                    type="button"
+                    onClick={onRollenAnsehen}
+                    className="flex min-h-11 items-center gap-2 rounded px-2 text-left hover:bg-db-dark/5 dark:hover:bg-white/5 hover:text-db-red transition"
+                    title="Vorschau: So käme eine Meldung bei JAV, Betriebsrat, HR oder Compliance an"
+                  >
+                    <Eye className="h-3.5 w-3.5 shrink-0" />
+                    <span>Andere Perspektive ansehen</span>
+                  </button>
+                )}
+              </div>
+            </details>
           </div>
         </div>
       </div>

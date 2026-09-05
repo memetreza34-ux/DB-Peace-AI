@@ -178,11 +178,6 @@ export function RightsAndLawsView({ onBack }) {
         </div>
       </div>
 
-      {/* Interactive Quiz Widget */}
-      <div className="max-w-3xl mx-auto -mt-2 mb-8 relative z-20">
-        <QuizWidget />
-      </div>
-
       {/* Die häufigsten Alltagsfragen, bevor es zu den Paragrafen geht */}
       <div className="max-w-3xl mx-auto mb-10">
         <AzubiRightsCheck />
@@ -245,6 +240,11 @@ export function RightsAndLawsView({ onBack }) {
         )}
       </div>
 
+      {/* Das Quiz steht am Ende: erst die Antwort auf die eigene Frage, dann
+          das Angebot, mehr zu wissen. */}
+      <div className="max-w-3xl mx-auto mt-10">
+        <QuizWidget />
+      </div>
     </div>
   );
 }
