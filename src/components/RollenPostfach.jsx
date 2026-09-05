@@ -14,7 +14,7 @@ import {
   ShieldCheck,
   UserCheck,
 } from "lucide-react";
-import { abonnieren, alleFaelle, fallWeitergeben, verlaufErgaenzen } from "../lib/faelle.js";
+import { abonnieren, alleFaelle, fallWeitergeben, serverMeldungen, verlaufErgaenzen } from "../lib/faelle.js";
 import { POSTFACH_ROLLEN } from "../config/rollen.js";
 import {
   rolleFinden,
@@ -49,7 +49,22 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
   const [bestand, setBestand] = useState(() => alleFaelle());
   useEffect(() => abonnieren(setBestand), []);
 
-  const grundFaelle = useMemo(() => sichtbareFaelle(rolleId, bestand), [rolleId, bestand]);
+  // Wirklich abgeschickte Meldungen kommen vom lokalen Server dazu.
+  const [abgeschickt, setAbgeschickt] = useState([]);
+  useEffect(() => {
+    let abgemeldet = false;
+    serverMeldungen(rolleId).then((meldungen) => {
+      if (!abgemeldet) setAbgeschickt(meldungen);
+    });
+    return () => {
+      abgemeldet = true;
+    };
+  }, [rolleId]);
+
+  const grundFaelle = useMemo(
+    () => [...abgeschickt, ...sichtbareFaelle(rolleId, bestand)],
+    [abgeschickt, rolleId, bestand],
+  );
   // Nur die selbst gemeldeten Vorgänge werden gezählt. Fälle über die eigene
   // Person bleiben ungezählt — sonst verriete die Zahl, dass es sie gibt.
   const eigeneAusgeblendet = useMemo(() => ausgeblendeteEigene(rolleId, bestand), [rolleId, bestand]);

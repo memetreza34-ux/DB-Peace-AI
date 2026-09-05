@@ -7,3 +7,6 @@ dist/
 
 # Lokale, persönliche Claude-Einstellungen
 .claude/settings.local.json
+
+# Lokale Meldungs-Datenbank — gehört niemandem ausser diesem Rechner
+daten/

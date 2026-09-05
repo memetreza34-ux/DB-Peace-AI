@@ -20,6 +20,7 @@ import {
   LockKeyhole,
   MessageSquareText,
   Mic,
+  Send,
   MicOff,
   RefreshCw,
   Scale,
@@ -104,12 +105,56 @@ function AnonymousReport() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(initialForm);
   const [analysis, setAnalysis] = useState(null);
+  const [gesendet, setGesendet] = useState(null);
+  const [sendeFehler, setSendeFehler] = useState("");
+  const [sendet, setSendet] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [improved, setImproved] = useState(false);
   const [error, setError] = useState("");
 
   const progress = Math.round((step / 5) * 100);
   const draft = useMemo(() => createDraftReport(form, analysis, improved), [analysis, form, improved]);
+
+  /*
+   * Abschicken heisst hier: die Meldung landet im Postfach der gewählten
+   * Stelle — in einer Datei auf diesem Rechner. Sie geht nicht ins Internet
+   * und erreicht niemanden bei der DB. Das muss die Oberfläche auch so sagen.
+   */
+  const absenden = async () => {
+    if (!form.contact || sendet) return;
+    setSendet(true);
+    setSendeFehler("");
+    try {
+      const antwort = await fetch("/api/meldungen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          empfaenger: form.contact,
+          kategorie: form.type,
+          anonym: form.anonymous,
+          inhalt: {
+            kontext: form.context,
+            zeitpunkt: form.time,
+            haeufigkeit: form.repetition,
+            beschreibung: form.description,
+            gefahr: form.danger,
+            belastung: form.stress,
+            zusammenfassung: analysis?.summary ?? "",
+          },
+        }),
+      });
+      if (!antwort.ok) throw new Error(`Server antwortete mit ${antwort.status}`);
+      setGesendet(await antwort.json());
+    } catch (fehler) {
+      // Ohne laufenden Server gibt es kein Postfach — dann muss die Person das
+      // erfahren und nicht glauben, die Meldung sei unterwegs.
+      setSendeFehler(
+        "Die Meldung konnte nicht abgelegt werden. Läuft der lokale Server? Du kannst den Entwurf so lange als PDF sichern.",
+      );
+    } finally {
+      setSendet(false);
+    }
+  };
 
   function update(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -152,6 +197,8 @@ function AnonymousReport() {
   function reset() {
     setStep(1);
     setForm(initialForm);
+    setGesendet(null);
+    setSendeFehler("");
     setAnalysis(null);
     setPreviewVisible(false);
     setImproved(false);
@@ -193,6 +240,10 @@ function AnonymousReport() {
                 onImprove={improveSummary}
                 onPreview={() => setPreviewVisible(true)}
                 onReset={reset}
+                onAbsenden={absenden}
+                gesendet={gesendet}
+                sendeFehler={sendeFehler}
+                sendet={sendet}
               />
             )}
 
@@ -250,7 +301,7 @@ function EntryHeader() {
       <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-db-dark/50 p-4 shadow-sm">
         <p className="flex items-start gap-3 text-sm font-black text-db-dark dark:text-white">
           <LockKeyhole className="mt-0.5 shrink-0 text-db-red" size={18} aria-hidden="true" />
-          Diese Demo übermittelt keine echten Meldungen.
+          Meldungen bleiben auf diesem Rechner und erreichen niemanden bei der DB.
         </p>
       </div>
     </div>
@@ -265,7 +316,7 @@ function SafetyNotice() {
         <div>
           <h3 className="text-lg font-black text-db-dark dark:text-white">Wichtiger Hinweis</h3>
           <p className="mt-2 text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
-            Bei akuter Gefahr bitte sofort reale Hilfe kontaktieren. Diese Demo speichert nichts und sendet nichts an ein Backend.
+            Bei akuter Gefahr bitte sofort reale Hilfe kontaktieren. Eine abgeschickte Meldung landet im Postfach der gewählten Stelle — in einer Datei auf diesem Rechner, unverschlüsselt. Sie geht nicht ins Internet.
           </p>
         </div>
       </div>
@@ -513,7 +564,7 @@ function ContactStep({ form, update }) {
   return (
     <StepPanel
       title="An wen soll die Meldung gehen?"
-      text="Die App verschickt nichts von selbst — sie bereitet einen Entwurf vor, den du danach selbst weitergibst."
+      text="Die Meldung landet im Postfach dieser Stelle — auf diesem Rechner. Für einen echten Meldeweg bei der DB nimm zusätzlich einen der offiziellen Wege unter „Ansprechpartner & Meldewege“."
     >
       <p className="text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
         {empfehlungsGrund(form.type)}
@@ -661,7 +712,7 @@ function StepControls({ analysis, onAnalyze, onBack, onNext, step, error }) {
 
 
 
-function AnalysisCard({ analysis, onImprove, onPreview, onReset, form }) {
+function AnalysisCard({ analysis, onImprove, onPreview, onReset, form, onAbsenden, gesendet, sendeFehler, sendet }) {
   const risk = riskStyles[analysis.risk];
 
   const handleDownloadPDF = () => {
@@ -740,7 +791,41 @@ function AnalysisCard({ analysis, onImprove, onPreview, onReset, form }) {
         <SummaryBlock label="Mögliche zuständige Stelle" value={analysis.route} wide />
         <SummaryBlock label="Was noch fehlt" value={analysis.missing} wide />
       </div>
+      {gesendet ? (
+        <div className="mt-5 rounded border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-5">
+          <p className="font-black text-emerald-900 dark:text-emerald-200">
+            Im Postfach angekommen — Kennzeichen {gesendet.id}
+          </p>
+          <p className="mt-2 text-sm font-semibold leading-relaxed text-emerald-900/80 dark:text-emerald-200/80">
+            Die Meldung liegt jetzt im Postfach von{" "}
+            {rolleFinden(form.contact)?.kurz ?? form.contact}. Notiere dir das
+            Kennzeichen, wenn du später nachfragen möchtest.
+          </p>
+          <p className="mt-3 text-xs font-bold leading-relaxed text-emerald-900/70 dark:text-emerald-200/60">
+            Gespeichert wird auf diesem Rechner, unverschlüsselt. Nichts davon geht ins Internet
+            oder erreicht jemanden bei der Deutschen Bahn.
+          </p>
+        </div>
+      ) : null}
+
+      {sendeFehler && (
+        <p className="mt-5 rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 p-4 text-sm font-bold leading-relaxed text-amber-900 dark:text-amber-200">
+          {sendeFehler}
+        </p>
+      )}
+
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        {!gesendet && (
+          <button
+            type="button"
+            onClick={onAbsenden}
+            disabled={!form.contact || sendet}
+            className="inline-flex items-center justify-center gap-2 rounded bg-db-dark px-5 py-3 font-black text-white transition hover:bg-db-red disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {sendet ? "Wird abgelegt …" : "Meldung abschicken"}
+            <Send size={18} aria-hidden="true" />
+          </button>
+        )}
         <button
           type="button"
           onClick={handleDownloadPDF}
@@ -787,7 +872,7 @@ function ReportPreview({ draft }) {
         <div>
           <p className="text-sm font-black uppercase tracking-wide text-db-red">Meldungsvorschau</p>
           <h3 className="mt-1 text-2xl font-black dark:text-white">Strukturierter interner Demo-Entwurf</h3>
-          <p className="mt-2 text-sm font-black text-db-rail dark:text-white/60">Diese Meldung wurde nicht übermittelt.</p>
+          <p className="mt-2 text-sm font-black text-db-rail dark:text-white/60">Vorschau des Entwurfs — abgeschickt wird erst mit dem Knopf darunter.</p>
         </div>
       </div>
       <div className="mt-5 grid gap-3 md:grid-cols-2">

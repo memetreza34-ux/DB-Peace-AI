@@ -63,8 +63,14 @@ werden sie geliefert?
 - **Er versendet keine Meldungen.** Der Melde-Assistent bereitet einen Text auf und
   übergibt ihn an einen offiziellen Meldeweg. Abgeschickt wird er von einem
   Menschen, der vorher draufschaut.
-- **Er speichert nichts auf einem Server.** Alle Eingaben bleiben im Browser des
-  Geräts. Es gibt keine Datenbank, kein Konto, keine Übertragung an die DB.
+- **Er speichert Meldungen lokal, sonst nichts.** Eine abgeschickte Meldung
+  landet in einer SQLite-Datei neben dem Projekt (`daten/meldungen.db`) und ist
+  im Postfach der gewählten Stelle sichtbar. Der Server hört nur auf
+  `127.0.0.1` — nichts geht ins Internet, nichts erreicht die DB. Alle übrigen
+  Eingaben (Gedächtnisprotokoll, Stimmung) bleiben weiterhin im Browser.
+  **Für einen Pilot zu klären:** Die Datei ist unverschlüsselt, und wer welche
+  Rolle hat, entscheidet allein der Browser — es gibt keine Anmeldung. Beides
+  wäre vor echten Meldungen zu lösen.
 - **Er verschlüsselt keine Inhalte.** Die PIN sperrt die Oberfläche auf dem Gerät,
   sie schützt die gespeicherten Inhalte nicht. Bei vier Ziffern wäre Verschlüsselung
   Sicherheitstheater. Die App behauptet das an keiner Stelle.

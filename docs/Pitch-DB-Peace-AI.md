@@ -12,7 +12,7 @@
 
 **DB Peace AI ist eine App, die Azubis genau in dem Moment begleitet, in dem sie Mobbing, Hass, Gewalt oder Diskriminierung erleben – sie hilft beim Sortieren, beim sachlichen Festhalten von Vorfällen, beim Vorbereiten einer Meldung und führt direkt zu den echten Hilfe- und Meldestellen der DB. Niedrigschwellig, anonym und jederzeit auf dem Handy.**
 
-> Das Versprechen der App: *„Die App sendet nichts automatisch. Menschen entscheiden, nicht die KI."*
+> Das Versprechen der App: *„Die Meldung geht erst, wenn du sie abschickst. Menschen entscheiden, nicht die KI."*
 
 ---
 

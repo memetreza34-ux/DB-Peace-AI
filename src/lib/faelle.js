@@ -72,3 +72,67 @@ export function zuruecksetzen() {
   faelle = DEMO_FAELLE.map((fall) => ({ ...fall, verlauf: [...fall.verlauf] }));
   melden();
 }
+
+/*
+ * Abgeschickte Meldungen vom lokalen Server holen und in die Form bringen, die
+ * das Postfach kennt.
+ *
+ * Sie kommen zu den erfundenen Beispielfällen dazu, statt sie zu ersetzen: die
+ * Demo-Fälle zeigen einen Verlauf über mehrere Tage, den eine frisch
+ * abgeschickte Meldung noch nicht hat. Beides nebeneinander ist ehrlicher als
+ * ein leeres Postfach.
+ */
+export async function serverMeldungen(rolleId) {
+  try {
+    const antwort = await fetch(`/api/meldungen?rolle=${encodeURIComponent(rolleId)}`);
+    if (!antwort.ok) return [];
+    const { meldungen = [] } = await antwort.json();
+    return meldungen.map(alsFall);
+  } catch {
+    // Ohne laufenden Server bleibt es bei den Beispielfällen. Das Postfach
+    // soll deshalb nicht kaputtgehen.
+    return [];
+  }
+}
+
+function alsFall(meldung) {
+  const zeit = new Date(meldung.eingegangen);
+  const inhalt = meldung.inhalt ?? {};
+  return {
+    id: meldung.id,
+    merkmale: [],
+    empfaenger: meldung.empfaenger,
+    vonMir: false,
+    status: meldung.status,
+    eingegangen: zeit.toLocaleString("de-DE", {
+      day: "2-digit",
+      month: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    kategorie: meldung.kategorie,
+    anonym: meldung.anonym,
+    zusammenfassung:
+      inhalt.zusammenfassung || inhalt.beschreibung || "Ohne weitere Angaben eingereicht.",
+    verlauf: [
+      {
+        id: 1,
+        von: "system",
+        text: meldung.anonym
+          ? "Anonym eingereicht über DB Peace."
+          : "Eingereicht über DB Peace.",
+        zeit: zeit.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }),
+      },
+      ...(inhalt.beschreibung && inhalt.beschreibung !== inhalt.zusammenfassung
+        ? [
+            {
+              id: 2,
+              von: "melder",
+              text: inhalt.beschreibung,
+              zeit: zeit.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }),
+            },
+          ]
+        : []),
+    ],
+  };
+}

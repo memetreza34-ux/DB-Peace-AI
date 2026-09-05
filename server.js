@@ -2,6 +2,7 @@ import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 import { GoogleGenAI } from "@google/genai";
+import { meldungAnlegen, meldungenFuer, statusSetzen } from "./meldungen-speicher.js";
 
 const PORT = Number(process.env.API_PORT || 8787);
 const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
@@ -178,6 +179,36 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "GET" && req.url === "/api/quiz") {
       await handleQuiz(req, res);
+      return;
+    }
+
+    /*
+     * Meldungen. Sie landen in einer SQLite-Datei neben dem Projekt und
+     * verlassen den Rechner nicht — der Server hört ohnehin nur auf 127.0.0.1.
+     */
+    if (req.method === "POST" && req.url === "/api/meldungen") {
+      const daten = await readJson(req);
+      const angelegt = meldungAnlegen({
+        empfaenger: daten.empfaenger,
+        kategorie: daten.kategorie,
+        anonym: daten.anonym,
+        inhalt: daten.inhalt,
+      });
+      sendJson(res, 201, angelegt);
+      return;
+    }
+
+    if (req.method === "GET" && req.url?.startsWith("/api/meldungen")) {
+      const rolle = new URL(req.url, "http://127.0.0.1").searchParams.get("rolle");
+      sendJson(res, 200, { meldungen: rolle ? meldungenFuer(rolle) : [] });
+      return;
+    }
+
+    if (req.method === "PATCH" && req.url?.startsWith("/api/meldungen/")) {
+      const id = decodeURIComponent(req.url.slice("/api/meldungen/".length).split("?")[0]);
+      const daten = await readJson(req);
+      const geaendert = statusSetzen(id, daten.status);
+      sendJson(res, geaendert ? 200 : 404, { geaendert });
       return;
     }
 
