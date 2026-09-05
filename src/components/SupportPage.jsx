@@ -174,8 +174,8 @@ export default function SupportPage({ onNavigate }) {
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-md bg-green-500/10 text-green-600 mb-2">
             <PhoneCall className="h-6 w-6" />
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-ink">Finde die richtige Unterstützung</h2>
-          <p className="text-sm font-normal text-ink-muted max-w-lg mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-black text-db-dark dark:text-white">Finde die richtige Unterstützung</h2>
+          <p className="text-sm font-semibold text-db-rail dark:text-white/60 max-w-lg mx-auto">
             Wähle aus, in welcher Situation du dich befindest. Wir zeigen dir sofort, welche Anlaufstellen bei der DB und extern für dich da sind.
           </p>
 
@@ -186,13 +186,13 @@ export default function SupportPage({ onNavigate }) {
                 <button
                   key={sit.id}
                   onClick={() => selectSituation(sit)}
-                  className="group rounded-xl border border-line/10 bg-surface p-5 hover:-translate-y-1 hover:border-green-500 transition shadow-sm"
+                  className="group rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 hover:-translate-y-1 hover:border-green-500 transition shadow-sm"
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <Icon className="h-5 w-5 text-green-600" />
-                    <span className="font-bold text-ink group-hover:text-green-700">{sit.title}</span>
+                    <span className="font-black text-db-dark dark:text-white group-hover:text-green-700">{sit.title}</span>
                   </div>
-                  <p className="text-sm font-normal text-ink-muted">{sit.explanation}</p>
+                  <p className="text-xs font-semibold text-db-rail dark:text-white/60">{sit.explanation}</p>
                 </button>
               );
             })}
@@ -205,41 +205,41 @@ export default function SupportPage({ onNavigate }) {
         <div className="space-y-6">
           <button
             onClick={goBack}
-            className="flex items-center gap-2 text-sm font-medium text-ink-muted hover:text-green-600 transition"
+            className="flex items-center gap-2 text-sm font-bold text-db-rail dark:text-white/60 hover:text-green-600 transition"
           >
             <ArrowLeft className="h-4 w-4" /> Zurück zur Übersicht
           </button>
 
-          <div className="rounded-md bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 p-5 sm:p-6 space-y-6">
+          <div className="rounded-md bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 p-6 sm:p-8 space-y-6">
              <div className="flex items-center gap-4 border-b border-green-200/50 dark:border-green-800/50 pb-4">
                <selected.icon className="h-8 w-8 text-green-700 dark:text-green-400" />
-               <h3 className="text-xl sm:text-2xl font-bold text-green-900 dark:text-green-300">{selected.title}</h3>
+               <h3 className="text-xl sm:text-2xl font-black text-green-900 dark:text-green-300">{selected.title}</h3>
              </div>
              
              <div>
-               <h4 className="text-sm font-bold text-green-800 dark:text-green-400 uppercase tracking-wider mb-2">Was du jetzt tun solltest</h4>
+               <h4 className="text-sm font-black text-green-800 dark:text-green-400 uppercase tracking-wider mb-2">Was du jetzt tun solltest</h4>
                <p className="text-sm font-medium text-green-900 dark:text-green-300 leading-relaxed bg-white/60 dark:bg-black/20 p-4 rounded-xl border border-green-200 dark:border-green-800">
                  {selected.guidance}
                </p>
              </div>
 
              <div className="pt-4">
-               <h4 className="text-sm font-bold text-green-800 dark:text-green-400 uppercase tracking-wider mb-4">Empfohlene Anlaufstellen</h4>
+               <h4 className="text-sm font-black text-green-800 dark:text-green-400 uppercase tracking-wider mb-4">Empfohlene Anlaufstellen</h4>
                <div className="grid gap-3">
                  {selected.contacts.map((contactName) => {
                    const details = contactDetails[contactName];
                    return (
-                     <div key={contactName} className={`rounded-xl border p-4 bg-surface flex flex-col sm:flex-row gap-4 sm:items-center justify-between ${details?.isUrgent ? 'border-red-200 dark:border-red-800 shadow-sm' : 'border-line/10 shadow-sm'}`}>
+                     <div key={contactName} className={`rounded-xl border p-4 bg-white dark:bg-db-dark/50 flex flex-col sm:flex-row gap-4 sm:items-center justify-between ${details?.isUrgent ? 'border-red-200 dark:border-red-800 shadow-sm' : 'border-db-dark/10 dark:border-white/10 shadow-sm'}`}>
                         <div>
                           <div className="flex items-center gap-2">
-                             <span className={`font-bold text-sm ${details?.isUrgent ? 'text-red-700 dark:text-red-400' : 'text-ink'}`}>{contactName}</span>
-                             <span className={`px-2 py-0.5 rounded text-xs font-bold uppercase ${details?.isUrgent ? 'bg-red-100 text-red-800' : 'bg-db-warm dark:bg-white/10 text-ink/70 '}`}>
+                             <span className={`font-black text-sm ${details?.isUrgent ? 'text-red-700 dark:text-red-400' : 'text-db-dark dark:text-white'}`}>{contactName}</span>
+                             <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${details?.isUrgent ? 'bg-red-100 text-red-800' : 'bg-db-warm dark:bg-white/10 text-db-dark/70 dark:text-white/70'}`}>
                                 {details?.role || 'Intern'}
                              </span>
                           </div>
-                          <p className="text-sm font-normal text-ink-muted mt-1">{details?.desc}</p>
+                          <p className="text-xs font-semibold text-db-rail dark:text-white/60 mt-1">{details?.desc}</p>
                           {!details?.ziel && details?.hinweis && (
-                            <p className="text-sm font-normal text-ink-muted  mt-1.5">
+                            <p className="text-[11px] font-semibold text-db-rail/80 dark:text-white/50 mt-1.5">
                               {details.hinweis}
                             </p>
                           )}
@@ -250,12 +250,12 @@ export default function SupportPage({ onNavigate }) {
                             {...(details.ziel.extern
                               ? { target: "_blank", rel: "noopener noreferrer" }
                               : {})}
-                            className={`shrink-0 rounded-lg px-4 py-2 text-sm font-bold transition text-center ${details?.isUrgent ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-db-dark text-white hover:bg-black'}`}
+                            className={`shrink-0 rounded-lg px-4 py-2 text-xs font-black transition text-center ${details?.isUrgent ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-db-dark text-white hover:bg-black'}`}
                           >
                             {details.ziel.label}
                           </a>
                         ) : (
-                          <span className="shrink-0 rounded-lg border border-line/15 px-4 py-2 text-sm font-medium text-ink-muted text-center">
+                          <span className="shrink-0 rounded-lg border border-db-dark/15 dark:border-white/15 px-4 py-2 text-xs font-bold text-db-rail dark:text-white/60 text-center">
                             Vor Ort erfragen
                           </span>
                         )}
@@ -266,9 +266,9 @@ export default function SupportPage({ onNavigate }) {
              </div>
           </div>
           
-          <div className="rounded-xl border border-line/10 bg-db-soft dark:bg-db-dark/50 p-5 text-center">
-             <p className="text-sm font-normal text-ink-muted">
-               Noch unsicher, was du tun sollst? Du kannst den Vorfall erst mal nur für dich <strong className="text-ink cursor-pointer underline" onClick={() => onNavigate && onNavigate("record-report")}>aufschreiben</strong> – ohne dass jemand davon erfährt. Später entscheidest du, ob etwas daraus wird.
+          <div className="rounded-xl border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-db-dark/50 p-5 text-center">
+             <p className="text-xs font-semibold text-db-rail dark:text-white/60">
+               Noch unsicher, was du tun sollst? Du kannst den Vorfall erst mal nur für dich <strong className="text-db-dark dark:text-white cursor-pointer underline" onClick={() => onNavigate && onNavigate("record-report")}>aufschreiben</strong> – ohne dass jemand davon erfährt. Später entscheidest du, ob etwas daraus wird.
              </p>
           </div>
         </div>

@@ -28,7 +28,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-full text-ink hover:bg-line/5  transition"
+      className="relative flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-full text-db-dark dark:text-white hover:bg-db-dark/5 dark:hover:bg-white/10 transition"
       aria-label="Toggle Dark Mode"
     >
       <motion.div

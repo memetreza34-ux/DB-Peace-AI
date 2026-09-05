@@ -64,8 +64,8 @@ export function AzubiRightsCheck() {
         <div className="rounded-full bg-db-red/10 p-3 text-db-red mb-3">
           <Scale className="h-6 w-6" />
         </div>
-        <h2 className="text-2xl font-bold text-ink">Azubi-Rechte auf einen Blick</h2>
-        <p className="text-sm font-medium text-ink-muted max-w-lg mt-2">
+        <h2 className="text-2xl font-black text-db-dark dark:text-white">Azubi-Rechte auf einen Blick</h2>
+        <p className="text-sm font-medium text-db-rail dark:text-white/60 max-w-lg mt-2">
           Die vier Fragen, die am häufigsten kommen — kurz beantwortet. Die vollständigen
           Gesetzestexte stehen darunter.
         </p>
@@ -81,8 +81,8 @@ export function AzubiRightsCheck() {
               key={right.id}
               className={`rounded-md border transition-colors ${
                 isExpanded
-                  ? "bg-surface border-line/20  shadow-md"
-                  : "bg-white/60 dark:bg-db-dark/30 border-line/5  hover:border-db-dark/10 dark:hover:border-white/20 hover:bg-white dark:hover:bg-db-dark/50"
+                  ? "bg-white dark:bg-db-dark/50 border-db-dark/20 dark:border-white/20 shadow-md"
+                  : "bg-white/60 dark:bg-db-dark/30 border-db-dark/5 dark:border-white/10 hover:border-db-dark/10 dark:hover:border-white/20 hover:bg-white dark:hover:bg-db-dark/50"
               }`}
             >
               <button
@@ -96,16 +96,16 @@ export function AzubiRightsCheck() {
                   <div className={`rounded-xl p-2 ${right.bg} ${right.color}`}>
                     <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="font-bold text-ink">{right.title}</h3>
+                  <h3 className="font-bold text-db-dark dark:text-white">{right.title}</h3>
                 </div>
-                <div className="text-ink-muted shrink-0">
+                <div className="text-db-rail dark:text-white/60 shrink-0">
                   {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
                 </div>
               </button>
 
               {isExpanded && (
                 <div id={`recht-${right.id}`} className="px-5 pb-5 pt-0 sm:pl-16">
-                  <p className="text-sm font-medium leading-relaxed text-ink-muted">
+                  <p className="text-sm font-medium leading-relaxed text-db-rail dark:text-white/70">
                     {right.content}
                   </p>
                   <p className="mt-3 text-xs font-bold uppercase tracking-wide text-db-rail/70 dark:text-white/50">

@@ -18,7 +18,7 @@ export function EmergencyModal({ isOpen, onClose }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       onClick={onClose}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 "
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-md"
     >
         <motion.div
           ref={dialogRef}
@@ -29,23 +29,25 @@ export function EmergencyModal({ isOpen, onClose }) {
           onClick={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-lg bg-surface  p-5 shadow-lg border border-line/10 outline-none"
+          className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-lg bg-white dark:bg-db-dark p-6 shadow-lg border border-db-dark/10 dark:border-white/10 outline-none"
         >
           {/* Header */}
-          <div className="flex items-center justify-between pb-4 border-b border-line/10">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-db-redInk dark:text-red-400">
-                Notfall
-              </p>
-              <h2 id="notfall-titel" className="mt-1.5 text-2xl font-bold tracking-tight text-ink">
-                Jetzt Hilfe holen
-              </h2>
-              <div className="mt-3 h-1 w-10 bg-db-red" />
+          <div className="flex items-center justify-between pb-4 border-b border-db-dark/10 dark:border-white/10">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-md bg-red-100 text-red-600">
+                <ShieldAlert className="h-7 w-7 animate-pulse" />
+              </div>
+              <div>
+                <h2 id="notfall-titel" className="text-xl font-black text-db-dark dark:text-white">Akuter Notfall</h2>
+                <p className="text-xs font-semibold text-db-rail dark:text-white/60">
+                  Schnelle Hilfe, ohne Versehen auszulösen.
+                </p>
+              </div>
             </div>
             <button
               onClick={onClose}
               aria-label="Notfall-Dialog schließen"
-              className="rounded-full p-2 bg-db-warm/50 dark:bg-white/10 text-ink hover:bg-db-dark dark:hover:bg-white hover:text-white dark:hover:text-db-dark transition"
+              className="rounded-full p-2 bg-db-warm/50 dark:bg-white/10 text-db-dark dark:text-white hover:bg-db-dark dark:hover:bg-white hover:text-white dark:hover:text-db-dark transition"
             >
               <X className="h-5 w-5" />
             </button>
@@ -55,7 +57,7 @@ export function EmergencyModal({ isOpen, onClose }) {
           <div className="mt-6 space-y-6">
             
             <div className="space-y-2">
-              <h3 className="text-sm font-bold text-ink">1. Polizei (Akute Gefahr)</h3>
+              <h3 className="text-sm font-bold text-db-dark dark:text-white">1. Polizei (Akute Gefahr)</h3>
               <EmergencySlider 
                 phoneNumber="110" 
                 label="Wischen für 110" 
@@ -65,7 +67,7 @@ export function EmergencyModal({ isOpen, onClose }) {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-bold text-ink">2. Rettungsdienst (Verletzung, medizinischer Notfall)</h3>
+              <h3 className="text-sm font-bold text-db-dark dark:text-white">2. Rettungsdienst (Verletzung, medizinischer Notfall)</h3>
               <EmergencySlider
                 phoneNumber="112"
                 label="Wischen für 112"
@@ -74,44 +76,29 @@ export function EmergencyModal({ isOpen, onClose }) {
               />
             </div>
 
-            <div className="pt-4 border-t border-line/10 space-y-3">
-               <h3 className="text-sm font-bold text-ink">Weitere Ansprechpartner</h3>
+            <div className="pt-4 border-t border-db-dark/10 dark:border-white/10 space-y-3">
+               <h3 className="text-sm font-bold text-db-dark dark:text-white">Weitere Ansprechpartner</h3>
                
-               <a href="tel:08001110111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-line/5  hover:border-line/20  transition">
+               <a href="tel:08001110111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-db-dark/5 dark:border-white/5 hover:border-db-dark/20 dark:hover:border-white/20 transition">
                   <div>
-                    <div className="font-bold text-sm text-ink">Telefonseelsorge (24/7)</div>
-                    <div className="text-sm font-medium text-ink-muted">0800 111 0 111 (Kostenfrei, anonym)</div>
+                    <div className="font-bold text-sm text-db-dark dark:text-white">Telefonseelsorge (24/7)</div>
+                    <div className="text-xs font-medium text-db-rail dark:text-white/60">0800 111 0 111 (Kostenfrei, anonym)</div>
                   </div>
-                  <div className="rounded-full bg-surface  p-2 shadow-sm border dark:border-white/10">
-                    <PhoneCall className="h-4 w-4 text-ink" />
+                  <div className="rounded-full bg-white dark:bg-db-dark/80 p-2 shadow-sm border dark:border-white/10">
+                    <PhoneCall className="h-4 w-4 text-db-dark dark:text-white" />
                   </div>
                </a>
 
-               <a href="tel:116111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-line/5  hover:border-line/20  transition">
+               <a href="tel:116111" className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-db-dark/5 dark:border-white/5 hover:border-db-dark/20 dark:hover:border-white/20 transition">
                   <div>
-                    <div className="font-bold text-sm text-ink">Nummer gegen Kummer</div>
-                    <div className="text-sm font-medium text-ink-muted">116 111 (Kostenfrei, bis 25 Jahre)</div>
+                    <div className="font-bold text-sm text-db-dark dark:text-white">Nummer gegen Kummer</div>
+                    <div className="text-xs font-medium text-db-rail dark:text-white/60">116 111 (Kostenfrei, bis 25 Jahre)</div>
                   </div>
-                  <div className="rounded-full bg-surface  p-2 shadow-sm border dark:border-white/10">
-                    <PhoneCall className="h-4 w-4 text-ink" />
+                  <div className="rounded-full bg-white dark:bg-db-dark/80 p-2 shadow-sm border dark:border-white/10">
+                    <PhoneCall className="h-4 w-4 text-db-dark dark:text-white" />
                   </div>
                </a>
-               <div className="flex items-center justify-between rounded-xl bg-db-warm/40 dark:bg-db-dark/50 p-4 border border-line/5 ">
-                  <div>
-                    <div className="font-bold text-sm text-ink">DB Sicherheitszentrale</div>
-                    <div className="text-sm font-medium text-ink-muted">
-                      Die Nummer steht auf deinem Dienstausweis.
-                    </div>
-                  </div>
-                  <div className="rounded-full bg-surface  p-2 shadow-sm border dark:border-white/10">
-                    <ShieldAlert className="h-4 w-4 text-ink" />
-                  </div>
-               </div>
             </div>
-
-            <p className="border-t border-line/10 pt-4 text-sm font-normal leading-relaxed text-ink-muted">
-              Hilfe holen ist kein Verrat. Du musst nichts entscheiden, was du nicht willst.
-            </p>
 
           </div>
       </motion.div>

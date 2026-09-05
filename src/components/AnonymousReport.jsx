@@ -158,16 +158,16 @@ function AnonymousReport() {
   }
 
   return (
-    <section id="meldung" className="bg-surface py-16 lg:py-20">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+    <section id="meldung" className="bg-white dark:bg-db-dark/30 py-16 lg:py-20">
+      <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <EntryHeader />
         <div className="mt-8 grid gap-6 xl:grid-cols-[0.86fr_1.44fr_0.9fr]">
-          <aside className="space-y-4">
+          <aside className="space-y-5">
             <SafetyNotice />
             <TimeSavingCard />
           </aside>
 
-          <div className="space-y-4">
+          <div className="space-y-5">
             <FormShell progress={progress} step={step}>
               {step === 1 && <IncidentStep form={form} update={update} />}
               {step === 2 && <ContextStep form={form} update={update} />}
@@ -204,10 +204,10 @@ function AnonymousReport() {
             )}
           </div>
 
-          <aside className="space-y-4">
+          <aside className="space-y-5">
             <div className="rounded-lg bg-db-dark p-5 text-white shadow-panel">
               <MessageSquareText size={24} className="text-red-200" aria-hidden="true" />
-              <h3 className="mt-3 text-lg font-bold">Lieber erst reden?</h3>
+              <h3 className="mt-3 text-lg font-black">Lieber erst reden?</h3>
               <p className="mt-2 text-sm font-semibold leading-6 text-white/80">
                 Der Peace-Assistent unten rechts hört zu und hilft dir beim Sortieren – ohne dass
                 daraus eine Meldung wird.
@@ -218,11 +218,11 @@ function AnonymousReport() {
               href="https://www.bkms-system.net/deutschebahn"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex w-full items-center justify-between rounded-lg border border-line/10 bg-surface p-5 font-bold text-ink shadow-sm transition hover:border-db-red hover:text-db-red"
+              className="flex w-full items-center justify-between rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 font-black text-db-dark dark:text-white shadow-sm transition hover:border-db-red hover:text-db-red"
             >
               <span>
                 Direkt zum DB-Hinweisgebersystem
-                <span className="mt-1 block text-sm font-normal text-ink-muted">
+                <span className="mt-1 block text-xs font-semibold text-db-rail dark:text-white/60">
                   Anonym, in zwölf Sprachen
                 </span>
               </span>
@@ -239,16 +239,16 @@ function EntryHeader() {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_0.72fr] lg:items-end">
       <div>
-        <p className="text-sm font-bold uppercase tracking-wider text-db-red">Anonyme Meldung</p>
-        <h2 className="mt-3 text-4xl font-bold leading-tight tracking-normal text-ink sm:text-5xl">
+        <p className="text-sm font-black uppercase tracking-wider text-db-red">Anonyme Meldung</p>
+        <h2 className="mt-3 text-4xl font-black leading-tight tracking-normal text-db-dark dark:text-white sm:text-5xl">
           Vorfall anonym melden
         </h2>
-        <p className="mt-4 max-w-3xl text-lg leading-8 text-ink-muted">
+        <p className="mt-4 max-w-3xl text-lg leading-8 text-db-rail dark:text-white/60">
           Strukturiert, vertraulich und vorbereitet für eine menschliche Prüfung.
         </p>
       </div>
-      <div className="rounded-lg border border-line/10 bg-db-soft dark:bg-db-dark/50 p-4 shadow-sm">
-        <p className="flex items-start gap-3 text-sm font-bold text-ink">
+      <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-db-dark/50 p-4 shadow-sm">
+        <p className="flex items-start gap-3 text-sm font-black text-db-dark dark:text-white">
           <LockKeyhole className="mt-0.5 shrink-0 text-db-red" size={18} aria-hidden="true" />
           Diese Demo übermittelt keine echten Meldungen.
         </p>
@@ -263,8 +263,8 @@ function SafetyNotice() {
       <div className="flex items-start gap-3">
         <ShieldAlert className="mt-1 shrink-0 text-db-red" size={24} aria-hidden="true" />
         <div>
-          <h3 className="text-lg font-bold text-ink">Wichtiger Hinweis</h3>
-          <p className="mt-2 text-sm font-normal leading-6 text-ink-muted">
+          <h3 className="text-lg font-black text-db-dark dark:text-white">Wichtiger Hinweis</h3>
+          <p className="mt-2 text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
             Bei akuter Gefahr bitte sofort reale Hilfe kontaktieren. Diese Demo speichert nichts und sendet nichts an ein Backend.
           </p>
         </div>
@@ -285,7 +285,7 @@ function TimeSavingCard() {
   return (
     <div className="rounded-lg bg-db-dark p-5 text-white shadow-panel">
       <Clock3 size={26} className="text-red-200" aria-hidden="true" />
-      <h3 className="mt-4 text-lg font-bold">Wie das DB-Zeit sparen könnte</h3>
+      <h3 className="mt-4 text-lg font-black">Wie das DB-Zeit sparen könnte</h3>
       <div className="mt-4 space-y-3 text-sm font-semibold leading-6 text-white/80">
         {points.map((point) => (
           <p key={point} className="flex gap-2">
@@ -300,16 +300,16 @@ function TimeSavingCard() {
 
 function FormShell({ children, progress, step }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-line/10 bg-db-soft dark:bg-db-dark/50 shadow-panel">
-      <div className="border-b border-line/10 bg-surface  p-5">
+    <div className="overflow-hidden rounded-lg border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-db-dark/50 shadow-panel">
+      <div className="border-b border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/80 p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-bold uppercase tracking-wide text-db-red">Schritt {step} von 5</p>
-            <h3 className="mt-1 text-2xl font-bold dark:text-white">Meldung strukturieren</h3>
+            <p className="text-sm font-black uppercase tracking-wide text-db-red">Schritt {step} von 5</p>
+            <h3 className="mt-1 text-2xl font-black dark:text-white">Meldung strukturieren</h3>
           </div>
-          <p className="text-sm font-medium text-ink-muted">{progress}%</p>
+          <p className="text-sm font-black text-db-rail dark:text-white/60">{progress}%</p>
         </div>
-        <div className="mt-4 h-2 overflow-hidden rounded bg-surface-sunk ">
+        <div className="mt-4 h-2 overflow-hidden rounded bg-db-soft dark:bg-db-dark">
           <div className="h-full bg-db-red transition-all duration-300" style={{ width: `${progress}%` }} />
         </div>
       </div>
@@ -331,13 +331,13 @@ function IncidentStep({ form, update }) {
               onClick={() => update("type", value)}
               className={`group rounded-lg border p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:shadow-sm ${
                 active
-                  ? "border-db-red bg-surface text-db-red"
-                  : "border-line/10 bg-surface text-ink hover:border-db-red"
+                  ? "border-db-red bg-white dark:bg-db-dark/50 text-db-red"
+                  : "border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 text-db-dark dark:text-white hover:border-db-red"
               }`}
             >
-              <Icon size={23} className={active ? "text-db-red" : "text-ink-muted group-hover:text-db-red"} />
-              <span className="mt-3 block font-bold">{value}</span>
-              <span className="mt-1 block text-sm font-normal leading-6 text-ink-muted">{description}</span>
+              <Icon size={23} className={active ? "text-db-red" : "text-db-rail dark:text-white/60 group-hover:text-db-red"} />
+              <span className="mt-3 block font-black">{value}</span>
+              <span className="mt-1 block text-sm font-semibold leading-6 text-db-rail dark:text-white/60">{description}</span>
             </button>
           );
         })}
@@ -366,7 +366,7 @@ function ContextStep({ form, update }) {
         />
       </Field>
       <div>
-        <p className="mb-3 font-bold text-ink">Wiederholung</p>
+        <p className="mb-3 font-black text-db-dark dark:text-white">Wiederholung</p>
         <div className="grid gap-3 sm:grid-cols-2">
           {repetitionOptions.map((option) => (
             <ChoiceButton
@@ -416,7 +416,7 @@ function DescriptionStep({ form, togglePerspective, update }) {
           className={`absolute bottom-4 right-4 p-2 rounded-full transition-all shadow-sm ${
             isRecording 
               ? 'bg-red-500 text-white animate-pulse' 
-              : 'bg-surface-sunk  text-ink hover:bg-db-dark/10 dark:hover:bg-white/10'
+              : 'bg-db-soft dark:bg-db-dark text-db-dark dark:text-white hover:bg-db-dark/10 dark:hover:bg-white/10'
           }`}
           title="Diktierfunktion (Speech-to-Text)"
         >
@@ -426,22 +426,22 @@ function DescriptionStep({ form, togglePerspective, update }) {
       
       {/* Evidence Upload Simulation */}
       <div className="mt-4">
-        <p className="mb-2 font-bold text-ink text-sm">Beweise hochladen (Optional)</p>
+        <p className="mb-2 font-black text-db-dark dark:text-white text-sm">Beweise hochladen (Optional)</p>
         <div 
           onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-line/20  bg-surface p-5 flex flex-col items-center justify-center text-center hover:border-db-red hover:bg-db-soft dark:hover:bg-white/5 transition-all cursor-pointer group"
+          className="border-2 border-dashed border-db-dark/20 dark:border-white/20 bg-white dark:bg-db-dark/50 p-6 flex flex-col items-center justify-center text-center hover:border-db-red hover:bg-db-soft dark:hover:bg-white/5 transition-all cursor-pointer group"
         >
           <input type="file" ref={fileInputRef} className="hidden" />
-          <div className="w-12 h-12 bg-line/5  rounded-full flex items-center justify-center mb-3 group-hover:bg-db-red/10 transition-colors">
+          <div className="w-12 h-12 bg-db-dark/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-3 group-hover:bg-db-red/10 transition-colors">
             <Upload className="w-5 h-5 text-db-dark/60 dark:text-white/60 group-hover:text-db-red" />
           </div>
-          <p className="font-bold text-sm text-ink">Screenshots, Chat-Verläufe oder Bilder</p>
-          <p className="text-sm text-ink-muted font-medium mt-1">Bleibt auf diesem Gerät (max. 50 MB)</p>
+          <p className="font-bold text-sm text-db-dark dark:text-white">Screenshots, Chat-Verläufe oder Bilder</p>
+          <p className="text-xs text-db-rail dark:text-white/60 font-medium mt-1">Bleibt auf diesem Gerät (max. 50 MB)</p>
         </div>
       </div>
 
       <div className="mt-6">
-        <p className="mb-3 font-bold text-ink">Optionale Einordnung</p>
+        <p className="mb-3 font-black text-db-dark dark:text-white">Optionale Einordnung</p>
         <div className="flex flex-wrap gap-2">
           {perspectiveChips.map((chip) => {
             const active = form.perspectives.includes(chip);
@@ -450,8 +450,8 @@ function DescriptionStep({ form, togglePerspective, update }) {
                 key={chip}
                 type="button"
                 onClick={() => togglePerspective(chip)}
-                className={`rounded px-3 py-2 text-sm font-bold transition ${
-                  active ? "bg-db-red text-white" : "bg-surface text-ink hover:text-db-red"
+                className={`rounded px-3 py-2 text-sm font-black transition ${
+                  active ? "bg-db-red text-white" : "bg-white dark:bg-db-dark/50 text-db-dark dark:text-white hover:text-db-red"
                 }`}
               >
                 {chip}
@@ -468,7 +468,7 @@ function RiskStep({ form, update }) {
   return (
     <StepPanel title="Risiko / Dringlichkeit" text="Diese Angaben helfen bei der Priorisierung für eine menschliche Prüfung.">
       <div>
-        <p className="mb-3 font-bold text-ink">Gibt es aktuell eine akute Gefahr?</p>
+        <p className="mb-3 font-black text-db-dark dark:text-white">Gibt es aktuell eine akute Gefahr?</p>
         <div className="grid gap-3 sm:grid-cols-2">
           {dangerOptions.map((option) => (
             <ChoiceButton key={option} active={form.danger === option} onClick={() => update("danger", option)}>
@@ -477,10 +477,10 @@ function RiskStep({ form, update }) {
           ))}
         </div>
       </div>
-      <div className="rounded-lg bg-surface p-4">
+      <div className="rounded-lg bg-white dark:bg-db-dark/50 p-4">
         <div className="flex items-center justify-between gap-4">
-          <p className="font-bold text-ink">Wie belastend ist die Situation für dich?</p>
-          <span className="rounded bg-db-red px-3 py-1 text-sm font-bold text-white">{form.stress}/5</span>
+          <p className="font-black text-db-dark dark:text-white">Wie belastend ist die Situation für dich?</p>
+          <span className="rounded bg-db-red px-3 py-1 text-sm font-black text-white">{form.stress}/5</span>
         </div>
         <input
           type="range"
@@ -490,7 +490,7 @@ function RiskStep({ form, update }) {
           onChange={(event) => update("stress", Number(event.target.value))}
           className="mt-5 w-full accent-db-red"
         />
-        <div className="mt-2 flex justify-between text-sm font-medium text-ink-muted">
+        <div className="mt-2 flex justify-between text-xs font-bold text-db-rail dark:text-white/60">
           <span>gering</span>
           <span>sehr belastend</span>
         </div>
@@ -515,7 +515,7 @@ function ContactStep({ form, update }) {
       title="An wen soll die Meldung gehen?"
       text="Die App verschickt nichts von selbst — sie bereitet einen Entwurf vor, den du danach selbst weitergibst."
     >
-      <p className="text-sm font-normal leading-6 text-ink-muted">
+      <p className="text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
         {empfehlungsGrund(form.type)}
       </p>
 
@@ -527,7 +527,7 @@ function ContactStep({ form, update }) {
             onClick={() => update("contact", rolle.id)}
           >
             {rolle.kurz}
-            <span className="mt-1 block text-sm font-normal leading-6 text-ink-muted">
+            <span className="mt-1 block text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
               {rolle.beschreibung.split(".")[0]}.
             </span>
           </ChoiceButton>
@@ -543,7 +543,7 @@ function ContactStep({ form, update }) {
               onClick={() => update("contact", rolle.id)}
             >
               {rolle.kurz}
-              <span className="mt-1 block text-sm font-normal leading-6 text-ink-muted">
+              <span className="mt-1 block text-sm font-semibold leading-6 text-db-rail dark:text-white/60">
                 {rolle.ueberoertlich ? "Nicht an deinem Standort" : rolle.beschreibung.split(".")[0] + "."}
               </span>
             </ChoiceButton>
@@ -555,13 +555,13 @@ function ContactStep({ form, update }) {
         <button
           type="button"
           onClick={() => setAlleZeigen(true)}
-          className="mt-4 min-h-11 text-sm font-bold text-db-red underline underline-offset-4"
+          className="mt-4 min-h-11 text-sm font-black text-db-red underline underline-offset-4"
         >
           Andere Stelle wählen — auch außerhalb deines Standorts
         </button>
       )}
 
-      <label className="flex items-start gap-3 rounded-lg bg-surface p-4 font-bold text-ink border border-line/10 mt-6">
+      <label className="flex items-start gap-3 rounded-lg bg-white dark:bg-db-dark/50 p-4 font-bold text-db-dark dark:text-white border border-db-dark/10 dark:border-white/10 mt-6">
         <input
           type="checkbox"
           checked={form.anonymous}
@@ -570,7 +570,7 @@ function ContactStep({ form, update }) {
         />
         <span>
           Ich möchte komplett anonym bleiben
-          <span className="block text-sm font-normal leading-6 text-ink-muted mt-1">
+          <span className="block text-sm font-semibold leading-6 text-db-rail dark:text-white/60 mt-1">
             Dein Entwurf bekommt dann keine Absenderzeile. Achte auch im Text darauf, keine Angaben zu nennen, an denen man dich erkennt.
           </span>
         </span>
@@ -588,10 +588,10 @@ function ContactStep({ form, update }) {
 
 function StepPanel({ children, text, title }) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div>
-        <h4 className="text-2xl font-bold text-ink">{title}</h4>
-        <p className="mt-2 font-normal leading-7 text-ink-muted">{text}</p>
+        <h4 className="text-2xl font-black text-db-dark dark:text-white">{title}</h4>
+        <p className="mt-2 font-semibold leading-7 text-db-rail dark:text-white/60">{text}</p>
       </div>
       {children}
     </div>
@@ -601,7 +601,7 @@ function StepPanel({ children, text, title }) {
 function Field({ children, label }) {
   return (
     <label className="block">
-      <span className="mb-2 block font-bold text-ink">{label}</span>
+      <span className="mb-2 block font-black text-db-dark dark:text-white">{label}</span>
       {children}
     </label>
   );
@@ -612,8 +612,8 @@ function ChoiceButton({ active, children, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-lg border p-4 text-left font-bold transition hover:-translate-y-0.5 hover:shadow-sm ${
-        active ? "border-db-red bg-surface text-db-red" : "border-line/10 bg-surface text-ink hover:border-db-red"
+      className={`rounded-lg border p-4 text-left font-black transition hover:-translate-y-0.5 hover:shadow-sm ${
+        active ? "border-db-red bg-white dark:bg-db-dark/50 text-db-red" : "border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 text-db-dark dark:text-white hover:border-db-red"
       }`}
     >
       {children}
@@ -631,7 +631,7 @@ function StepControls({ analysis, onAnalyze, onBack, onNext, step, error }) {
       <button
         type="button"
         onClick={onBack}
-        className="rounded border border-line/15 bg-surface px-5 py-3 font-bold text-ink disabled:opacity-40"
+        className="rounded border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/50 px-5 py-3 font-black text-db-dark dark:text-white disabled:opacity-40"
         disabled={step === 1}
       >
         Zurück
@@ -640,7 +640,7 @@ function StepControls({ analysis, onAnalyze, onBack, onNext, step, error }) {
         <button
           type="button"
           onClick={onNext}
-          className="rounded bg-db-red px-5 py-3 font-bold text-white transition hover:bg-red-700"
+          className="rounded bg-db-red px-5 py-3 font-black text-white transition hover:bg-red-700"
         >
           Weiter
         </button>
@@ -648,7 +648,7 @@ function StepControls({ analysis, onAnalyze, onBack, onNext, step, error }) {
         <button
           type="button"
           onClick={onAnalyze}
-          className="inline-flex items-center justify-center gap-2 rounded bg-db-red px-5 py-3 font-bold text-white transition hover:bg-red-700"
+          className="inline-flex items-center justify-center gap-2 rounded bg-db-red px-5 py-3 font-black text-white transition hover:bg-red-700"
         >
           {analysis ? "Meldung erneut prüfen" : "Meldung prüfen"}
           <Bot size={18} aria-hidden="true" />
@@ -723,13 +723,13 @@ function AnalysisCard({ analysis, onImprove, onPreview, onReset, form }) {
   };
 
   return (
-    <div className="rounded-lg border border-line/10 bg-surface p-5 shadow-panel">
+    <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 shadow-panel">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-sm font-bold uppercase tracking-wide text-db-red">Lokale KI-Demo-Analyse</p>
-          <h3 className="mt-1 text-2xl font-bold dark:text-white">Professionelle Zusammenfassung</h3>
+          <p className="text-sm font-black uppercase tracking-wide text-db-red">Lokale KI-Demo-Analyse</p>
+          <h3 className="mt-1 text-2xl font-black dark:text-white">Professionelle Zusammenfassung</h3>
         </div>
-        <span className={`w-fit rounded px-3 py-1 text-sm font-bold ${risk.className}`}>{risk.label}</span>
+        <span className={`w-fit rounded px-3 py-1 text-sm font-black ${risk.className}`}>{risk.label}</span>
       </div>
       <div className="mt-5 grid gap-3 md:grid-cols-2">
         <SummaryBlock label="Kategorie" value={analysis.category} />
@@ -744,7 +744,7 @@ function AnalysisCard({ analysis, onImprove, onPreview, onReset, form }) {
         <button
           type="button"
           onClick={handleDownloadPDF}
-          className="inline-flex items-center justify-center gap-2 rounded bg-db-red px-5 py-3 font-bold text-white transition hover:bg-red-700 shadow-sm"
+          className="inline-flex items-center justify-center gap-2 rounded bg-db-red px-5 py-3 font-black text-white transition hover:bg-red-700 shadow-sm"
         >
           Als PDF herunterladen
           <Download size={18} aria-hidden="true" />
@@ -752,7 +752,7 @@ function AnalysisCard({ analysis, onImprove, onPreview, onReset, form }) {
         <button
           type="button"
           onClick={onPreview}
-          className="inline-flex items-center justify-center gap-2 rounded bg-db-dark px-5 py-3 font-bold text-white transition hover:bg-db-red"
+          className="inline-flex items-center justify-center gap-2 rounded bg-db-dark px-5 py-3 font-black text-white transition hover:bg-db-red"
         >
           Vorschau ansehen
           <FileText size={18} aria-hidden="true" />
@@ -760,7 +760,7 @@ function AnalysisCard({ analysis, onImprove, onPreview, onReset, form }) {
         <button
           type="button"
           onClick={onReset}
-          className="inline-flex items-center justify-center gap-2 rounded border border-line/15 bg-surface px-5 py-3 font-bold text-ink transition hover:border-db-red hover:text-db-red"
+          className="inline-flex items-center justify-center gap-2 rounded border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/50 px-5 py-3 font-black text-db-dark dark:text-white transition hover:border-db-red hover:text-db-red"
         >
           Neu starten
           <RefreshCw size={18} aria-hidden="true" />
@@ -772,22 +772,22 @@ function AnalysisCard({ analysis, onImprove, onPreview, onReset, form }) {
 
 function SummaryBlock({ label, value, wide = false }) {
   return (
-    <div className={`rounded bg-surface-sunk  p-4 ${wide ? "md:col-span-2" : ""}`}>
-      <p className="text-xs font-bold uppercase tracking-wide text-db-red">{label}</p>
-      <p className="mt-2 whitespace-pre-line font-semibold leading-7 text-ink">{value}</p>
+    <div className={`rounded bg-db-soft dark:bg-db-dark/30 p-4 ${wide ? "md:col-span-2" : ""}`}>
+      <p className="text-xs font-black uppercase tracking-wide text-db-red">{label}</p>
+      <p className="mt-2 whitespace-pre-line font-semibold leading-7 text-db-dark dark:text-white">{value}</p>
     </div>
   );
 }
 
 function ReportPreview({ draft }) {
   return (
-    <div className="rounded-lg border border-line/10 bg-surface p-5 shadow-panel">
+    <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 shadow-panel">
       <div className="flex items-start gap-3">
         <FileText className="mt-1 shrink-0 text-db-red" size={28} aria-hidden="true" />
         <div>
-          <p className="text-sm font-bold uppercase tracking-wide text-db-red">Meldungsvorschau</p>
-          <h3 className="mt-1 text-2xl font-bold dark:text-white">Strukturierter interner Demo-Entwurf</h3>
-          <p className="mt-2 text-sm font-medium text-ink-muted">Diese Meldung wurde nicht übermittelt.</p>
+          <p className="text-sm font-black uppercase tracking-wide text-db-red">Meldungsvorschau</p>
+          <h3 className="mt-1 text-2xl font-black dark:text-white">Strukturierter interner Demo-Entwurf</h3>
+          <p className="mt-2 text-sm font-black text-db-rail dark:text-white/60">Diese Meldung wurde nicht übermittelt.</p>
         </div>
       </div>
       <div className="mt-5 grid gap-3 md:grid-cols-2">
@@ -808,16 +808,16 @@ function WorkflowCard() {
   ];
 
   return (
-    <div className="rounded-lg border border-line/10 bg-surface-sunk  p-5 shadow-sm">
+    <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-db-dark/30 p-5 shadow-sm">
       <ClipboardList size={26} className="text-db-red" aria-hidden="true" />
-      <h3 className="mt-4 text-lg font-bold dark:text-white">Workflow in der Demo</h3>
+      <h3 className="mt-4 text-lg font-black dark:text-white">Workflow in der Demo</h3>
       <div className="mt-4 space-y-3">
         {steps.map((step, index) => (
-          <div key={step} className="flex items-center gap-3 rounded bg-surface p-3">
-            <span className="flex h-7 w-7 items-center justify-center rounded bg-db-red text-sm font-bold text-white">
+          <div key={step} className="flex items-center gap-3 rounded bg-white dark:bg-db-dark/50 p-3">
+            <span className="flex h-7 w-7 items-center justify-center rounded bg-db-red text-xs font-black text-white">
               {index + 1}
             </span>
-            <span className="text-sm font-bold text-ink">{step}</span>
+            <span className="text-sm font-black text-db-dark dark:text-white">{step}</span>
           </div>
         ))}
       </div>
@@ -836,7 +836,7 @@ function PrinciplesCard() {
   return (
     <div className="rounded-lg bg-db-dark p-5 text-white shadow-panel">
       <Handshake size={26} className="text-red-200" aria-hidden="true" />
-      <h3 className="mt-4 text-lg font-bold">Verantwortungsprinzipien</h3>
+      <h3 className="mt-4 text-lg font-black">Verantwortungsprinzipien</h3>
       <div className="mt-4 space-y-3 text-sm font-semibold leading-6 text-white/80">
         {points.map((point) => (
           <p key={point} className="flex gap-2">

@@ -35,7 +35,7 @@ export function PanicButton() {
     >
       <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
 
-      <span className="absolute left-full ml-4 bg-slate-800 text-white text-sm font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+      <span className="absolute left-full ml-4 bg-slate-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
         Schnell verlassen
       </span>
     </button>

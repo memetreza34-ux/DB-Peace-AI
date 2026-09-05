@@ -138,7 +138,7 @@ export function AppLock({ onUnlock }) {
     : "Dein geschützter Bereich. Bitte gib deine PIN ein.";
 
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-5 text-white selection:bg-db-red">
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-white selection:bg-db-red">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -148,7 +148,7 @@ export function AppLock({ onUnlock }) {
           <Lock className="w-12 h-12 text-db-red" />
         </div>
 
-        <h1 className="text-2xl font-bold mb-2 tracking-tight">{titel}</h1>
+        <h1 className="text-2xl font-black mb-2 tracking-tight">{titel}</h1>
         <p className="text-slate-400 font-medium text-sm mb-8 text-center max-w-xs">{untertitel}</p>
 
         {/* PIN Indicators */}
@@ -216,7 +216,7 @@ export function AppLock({ onUnlock }) {
           </button>
         </div>
 
-        <div className="mt-10 flex items-start gap-2 text-sm font-medium text-slate-500 max-w-xs text-center">
+        <div className="mt-10 flex items-start gap-2 text-xs font-medium text-slate-500 max-w-xs text-center">
           <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
           <span className="text-left">
             Deine Eingaben bleiben auf diesem Gerät. Die PIN wird nur als Prüfsumme gespeichert,
@@ -237,7 +237,7 @@ export function AppLock({ onUnlock }) {
  */
 function Geraetewahl({ onWahl }) {
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-5 text-white selection:bg-db-red">
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-white selection:bg-db-red">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -247,7 +247,7 @@ function Geraetewahl({ onWahl }) {
           <Lock className="w-12 h-12 text-db-red" />
         </div>
 
-        <h1 className="text-2xl font-bold mb-2 tracking-tight text-center">
+        <h1 className="text-2xl font-black mb-2 tracking-tight text-center">
           Wer nutzt dieses Gerät?
         </h1>
         <p className="text-slate-400 font-medium text-sm mb-8 text-center max-w-sm leading-relaxed">
@@ -263,7 +263,7 @@ function Geraetewahl({ onWahl }) {
           >
             <span className="flex items-center gap-3">
               <Smartphone className="h-6 w-6 shrink-0 text-db-red" />
-              <span className="font-bold">Nur ich nutze dieses Gerät</span>
+              <span className="font-black">Nur ich nutze dieses Gerät</span>
             </span>
             <span className="mt-2 block text-sm font-medium leading-relaxed text-slate-400">
               Dein persönliches Diensthandy oder dein Laptop. Deine Notizen bleiben gespeichert und
@@ -278,7 +278,7 @@ function Geraetewahl({ onWahl }) {
           >
             <span className="flex items-center gap-3">
               <Users className="h-6 w-6 shrink-0 text-db-red" />
-              <span className="font-bold">Mehrere nutzen dieses Gerät</span>
+              <span className="font-black">Mehrere nutzen dieses Gerät</span>
             </span>
             <span className="mt-2 block text-sm font-medium leading-relaxed text-slate-400">
               Werkstatt-Tablet, Schulungsraum, Schichtgerät. Dann speichert die App nichts: Sobald
@@ -288,7 +288,7 @@ function Geraetewahl({ onWahl }) {
           </button>
         </div>
 
-        <p className="mt-8 flex items-start gap-2 text-sm font-medium leading-relaxed text-slate-500 max-w-sm">
+        <p className="mt-8 flex items-start gap-2 text-xs font-medium leading-relaxed text-slate-500 max-w-sm">
           <ShieldCheck className="mt-px h-4 w-4 shrink-0 text-emerald-500" />
           <span>
             Eine vierstellige PIN kann Inhalte nicht verschlüsseln. Auf einem geteilten Gerät wäre

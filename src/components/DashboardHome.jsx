@@ -1,12 +1,15 @@
 import React from "react";
+import { motion } from "framer-motion";
 import {
-  ChevronRight,
   FileText,
-  GraduationCap,
   HelpCircle,
   PhoneCall,
-  Scale,
+  GraduationCap,
   Siren,
+  ArrowRight,
+  TrainFront,
+  Sparkles,
+  Scale
 } from "lucide-react";
 import { MoodTracker } from "./MoodTracker";
 
@@ -19,133 +22,187 @@ import { MoodTracker } from "./MoodTracker";
  */
 const einblendVerzoegerung = (index) => ({ animationDelay: `${Math.min(index, 6) * 55}ms` });
 
-/*
- * Reihenfolge der Seite, und warum sie so ist:
- *
- * 1. Begrüßung — kurz, ohne Namen. Die App hat keine Anmeldung und kennt
- *    niemanden; „Hallo Lea" wäre eine Zusage, die sie nicht einlöst.
- * 2. Notfall — direkt darunter. Vorher stand er ganz unten, hinter fünf
- *    Kacheln. Wer ihn braucht, soll nicht scrollen müssen.
- * 3. Die fünf Wege als Liste. Zeilen lesen sich schneller als Kacheln, wenn
- *    man aufgewühlt ist und nur einen Weg sucht.
- * 4. Stimmungsabfrage zuletzt — sie ist das Unwichtigste auf dieser Seite.
- */
 export function DashboardHome({ onNavigate, onOpenEmergency }) {
-  const wege = [
+  // Bewusst kurz gehalten: Wer diese App öffnet, weil es ihm schlecht geht,
+  // soll fünf Wege sehen und nicht sieben. Analytics und Projekte sind
+  // Nebenschauplätze und stehen im Fußbereich.
+  const dashboardItems = [
     {
+      // Steht bewusst an erster Stelle: Wer die App im Ernstfall öffnet, weiss
+      // meist noch nicht, was er braucht — sondern nur, dass etwas passiert ist.
       id: "support",
       title: "Was ist gerade los?",
-      description: "Tippe an, was auf dich zutrifft. Ohne alles erzählen zu müssen.",
+      description: "Beschreib die Situation – die App zeigt dir, was du jetzt tun kannst.",
       icon: HelpCircle,
-      action: () => onNavigate("support"),
+      color: "text-db-red",
+      bgColor: "bg-db-red/10 dark:bg-db-red/20",
+      borderColor: "hover:border-db-red hover:shadow-db-red/10",
+      action: () => onNavigate("support")
     },
     {
       id: "record-report",
       title: "Festhalten & Melden",
-      description: "Notiere einen Vorfall für dich. Melden geht später — auch anonym.",
+      description: "Privates Gedächtnisprotokoll oder offizielle, anonyme Meldung.",
       icon: FileText,
-      action: () => onNavigate("record-report"),
+      color: "text-blue-600 dark:text-blue-400",
+      bgColor: "bg-blue-500/10 dark:bg-blue-500/20",
+      borderColor: "hover:border-blue-500 hover:shadow-blue-500/10 dark:hover:border-blue-400",
+      action: () => onNavigate("record-report")
     },
     {
       id: "contacts",
       title: "Ansprechpartner & Meldewege",
-      description: "JAV, Betriebsrat, Vertrauensperson — wer wofür zuständig ist.",
+      description: "Offizielle Meldestellen der DB, Beratung und externe Hilfe – mit echten Kontaktdaten.",
       icon: PhoneCall,
-      action: () => onNavigate("contacts"),
+      color: "text-emerald-600 dark:text-emerald-400",
+      bgColor: "bg-emerald-500/10 dark:bg-emerald-500/20",
+      borderColor: "hover:border-emerald-500 hover:shadow-emerald-500/10 dark:hover:border-emerald-400",
+      action: () => onNavigate("contacts")
     },
     {
       id: "learning",
       title: "Kurse & Seminare",
-      description: "Kurze Trainings zu Konflikten, Grenzen und Deeskalation.",
+      description: "Wissen, Trainings und Präventions-Seminare zu Mobbing & Konflikten.",
       icon: GraduationCap,
-      action: () => onNavigate("learning"),
+      color: "text-purple-600 dark:text-purple-400",
+      bgColor: "bg-purple-500/10 dark:bg-purple-500/20",
+      borderColor: "hover:border-purple-500 hover:shadow-purple-500/10 dark:hover:border-purple-400",
+      action: () => onNavigate("learning")
     },
     {
       id: "rights",
       title: "Rechte & Gesetze",
-      description: "AGG, BBiG und DB-Richtlinien in einfacher Sprache.",
+      description: "AGG, BBiG und DB-Richtlinien auf gut Deutsch erklärt.",
       icon: Scale,
-      action: () => onNavigate("rights"),
+      color: "text-teal-600 dark:text-teal-400",
+      bgColor: "bg-teal-500/10 dark:bg-teal-500/20",
+      borderColor: "hover:border-teal-500 hover:shadow-teal-500/10 dark:hover:border-teal-400",
+      action: () => onNavigate("rights")
     },
   ];
 
   return (
-    <div className="space-y-6">
-      <section className="motion-card">
-        <h1 className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight text-ink">
-          Du bist hier richtig.
-        </h1>
-        <div className="mt-3.5 h-1 w-11 bg-db-red" />
-        <p className="mt-3.5 max-w-[46ch] text-base font-normal leading-relaxed text-ink-muted">
-          Alles, was du hier machst, bleibt bei dir. Du entscheidest, ob und wann ein nächster
-          Schritt kommt.
-        </p>
-      </section>
+    <div className="space-y-10">
+      
+      {/* Welcome Banner */}
+      <div className="motion-card rounded-lg bg-db-dark px-6 py-10 sm:px-10 sm:py-14 text-center shadow-lg shadow-db-dark/20 relative overflow-hidden group">
+        {/* Background Glow */}
+        <motion.div 
+          animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute left-1/2 top-0 -translate-x-1/2 -mt-20 h-64 w-[600px] rounded-full bg-db-red/30 blur-[120px] pointer-events-none" 
+        />
+        
+        {/* Animated Background Train Track Line */}
+        <div className="absolute top-1/2 left-0 w-full h-px bg-white/5 -translate-y-1/2 pointer-events-none" />
+        
+        {/* Animated Train */}
+        <motion.div
+          initial={false}
+          animate={{ x: ["-150%", "250vw"], opacity: [0, 1, 1, 0] }}
+          transition={{ 
+            duration: 12, 
+            repeat: Infinity, 
+            ease: "linear",
+            delay: 1
+          }}
+          className="absolute top-1/2 -translate-y-1/2 left-0 pointer-events-none opacity-20"
+        >
+          <div className="flex items-center text-white/10">
+            <TrainFront className="h-24 w-24 sm:h-32 sm:w-32" />
+            <div className="h-16 w-32 border-2 border-white/10 rounded-xl ml-2"></div>
+            <div className="h-16 w-32 border-2 border-white/10 rounded-xl ml-2"></div>
+          </div>
+        </motion.div>
 
-      {/* Der Notfall steht bewusst vor allem anderen. */}
-      <button
-        type="button"
-        onClick={onOpenEmergency}
-        style={einblendVerzoegerung(1)}
-        className="motion-card flex w-full flex-wrap items-center justify-between gap-5 bg-db-red p-5 text-left text-white transition hover:bg-red-700"
-      >
-        <span className="flex min-w-[200px] flex-1 items-start gap-3.5">
-          <Siren className="mt-0.5 h-6 w-6 shrink-0" />
-          <span>
-            <span className="block text-xs font-semibold uppercase tracking-[0.1em] text-white/85">
-              Sofort Hilfe
-            </span>
-            <span className="mt-1 block text-lg font-bold">Wenn es jetzt nicht mehr geht</span>
-            <span className="mt-0.5 block text-sm font-normal text-white">
-              Notrufe, anonyme Hilfe, Vertrauenspersonen.
-            </span>
-          </span>
-        </span>
-        <span className="flex min-h-[52px] shrink-0 items-center gap-2 bg-white px-5 text-base font-bold text-db-redInk">
-          Notfall öffnen
-          <ChevronRight className="h-4 w-4" />
-        </span>
-      </button>
+        {/* Floating Sparkles */}
+        <motion.div
+          animate={{ y: [0, -10, 0], opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-8 left-10 sm:left-20 text-db-red pointer-events-none"
+        >
+          <Sparkles className="h-6 w-6" />
+        </motion.div>
+        <motion.div
+          animate={{ y: [0, 10, 0], opacity: [0.3, 0.8, 0.3] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute bottom-8 right-10 sm:right-20 text-db-red pointer-events-none"
+        >
+          <Sparkles className="h-8 w-8" />
+        </motion.div>
 
-      <section className="motion-card" style={einblendVerzoegerung(2)}>
-        <h2 className="px-1 pb-3 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">
-          Wobei brauchst du Hilfe?
-        </h2>
-        <div className="border-y border-line/15 bg-surface shadow-panel">
-          {wege.map((weg, index) => {
-            const Icon = weg.icon;
-            return (
-              <button
-                key={weg.id}
-                type="button"
-                onClick={weg.action}
-                className={`group grid w-full grid-cols-[24px_1fr_18px] items-center gap-3.5 p-4 text-left transition hover:shadow-[inset_3px_0_0_theme(colors.db.red)] sm:px-5 ${
-                  index > 0 ? "border-t border-line/15" : ""
-                }`}
-              >
-                <Icon className="h-5.5 w-5.5 text-ink" />
-                <span>
-                  <span className="block text-base font-bold tracking-tight text-ink sm:text-[17px]">
-                    {weg.title}
-                  </span>
-                  <span className="mt-0.5 block text-sm font-normal leading-snug text-ink-muted">
-                    {weg.description}
-                  </span>
-                </span>
-                <ChevronRight className="h-4.5 w-4.5 text-ink-muted transition group-hover:text-db-red" />
-              </button>
-            );
-          })}
+        <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-6 max-w-2xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight drop-shadow-lg">
+            Willkommen bei DB Peace
+          </h1>
+          <p className="text-base sm:text-lg font-medium text-white/80 max-w-xl">
+            Dein digitaler Raum für ein respektvolles Miteinander. Wähle aus, was du gerade brauchst.
+          </p>
         </div>
-      </section>
+      </div>
 
-      <div className="motion-card" style={einblendVerzoegerung(3)}>
+      <div className="motion-card max-w-md mx-auto w-full z-20 relative" style={einblendVerzoegerung(1)}>
         <MoodTracker />
       </div>
 
-      <p className="text-sm font-normal leading-relaxed text-ink-muted">
-        Prototyp für die Ausbildung. Keine Rechtsberatung. Menschen entscheiden, nicht die App.
-      </p>
+      {/* Grid Menu */}
+      {/* Eigene Überschrift statt Sprung von h1 direkt auf h3 — hilft beim
+          Vorlesen mit Screenreader und gibt der Kartenwand einen Sinn. */}
+      <h2 className="text-xl font-black text-db-dark dark:text-white mt-2">
+        Was brauchst du gerade?
+      </h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 relative z-20">
+        {dashboardItems.map((item, index) => {
+          const Icon = item.icon;
+          return (
+            <motion.button
+              initial={false}
+              whileHover={{ y: -4, scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              key={item.id}
+              onClick={item.action}
+              style={einblendVerzoegerung(index)}
+              className={`motion-card group flex flex-col items-start rounded-md border border-db-dark/5 dark:border-white/10 bg-white/70 dark:bg-db-dark/50 backdrop-blur-md p-6 text-left transition-colors shadow-sm hover:shadow-md dark:hover:bg-db-dark/80 ${item.borderColor}`}
+            >
+              <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl mb-4 transition-transform group-hover:scale-110 ${item.bgColor} ${item.color}`}>
+                <Icon className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-black text-db-dark dark:text-white mb-2 group-hover:text-db-red dark:group-hover:text-db-red transition-colors">
+                {item.title}
+              </h3>
+              <p className="text-sm font-semibold text-db-rail dark:text-white/70 flex-1">
+                {item.description}
+              </p>
+              
+              <div className="mt-4 flex w-full items-center justify-between opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">
+                <span className="text-xs font-black uppercase text-db-red tracking-wider">Öffnen</span>
+                <ArrowRight className="h-4 w-4 text-db-red" />
+              </div>
+            </motion.button>
+          );
+        })}
+      </div>
+
+      {/* Secondary Actions / Footer of Dashboard */}
+      <div className="motion-card" style={einblendVerzoegerung(6)}>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={onOpenEmergency}
+          className="flex items-center gap-4 rounded-md border border-red-200/50 dark:border-red-500/20 bg-white/70 dark:bg-red-500/5 backdrop-blur-md p-5 text-left transition hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 dark:hover:border-red-500/30 hover:shadow-lg hover:shadow-red-500/10 group"
+        >
+          <div className="rounded-xl bg-red-100 dark:bg-red-500/20 p-3 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
+            <Siren className="h-6 w-6" />
+          </div>
+          <div>
+            <h4 className="font-black text-db-dark dark:text-white">Akuter Notfall</h4>
+            <p className="text-xs font-semibold text-db-rail dark:text-white/70 mt-0.5">Sofortige Hilfe & Kontakte</p>
+          </div>
+        </motion.button>
+
+      </div>
+
     </div>
   );
 }

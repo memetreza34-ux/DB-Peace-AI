@@ -85,9 +85,9 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
 
   if (!rolle) {
     return (
-      <div className="p-6">
-        <p className="font-bold text-ink">Diese Rolle gibt es nicht.</p>
-        <button onClick={onExit} className="mt-4 font-bold text-db-red underline">
+      <div className="p-8">
+        <p className="font-bold text-db-dark dark:text-white">Diese Rolle gibt es nicht.</p>
+        <button onClick={onExit} className="mt-4 font-black text-db-red underline">
           Zurück
         </button>
       </div>
@@ -141,19 +141,19 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
   };
 
   return (
-    <div className="min-h-screen bg-surface-sunk ">
-      <header className="border-b border-line/10 bg-surface">
-        <div className="mx-auto max-w-7xl px-4 sm:px-5 py-4">
+    <div className="min-h-screen bg-db-soft dark:bg-db-dark">
+      <header className="border-b border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-xs font-bold uppercase tracking-wide text-db-red">
+              <p className="text-xs font-black uppercase tracking-wide text-db-red">
                 {eigeneRolle ? "Deine Rolle" : "Vorschau"} · {gruppe?.name}
               </p>
-              <h1 className="mt-1 text-2xl font-bold text-ink">{rolle.name}</h1>
-              <p className="mt-1 max-w-2xl text-sm font-normal text-ink-muted">
+              <h1 className="mt-1 text-2xl font-black text-db-dark dark:text-white">{rolle.name}</h1>
+              <p className="mt-1 max-w-2xl text-sm font-semibold text-db-rail dark:text-white/60">
                 {rolle.beschreibung}
               </p>
-              <p className="mt-2 flex flex-wrap items-center gap-x-2 text-sm font-normal text-ink-muted ">
+              <p className="mt-2 flex flex-wrap items-center gap-x-2 text-xs font-semibold text-db-rail/80 dark:text-white/50">
                 {(rolle.grundlage || rolle.grundlageOffen) && (
                   <span className="flex items-center gap-1.5 font-bold">
                     <Scale className="h-3.5 w-3.5" />
@@ -168,7 +168,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
               <button
                 type="button"
                 onClick={onRolleWechseln}
-                className="flex min-h-11 items-center gap-2 rounded-xl border border-line/15 px-4 py-2 text-sm font-bold text-ink transition hover:border-db-red hover:text-db-red"
+                className="flex min-h-11 items-center gap-2 rounded-xl border border-db-dark/15 dark:border-white/15 px-4 py-2 text-xs font-black text-db-dark dark:text-white transition hover:border-db-red hover:text-db-red"
               >
                 <Repeat className="h-4 w-4" />
                 Andere Rolle
@@ -176,7 +176,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
               <button
                 type="button"
                 onClick={onExit}
-                className="flex min-h-11 items-center gap-2 rounded-xl bg-contrast  px-4 py-2 text-sm font-bold text-contrast-ink  transition hover:opacity-90"
+                className="flex min-h-11 items-center gap-2 rounded-xl bg-db-dark dark:bg-white px-4 py-2 text-xs font-black text-white dark:text-db-dark transition hover:opacity-90"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Zurück zur Azubi-Ansicht
@@ -189,16 +189,16 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
       {/* pb-28 hält den unteren Rand frei von den schwebenden Schaltflächen
           (Quick Exit). Auf dem Handy verdeckte der Knopf sonst den letzten
           Absatz — und Dienstgeräte sind genau der Fall, für den das zählt. */}
-      <div className="mx-auto max-w-7xl space-y-4 px-4 sm:px-5 py-5 pb-28 sm:pb-8">
+      <div className="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 py-6 pb-28 sm:pb-8">
         {/* Zwei Aussagen, die immer gelten: erfundene Fälle, und die Trennung.
             Bewusst in einer Zeile statt in zwei Absätzen — davor stehen im
             Ernstfall noch Fristenwarnung und Befangenheitshinweis. */}
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border border-line/10 bg-surface px-4 py-3">
-          <span className="flex items-center gap-2 text-sm font-bold text-amber-800 dark:text-amber-300">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 px-4 py-3">
+          <span className="flex items-center gap-2 text-xs font-bold text-amber-800 dark:text-amber-300">
             <Info className="h-4 w-4 shrink-0" />
             Erfundene Beispielfälle — nichts davon erreicht jemanden
           </span>
-          <span className="flex items-center gap-2 text-sm font-medium text-ink-muted">
+          <span className="flex items-center gap-2 text-xs font-bold text-db-rail dark:text-white/60">
             <Lock className="h-4 w-4 shrink-0 text-db-red" />
             Nur Fälle an {rolle.kurz}. Andere Stellen sind hier unsichtbar, auch als Zahl
           </span>
@@ -247,9 +247,9 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
         )}
 
         {eigeneAusgeblendet > 0 && (
-          <div className="flex items-start gap-3 rounded-xl border border-line/10 bg-surface p-4">
+          <div className="flex items-start gap-3 rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-4">
             <UserCheck className="mt-0.5 h-5 w-5 shrink-0 text-db-red" />
-            <p className="text-sm font-normal leading-relaxed text-ink-muted">
+            <p className="text-sm font-semibold leading-relaxed text-db-rail dark:text-white/70">
               {eigeneAusgeblendet === 1 ? "Ein Vorgang wird" : `${eigeneAusgeblendet} Vorgänge werden`} dir
               hier nicht angezeigt: {eigeneAusgeblendet === 1 ? "Du hast ihn" : "Du hast sie"} selbst
               gemeldet. Niemand bearbeitet seinen eigenen Fall.{" "}
@@ -261,19 +261,19 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
 
         <div className="grid gap-4 lg:grid-cols-12">
           {/* Liste */}
-          <div className="lg:col-span-5 rounded-xl border border-line/10 bg-surface overflow-hidden">
-            <div className="flex items-center justify-between border-b border-line/10 px-4 py-3">
-              <h2 className="flex items-center gap-2 text-sm font-bold text-ink">
+          <div className="lg:col-span-5 rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 overflow-hidden">
+            <div className="flex items-center justify-between border-b border-db-dark/10 dark:border-white/10 px-4 py-3">
+              <h2 className="flex items-center gap-2 text-sm font-black text-db-dark dark:text-white">
                 <Inbox className="h-4 w-4 text-db-red" />
                 Posteingang
               </h2>
-              <span className="rounded-full bg-surface-sunk  px-2.5 py-0.5 text-sm font-medium text-ink-muted">
+              <span className="rounded-full bg-db-soft dark:bg-white/10 px-2.5 py-0.5 text-xs font-black text-db-rail dark:text-white/70">
                 {faelle.length}
               </span>
             </div>
 
             {faelle.length === 0 ? (
-              <p className="p-5 text-center text-sm font-normal text-ink-muted ">
+              <p className="p-6 text-center text-sm font-semibold text-db-rail dark:text-white/50">
                 Keine Fälle für diese Rolle.
               </p>
             ) : (
@@ -293,15 +293,15 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-sm font-bold text-ink">
+                        <span className="text-xs font-black text-db-dark dark:text-white">
                           {fall.kategorie}
                         </span>
                         <StatusMarke status={fall.status} />
                       </div>
-                      <p className="mt-1.5 line-clamp-2 text-sm font-normal text-ink-muted">
+                      <p className="mt-1.5 line-clamp-2 text-xs font-semibold text-db-rail dark:text-white/60">
                         {fall.zusammenfassung}
                       </p>
-                      <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-medium text-ink-muted ">
+                      <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] font-bold text-db-rail/70 dark:text-white/40">
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {fall.eingegangen}
@@ -321,24 +321,24 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
           </div>
 
           {/* Detail */}
-          <div className="lg:col-span-7 rounded-xl border border-line/10 bg-surface">
+          <div className="lg:col-span-7 rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50">
             {!gewaehlt ? (
-              <p className="p-6 text-center text-sm font-normal text-ink-muted ">
+              <p className="p-8 text-center text-sm font-semibold text-db-rail dark:text-white/50">
                 Wähle links einen Fall aus.
               </p>
             ) : (
               <div className="flex flex-col">
-                <div className="border-b border-line/10 p-5">
+                <div className="border-b border-db-dark/10 dark:border-white/10 p-5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h2 className="text-lg font-bold text-ink">
+                    <h2 className="text-lg font-black text-db-dark dark:text-white">
                       {gewaehlt.kategorie}
                     </h2>
                     <StatusMarke status={gewaehlt.status} />
                   </div>
-                  <p className="mt-2 text-sm font-normal leading-relaxed text-ink-muted">
+                  <p className="mt-2 text-sm font-semibold leading-relaxed text-db-rail dark:text-white/70">
                     {gewaehlt.zusammenfassung}
                   </p>
-                  <div className="mt-3 flex flex-wrap items-center gap-3 text-sm font-medium text-db-rail/70 dark:text-white/50">
+                  <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-bold text-db-rail/70 dark:text-white/50">
                     <span>{gewaehlt.id}</span>
                     <span>·</span>
                     <span>{gewaehlt.eingegangen}</span>
@@ -353,7 +353,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                     {zeigtFristen && gewaehlt.frist && (
                       <>
                         <span>·</span>
-                        <span className="rounded bg-surface-sunk  px-2 py-0.5">
+                        <span className="rounded bg-db-soft dark:bg-white/10 px-2 py-0.5">
                           {gewaehlt.frist}
                         </span>
                       </>
@@ -362,7 +362,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                 </div>
 
                 {gewaehlt.status === "abgeschlossen" && (
-                  <p className="border-t border-line/10 bg-surface-sunk  px-5 py-3 text-sm font-normal leading-relaxed text-ink-muted">
+                  <p className="border-t border-db-dark/10 dark:border-white/10 bg-db-soft/60 dark:bg-white/5 px-5 py-3 text-xs font-semibold leading-relaxed text-db-rail dark:text-white/60">
                     Abgeschlossen. Wie lange ein abgeschlossener Vorgang sichtbar bleibt und wer
                     ihn löscht, ist vor einem Pilotbetrieb zu klären — die App legt das nicht
                     eigenmächtig fest.
@@ -378,8 +378,8 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                 </div>
 
                 {aktionen.length > 0 && (
-                  <div className="border-t border-line/10 p-4">
-                    <p className="mb-2 text-xs font-bold uppercase tracking-wide text-ink-muted ">
+                  <div className="border-t border-db-dark/10 dark:border-white/10 p-4">
+                    <p className="mb-2 text-xs font-black uppercase tracking-wide text-db-rail dark:text-white/50">
                       Was {rolle.kurz} hier tun kann
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -389,12 +389,12 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                           type="button"
                           onClick={() => aktionAusfuehren(aktion)}
                           title={aktion.beschreibung}
-                          className="flex min-h-11 items-center gap-2 rounded-xl border border-line/15 bg-surface px-3.5 text-sm font-bold text-ink transition hover:border-db-red hover:text-db-red"
+                          className="flex min-h-11 items-center gap-2 rounded-xl border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 px-3.5 text-xs font-black text-db-dark dark:text-white transition hover:border-db-red hover:text-db-red"
                         >
                           <UserCheck className="h-4 w-4" />
                           {aktion.label}
                           {aktion.grundlage && (
-                            <span className="font-medium text-ink-muted ">
+                            <span className="font-bold text-db-rail/70 dark:text-white/40">
                               {aktion.grundlage}
                             </span>
                           )}
@@ -406,7 +406,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
 
                 <form
                   onSubmit={antworten_senden}
-                  className="border-t border-line/10 p-4 space-y-3"
+                  className="border-t border-db-dark/10 dark:border-white/10 p-4 space-y-3"
                 >
                   <label htmlFor="antwort" className="sr-only">
                     Antwort schreiben
@@ -420,11 +420,11 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                       placeholder={
                         gewaehlt.anonym ? "Anonym zurückschreiben …" : "Antwort schreiben …"
                       }
-                      className="min-h-11 flex-1 rounded-xl border border-line/15 bg-surface px-3 text-sm font-semibold text-ink"
+                      className="min-h-11 flex-1 rounded-xl border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 px-3 text-sm font-semibold text-db-dark dark:text-white"
                     />
                     <button
                       type="submit"
-                      className="flex min-h-11 items-center gap-2 rounded-xl bg-db-red px-4 text-sm font-bold text-white transition hover:bg-red-700"
+                      className="flex min-h-11 items-center gap-2 rounded-xl bg-db-red px-4 text-sm font-black text-white transition hover:bg-red-700"
                     >
                       <Send className="h-4 w-4" />
                       <span className="hidden sm:inline">Senden</span>
@@ -436,14 +436,14 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                       <button
                         type="button"
                         onClick={() => setWeiterleitHinweis((offen) => !offen)}
-                        className="flex min-h-11 items-center gap-2 text-sm font-medium text-ink-muted transition hover:text-db-red"
+                        className="flex min-h-11 items-center gap-2 text-xs font-black text-db-rail dark:text-white/60 transition hover:text-db-red"
                       >
                         <UserCheck className="h-4 w-4" />
                         An eine andere Stelle weitergeben
                       </button>
                       {weiterleitHinweis && (
-                        <div className="mt-2 rounded-xl border border-line/10 bg-surface-sunk p-3">
-                          <p className="text-sm font-normal leading-relaxed text-ink-muted">
+                        <div className="mt-2 rounded-xl border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-white/5 p-3">
+                          <p className="text-xs font-semibold leading-relaxed text-db-rail dark:text-white/70">
                             {regel.bedingung} Die Weitergabe steht danach für beide Seiten im
                             Verlauf — der Fall verschwindet aus diesem Postfach und liegt bei der
                             gewählten Stelle.
@@ -454,7 +454,7 @@ export function RollenPostfach({ rolleId, onExit, onRolleWechseln }) {
                                 key={ziel.id}
                                 type="button"
                                 onClick={() => weitergeben(ziel.id)}
-                                className="min-h-11 rounded-lg border border-line/15 bg-surface px-3 text-sm font-bold text-ink transition hover:border-db-red hover:text-db-red"
+                                className="min-h-11 rounded-lg border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 px-3 text-xs font-bold text-db-dark dark:text-white transition hover:border-db-red hover:text-db-red"
                               >
                                 {ziel.kurz}
                               </button>
@@ -484,7 +484,7 @@ function Hinweisleiste({ rolleId, fall }) {
   if (hinweise.length === 0 && (fristen.length === 0 || !eingang)) return null;
 
   return (
-    <div className="space-y-2 border-t border-line/10 bg-surface-sunk  p-4">
+    <div className="space-y-2 border-t border-db-dark/10 dark:border-white/10 bg-db-soft/60 dark:bg-white/5 p-4">
       {eingang &&
         fristen.map((frist) => {
           const stand = fristStand(frist, eingang);
@@ -493,15 +493,15 @@ function Hinweisleiste({ rolleId, fall }) {
               ? "border-db-red/40 bg-red-50 dark:bg-red-950/20 text-db-redInk dark:text-red-300"
               : stand.stand === "knapp"
                 ? "border-amber-300 bg-amber-50 dark:bg-amber-950/20 text-amber-900 dark:text-amber-300"
-                : "border-line/10 bg-surface text-ink-muted";
+                : "border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/30 text-db-rail dark:text-white/70";
           return (
             <div key={frist.id} className={`flex items-start gap-2.5 rounded-xl border p-3 ${farbe}`}>
               <AlarmClock className="mt-0.5 h-4 w-4 shrink-0" />
               <div>
-                <p className="text-sm font-bold">
+                <p className="text-xs font-black">
                   {frist.bezeichnung}: {stand.text}
                 </p>
-                <p className="mt-0.5 text-sm font-semibold leading-relaxed opacity-80">
+                <p className="mt-0.5 text-[11px] font-semibold leading-relaxed opacity-80">
                   {frist.erklaerung} ({frist.grundlage})
                 </p>
               </div>
@@ -512,15 +512,15 @@ function Hinweisleiste({ rolleId, fall }) {
       {hinweise.map((hinweis) => (
         <div
           key={hinweis.id}
-          className="flex items-start gap-2.5 rounded-xl border border-line/10 bg-surface p-3"
+          className="flex items-start gap-2.5 rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/30 p-3"
         >
           <Scale className="mt-0.5 h-4 w-4 shrink-0 text-db-red" />
           <div>
-            <p className="text-sm font-bold text-ink">{hinweis.titel}</p>
-            <p className="mt-0.5 text-sm font-normal leading-relaxed text-ink-muted">
+            <p className="text-xs font-black text-db-dark dark:text-white">{hinweis.titel}</p>
+            <p className="mt-0.5 text-[11px] font-semibold leading-relaxed text-db-rail dark:text-white/60">
               {hinweis.text}
             </p>
-            <p className="mt-1 text-xs font-bold uppercase tracking-wide text-ink-muted ">
+            <p className="mt-1 text-[11px] font-black uppercase tracking-wide text-db-rail/70 dark:text-white/40">
               {hinweis.grundlage} · keine Rechtsberatung
             </p>
           </div>
@@ -532,8 +532,8 @@ function Hinweisleiste({ rolleId, fall }) {
 
 function Auswertung({ ergebnis, rolleKurz }) {
   return (
-    <div className="rounded-xl border border-line/10 bg-surface p-5">
-      <h2 className="flex items-center gap-2 text-sm font-bold text-ink">
+    <div className="rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5">
+      <h2 className="flex items-center gap-2 text-sm font-black text-db-dark dark:text-white">
         <BarChart3 className="h-4 w-4 text-db-red" />
         Häufungen im Postfach von {rolleKurz}
       </h2>
@@ -543,15 +543,15 @@ function Auswertung({ ergebnis, rolleKurz }) {
           {ergebnis.muster.map((eintrag) => (
             <li
               key={eintrag.kategorie}
-              className="flex items-center justify-between rounded-xl bg-surface-sunk px-3.5 py-2.5"
+              className="flex items-center justify-between rounded-xl bg-db-soft dark:bg-white/5 px-3.5 py-2.5"
             >
-              <span className="text-sm font-bold text-ink">{eintrag.kategorie}</span>
-              <span className="text-sm font-bold text-db-red">{eintrag.anzahl} Fälle</span>
+              <span className="text-sm font-bold text-db-dark dark:text-white">{eintrag.kategorie}</span>
+              <span className="text-sm font-black text-db-red">{eintrag.anzahl} Fälle</span>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="mt-3 rounded-xl border border-line/10 bg-surface-sunk p-3.5 text-sm font-normal leading-relaxed text-ink-muted">
+        <p className="mt-3 rounded-xl border border-db-dark/10 dark:border-white/10 bg-db-soft dark:bg-white/5 p-3.5 text-xs font-semibold leading-relaxed text-db-rail dark:text-white/60">
           Hier steht nichts — und das ist Absicht. {sperrBegruendung(ergebnis.schwelle)}
         </p>
       )}
@@ -573,7 +573,7 @@ function StatusMarke({ status }) {
   };
   const marke = marken[status] ?? marken.offen;
   return (
-    <span className={`shrink-0 rounded px-2 py-0.5 text-sm font-bold ${marke.klasse}`}>
+    <span className={`shrink-0 rounded px-2 py-0.5 text-[11px] font-black ${marke.klasse}`}>
       {marke.text}
     </span>
   );
@@ -582,7 +582,7 @@ function StatusMarke({ status }) {
 function Nachricht({ eintrag, rolleKurz }) {
   if (eintrag.von === "system") {
     return (
-      <p className="flex items-center justify-center gap-2 text-center text-sm font-medium text-ink-muted ">
+      <p className="flex items-center justify-center gap-2 text-center text-[11px] font-bold text-db-rail/70 dark:text-white/40">
         <ShieldCheck className="h-3.5 w-3.5" />
         {eintrag.text} · {eintrag.zeit}
       </p>
@@ -595,15 +595,15 @@ function Nachricht({ eintrag, rolleKurz }) {
       <div
         className={`max-w-[85%] rounded-xl px-3.5 py-2.5 ${
           vonRolle
-            ? "bg-contrast  text-contrast-ink "
-            : "bg-surface-sunk  text-ink"
+            ? "bg-db-dark dark:bg-white text-white dark:text-db-dark"
+            : "bg-db-soft dark:bg-white/10 text-db-dark dark:text-white"
         }`}
       >
-        <p className="text-xs font-bold uppercase tracking-wide opacity-60">
+        <p className="text-[11px] font-black uppercase tracking-wide opacity-60">
           {vonRolle ? rolleKurz : "meldende Person"}
         </p>
         <p className="mt-1 text-sm font-semibold leading-relaxed">{eintrag.text}</p>
-        <p className="mt-1 text-sm font-bold opacity-50">{eintrag.zeit}</p>
+        <p className="mt-1 text-[11px] font-bold opacity-50">{eintrag.zeit}</p>
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ function TextMitRufnummern({ text }) {
           <a
             key={i}
             href={`tel:${teil.replace(/\s/g, "")}`}
-            className="font-bold underline decoration-2 underline-offset-2 hover:text-db-red"
+            className="font-black underline decoration-2 underline-offset-2 hover:text-db-red"
           >
             {teil}
           </a>
@@ -168,17 +168,17 @@ export function FloatingChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="absolute bottom-20 right-0 w-[360px] h-[540px] max-h-[80vh] rounded-lg bg-white/90 dark:bg-db-dark/95  border border-line/10 shadow-lg flex flex-col overflow-hidden transition-colors"
+            className="absolute bottom-20 right-0 w-[360px] h-[540px] max-h-[80vh] rounded-lg bg-white/90 dark:bg-db-dark/95 backdrop-blur-xl border border-db-dark/10 dark:border-white/10 shadow-lg flex flex-col overflow-hidden transition-colors"
           >
             {/* Header */}
             <div className="flex items-center justify-between bg-db-dark dark:bg-black/50 px-5 py-4 text-white">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 ">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
                   <Bot className="h-6 w-6 text-db-red" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold tracking-wide">Dein Peace-Assistent</h3>
-                  <p className="text-sm font-medium text-white/70">Sicher & vertraulich</p>
+                  <h3 className="text-sm font-black tracking-wide">Dein Peace-Assistent</h3>
+                  <p className="text-[11px] font-medium text-white/70">Sicher & vertraulich</p>
                 </div>
               </div>
               <button
@@ -204,8 +204,8 @@ export function FloatingChatWidget() {
                       m.role === "user"
                         ? "bg-db-red text-white rounded-br-sm shadow-md shadow-db-red/20"
                         : m.kritisch
-                        ? "bg-red-50 dark:bg-red-950/40 text-ink rounded-bl-sm border-2 border-db-red shadow-sm"
-                        : "bg-white dark:bg-db-rail text-ink rounded-bl-sm border border-line/5  shadow-sm"
+                        ? "bg-red-50 dark:bg-red-950/40 text-db-dark dark:text-white rounded-bl-sm border-2 border-db-red shadow-sm"
+                        : "bg-white dark:bg-db-rail text-db-dark dark:text-white rounded-bl-sm border border-db-dark/5 dark:border-white/10 shadow-sm"
                     }`}
                   >
                     {m.role === "assistant" ? <TextMitRufnummern text={m.text} /> : m.text}
@@ -219,7 +219,7 @@ export function FloatingChatWidget() {
                   animate={{ opacity: 1, y: 0 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-white dark:bg-db-rail border border-line/5  rounded-md rounded-bl-sm px-4 py-3 flex gap-1 items-center shadow-sm">
+                  <div className="bg-white dark:bg-db-rail border border-db-dark/5 dark:border-white/10 rounded-md rounded-bl-sm px-4 py-3 flex gap-1 items-center shadow-sm">
                     <span className="w-2 h-2 rounded-full bg-db-dark/30 dark:bg-white/30 animate-bounce" style={{ animationDelay: '0ms' }} />
                     <span className="w-2 h-2 rounded-full bg-db-dark/30 dark:bg-white/30 animate-bounce" style={{ animationDelay: '150ms' }} />
                     <span className="w-2 h-2 rounded-full bg-db-dark/30 dark:bg-white/30 animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -229,14 +229,14 @@ export function FloatingChatWidget() {
             </div>
 
             {/* Input Area */}
-            <form onSubmit={handleSubmit} className="border-t border-line/10 bg-surface  p-4 transition-colors">
+            <form onSubmit={handleSubmit} className="border-t border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark p-4 transition-colors">
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Schreibe eine Nachricht..."
-                  className="flex-1 rounded-xl border border-line/15 bg-db-warm/50 dark:bg-db-rail/50 dark:text-white px-4 py-2.5 text-sm outline-none transition placeholder:text-db-rail/70 dark:placeholder:text-white/50 focus:border-db-red focus:bg-white dark:focus:bg-db-dark focus:ring-2 focus:ring-db-red/20"
+                  className="flex-1 rounded-xl border border-db-dark/15 dark:border-white/15 bg-db-warm/50 dark:bg-db-rail/50 dark:text-white px-4 py-2.5 text-sm outline-none transition placeholder:text-db-rail/70 dark:placeholder:text-white/50 focus:border-db-red focus:bg-white dark:focus:bg-db-dark focus:ring-2 focus:ring-db-red/20"
                 />
                 <button
                   type="submit"

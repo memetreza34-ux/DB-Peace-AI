@@ -20,10 +20,7 @@ import {
   Eye,
   Lock,
   ArrowRight,
-  Star,
-  Smile,
-  Meh,
-  Frown,
+  Star
 } from "lucide-react";
 import { abonnieren, alleFaelle, verlaufErgaenzen } from "../lib/faelle.js";
 import { eigeneFaelle, rolleFinden } from "../lib/rolle.js";
@@ -60,14 +57,14 @@ export function ProfileView() {
 
   // Die echten Einträge aus dem Stimmungs-Tracker auf der Startseite.
   const stimmungsBezeichnung = {
-    good: { mood: "Gut", Icon: Smile, color: "text-emerald-600 dark:text-emerald-400" },
-    neutral: { mood: "Okay", Icon: Meh, color: "text-ink-muted" },
-    bad: { mood: "Gestresst", Icon: Frown, color: "text-db-red" },
+    good: { mood: "Gut", icon: "🙂", color: "text-emerald-500" },
+    neutral: { mood: "Okay", icon: "😐", color: "text-amber-500" },
+    bad: { mood: "Gestresst", icon: "😞", color: "text-red-500" },
   };
   const moodHistory = stimmungLaden().map((eintrag) => ({
     date: tagesbezeichnung(eintrag.datum),
     notiz: eintrag.notiz,
-    ...(stimmungsBezeichnung[eintrag.stimmung] ?? { mood: eintrag.stimmung, Icon: Meh, color: "text-db-rail" }),
+    ...(stimmungsBezeichnung[eintrag.stimmung] ?? { mood: eintrag.stimmung, icon: "•", color: "text-db-rail" }),
   }));
 
   const savedCourses = [
@@ -90,14 +87,14 @@ export function ProfileView() {
         const selectedTicket = tickets.find(t => t.id === selectedTicketId);
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-ink mb-2">Meine Meldungen & Postfach</h3>
-            <p className="text-sm font-medium text-ink-muted mb-6">
+            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Meine Meldungen & Postfach</h3>
+            <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-6">
               Hier siehst du deine eingereichten, anonymen Meldungen und kannst sicher mit den Bearbeitern (JAV, HR) schreiben.
             </p>
             
             <div className="flex flex-col lg:flex-row gap-4 h-[500px]">
               {/* Inbox List */}
-              <div className="w-full lg:w-1/3 bg-surface rounded-md border border-line/10 flex flex-col overflow-hidden shrink-0">
+              <div className="w-full lg:w-1/3 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 flex flex-col overflow-hidden shrink-0">
                  <div className="overflow-y-auto flex-1 p-2 space-y-2">
                    {tickets.map(ticket => (
                      <button
@@ -106,13 +103,13 @@ export function ProfileView() {
                        className={`w-full text-left p-4 rounded-xl border transition-all ${selectedTicketId === ticket.id ? 'border-db-red bg-db-red/5 dark:bg-db-red/10' : 'border-transparent hover:bg-db-dark/5 dark:hover:bg-white/5'}`}
                      >
                        <div className="flex justify-between items-start mb-1">
-                          <span className="font-bold text-ink text-sm">{ticket.id}</span>
-                          <span className="shrink-0 whitespace-nowrap rounded bg-db-dark/5 dark:bg-white/10 px-2 py-0.5 text-sm font-bold text-ink">
+                          <span className="font-black text-db-dark dark:text-white text-sm">{ticket.id}</span>
+                          <span className="shrink-0 whitespace-nowrap rounded bg-db-dark/5 dark:bg-white/10 px-2 py-0.5 text-[10px] font-bold text-db-dark dark:text-white">
                             {{ offen: "offen", "in-bearbeitung": "läuft", abgeschlossen: "erledigt" }[ticket.status] ?? ticket.status}
                           </span>
                        </div>
-                       <p className="text-sm font-medium text-ink-muted mb-1 truncate">{ticket.kategorie}</p>
-                       <p className="text-sm font-normal text-ink-muted  truncate">
+                       <p className="text-xs font-bold text-db-rail dark:text-white/60 mb-1 truncate">{ticket.kategorie}</p>
+                       <p className="text-[11px] font-semibold text-db-rail/70 dark:text-white/40 truncate">
                          an {rolleFinden(ticket.empfaenger)?.kurz ?? "unbekannt"}
                        </p>
                      </button>
@@ -121,7 +118,7 @@ export function ProfileView() {
               </div>
 
               {/* Chat Area */}
-              <div className="w-full lg:w-2/3 bg-surface rounded-md border border-line/10 flex flex-col overflow-hidden">
+              <div className="w-full lg:w-2/3 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10 flex flex-col overflow-hidden">
                 {selectedTicket ? (
                   <>
                     <FristenFuerMich fall={selectedTicket} />
@@ -130,11 +127,11 @@ export function ProfileView() {
                           <div key={msg.id} className={`flex ${msg.von === 'melder' ? 'justify-end' : 'justify-start'}`}>
                             {msg.von === 'system' ? (
                               <div className="w-full text-center py-2">
-                                 <span className="text-xs font-bold uppercase text-db-rail dark:text-white/40 bg-line/5  px-3 py-1 rounded-full">{msg.text}</span>
+                                 <span className="text-[10px] font-bold uppercase text-db-rail dark:text-white/40 bg-db-dark/5 dark:bg-white/5 px-3 py-1 rounded-full">{msg.text}</span>
                               </div>
                             ) : (
-                              <div className={`max-w-[85%] rounded-md p-4 ${msg.von === 'melder' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-surface-sunk text-ink rounded-tl-sm border border-line/10'}`}>
-                                 <div className="flex items-center gap-2 mb-1 opacity-70 text-xs font-bold uppercase tracking-wider">
+                              <div className={`max-w-[85%] rounded-md p-4 ${msg.von === 'melder' ? 'bg-db-red text-white rounded-tr-sm' : 'bg-db-soft dark:bg-white/5 text-db-dark dark:text-white rounded-tl-sm border border-db-dark/10 dark:border-white/10'}`}>
+                                 <div className="flex items-center gap-2 mb-1 opacity-70 text-[10px] font-bold uppercase tracking-wider">
                                     {msg.von === 'melder'
                                       ? 'Du'
                                       : rolleFinden(selectedTicket.empfaenger)?.kurz ?? 'Bearbeitung'}{' '}
@@ -146,14 +143,14 @@ export function ProfileView() {
                           </div>
                        ))}
                     </div>
-                    <div className="p-3 border-t border-line/10 bg-white dark:bg-transparent shrink-0">
+                    <div className="p-3 border-t border-db-dark/10 dark:border-white/10 bg-white dark:bg-transparent shrink-0">
                        <form onSubmit={handleSendReply} className="flex gap-2">
                           <input 
                             type="text" 
                             value={replyText}
                             onChange={(e) => setReplyText(e.target.value)}
                             placeholder="Anonym antworten..."
-                            className="flex-1 bg-line/5  border border-line/10 rounded-xl px-4 py-3 text-sm font-medium text-ink focus:outline-none focus:border-db-red"
+                            className="flex-1 bg-db-dark/5 dark:bg-white/5 border border-db-dark/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-db-dark dark:text-white focus:outline-none focus:border-db-red"
                           />
                           <button 
                             type="submit"
@@ -166,9 +163,9 @@ export function ProfileView() {
                     </div>
                   </>
                 ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center text-db-rail dark:text-white/40 p-6 text-center">
+                  <div className="flex-1 flex flex-col items-center justify-center text-db-rail dark:text-white/40 p-8 text-center">
                      <Inbox className="w-12 h-12 mb-4 opacity-20" />
-                     <h3 className="text-sm font-bold">Wähle eine Meldung aus</h3>
+                     <h3 className="text-sm font-black">Wähle eine Meldung aus</h3>
                   </div>
                 )}
               </div>
@@ -178,17 +175,17 @@ export function ProfileView() {
       case "protokolle":
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-ink mb-2">Meine Gedächtnisprotokolle</h3>
-            <p className="text-sm font-medium text-ink-muted mb-6">
+            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Meine Gedächtnisprotokolle</h3>
+            <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-6">
               Diese Einträge bleiben auf diesem Gerät und werden nirgendwo hochgeladen.
             </p>
             {savedRecords.map(record => (
-              <div key={record.id} className="bg-surface border border-line/10 rounded-md p-5 shadow-sm hover:shadow-md transition">
-                <div className="flex items-center gap-2 text-sm font-medium text-ink-muted mb-2">
+              <div key={record.id} className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm hover:shadow-md transition">
+                <div className="flex items-center gap-2 text-xs font-bold text-db-rail dark:text-white/60 mb-2">
                   <Clock className="w-3 h-3" />
                   {record.date} • {record.time}
                 </div>
-                <h4 className="font-bold text-ink text-lg mb-1">{record.category || "Protokoll-Eintrag"}</h4>
+                <h4 className="font-black text-db-dark dark:text-white text-lg mb-1">{record.category || "Protokoll-Eintrag"}</h4>
                 <p className="text-sm text-db-dark/80 dark:text-white/80">{record.description}</p>
                 {/* Beide Funktionen sind im Prototyp nicht angebunden. Sichtbar
                     deaktiviert statt mit einem Hinweisfenster beim Klick. */}
@@ -197,7 +194,7 @@ export function ProfileView() {
                     type="button"
                     disabled
                     title="Im Prototyp noch nicht verfügbar"
-                    className="text-sm font-medium bg-line/5  px-3 py-1.5 rounded-lg text-db-dark/40 dark:text-white/40 cursor-not-allowed"
+                    className="text-xs font-bold bg-db-dark/5 dark:bg-white/5 px-3 py-1.5 rounded-lg text-db-dark/40 dark:text-white/40 cursor-not-allowed"
                   >
                     Bearbeiten
                   </button>
@@ -205,11 +202,11 @@ export function ProfileView() {
                     type="button"
                     disabled
                     title="Im Prototyp noch nicht verfügbar"
-                    className="text-sm font-bold bg-db-red/5 px-3 py-1.5 rounded-lg text-db-red/40 cursor-not-allowed"
+                    className="text-xs font-bold bg-db-red/5 px-3 py-1.5 rounded-lg text-db-red/40 cursor-not-allowed"
                   >
                     Meldung daraus erstellen
                   </button>
-                  <span className="text-sm font-normal text-ink-muted ">
+                  <span className="text-[11px] font-semibold text-db-rail/70 dark:text-white/40">
                     im Prototyp noch nicht angebunden
                   </span>
                 </div>
@@ -220,24 +217,24 @@ export function ProfileView() {
       case "stimmung":
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-ink mb-2">Stimmungs-Verlauf</h3>
-            <div className="bg-surface border border-line/10 rounded-md p-5 shadow-sm">
+            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Stimmungs-Verlauf</h3>
+            <div className="bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-6 shadow-sm">
               <div className="space-y-6">
                 {moodHistory.length === 0 ? (
-                  <p className="py-5 text-center text-sm font-normal text-ink-muted ">
+                  <p className="py-6 text-center text-sm font-semibold text-db-rail dark:text-white/50">
                     Noch kein Eintrag. Auf der Startseite kannst du festhalten, wie deine Schicht war.
                   </p>
                 ) : (
                   moodHistory.map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between gap-4 border-b border-line/5  pb-4 last:border-0 last:pb-0">
+                    <div key={idx} className="flex items-center justify-between gap-4 border-b border-db-dark/5 dark:border-white/5 pb-4 last:border-0 last:pb-0">
                       <div className="min-w-0">
-                        <div className="text-sm font-medium text-ink-muted mb-1">{item.date}</div>
-                        <div className="font-bold text-ink">{item.mood}</div>
+                        <div className="text-xs font-bold text-db-rail dark:text-white/60 mb-1">{item.date}</div>
+                        <div className="font-black text-db-dark dark:text-white">{item.mood}</div>
                         {item.notiz && (
-                          <p className="mt-1 text-sm font-normal text-ink-muted">{item.notiz}</p>
+                          <p className="mt-1 text-xs font-semibold text-db-rail dark:text-white/60">{item.notiz}</p>
                         )}
                       </div>
-                      {item.Icon && <item.Icon className={`h-8 w-8 shrink-0 ${item.color}`} />}
+                      <div className={`shrink-0 text-4xl ${item.color}`}>{item.icon}</div>
                     </div>
                   ))
                 )}
@@ -248,19 +245,19 @@ export function ProfileView() {
       case "kurse":
         return (
           <div className="space-y-4">
-            <h3 className="font-bold text-xl text-ink mb-2">Gemerkte Kurse</h3>
+            <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Gemerkte Kurse</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {savedCourses.map((course, idx) => (
-                <div key={idx} className="group bg-surface border border-line/10 rounded-md p-5 shadow-sm hover:border-db-red dark:hover:border-db-red transition cursor-pointer flex flex-col justify-between">
+                <div key={idx} className="group bg-white dark:bg-db-dark/50 border border-db-dark/10 dark:border-white/10 rounded-md p-5 shadow-sm hover:border-db-red dark:hover:border-db-red transition cursor-pointer flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center gap-2 text-xs font-bold text-ink-muted mb-2 uppercase tracking-wider">
+                    <div className="flex items-center gap-2 text-xs font-bold text-db-rail dark:text-white/60 mb-2 uppercase tracking-wider">
                       <Video className="w-3 h-3" />
                       {course.type}
                     </div>
-                    <h4 className="font-bold text-ink text-lg group-hover:text-db-red transition">{course.title}</h4>
+                    <h4 className="font-black text-db-dark dark:text-white text-lg group-hover:text-db-red transition">{course.title}</h4>
                   </div>
                   <div className="mt-6 flex items-center justify-between">
-                    <span className="text-sm font-medium text-ink/70 ">{course.duration}</span>
+                    <span className="text-xs font-bold text-db-dark/70 dark:text-white/70">{course.duration}</span>
                     <ChevronRight className="w-5 h-5 text-db-dark/30 dark:text-white/30 group-hover:text-db-red transition translate-x-0 group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -278,10 +275,10 @@ export function ProfileView() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-4xl mx-auto py-8 px-4 sm:px-5"
+      className="max-w-4xl mx-auto py-8 px-4 sm:px-6"
     >
       {/* Profile Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-10 bg-db-dark p-6 rounded-lg shadow-md shadow-db-dark/10 relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-10 bg-db-dark p-8 rounded-lg shadow-md shadow-db-dark/10 relative overflow-hidden">
         <div className="absolute -top-20 -right-20 opacity-5 pointer-events-none">
           <User className="w-80 h-80 text-white" />
         </div>
@@ -289,9 +286,9 @@ export function ProfileView() {
           <User className="w-12 h-12 text-white" />
         </div>
         <div className="relative z-10 text-white flex-1">
-          <h1 className="text-3xl font-bold mb-1">Mein DB Peace</h1>
+          <h1 className="text-3xl font-black mb-1">Mein DB Peace</h1>
           <p className="text-white/70 font-medium mb-2">Dein sicherer, privater Raum.</p>
-          <p className="text-white/60 text-sm font-normal mb-4 max-w-xl leading-relaxed">
+          <p className="text-white/60 text-xs font-semibold mb-4 max-w-xl leading-relaxed">
             Postfach und gemerkte Kurse zeigen im Prototyp erfundene Beispiele. Deine
             Gedächtnisprotokolle und dein Stimmungs-Tagebuch sind echt — sie liegen auf diesem
             Gerät.
@@ -300,7 +297,7 @@ export function ProfileView() {
               weil er gemobbt wird, sammelt keine Abzeichen. Belohnungslogik wäre
               hier zynisch — und die Zahlen wären ohnehin erfunden. */}
           <div className="flex gap-4">
-            <div className="bg-white/10  rounded-xl p-3 border border-white/10 flex items-center gap-3 max-w-md">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 flex items-center gap-3 max-w-md">
               <div className="bg-white/10 p-2 rounded-lg text-white/80">
                 <Lock className="w-5 h-5" />
               </div>
@@ -327,21 +324,21 @@ export function ProfileView() {
             className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === "postfach" 
                 ? "bg-db-red text-white shadow-md" 
-                : "text-ink/70  hover:bg-line/5 "
+                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
             }`}
           >
             <div className="flex items-center gap-3">
               <Inbox className="w-5 h-5" /> Postfach
             </div>
-            <div className="bg-db-dark/20 text-sm px-2 py-0.5 rounded-full">{tickets.length}</div>
+            <div className="bg-db-dark/20 text-xs px-2 py-0.5 rounded-full">{tickets.length}</div>
           </button>
           
           <button 
             onClick={() => setActiveTab("protokolle")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === "protokolle" 
-                ? "bg-contrast  text-contrast-ink  shadow-md" 
-                : "text-ink/70  hover:bg-line/5 "
+                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-md" 
+                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
             }`}
           >
             <FolderLock className="w-5 h-5" /> Gedächtnisprotokolle
@@ -351,8 +348,8 @@ export function ProfileView() {
             onClick={() => setActiveTab("stimmung")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === "stimmung" 
-                ? "bg-contrast  text-contrast-ink  shadow-md" 
-                : "text-ink/70  hover:bg-line/5 "
+                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-md" 
+                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
             }`}
           >
             <LineChart className="w-5 h-5" /> Stimmungs-Verlauf
@@ -362,8 +359,8 @@ export function ProfileView() {
             onClick={() => setActiveTab("kurse")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${
               activeTab === "kurse" 
-                ? "bg-contrast  text-contrast-ink  shadow-md" 
-                : "text-ink/70  hover:bg-line/5 "
+                ? "bg-db-dark dark:bg-white text-white dark:text-db-dark shadow-md" 
+                : "text-db-dark/70 dark:text-white/70 hover:bg-db-dark/5 dark:hover:bg-white/10"
             }`}
           >
             <Bookmark className="w-5 h-5" /> Gemerkte Kurse
@@ -405,7 +402,7 @@ function FristenFuerMich({ fall }) {
   const stelle = rolleFinden(fall.empfaenger)?.kurz ?? "die zuständige Stelle";
 
   return (
-    <div className="border-b border-line/10 bg-surface-sunk  p-4 space-y-2">
+    <div className="border-b border-db-dark/10 dark:border-white/10 bg-db-soft/60 dark:bg-white/5 p-4 space-y-2">
       {fristen.map((frist) => {
         const stand = fristStand(frist, eingang);
         const ueberfaellig = stand.stand === "ueberfaellig";
@@ -415,17 +412,17 @@ function FristenFuerMich({ fall }) {
             className={`rounded-xl border p-3 ${
               ueberfaellig
                 ? "border-db-red/40 bg-red-50 dark:bg-red-950/20"
-                : "border-line/10 bg-surface"
+                : "border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/30"
             }`}
           >
             <p
-              className={`text-sm font-bold ${
-                ueberfaellig ? "text-db-redInk dark:text-red-300" : "text-ink"
+              className={`text-xs font-black ${
+                ueberfaellig ? "text-db-redInk dark:text-red-300" : "text-db-dark dark:text-white"
               }`}
             >
               {frist.bezeichnung}: {stand.text}
             </p>
-            <p className="mt-1 text-sm font-normal leading-relaxed text-ink-muted">
+            <p className="mt-1 text-[11px] font-semibold leading-relaxed text-db-rail dark:text-white/60">
               {ueberfaellig
                 ? `${stelle} hätte sich längst melden müssen. Du darfst nachfragen — und dich an eine andere Stelle wenden, wenn nichts passiert.`
                 : frist.erklaerung}{" "}

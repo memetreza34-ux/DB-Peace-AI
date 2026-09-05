@@ -55,7 +55,7 @@ const SEARCH_INDEX = [
     title: "Betriebsrat & JAV finden",
     description: "Deine Interessenvertretung im Betrieb.",
     category: "Kontakte",
-    icon: <PhoneCall className="w-5 h-5 text-ink" />,
+    icon: <PhoneCall className="w-5 h-5 text-db-dark dark:text-white" />,
     keywords: ["betriebsrat", "br", "jav", "ausbildung", "afk", "ngk", "hr", "personal"],
     action: (navigate) => navigate("contacts")
   },
@@ -73,7 +73,7 @@ const SEARCH_INDEX = [
     title: "Startseite (Dashboard)",
     description: "Zurück zur Hauptübersicht von DB Peace.",
     category: "Navigation",
-    icon: <LayoutDashboard className="w-5 h-5 text-ink" />,
+    icon: <LayoutDashboard className="w-5 h-5 text-db-dark dark:text-white" />,
     keywords: ["home", "start", "übersicht", "dashboard", "hauptseite"],
     action: (navigate) => navigate("home")
   }
@@ -116,14 +116,14 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
   if (!isOpen) return null;
 
   return (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 sm:px-5">
+        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] px-4 sm:px-6">
         {/* Backdrop */}
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 bg-db-dark/40 dark:bg-black/60 "
+          className="absolute inset-0 bg-db-dark/40 dark:bg-black/60 backdrop-blur-sm"
         />
         
         {/* Search Panel */}
@@ -137,22 +137,22 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           aria-modal="true"
           aria-label="Suche"
           tabIndex={-1}
-          className="relative w-full max-w-2xl bg-surface  rounded-lg shadow-lg border border-line/10 overflow-hidden flex flex-col max-h-[80vh] outline-none"
+          className="relative w-full max-w-2xl bg-white dark:bg-db-dark rounded-lg shadow-lg border border-db-dark/10 dark:border-white/10 overflow-hidden flex flex-col max-h-[80vh] outline-none"
         >
           {/* Search Input Area */}
-          <div className="flex items-center px-4 py-4 border-b border-line/10 bg-line/5 ">
-            <Search className="w-6 h-6 text-ink-muted  ml-2 shrink-0" />
+          <div className="flex items-center px-4 py-4 border-b border-db-dark/10 dark:border-white/10 bg-db-dark/5 dark:bg-white/5">
+            <Search className="w-6 h-6 text-db-rail dark:text-white/50 ml-2 shrink-0" />
             <input
               ref={inputRef}
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Wonach suchst du? (z.B. 'Mobbing', 'Betriebsrat', 'melden')"
-              className="flex-grow bg-transparent border-none outline-none px-4 text-xl font-medium text-ink placeholder:text-db-rail dark:placeholder:text-white/40"
+              className="flex-grow bg-transparent border-none outline-none px-4 text-xl font-medium text-db-dark dark:text-white placeholder:text-db-rail dark:placeholder:text-white/40"
             />
             <button 
               onClick={onClose}
-              className="p-2 text-db-rail hover:text-ink/50 dark:hover:text-white bg-line/5  hover:bg-db-dark/10 dark:hover:bg-white/10 rounded-full transition shrink-0"
+              className="p-2 text-db-rail hover:text-db-dark dark:text-white/50 dark:hover:text-white bg-db-dark/5 dark:bg-white/5 hover:bg-db-dark/10 dark:hover:bg-white/10 rounded-full transition shrink-0"
             >
               <X className="w-5 h-5" />
             </button>
@@ -161,16 +161,16 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           {/* Results Area */}
           <div className="overflow-y-auto p-2 db-scrollbar">
             {query.trim() === "" && (
-              <div className="px-4 py-3 text-xs font-bold text-ink-muted  uppercase tracking-wider">
+              <div className="px-4 py-3 text-xs font-bold text-db-rail dark:text-white/50 uppercase tracking-wider">
                 Häufig gesucht
               </div>
             )}
             
             {query.trim() !== "" && displayResults.length === 0 && (
-              <div className="px-5 py-12 text-center">
+              <div className="px-6 py-12 text-center">
                 <Search className="w-12 h-12 text-db-rail dark:text-white/30 mx-auto mb-4 opacity-50" />
-                <h3 className="text-lg font-bold text-ink">Keine Ergebnisse gefunden</h3>
-                <p className="text-ink-muted mt-1">Versuche andere Suchbegriffe wie "Hilfe" oder "Kontakt".</p>
+                <h3 className="text-lg font-bold text-db-dark dark:text-white">Keine Ergebnisse gefunden</h3>
+                <p className="text-db-rail dark:text-white/60 mt-1">Versuche andere Suchbegriffe wie "Hilfe" oder "Kontakt".</p>
               </div>
             )}
 
@@ -182,12 +182,12 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
                   className="w-full flex items-center justify-between p-4 rounded-md hover:bg-db-dark/5 dark:hover:bg-white/5 transition-colors group text-left"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-surface  border border-line/10 flex items-center justify-center shadow-sm shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-white dark:bg-db-dark border border-db-dark/10 dark:border-white/10 flex items-center justify-center shadow-sm shrink-0">
                       {item.icon}
                     </div>
                     <div>
-                      <h4 className="font-bold text-ink">{item.title}</h4>
-                      <p className="text-sm font-medium text-ink-muted">{item.description}</p>
+                      <h4 className="font-bold text-db-dark dark:text-white">{item.title}</h4>
+                      <p className="text-sm font-medium text-db-rail dark:text-white/60">{item.description}</p>
                     </div>
                   </div>
                   <ArrowRight className="w-5 h-5 text-db-rail dark:text-white/30 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0" />
@@ -197,9 +197,9 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           </div>
           
           {/* Footer */}
-          <div className="px-5 py-3 bg-line/5  border-t border-line/10 text-sm font-normal text-ink-muted  flex justify-between items-center">
+          <div className="px-6 py-3 bg-db-dark/5 dark:bg-white/5 border-t border-db-dark/10 dark:border-white/10 text-xs font-semibold text-db-rail dark:text-white/50 flex justify-between items-center">
             <span>Die Suche hilft dir, schneller zum Ziel zu kommen.</span>
-            <span className="flex items-center gap-1"><kbd className="bg-surface  px-1.5 py-0.5 rounded border border-line/20  shadow-sm font-sans font-bold">ESC</kbd> zum Schließen</span>
+            <span className="flex items-center gap-1"><kbd className="bg-white dark:bg-db-dark px-1.5 py-0.5 rounded border border-db-dark/20 dark:border-white/20 shadow-sm font-sans font-bold">ESC</kbd> zum Schließen</span>
           </div>
         </motion.div>
         </div>

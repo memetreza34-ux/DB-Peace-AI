@@ -39,10 +39,10 @@ export function ContactsView() {
   return (
     <div className="w-full">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-ink mb-2">
+        <h1 className="text-3xl font-black text-db-dark dark:text-white mb-2">
           Wichtige Kontakte & SOS
         </h1>
-        <p className="text-lg text-ink-muted font-medium">
+        <p className="text-lg text-db-rail dark:text-white/70 font-medium">
           Bei akuter Gefahr die Nummern ganz oben. Alles andere ist für später.
         </p>
       </div>
@@ -52,13 +52,13 @@ export function ContactsView() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-surface  rounded-lg p-5 border-2 border-red-500/20 shadow-sm flex flex-col h-full"
+          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border-2 border-red-500/20 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-red-500 text-white p-3 rounded-xl">
               <ShieldAlert className="w-6 h-6" />
             </div>
-            <h2 className="text-xl font-bold text-ink">Akute Gefahr</h2>
+            <h2 className="text-xl font-black text-db-dark dark:text-white">Akute Gefahr</h2>
           </div>
 
           <div className="space-y-4 flex-grow">
@@ -79,16 +79,16 @@ export function ContactsView() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-surface  rounded-lg p-5 border border-line/10 shadow-sm flex flex-col h-full"
+          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border border-db-dark/10 dark:border-white/10 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-contrast text-contrast-ink   p-3 rounded-xl">
+            <div className="bg-db-dark text-white dark:bg-white dark:text-db-dark p-3 rounded-xl">
               <Building2 className="w-6 h-6" />
             </div>
-            <h2 className="text-xl font-bold text-ink">Meldewege der DB</h2>
+            <h2 className="text-xl font-black text-db-dark dark:text-white">Meldewege der DB</h2>
           </div>
 
-          <p className="text-sm font-medium text-ink-muted mb-5 leading-relaxed">
+          <p className="text-xs font-medium text-db-rail dark:text-white/60 mb-5 leading-relaxed">
             Offizielle Meldestellen des DB-Konzerns. Du entscheidest, ob du deinen Namen nennst.
           </p>
 
@@ -104,16 +104,16 @@ export function ContactsView() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-surface  rounded-lg p-5 border border-line/10 shadow-sm flex flex-col h-full"
+          className="bg-white dark:bg-db-dark/80 rounded-lg p-6 border border-db-dark/10 dark:border-white/10 shadow-sm flex flex-col h-full"
         >
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 p-3 rounded-xl">
               <HeartHandshake className="w-6 h-6" />
             </div>
-            <h2 className="text-xl font-bold text-ink">Beratung</h2>
+            <h2 className="text-xl font-black text-db-dark dark:text-white">Beratung</h2>
           </div>
 
-          <p className="text-sm font-medium text-ink-muted mb-5 leading-relaxed">
+          <p className="text-xs font-medium text-db-rail dark:text-white/60 mb-5 leading-relaxed">
             Zum Reden und Sortieren — ohne dass daraus eine Meldung wird.
           </p>
 
@@ -133,26 +133,26 @@ export function ContactsView() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="mt-6 bg-surface-sunk rounded-lg p-5 border border-line/10"
+        className="mt-6 bg-db-soft dark:bg-white/5 rounded-lg p-6 border border-db-dark/10 dark:border-white/10"
       >
         <div className="flex items-center gap-3 mb-2">
           <MapPin className="w-5 h-5 text-db-red" />
-          <h2 className="text-lg font-bold text-ink">An deinem Standort</h2>
+          <h2 className="text-lg font-black text-db-dark dark:text-white">An deinem Standort</h2>
         </div>
-        <p className="text-sm font-medium text-ink-muted mb-4 max-w-3xl leading-relaxed">
+        <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-4 max-w-3xl leading-relaxed">
           Diese Stellen sind je nach Standort und Ausbildungsbereich unterschiedlich. Wähle deinen
           Standort, dann siehst du, wer dort hinter den Rollen steht.
         </p>
 
         <div className="mb-5 flex flex-wrap items-center gap-2">
-          <label htmlFor="standortwahl" className="text-sm font-bold text-ink">
+          <label htmlFor="standortwahl" className="text-xs font-black text-db-dark dark:text-white">
             Dein Standort
           </label>
           <select
             id="standortwahl"
             value={standort?.id ?? ""}
             onChange={(event) => standortWaehlen(event.target.value)}
-            className="min-h-11 rounded-xl border border-line/15 bg-surface px-3 text-sm font-bold text-ink"
+            className="min-h-11 rounded-xl border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/50 px-3 text-sm font-bold text-db-dark dark:text-white"
           >
             <option value="">Noch nicht gewählt</option>
             {STANDORTE.map((eintrag) => (
@@ -165,7 +165,7 @@ export function ContactsView() {
         </div>
 
         {standort?.beispiel && (
-          <p className="mb-5 flex items-start gap-2 rounded-xl border border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20 p-3 text-sm font-semibold leading-relaxed text-amber-900 dark:text-amber-200">
+          <p className="mb-5 flex items-start gap-2 rounded-xl border border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20 p-3 text-xs font-semibold leading-relaxed text-amber-900 dark:text-amber-200">
             <Info className="mt-px h-4 w-4 shrink-0" />
             <span>
               Beispiel-Standort mit erfundenen Personen — so sieht es aus, wenn echte Daten
@@ -185,28 +185,28 @@ export function ContactsView() {
               return (
                 <div
                   key={rolleId}
-                  className="rounded-xl bg-surface p-4 border border-line/10"
+                  className="rounded-xl bg-white dark:bg-db-dark/50 p-4 border border-db-dark/10 dark:border-white/10"
                 >
-                  <h3 className="font-bold text-sm text-ink">{rolle?.kurz}</h3>
-                  <p className="mb-3 text-sm font-normal text-ink-muted ">
+                  <h3 className="font-black text-sm text-db-dark dark:text-white">{rolle?.kurz}</h3>
+                  <p className="mb-3 text-[11px] font-semibold text-db-rail dark:text-white/50">
                     {rolle?.name}
                   </p>
                   {personen.length > 0 ? (
                     <ul className="space-y-2.5">
                       {personen.map((person) => (
                         <li key={person.name}>
-                          <p className="text-sm font-bold text-ink">{person.name}</p>
-                          <p className="text-sm font-normal text-ink-muted">
+                          <p className="text-xs font-black text-db-dark dark:text-white">{person.name}</p>
+                          <p className="text-[11px] font-semibold text-db-rail dark:text-white/60">
                             {person.funktion}
                           </p>
-                          <p className="text-sm font-medium text-ink-muted ">
+                          <p className="text-[11px] font-medium text-db-rail/80 dark:text-white/50">
                             {person.erreichbar}
                           </p>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="flex items-start gap-1.5 text-sm font-normal text-ink-muted ">
+                    <p className="flex items-start gap-1.5 text-[11px] font-semibold text-db-rail/80 dark:text-white/50">
                       <Info className="mt-px h-3.5 w-3.5 shrink-0" />
                       <span>Für diesen Standort noch nicht hinterlegt.</span>
                     </p>
@@ -220,21 +220,21 @@ export function ContactsView() {
             {OFFEN_FUER_PILOT.map((eintrag) => (
               <div
                 key={eintrag.id}
-                className="rounded-xl bg-surface p-4 border border-line/10"
+                className="rounded-xl bg-white dark:bg-db-dark/50 p-4 border border-db-dark/10 dark:border-white/10"
               >
-                <h3 className="font-bold text-sm text-ink mb-1">{eintrag.name}</h3>
-                <p className="text-sm font-medium text-ink-muted mb-3 leading-relaxed">
+                <h3 className="font-black text-sm text-db-dark dark:text-white mb-1">{eintrag.name}</h3>
+                <p className="text-xs font-medium text-db-rail dark:text-white/60 mb-3 leading-relaxed">
                   {eintrag.beschreibung}
                 </p>
                 {eintrag.wert ? (
                   <a
                     href={telLink(eintrag.wert)}
-                    className="inline-flex items-center gap-2 text-sm font-bold text-db-red hover:underline"
+                    className="inline-flex items-center gap-2 text-xs font-bold text-db-red hover:underline"
                   >
                     <PhoneCall className="w-3.5 h-3.5" /> {eintrag.wert}
                   </a>
                 ) : (
-                  <p className="text-sm font-normal text-ink-muted  flex items-start gap-1.5">
+                  <p className="text-[11px] font-semibold text-db-rail/80 dark:text-white/50 flex items-start gap-1.5">
                     <Info className="w-3.5 h-3.5 shrink-0 mt-px" />
                     <span>{eintrag.hinweis}</span>
                   </p>
@@ -251,19 +251,19 @@ export function ContactsView() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.35 }}
-        className="mt-6 rounded-lg border-2 border-amber-200 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20 p-5"
+        className="mt-6 rounded-lg border-2 border-amber-200 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-950/20 p-6"
       >
         <div className="flex items-center gap-3 mb-2">
           <ShieldPlus className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-          <h2 className="text-lg font-bold text-ink">
+          <h2 className="text-lg font-black text-db-dark dark:text-white">
             Noch keine 18? Dann gilt für dich mehr
           </h2>
         </div>
         <div className="grid gap-4 sm:grid-cols-3 mt-4">
           {UNTER_18.map((h) => (
             <div key={h.id}>
-              <h3 className="font-bold text-sm text-ink mb-1">{h.titel}</h3>
-              <p className="text-sm font-medium text-ink-muted leading-relaxed">
+              <h3 className="font-black text-sm text-db-dark dark:text-white mb-1">{h.titel}</h3>
+              <p className="text-xs font-medium text-db-rail dark:text-white/70 leading-relaxed">
                 {h.text}
               </p>
             </div>
@@ -271,7 +271,7 @@ export function ContactsView() {
         </div>
       </motion.div>
 
-      <p className="mt-6 text-center text-sm font-normal text-ink-muted ">
+      <p className="mt-6 text-center text-[11px] font-semibold text-db-rail/70 dark:text-white/40">
         Kontaktdaten zuletzt geprüft am {new Date(GEPRUEFT_AM).toLocaleDateString("de-DE")} ·
         Quellen: deutschebahn.com (Compliance – Hinweise geben), railbow.deutschebahn.com
       </p>
@@ -285,17 +285,17 @@ function TelefonKarte({ name, nummer, desc, dringend }) {
       className={`p-4 rounded-xl border ${
         dringend
           ? "bg-red-50 dark:bg-red-950/20 border-red-100 dark:border-red-900/30"
-          : "bg-line/5  border-transparent"
-      } transition hover:border-line/20 `}
+          : "bg-db-dark/5 dark:bg-white/5 border-transparent"
+      } transition hover:border-db-dark/20 dark:hover:border-white/20`}
     >
       <h3
-        className={`font-bold mb-1 ${
-          dringend ? "text-red-700 dark:text-red-400" : "text-ink"
+        className={`font-black mb-1 ${
+          dringend ? "text-red-700 dark:text-red-400" : "text-db-dark dark:text-white"
         }`}
       >
         {name}
       </h3>
-      <p className="text-sm font-medium text-ink-muted mb-3 leading-relaxed">
+      <p className="text-sm font-medium text-db-rail dark:text-white/60 mb-3 leading-relaxed">
         {desc}
       </p>
       <a
@@ -303,7 +303,7 @@ function TelefonKarte({ name, nummer, desc, dringend }) {
         className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition ${
           dringend
             ? "bg-red-600 text-white hover:bg-red-700"
-            : "bg-surface  text-ink border border-line/10 hover:shadow-sm"
+            : "bg-white dark:bg-db-dark text-db-dark dark:text-white border border-db-dark/10 dark:border-white/10 hover:shadow-sm"
         }`}
       >
         <PhoneCall className="w-4 h-4" />
@@ -324,9 +324,9 @@ function MeldewegKarte({ weg }) {
       : null;
 
   return (
-    <div className="p-4 rounded-xl bg-line/5  border border-transparent transition hover:border-line/20 ">
-      <h3 className="font-bold mb-1 text-ink">{weg.name}</h3>
-      <p className="text-sm font-medium text-ink-muted mb-3 leading-relaxed">
+    <div className="p-4 rounded-xl bg-db-dark/5 dark:bg-white/5 border border-transparent transition hover:border-db-dark/20 dark:hover:border-white/20">
+      <h3 className="font-black mb-1 text-db-dark dark:text-white">{weg.name}</h3>
+      <p className="text-sm font-medium text-db-rail dark:text-white/60 mb-3 leading-relaxed">
         {weg.beschreibung}
       </p>
 
@@ -334,17 +334,17 @@ function MeldewegKarte({ weg }) {
         <a
           href={ziel.href}
           {...(ziel.extern ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-surface  text-ink border border-line/10 hover:shadow-sm transition break-all"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs bg-white dark:bg-db-dark text-db-dark dark:text-white border border-db-dark/10 dark:border-white/10 hover:shadow-sm transition break-all"
         >
           <ziel.icon className="w-4 h-4 shrink-0" />
           {ziel.label}
         </a>
       ) : (
-        <p className="text-sm font-normal text-ink-muted">{weg.adresse}</p>
+        <p className="text-xs font-semibold text-db-rail dark:text-white/60">{weg.adresse}</p>
       )}
 
       {weg.erreichbarkeit && (
-        <p className="mt-2 text-sm font-normal text-ink-muted ">
+        <p className="mt-2 text-[11px] font-semibold text-db-rail/80 dark:text-white/50">
           {weg.erreichbarkeit}
         </p>
       )}
@@ -354,9 +354,9 @@ function MeldewegKarte({ weg }) {
 
 function BeratungKarte({ eintrag }) {
   return (
-    <div className="p-4 rounded-xl bg-line/5  border border-transparent transition hover:border-line/20 ">
-      <h3 className="font-bold mb-1 text-ink">{eintrag.name}</h3>
-      <p className="text-sm font-medium text-ink-muted mb-3 leading-relaxed">
+    <div className="p-4 rounded-xl bg-db-dark/5 dark:bg-white/5 border border-transparent transition hover:border-db-dark/20 dark:hover:border-white/20">
+      <h3 className="font-black mb-1 text-db-dark dark:text-white">{eintrag.name}</h3>
+      <p className="text-sm font-medium text-db-rail dark:text-white/60 mb-3 leading-relaxed">
         {eintrag.beschreibung}
       </p>
 
@@ -365,14 +365,14 @@ function BeratungKarte({ eintrag }) {
           href={eintrag.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm bg-surface  text-ink border border-line/10 hover:shadow-sm transition"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-xs bg-white dark:bg-db-dark text-db-dark dark:text-white border border-db-dark/10 dark:border-white/10 hover:shadow-sm transition"
         >
           <ExternalLink className="w-4 h-4" /> Zur Seite
         </a>
       )}
 
       {eintrag.intranet && (
-        <p className="mt-2 text-sm font-normal text-ink-muted  flex items-start gap-1.5">
+        <p className="mt-2 text-[11px] font-semibold text-db-rail/80 dark:text-white/50 flex items-start gap-1.5">
           <Info className="w-3.5 h-3.5 shrink-0 mt-px" />
           <span>Im DB-Intranet: {eintrag.intranet}</span>
         </p>

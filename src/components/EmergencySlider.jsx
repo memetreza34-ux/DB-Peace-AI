@@ -82,7 +82,7 @@ export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500",
         {!gpsStatus && (
           <button 
             onClick={handleCancel}
-            className="w-full py-2 text-sm font-medium text-db-rail hover:text-db-dark transition"
+            className="w-full py-2 text-sm font-bold text-db-rail hover:text-db-dark transition"
           >
             Abbrechen
           </button>
@@ -92,10 +92,10 @@ export function EmergencySlider({ phoneNumber, label, colorClass = "bg-red-500",
   }
 
   return (
-    <div ref={containerRef} className={`relative w-full h-16 rounded-full overflow-hidden flex items-center p-1 shadow-inner ${colorClass} bg-opacity-20 `}>
+    <div ref={containerRef} className={`relative w-full h-16 rounded-full overflow-hidden flex items-center p-1 shadow-inner ${colorClass} bg-opacity-20 backdrop-blur-md`}>
       <motion.div 
         style={{ opacity: textOpacity }}
-        className="absolute w-full text-center pointer-events-none text-sm font-bold tracking-wide text-db-dark mix-blend-overlay opacity-70 uppercase"
+        className="absolute w-full text-center pointer-events-none text-sm font-black tracking-wide text-db-dark mix-blend-overlay opacity-70 uppercase"
       >
         {label}
       </motion.div>
