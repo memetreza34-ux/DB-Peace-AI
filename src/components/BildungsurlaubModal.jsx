@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { X, Copy, CheckCircle2, TentTree, User, Building2, Calendar, FileText, Download } from "lucide-react";
 import { jsPDF } from "jspdf";
+import { useDialog } from "../lib/useDialog";
 
 export function BildungsurlaubModal({ course, onClose }) {
+  const dialogRef = useDialog(Boolean(course), onClose);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
@@ -70,20 +72,35 @@ ${formData.department ? `Abteilung: ${formData.department}` : ""}
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-db-dark/60  p-4 animate-fadeIn">
-      <div className="bg-white rounded-lg p-5 sm:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative shadow-lg">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-db-dark/60 p-4 animate-fadeIn"
+      onClick={onClose}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="bildungsurlaub-titel"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+        className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto bg-surface p-5 shadow-schwebend outline-none sm:p-6"
+      >
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full hover:bg-db-dark/5 transition"
+          aria-label="Dialog schließen"
+          className="absolute right-4 top-4 flex min-h-11 min-w-11 items-center justify-center text-ink transition hover:bg-line/5"
         >
-          <X className="h-6 w-6 text-db-dark/50" />
+          <X className="h-6 w-6" />
         </button>
 
         <div className="flex items-center gap-3 mb-2">
           <div className="p-3 bg-db-soft rounded-xl">
             <TentTree className="h-6 w-6 text-db-red" />
           </div>
-          <h2 className="text-2xl font-schild font-bold text-db-dark">Antrag auf Bildungsurlaub</h2>
+          <h2 id="bildungsurlaub-titel" className="font-schild text-2xl font-bold leading-tight tracking-tight text-ink">
+            Antrag auf Bildungsurlaub
+          </h2>
         </div>
         <p className="text-sm font-normal text-db-rail mb-8">
           Für den Kurs: <span className="font-bold text-db-dark">{course.title}</span>

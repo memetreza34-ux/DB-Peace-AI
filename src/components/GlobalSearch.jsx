@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Search, X, ArrowRight, ShieldAlert, GraduationCap, Users, FileText, PhoneCall, LayoutDashboard } from "lucide-react";
+import { useDialog } from "../lib/useDialog";
 
 // The Search Index
 const SEARCH_INDEX = [
@@ -79,6 +80,7 @@ const SEARCH_INDEX = [
 ];
 
 export function GlobalSearch({ isOpen, onClose, onNavigate }) {
+  const dialogRef = useDialog(isOpen, onClose);
   const [query, setQuery] = useState("");
   const inputRef = useRef(null);
 
@@ -88,13 +90,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
       setQuery("");
     }
     
-    // Add escape key listener
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (isOpen) window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
 
   // Filter logic
@@ -136,7 +132,12 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -20 }}
           transition={{ duration: 0.15, ease: "easeOut" }}
-          className="relative w-full max-w-2xl bg-surface  rounded-lg shadow-lg border border-line/10 overflow-hidden flex flex-col max-h-[80vh]"
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Suche"
+          tabIndex={-1}
+          className="relative flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden border border-line/10 bg-surface shadow-schwebend outline-none"
         >
           {/* Search Input Area */}
           <div className="flex items-center px-4 py-4 border-b border-line/10 bg-line/5 ">
