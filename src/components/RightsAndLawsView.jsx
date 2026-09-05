@@ -221,13 +221,23 @@ export function RightsAndLawsView({ onBack }) {
       {/* List */}
       <div className="space-y-10 max-w-3xl mx-auto mt-8">
         {filteredLaws.length > 0 ? (
-          Object.entries(groupedLaws).map(([title, laws]) => (
-            <div key={title} className="space-y-4">
-              <h2 className="text-xl font-black text-db-dark dark:text-white pl-3 border-l-4 border-db-red/80">{title}</h2>
-              <div className="space-y-4 pl-4 border-l-2 border-db-dark/10 dark:border-white/10 ml-3">
+          Object.entries(groupedLaws).map(([title, laws], gruppenIndex) => (
+            <details
+              key={title}
+              open={searchQuery.trim() !== "" || gruppenIndex === 0}
+              className="group"
+            >
+              <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 pl-3 border-l-4 border-db-red/80">
+                <h2 className="flex-grow text-xl font-black text-db-dark dark:text-white">{title}</h2>
+                <span className="flex shrink-0 items-center gap-2 text-sm font-bold text-db-rail dark:text-white/60">
+                  {laws.length}
+                  <ChevronDown className="h-5 w-5 transition-transform group-open:rotate-180" />
+                </span>
+              </summary>
+              <div className="mt-4 space-y-4 pl-4 border-l-2 border-db-dark/10 dark:border-white/10 ml-3">
                 {laws.map(renderCard)}
               </div>
-            </div>
+            </details>
           ))
         ) : (
           <div className="text-center py-12 bg-white dark:bg-db-dark/50 rounded-md border border-db-dark/10 dark:border-white/10">
