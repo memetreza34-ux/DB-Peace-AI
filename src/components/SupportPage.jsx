@@ -168,51 +168,31 @@ export default function SupportPage({ onNavigate }) {
 
   return (
     <div className="mx-auto max-w-3xl space-y-8 animate-fadeIn">
-      {/* Die Situationen als Tafel. Hier gibt es keine natürliche Marker-Spalte —
-          es sind Zustände, keine Wege — also bekommt keine erfunden. Wahr ist
-          nur eins: bei manchen steht der Notruf in den Anlaufstellen. Die
-          tragen eine rote Kante, der Rest bleibt ruhig. */}
+      {/* STEP 1: SITUATION SELECTION */}
       {step === 1 && (
-        <div className="py-4">
-          <div className="border-l-4 border-db-red pl-4">
-            <h2 className="hyphens-auto break-words font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
-              Finde die richtige Unterstützung
-            </h2>
-            <p className="mt-3 max-w-[52ch] text-base font-normal leading-relaxed text-ink-muted">
-              Wähle aus, in welcher Situation du dich befindest. Du siehst sofort, welche
-              Anlaufstellen bei der DB und extern für dich da sind.
-            </p>
+        <div className="text-center space-y-6 py-4">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-md bg-green-500/10 text-green-600 mb-2">
+            <PhoneCall className="h-6 w-6" />
           </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-ink">Finde die richtige Unterstützung</h2>
+          <p className="text-sm font-normal text-ink-muted max-w-lg mx-auto">
+            Wähle aus, in welcher Situation du dich befindest. Wir zeigen dir sofort, welche Anlaufstellen bei der DB und extern für dich da sind.
+          </p>
 
-          <div className="mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 text-left">
             {situations.map((sit) => {
               const Icon = sit.icon;
-              const akut = sit.contacts.some((k) => k.includes("110"));
               return (
                 <button
                   key={sit.id}
                   onClick={() => selectSituation(sit)}
-                  className={`group flex w-full items-baseline gap-3 border-b border-line/15 py-4 text-left transition hover:bg-line/5 ${
-                    akut ? "border-l-4 border-l-db-red pl-3" : ""
-                  }`}
+                  className="group rounded-xl border border-line/10 bg-surface p-5 hover:-translate-y-1 hover:border-green-500 transition shadow-sm"
                 >
-                  <Icon
-                    className={`h-5 w-5 shrink-0 translate-y-1 ${akut ? "text-db-red" : "text-ink"}`}
-                  />
-                  <span className="flex-1">
-                    <span className="block font-schild text-xl font-bold leading-tight tracking-tight text-ink sm:text-2xl">
-                      {sit.title}
-                    </span>
-                    <span className="mt-1 block text-sm font-normal leading-snug text-ink-muted">
-                      {sit.explanation}
-                    </span>
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="self-center text-lg text-ink-muted transition-transform group-hover:translate-x-1 group-hover:text-db-red"
-                  >
-                    →
-                  </span>
+                  <div className="flex items-center gap-3 mb-2">
+                    <Icon className="h-5 w-5 text-green-600" />
+                    <span className="font-bold text-ink group-hover:text-green-700">{sit.title}</span>
+                  </div>
+                  <p className="text-sm font-normal text-ink-muted">{sit.explanation}</p>
                 </button>
               );
             })}
@@ -233,7 +213,7 @@ export default function SupportPage({ onNavigate }) {
           <div className="rounded-md bg-ok border border-ok-line p-5 sm:p-6 space-y-6">
              <div className="flex items-center gap-4 border-b border-green-200/50 dark:border-green-800/50 pb-4">
                <selected.icon className="h-8 w-8 text-ok-ink" />
-               <h3 className="text-xl sm:text-2xl font-schild font-bold text-ok-ink">{selected.title}</h3>
+               <h3 className="text-xl sm:text-2xl font-bold text-ok-ink">{selected.title}</h3>
              </div>
              
              <div>

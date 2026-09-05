@@ -52,7 +52,7 @@ export function MoodTracker() {
             className="flex flex-col gap-4"
           >
             <div>
-              <h2 className="text-lg font-schild font-bold text-ink">Wie war deine Schicht heute?</h2>
+              <h2 className="text-lg font-bold text-ink">Wie war deine Schicht heute?</h2>
               <p className="text-sm font-medium text-ink-muted">Dein privates Stimmungs-Tagebuch. Niemand außer dir sieht das.</p>
             </div>
 
@@ -145,7 +145,7 @@ export function MoodTracker() {
             <div className="rounded-full bg-ok p-4 text-ok-ink mb-3">
               <CheckCircle2 className="h-8 w-8" />
             </div>
-            <h2 className="text-lg font-schild font-bold text-ink">Gespeichert!</h2>
+            <h2 className="text-lg font-bold text-ink">Gespeichert!</h2>
             <p className="text-sm font-medium text-ink-muted max-w-xs">
               Dein Eintrag wurde in dein privates Tagebuch aufgenommen. Gute Erholung!
             </p>

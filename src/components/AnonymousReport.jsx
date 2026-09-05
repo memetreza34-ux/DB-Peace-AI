@@ -158,8 +158,8 @@ function AnonymousReport() {
   }
 
   return (
-    <section id="meldung">
-      <div className="mx-auto max-w-7xl">
+    <section id="meldung" className="bg-surface py-16 lg:py-20">
+      <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <EntryHeader />
         <div className="mt-8 grid gap-6 xl:grid-cols-[0.86fr_1.44fr_0.9fr]">
           <aside className="space-y-4">
@@ -207,7 +207,7 @@ function AnonymousReport() {
           <aside className="space-y-4">
             <div className="rounded-lg bg-db-dark p-5 text-white shadow-panel">
               <MessageSquareText size={24} className="text-red-200" aria-hidden="true" />
-              <h3 className="mt-3 text-lg font-schild font-bold">Lieber erst reden?</h3>
+              <h3 className="mt-3 text-lg font-bold">Lieber erst reden?</h3>
               <p className="mt-2 text-sm font-semibold leading-6 text-white/80">
                 Der Peace-Assistent unten rechts hört zu und hilft dir beim Sortieren – ohne dass
                 daraus eine Meldung wird.
@@ -239,10 +239,11 @@ function EntryHeader() {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_0.72fr] lg:items-end">
       <div>
-        <h2 className="border-b-2 border-ink pb-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink">
+        <p className="text-sm font-bold uppercase tracking-wider text-db-red">Anonyme Meldung</p>
+        <h2 className="mt-3 text-4xl font-bold leading-tight tracking-normal text-ink sm:text-5xl">
           Vorfall anonym melden
         </h2>
-        <p className="mt-3 max-w-[52ch] text-base font-normal leading-relaxed text-ink-muted">
+        <p className="mt-4 max-w-3xl text-lg leading-8 text-ink-muted">
           Strukturiert, vertraulich und vorbereitet für eine menschliche Prüfung.
         </p>
       </div>
@@ -262,7 +263,7 @@ function SafetyNotice() {
       <div className="flex items-start gap-3">
         <ShieldAlert className="mt-1 shrink-0 text-db-red" size={24} aria-hidden="true" />
         <div>
-          <h3 className="text-lg font-schild font-bold text-ink">Wichtiger Hinweis</h3>
+          <h3 className="text-lg font-bold text-ink">Wichtiger Hinweis</h3>
           <p className="mt-2 text-sm font-normal leading-6 text-ink-muted">
             Bei akuter Gefahr bitte sofort reale Hilfe kontaktieren. Diese Demo speichert nichts und sendet nichts an ein Backend.
           </p>
@@ -284,7 +285,7 @@ function TimeSavingCard() {
   return (
     <div className="rounded-lg bg-db-dark p-5 text-white shadow-panel">
       <Clock3 size={26} className="text-red-200" aria-hidden="true" />
-      <h3 className="mt-4 text-lg font-schild font-bold">Wie das DB-Zeit sparen könnte</h3>
+      <h3 className="mt-4 text-lg font-bold">Wie das DB-Zeit sparen könnte</h3>
       <div className="mt-4 space-y-3 text-sm font-semibold leading-6 text-white/80">
         {points.map((point) => (
           <p key={point} className="flex gap-2">
@@ -304,7 +305,7 @@ function FormShell({ children, progress, step }) {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-bold uppercase tracking-wide text-db-red">Schritt {step} von 5</p>
-            <h3 className="mt-1 font-schild text-2xl font-bold leading-tight tracking-tight text-ink">Meldung strukturieren</h3>
+            <h3 className="mt-1 text-2xl font-bold dark:text-white">Meldung strukturieren</h3>
           </div>
           <p className="text-sm font-medium text-ink-muted">{progress}%</p>
         </div>
@@ -412,7 +413,7 @@ function DescriptionStep({ form, togglePerspective, update }) {
         <button
           type="button"
           onClick={toggleRecording}
-          className={`absolute bottom-4 right-4 p-2 transition-all ${
+          className={`absolute bottom-4 right-4 p-2 rounded-full transition-all shadow-sm ${
             isRecording 
               ? 'bg-red-500 text-white animate-pulse' 
               : 'bg-surface-sunk  text-ink hover:bg-db-dark/10 dark:hover:bg-white/10'
@@ -431,7 +432,7 @@ function DescriptionStep({ form, togglePerspective, update }) {
           className="border-2 border-dashed border-line/20  bg-surface p-5 flex flex-col items-center justify-center text-center hover:border-db-red hover:bg-db-soft dark:hover:bg-white/5 transition-all cursor-pointer group"
         >
           <input type="file" ref={fileInputRef} className="hidden" />
-          <div className="w-12 h-12 bg-line/5  flex items-center justify-center mb-3 group-hover:bg-db-red/10 transition-colors">
+          <div className="w-12 h-12 bg-line/5  rounded-full flex items-center justify-center mb-3 group-hover:bg-db-red/10 transition-colors">
             <Upload className="w-5 h-5 text-db-dark/60 dark:text-white/60 group-hover:text-db-red" />
           </div>
           <p className="font-bold text-sm text-ink">Screenshots, Chat-Verläufe oder Bilder</p>
@@ -589,7 +590,7 @@ function StepPanel({ children, text, title }) {
   return (
     <div className="space-y-4">
       <div>
-        <h4 className="text-2xl font-schild font-bold text-ink">{title}</h4>
+        <h4 className="text-2xl font-bold text-ink">{title}</h4>
         <p className="mt-2 font-normal leading-7 text-ink-muted">{text}</p>
       </div>
       {children}
@@ -726,7 +727,7 @@ function AnalysisCard({ analysis, onImprove, onPreview, onReset, form }) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-bold uppercase tracking-wide text-db-red">Lokale KI-Demo-Analyse</p>
-          <h3 className="mt-1 font-schild text-2xl font-bold leading-tight tracking-tight text-ink">Professionelle Zusammenfassung</h3>
+          <h3 className="mt-1 text-2xl font-bold dark:text-white">Professionelle Zusammenfassung</h3>
         </div>
         <span className={`w-fit rounded px-3 py-1 text-sm font-bold ${risk.className}`}>{risk.label}</span>
       </div>
@@ -785,7 +786,7 @@ function ReportPreview({ draft }) {
         <FileText className="mt-1 shrink-0 text-db-red" size={28} aria-hidden="true" />
         <div>
           <p className="text-sm font-bold uppercase tracking-wide text-db-red">Meldungsvorschau</p>
-          <h3 className="mt-1 font-schild text-2xl font-bold leading-tight tracking-tight text-ink">Strukturierter interner Demo-Entwurf</h3>
+          <h3 className="mt-1 text-2xl font-bold dark:text-white">Strukturierter interner Demo-Entwurf</h3>
           <p className="mt-2 text-sm font-medium text-ink-muted">Diese Meldung wurde nicht übermittelt.</p>
         </div>
       </div>
@@ -809,7 +810,7 @@ function WorkflowCard() {
   return (
     <div className="rounded-lg border border-line/10 bg-surface-sunk  p-5 shadow-sm">
       <ClipboardList size={26} className="text-db-red" aria-hidden="true" />
-      <h3 className="mt-4 text-lg font-schild font-bold dark:text-white">Workflow in der Demo</h3>
+      <h3 className="mt-4 text-lg font-bold dark:text-white">Workflow in der Demo</h3>
       <div className="mt-4 space-y-3">
         {steps.map((step, index) => (
           <div key={step} className="flex items-center gap-3 rounded bg-surface p-3">
@@ -835,7 +836,7 @@ function PrinciplesCard() {
   return (
     <div className="rounded-lg bg-db-dark p-5 text-white shadow-panel">
       <Handshake size={26} className="text-red-200" aria-hidden="true" />
-      <h3 className="mt-4 text-lg font-schild font-bold">Verantwortungsprinzipien</h3>
+      <h3 className="mt-4 text-lg font-bold">Verantwortungsprinzipien</h3>
       <div className="mt-4 space-y-3 text-sm font-semibold leading-6 text-white/80">
         {points.map((point) => (
           <p key={point} className="flex gap-2">

@@ -51,17 +51,17 @@ export function LearningHubView() {
 
   // Header UI
   const renderHeader = () => (
-    <div className="border-l-4 border-db-red pl-4">
+    <div className="bg-surface-inverse p-5 text-ink-inverse relative overflow-hidden">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2 max-w-2xl">
-          <div className="flex items-center gap-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink-muted">
-            <GraduationCap className="h-4 w-4 text-db-red" />
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-db-warm ">
+            <GraduationCap className="h-3.5 w-3.5 text-amber-400" />
             <span>Wissen &amp; Vorbeugen</span>
           </div>
-          <h1 className="mt-2 hyphens-auto break-words font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
             Kurs- & Seminar-Katalog
           </h1>
-          <p className="mt-3 max-w-[52ch] text-base font-normal leading-relaxed text-ink-muted">
+          <p className="text-sm font-medium text-white/80 leading-relaxed">
             Geprüfte Angebote von Bundeszentrale, Gewerkschaften und Fachstellen — mit Direktlink zum jeweiligen Anbieter.
           </p>
         </div>
@@ -69,14 +69,14 @@ export function LearningHubView() {
         {/* Search Bar */}
         <div className="w-full md:w-72 relative group">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-ink-muted group-focus-within:text-db-red transition-colors" />
+            <Search className="h-5 w-5 text-db-warm group-focus-within:text-db-red transition-colors" />
           </div>
           <input
             type="text"
             placeholder="Kurse durchsuchen..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border border-line/20 bg-surface py-3 pl-10 pr-4 text-base font-normal text-ink transition placeholder:text-ink-muted focus:border-db-red focus:outline-none focus:ring-2 focus:ring-db-red/20"
+            className="w-full bg-white/10 border border-white/20 rounded-xl py-3 pl-10 pr-4 text-sm font-semibold text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-db-red focus:bg-white/20 transition-all  shadow-inner"
           />
         </div>
       </div>
@@ -93,62 +93,47 @@ export function LearningHubView() {
       )
     : [];
 
-  /*
-   * Ein Kurs als Tafel-Zeile. Links steht der Anbieter — bei geprüften
-   * Angeboten von aussen ist das die Frage, die vor dem Klicken kommt: von wem
-   * ist das eigentlich?
-   */
   const renderCourse = (course) => (
-    <div key={course.id} className="group border-b border-line/15 py-5">
-      <div className="grid gap-x-4 sm:grid-cols-[104px_1fr]">
-        <p className="font-schild text-xs font-semibold uppercase leading-tight tracking-[0.12em] text-ink-muted">
-          {course.provider}
-        </p>
-        <div className="mt-1 sm:mt-0">
-          <h3 className="font-schild text-xl font-bold leading-tight tracking-tight text-ink sm:text-2xl">
-            {course.title}
-          </h3>
-          <p className="mt-1.5 max-w-2xl text-sm font-normal leading-relaxed text-ink-muted">
+    <div key={course.id} className="rounded-md border border-line/10 bg-surface p-5 sm:p-5 shadow-sm hover:shadow-md transition group">
+      <div className="flex flex-col sm:flex-row justify-between gap-4">
+        <div className="space-y-3">
+          <div>
+            <h3 className="text-lg font-bold text-ink">{course.title}</h3>
+            <p className="text-xs font-bold text-ink-muted uppercase tracking-wider">{course.provider}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {course.tags.map(tag => (
+              <span key={tag} className="px-2.5 py-1 rounded bg-db-warm/50 dark:bg-db-dark/30 border border-line/5  text-sm font-bold text-ink">
+                {tag}
+              </span>
+            ))}
+          </div>
+          <p className="text-sm font-semibold text-db-dark/80 dark:text-white/80 max-w-2xl leading-relaxed">
             {course.desc}
           </p>
-
-          {course.tags.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {course.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="border border-line/20 px-2.5 py-1 font-schild text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-
           {course.requirements && (
-            <p className="mt-3 border-l-2 border-line/20 pl-3 text-sm font-normal leading-relaxed text-ink-muted">
-              <span className="font-semibold text-ink">Was du dafür brauchst: </span>
-              {course.requirements}
-            </p>
-          )}
-
-          {course.link !== "" && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              <button
-                onClick={() => setSelectedCourseDetail(course)}
-                className="inline-flex min-h-11 items-center gap-2 bg-contrast px-4 font-schild text-base font-bold text-contrast-ink transition hover:opacity-90"
-              >
-                Details ansehen <ExternalLink className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setSelectedCourseForLeave(course)}
-                className="inline-flex min-h-11 items-center gap-2 border border-line/20 px-4 font-schild text-base font-bold text-ink transition hover:border-db-red hover:text-db-red"
-              >
-                <TentTree className="h-4 w-4" /> Bildungsurlaub
-              </button>
+            <div className="mt-3 rounded-lg bg-surface-sunk  p-3 border border-line/5 ">
+              <p className="text-sm font-bold text-ink mb-1">Was du dafür brauchst:</p>
+              <p className="text-sm font-normal text-ink-muted">{course.requirements}</p>
             </div>
           )}
         </div>
+        {course.link !== "" && (
+          <div className="shrink-0 pt-2 sm:pt-0 flex flex-col gap-2">
+            <button
+              onClick={() => setSelectedCourseDetail(course)}
+              className="inline-flex items-center gap-2 rounded-lg bg-db-dark px-4 py-2 text-sm font-bold text-white hover:bg-db-dark/90 transition shadow-sm w-full sm:w-auto justify-center"
+            >
+              Details ansehen <ExternalLink className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setSelectedCourseForLeave(course)}
+              className="inline-flex items-center gap-2 rounded-lg bg-teal-50 px-4 py-2 text-sm font-bold text-teal-700 hover:bg-teal-100 border border-teal-200 transition shadow-sm w-full sm:w-auto justify-center"
+            >
+              <TentTree className="h-4 w-4" /> Bildungsurlaub
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -160,7 +145,7 @@ export function LearningHubView() {
         {renderHeader()}
         
         <div className="mb-6 border-b border-line/10 pb-4">
-          <h2 className="text-xl font-schild font-bold text-ink flex items-center gap-2">
+          <h2 className="text-xl font-bold text-ink flex items-center gap-2">
             <Search className="h-6 w-6 text-ink" />
             Suchergebnisse für "{searchQuery}"
           </h2>
@@ -197,34 +182,21 @@ export function LearningHubView() {
       <div className="space-y-8 animate-fadeIn">
         {renderHeader()}
 
-        <div className="py-4">
-          <h2 className="border-b-2 border-ink pb-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink">
-            Wonach suchst du?
-          </h2>
-          <div>
+        <div className="text-center space-y-6 py-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 text-left">
             {courseCategories.map((cat) => {
               const Icon = cat.icon;
               return (
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className="group flex w-full items-baseline gap-3 border-b border-line/15 py-4 text-left transition hover:bg-line/5"
+                  className="group rounded-xl border border-line/10 bg-surface p-5 hover:-translate-y-1 hover:border-db-dark dark:hover:border-white/50 transition shadow-sm relative overflow-hidden"
                 >
-                  <Icon className="h-5 w-5 shrink-0 translate-y-1 text-ink" />
-                  <span className="flex-1">
-                    <span className="block font-schild text-xl font-bold leading-tight tracking-tight text-ink sm:text-2xl">
-                      {cat.title}
-                    </span>
-                    <span className="mt-1 block text-sm font-normal leading-snug text-ink-muted">
-                      {cat.desc}
-                    </span>
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="self-center text-lg text-ink-muted transition-transform group-hover:translate-x-1 group-hover:text-db-red"
-                  >
-                    →
-                  </span>
+                  <div className="flex items-center gap-3 mb-2">
+                    <Icon className={`h-6 w-6 ${cat.textColor}`} />
+                    <span className="font-bold text-ink text-lg group-hover:text-db-red dark:group-hover:text-db-red transition-colors">{cat.title}</span>
+                  </div>
+                  <p className="text-sm font-normal text-ink-muted">{cat.desc}</p>
                 </button>
               );
             })}
@@ -245,7 +217,9 @@ export function LearningHubView() {
         >
           <ArrowLeft className="h-4 w-4" /> Zurück zum Katalog
         </button>
-        <TrainingMode />
+        <div className="rounded-md bg-surface border border-line/10 p-4 sm:p-5 shadow-sm">
+          <TrainingMode />
+        </div>
       </div>
     );
   }
@@ -268,7 +242,7 @@ export function LearningHubView() {
       </div>
 
       <div className="mb-6 border-b border-line/10 pb-4">
-        <h2 className="text-xl font-schild font-bold text-ink flex items-center gap-2">
+        <h2 className="text-xl font-bold text-ink flex items-center gap-2">
           <currentCategoryObj.icon className={`h-6 w-6 ${currentCategoryObj.textColor}`} />
           {currentCategoryObj.title}
         </h2>

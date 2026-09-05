@@ -137,7 +137,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
           aria-modal="true"
           aria-label="Suche"
           tabIndex={-1}
-          className="relative flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden border border-line/10 bg-surface shadow-schwebend outline-none"
+          className="relative w-full max-w-2xl bg-surface  rounded-lg shadow-lg border border-line/10 overflow-hidden flex flex-col max-h-[80vh] outline-none"
         >
           {/* Search Input Area */}
           <div className="flex items-center px-4 py-4 border-b border-line/10 bg-line/5 ">
@@ -169,7 +169,7 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
             {query.trim() !== "" && displayResults.length === 0 && (
               <div className="px-5 py-12 text-center">
                 <Search className="w-12 h-12 text-db-rail dark:text-white/30 mx-auto mb-4 opacity-50" />
-                <h3 className="text-lg font-schild font-bold text-ink">Keine Ergebnisse gefunden</h3>
+                <h3 className="text-lg font-bold text-ink">Keine Ergebnisse gefunden</h3>
                 <p className="text-ink-muted mt-1">Versuche andere Suchbegriffe wie "Hilfe" oder "Kontakt".</p>
               </div>
             )}

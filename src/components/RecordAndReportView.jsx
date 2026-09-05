@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import AnonymousReport from "./AnonymousReport.jsx";
 import { AISmartReport } from "./AISmartReport.jsx";
-import { NotebookPen, Megaphone, Sparkles, Plus, Clock, FileText, Camera, X, ArrowLeft, Trash2, Smartphone, AlertTriangle } from "lucide-react";
+import { NotebookPen, Megaphone, Plus, Clock, FileText, Camera, X, ArrowLeft, Trash2, Smartphone, AlertTriangle } from "lucide-react";
 import { protokollLaden, protokollSpeichern, dateiEinlesen, speicherHinweis } from "../lib/protokoll.js";
 import { useDialog } from "../lib/useDialog.js";
 
@@ -90,17 +90,17 @@ export function RecordAndReportView() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="border-l-4 border-db-red pl-4">
+      <div className="bg-surface-inverse p-5 text-ink-inverse relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2 max-w-2xl">
-            <div className="flex items-center gap-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink-muted">
-              <NotebookPen className="h-4 w-4 text-db-red" />
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-db-warm ">
+              <NotebookPen className="h-3.5 w-3.5 text-amber-400" />
               <span>Festhalten &amp; Melden</span>
             </div>
-            <h1 className="mt-2 hyphens-auto break-words font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
               Gedächtnisprotokoll & Vorfall-Meldung
             </h1>
-            <p className="mt-3 max-w-[52ch] text-base font-normal leading-relaxed text-ink-muted">
+            <p className="text-sm font-medium text-white/80 leading-relaxed">
               Halte Geschehnisse sachlich und anonym fest – als Gedächtnisstütze für dich selbst oder als vorbereitete Meldung für JAV, Betriebsrat oder Ausbilder:innen.
             </p>
           </div>
@@ -108,67 +108,42 @@ export function RecordAndReportView() {
         </div>
       </div>
 
-      {/* Die drei Wege als Tafel — links steht, was aus dem Eintrag wird. */}
+      {/* STEP 1: GRID SELECTION */}
       {!subTab && (
-        <div className="py-4">
-          <h2 className="border-b-2 border-ink pb-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink">
-            Was möchtest du tun?
-          </h2>
-          <div>
-            {[
-              {
-                id: "protokoll",
-                marker: "Bleibt hier",
-                titel: "Vorfall festhalten",
-                text: "Privates Gedächtnisprotokoll anlegen, um Fakten sofort zu sichern.",
-                icon: NotebookPen,
-              },
-              {
-                id: "meldung",
-                marker: "Geht raus",
-                titel: "Meldung verfassen",
-                text: "Einen Vorfall offiziell, sachlich und auf Wunsch anonym melden.",
-                icon: Megaphone,
-              },
-              {
-                id: "ki",
-                marker: "Mit KI",
-                titel: "Frei erzählen",
-                text: "Schreibe oder diktiere, was passiert ist. Die KI füllt das Formular für dich aus.",
-                icon: Sparkles,
-              },
-            ].map((weg) => {
-              const Icon = weg.icon;
-              return (
-                <button
-                  key={weg.id}
-                  type="button"
-                  onClick={() => setSubTab(weg.id)}
-                  className="group grid w-full grid-cols-[92px_1fr_16px] items-baseline gap-x-3 border-b border-line/15 py-4 text-left transition hover:bg-line/5 sm:grid-cols-[104px_1fr_16px] sm:gap-x-4"
-                >
-                  <span className="font-schild text-xs font-semibold uppercase leading-tight tracking-[0.12em] text-ink-muted transition-colors group-hover:text-db-red">
-                    {weg.marker}
-                  </span>
-                  <span>
-                    <span className="flex items-center gap-2">
-                      <Icon className="h-5 w-5 shrink-0 text-ink" />
-                      <span className="font-schild text-xl font-bold leading-tight tracking-tight text-ink sm:text-2xl">
-                        {weg.titel}
-                      </span>
-                    </span>
-                    <span className="mt-1 block text-sm font-normal leading-snug text-ink-muted">
-                      {weg.text}
-                    </span>
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="self-center text-lg text-ink-muted transition-transform group-hover:translate-x-1 group-hover:text-db-red"
-                  >
-                    →
-                  </span>
-                </button>
-              );
-            })}
+        <div className="text-center space-y-6 py-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-ink">Was möchtest du tun?</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 text-left">
+            <button
+              onClick={() => setSubTab("protokoll")}
+              className="group rounded-xl border border-line/10 bg-surface p-5 hover:-translate-y-1 hover:border-amber-400 dark:hover:border-amber-400 transition shadow-sm"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <NotebookPen className="h-6 w-6 text-amber-500" />
+                <span className="font-bold text-ink text-lg group-hover:text-amber-600 transition-colors">Vorfall festhalten</span>
+              </div>
+              <p className="text-sm font-normal text-ink-muted">Privates Gedächtnisprotokoll anlegen, um Fakten sofort zu sichern.</p>
+            </button>
+
+            <button
+              onClick={() => setSubTab("meldung")}
+              className="group rounded-xl border border-line/10 bg-surface p-5 hover:-translate-y-1 hover:border-db-red dark:hover:border-db-red transition shadow-sm"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <Megaphone className="h-6 w-6 text-db-red" />
+                <span className="font-bold text-ink text-lg group-hover:text-db-red transition-colors">Meldung verfassen</span>
+              </div>
+              <p className="text-sm font-normal text-ink-muted">Einen Vorfall offiziell, sachlich und auf Wunsch anonym melden.</p>
+            </button>
+
+            <button
+              onClick={() => setSubTab("ki")}
+              className="group rounded-xl border border-line/10 bg-surface p-5 hover:-translate-y-1 hover:border-blue-500 dark:hover:border-blue-500 transition shadow-sm"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <span className="font-bold text-ink text-lg group-hover:text-blue-600 transition-colors">🤖 KI-Assistent</span>
+              </div>
+              <p className="text-sm font-normal text-ink-muted">Schreibe oder diktiere frei, was passiert ist. Die KI füllt das Formular für dich aus.</p>
+            </button>
           </div>
         </div>
       )}
@@ -177,9 +152,9 @@ export function RecordAndReportView() {
       {subTab && (
         <button
           onClick={() => setSubTab(null)}
-          className="flex min-h-11 items-center gap-2 text-sm font-bold text-ink-muted transition hover:text-db-red"
+          className="flex items-center gap-2 text-sm font-medium text-ink-muted hover:text-db-red dark:hover:text-db-red transition"
         >
-          <ArrowLeft className="h-4 w-4" /> Zurück zur Auswahl
+          <ArrowLeft className="h-4 w-4" /> Zurück zur Übersicht
         </button>
       )}
 
@@ -208,7 +183,7 @@ export function RecordAndReportView() {
           <div className="rounded-md bg-surface border border-line/10 p-5 shadow-sm">
             <div className="flex items-center justify-between pb-4 border-b border-line/10">
               <div>
-                <h2 className="text-lg font-schild font-bold text-ink">Dein Gedächtnisprotokoll</h2>
+                <h2 className="text-lg font-bold text-ink">Dein Gedächtnisprotokoll</h2>
                 <p className="text-sm font-normal text-ink-muted">
                   Halte Fakten fest (Datum, Zeit, Ort), solange deine Erinnerung frisch ist.
                 </p>
@@ -437,7 +412,9 @@ export function RecordAndReportView() {
 
       {/* Sub-Tab 2: Melden (5-Schritte-Assistent) */}
       {subTab === "meldung" && (
-        <AnonymousReport />
+        <div className="rounded-md bg-surface border border-line/10 p-4 sm:p-5 shadow-sm">
+          <AnonymousReport />
+        </div>
       )}
       {/* Selected Record Modal */}
       {selectedRecord && (
@@ -463,7 +440,7 @@ export function RecordAndReportView() {
             </button>
             <h2
               id="protokoll-eintrag-titel"
-              className="text-xl font-schild font-bold text-ink mb-4 flex items-center gap-2"
+              className="text-xl font-bold text-ink mb-4 flex items-center gap-2"
             >
               <NotebookPen className="h-6 w-6 text-db-red" />
               Protokoll-Eintrag

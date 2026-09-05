@@ -53,7 +53,7 @@ export function RollenWechsel({ isOpen, onClose, onRolleWaehlen, aktiveRolle }) 
           <div className="mx-auto mb-4 w-fit rounded-xl bg-contrast  p-3 text-contrast-ink  shadow-sm">
             <Eye className="h-8 w-8" />
           </div>
-          <h2 id="rollenwahl-titel" className="text-xl font-schild font-bold text-ink">
+          <h2 id="rollenwahl-titel" className="text-xl font-bold text-ink">
             Rolle wechseln
           </h2>
           <p className="mt-1 text-sm font-medium text-ink-muted">

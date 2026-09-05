@@ -1,5 +1,13 @@
 import React from "react";
-import { Siren } from "lucide-react";
+import {
+  ChevronRight,
+  FileText,
+  GraduationCap,
+  HelpCircle,
+  PhoneCall,
+  Scale,
+  Siren,
+} from "lucide-react";
 import { MoodTracker } from "./MoodTracker";
 
 /*
@@ -18,68 +26,57 @@ const einblendVerzoegerung = (index) => ({ animationDelay: `${Math.min(index, 6)
  *    niemanden; „Hallo Lea" wäre eine Zusage, die sie nicht einlöst.
  * 2. Notfall — direkt darunter. Vorher stand er ganz unten, hinter fünf
  *    Kacheln. Wer ihn braucht, soll nicht scrollen müssen.
- * 3. Die fünf Wege als Tafel. Zeilen lesen sich schneller als Kacheln, wenn
+ * 3. Die fünf Wege als Liste. Zeilen lesen sich schneller als Kacheln, wenn
  *    man aufgewühlt ist und nur einen Weg sucht.
  * 4. Stimmungsabfrage zuletzt — sie ist das Unwichtigste auf dieser Seite.
- *
- * Warum die Seite aussieht wie eine Abfahrtstafel:
- *
- * Wer aufgewühlt ist, braucht dasselbe wie jemand am Bahnsteig — wohin kann
- * ich, und was passiert dann. Deshalb steht links keine Bildmarke, sondern die
- * Antwort auf die Frage, die vor dem Antippen kommt: Muss ich reden? Erfährt
- * das jemand? „Ohne Worte", „Bleibt hier", „Menschen" sind keine Etiketten,
- * sondern der Unterschied zwischen den Wegen.
  */
 export function DashboardHome({ onNavigate, onOpenEmergency }) {
   const wege = [
     {
       id: "support",
-      marker: "Ohne Worte",
       title: "Was ist gerade los?",
       description: "Tippe an, was auf dich zutrifft. Ohne alles erzählen zu müssen.",
+      icon: HelpCircle,
       action: () => onNavigate("support"),
     },
     {
       id: "record-report",
-      marker: "Bleibt hier",
       title: "Festhalten & Melden",
       description: "Notiere einen Vorfall für dich. Melden geht später — auch anonym.",
+      icon: FileText,
       action: () => onNavigate("record-report"),
     },
     {
       id: "contacts",
-      marker: "Menschen",
       title: "Ansprechpartner & Meldewege",
       description: "JAV, Betriebsrat, Vertrauensperson — wer wofür zuständig ist.",
+      icon: PhoneCall,
       action: () => onNavigate("contacts"),
     },
     {
       id: "learning",
-      marker: "In Ruhe",
       title: "Kurse & Seminare",
       description: "Kurze Trainings zu Konflikten, Grenzen und Deeskalation.",
+      icon: GraduationCap,
       action: () => onNavigate("learning"),
     },
     {
       id: "rights",
-      marker: "Nachlesen",
       title: "Rechte & Gesetze",
       description: "AGG, BBiG und DB-Richtlinien in einfacher Sprache.",
+      icon: Scale,
       action: () => onNavigate("rights"),
     },
   ];
 
   return (
-    <div className="space-y-8">
-      {/* Die rote Kante links ist das DB-Erscheinungsbild, nicht Zierrat: sie
-          trägt den Titel, statt ihn zu unterstreichen. */}
-      <section className="motion-card border-l-4 border-db-red pl-4">
-        <h1 className="hyphens-auto break-words font-schild text-4xl font-bold leading-[0.98] tracking-tight text-ink sm:text-5xl">
-          Du bist
-          <br />
-          hier richtig.
+    <div className="space-y-6">
+      <section className="motion-card">
+        <h1 className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight text-ink">
+          Du bist hier richtig.
         </h1>
-        <p className="mt-4 max-w-[46ch] text-base font-normal leading-relaxed text-ink-muted">
+        <div className="mt-3.5 h-1 w-11 bg-db-red" />
+        <p className="mt-3.5 max-w-[46ch] text-base font-normal leading-relaxed text-ink-muted">
           Alles, was du hier machst, bleibt bei dir. Du entscheidest, ob und wann ein nächster
           Schritt kommt.
         </p>
@@ -90,60 +87,55 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
         type="button"
         onClick={onOpenEmergency}
         style={einblendVerzoegerung(1)}
-        className="motion-card group block w-full rounded-none bg-db-red p-5 text-left text-white transition hover:bg-db-redInk"
+        className="motion-card flex w-full flex-wrap items-center justify-between gap-5 bg-db-red p-5 text-left text-white transition hover:bg-red-700"
       >
-        <span className="flex items-center gap-2.5">
-          <Siren className="h-5 w-5 shrink-0" />
-          <span className="font-schild text-sm font-semibold uppercase tracking-[0.18em]">
-            Sofort Hilfe
+        <span className="flex min-w-[200px] flex-1 items-start gap-3.5">
+          <Siren className="mt-0.5 h-6 w-6 shrink-0" />
+          <span>
+            <span className="block text-xs font-semibold uppercase tracking-[0.1em] text-white/85">
+              Sofort Hilfe
+            </span>
+            <span className="mt-1 block text-lg font-bold">Wenn es jetzt nicht mehr geht</span>
+            <span className="mt-0.5 block text-sm font-normal text-white">
+              Notrufe, anonyme Hilfe, Vertrauenspersonen.
+            </span>
           </span>
         </span>
-        <span className="mt-3 block font-schild text-2xl font-bold leading-tight">
-          Wenn es jetzt nicht mehr geht
-        </span>
-        <span className="mt-1.5 block text-base font-normal leading-snug text-white">
-          Notrufe, anonyme Hilfe, Vertrauenspersonen.
-        </span>
-        <span className="mt-4 inline-flex min-h-[52px] items-center gap-3 bg-white px-5 font-schild text-lg font-bold text-db-redInk">
+        <span className="flex min-h-[52px] shrink-0 items-center gap-2 bg-white px-5 text-base font-bold text-db-redInk">
           Notfall öffnen
-          <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
-            →
-          </span>
+          <ChevronRight className="h-4 w-4" />
         </span>
       </button>
 
       <section className="motion-card" style={einblendVerzoegerung(2)}>
-        <h2 className="border-b-2 border-ink pb-2 font-schild text-sm font-semibold uppercase tracking-[0.18em] text-ink">
+        <h2 className="px-1 pb-3 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">
           Wobei brauchst du Hilfe?
         </h2>
-        <div>
-          {wege.map((weg) => (
-            <button
-              key={weg.id}
-              type="button"
-              onClick={weg.action}
-              className="group grid w-full grid-cols-[92px_1fr_16px] items-baseline gap-x-3 border-b border-line/15 py-4 text-left transition hover:bg-line/5 sm:grid-cols-[104px_1fr_16px] sm:gap-x-4"
-            >
-              {/* Die Marker-Spalte beantwortet, was das Antippen kostet. */}
-              <span className="font-schild text-xs font-semibold uppercase leading-tight tracking-[0.12em] text-ink-muted transition-colors group-hover:text-db-red">
-                {weg.marker}
-              </span>
-              <span>
-                <span className="block font-schild text-xl font-bold leading-tight tracking-tight text-ink sm:text-2xl">
-                  {weg.title}
-                </span>
-                <span className="mt-1 block text-sm font-normal leading-snug text-ink-muted">
-                  {weg.description}
-                </span>
-              </span>
-              <span
-                aria-hidden="true"
-                className="self-center text-lg text-ink-muted transition-transform group-hover:translate-x-1 group-hover:text-db-red"
+        <div className="border-y border-line/15 bg-surface shadow-panel">
+          {wege.map((weg, index) => {
+            const Icon = weg.icon;
+            return (
+              <button
+                key={weg.id}
+                type="button"
+                onClick={weg.action}
+                className={`group grid w-full grid-cols-[24px_1fr_18px] items-center gap-3.5 p-4 text-left transition hover:shadow-[inset_3px_0_0_theme(colors.db.red)] sm:px-5 ${
+                  index > 0 ? "border-t border-line/15" : ""
+                }`}
               >
-                →
-              </span>
-            </button>
-          ))}
+                <Icon className="h-5.5 w-5.5 text-ink" />
+                <span>
+                  <span className="block text-base font-bold tracking-tight text-ink sm:text-[17px]">
+                    {weg.title}
+                  </span>
+                  <span className="mt-0.5 block text-sm font-normal leading-snug text-ink-muted">
+                    {weg.description}
+                  </span>
+                </span>
+                <ChevronRight className="h-4.5 w-4.5 text-ink-muted transition group-hover:text-db-red" />
+              </button>
+            );
+          })}
         </div>
       </section>
 

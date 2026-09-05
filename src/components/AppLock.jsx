@@ -148,7 +148,7 @@ export function AppLock({ onUnlock }) {
           <Lock className="w-12 h-12 text-db-red" />
         </div>
 
-        <h1 className="text-2xl font-schild font-bold mb-2 tracking-tight">{titel}</h1>
+        <h1 className="text-2xl font-bold mb-2 tracking-tight">{titel}</h1>
         <p className="text-slate-400 font-medium text-sm mb-8 text-center max-w-xs">{untertitel}</p>
 
         {/* PIN Indicators */}
@@ -193,7 +193,7 @@ export function AppLock({ onUnlock }) {
               key={num}
               onClick={() => handleKeyPress(num.toString())}
               disabled={gesperrt}
-              className="h-16 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-2xl font-schild font-bold transition flex items-center justify-center disabled:opacity-40 disabled:hover:bg-slate-800"
+              className="h-16 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-2xl font-bold transition flex items-center justify-center disabled:opacity-40 disabled:hover:bg-slate-800"
             >
               {num}
             </button>
@@ -202,7 +202,7 @@ export function AppLock({ onUnlock }) {
           <button
             onClick={() => handleKeyPress("0")}
             disabled={gesperrt}
-            className="h-16 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-2xl font-schild font-bold transition flex items-center justify-center disabled:opacity-40 disabled:hover:bg-slate-800"
+            className="h-16 rounded-full bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-2xl font-bold transition flex items-center justify-center disabled:opacity-40 disabled:hover:bg-slate-800"
           >
             0
           </button>
@@ -247,7 +247,7 @@ function Geraetewahl({ onWahl }) {
           <Lock className="w-12 h-12 text-db-red" />
         </div>
 
-        <h1 className="text-2xl font-schild font-bold mb-2 tracking-tight text-center">
+        <h1 className="text-2xl font-bold mb-2 tracking-tight text-center">
           Wer nutzt dieses Gerät?
         </h1>
         <p className="text-slate-400 font-medium text-sm mb-8 text-center max-w-sm leading-relaxed">

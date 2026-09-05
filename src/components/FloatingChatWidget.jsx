@@ -183,7 +183,7 @@ export function FloatingChatWidget() {
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 hover:bg-white/10 transition"
+                className="rounded-full p-2 hover:bg-white/10 transition"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -258,7 +258,7 @@ export function FloatingChatWidget() {
         onClick={() => setIsOpen(!isOpen)}
         aria-label={isOpen ? "Peace-Assistent schließen" : "Peace-Assistent öffnen – schreib, was los ist"}
         aria-expanded={isOpen}
-        className={`flex h-14 w-14 items-center justify-center shadow-schwebend transition-colors ${
+        className={`flex h-14 w-14 items-center justify-center rounded-full shadow-md transition-colors ${
           isOpen ? 'bg-db-dark text-white' : 'bg-db-red text-white'
         }`}
       >

@@ -4,10 +4,6 @@ export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
-      fontFamily: {
-        // Beschilderung schmal, Lesetext normal — die Aufteilung vom Bahnsteig.
-        schild: ['"Fira Sans Condensed"', '"Fira Sans"', "system-ui", "sans-serif"],
-      },
       colors: {
         // Semantische Ebene — siehe src/styles/tokens.css. Diese Namen sagen,
         // wofür eine Farbe da ist; hell und dunkel klären die Tokens.
@@ -42,30 +38,24 @@ export default {
         },
       },
       borderRadius: {
-        // Das DB-Erscheinungsbild kennt keine abgerundeten Kacheln. Die
-        // Klassen bleiben in Gebrauch, laufen aber alle auf dieselbe Kante
-        // hinaus — so muss niemand 400 Stellen anfassen. `full` bleibt echt
-        // rund, das sind Punkte und Zustandsanzeigen, keine Flächen.
-        none: "0",
-        DEFAULT: "0",
-        sm: "0",
-        md: "0",
-        lg: "0",
-        xl: "0",
-        "2xl": "0",
-        "3xl": "0",
+        // Das DB-Erscheinungsbild lebt von Flächen und Kanten, nicht von
+        // abgerundeten Kacheln. Alle Klassen bleiben nutzbar, fallen aber
+        // deutlich flacher aus als die Tailwind-Voreinstellung.
+        DEFAULT: "2px",
+        sm: "2px",
+        md: "3px",
+        lg: "3px",
+        xl: "4px",
+        "2xl": "4px",
+        "3xl": "6px",
       },
       boxShadow: {
-        // Flächen setzen sich durch ihre Farbe ab, nicht durch einen Schlagschatten
-        // — weiss auf hellgrau, im Dunkelmodus umgekehrt. Ein schwebender Knopf
-        // darf sich abheben, alles andere liegt flach auf.
-        panel: "none",
-        sm: "none",
-        DEFAULT: "none",
-        md: "none",
-        lg: "none",
-        xl: "none",
-        schwebend: "0 2px 12px rgba(40, 45, 55, 0.22)",
+        panel: "0 1px 2px rgba(40, 45, 55, 0.10)",
+        sm: "0 1px 2px rgba(40, 45, 55, 0.08)",
+        DEFAULT: "0 1px 2px rgba(40, 45, 55, 0.10)",
+        md: "0 1px 3px rgba(40, 45, 55, 0.12)",
+        lg: "0 2px 6px rgba(40, 45, 55, 0.12)",
+        xl: "0 3px 10px rgba(40, 45, 55, 0.14)",
       },
     },
   },
