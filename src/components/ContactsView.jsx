@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { STANDORTE, STANDORT_ROLLEN, STELLEN } from "../config/standorte.js";
 import { standortLaden, standortSpeichern, besetzungFuer } from "../lib/standort.js";
-import { rolleFinden } from "../lib/rolle.js";
+import { rolleFinden, hatPostfach } from "../lib/rolle.js";
+import { GespraechAnfragen } from "./GespraechAnfragen.jsx";
 import { motion } from "framer-motion";
 import {
   ShieldAlert,
@@ -14,7 +15,8 @@ import {
   Info,
   MapPin,
   ShieldPlus,
-  ChevronDown
+  ChevronDown,
+  MessageCircle
 } from "lucide-react";
 import {
   DB_MELDEWEGE,
@@ -28,6 +30,8 @@ import {
 
 export function ContactsView() {
   const [standort, setStandort] = useState(() => standortLaden());
+  // Wen möchte jemand ansprechen? null = kein Dialog offen.
+  const [gespraechMit, setGespraechMit] = useState(null);
 
   const standortWaehlen = (id) => {
     standortSpeichern(id);
@@ -178,6 +182,21 @@ export function ContactsView() {
                       <span>Für diesen Standort noch nicht hinterlegt.</span>
                     </p>
                   )}
+
+                  {/* Der kurze Weg neben dem Melde-Assistenten: wer nur reden
+                      will, soll keinen Vorgang mit fünf Schritten auslösen. */}
+                  {hatPostfach(rolleId) && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setGespraechMit({ rolleId, personName: personen[0]?.name ?? "" })
+                      }
+                      className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-db-dark/15 px-3 text-xs font-black text-db-dark transition hover:border-db-red hover:text-db-red dark:border-white/15 dark:text-white"
+                    >
+                      <MessageCircle className="h-3.5 w-3.5" />
+                      Gespräch anfragen
+                    </button>
+                  )}
                 </div>
               );
             })}
@@ -233,6 +252,14 @@ export function ContactsView() {
         </div>
         </Abschnitt>
       </div>
+
+      {gespraechMit && (
+        <GespraechAnfragen
+          rolleId={gespraechMit.rolleId}
+          personName={gespraechMit.personName}
+          onClose={() => setGespraechMit(null)}
+        />
+      )}
 
       <p className="mt-6 text-center text-[11px] font-semibold text-db-rail/70 dark:text-white/40">
         Kontaktdaten zuletzt geprüft am {new Date(GEPRUEFT_AM).toLocaleDateString("de-DE")} ·

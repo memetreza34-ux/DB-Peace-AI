@@ -34,14 +34,22 @@ function verbindung() {
       empfaenger   TEXT NOT NULL,
       kategorie    TEXT NOT NULL,
       anonym       INTEGER NOT NULL DEFAULT 1,
+      art          TEXT NOT NULL DEFAULT 'meldung',
       status       TEXT NOT NULL DEFAULT 'offen',
       inhalt       TEXT NOT NULL
     );
     CREATE INDEX IF NOT EXISTS meldungen_empfaenger
       ON meldungen (empfaenger, eingegangen DESC);
   `);
+  // Bestehende Ablagen nachziehen, ohne sie zu verlieren.
+  const spalten = db.prepare("PRAGMA table_info(meldungen)").all();
+  if (!spalten.some((s) => s.name === "art")) {
+    db.exec("ALTER TABLE meldungen ADD COLUMN art TEXT NOT NULL DEFAULT 'meldung'");
+  }
   return db;
 }
+
+export const ARTEN = ["meldung", "gespraech"];
 
 /*
  * Wer eine Meldung bekommen kann, steht in src/config/rollen.js — dieselbe
@@ -53,7 +61,7 @@ export const EMPFAENGER = ROLLEN.filter((rolle) => RECHTE[rolle.gruppe]?.postfac
   (rolle) => rolle.id,
 );
 
-export function meldungAnlegen({ empfaenger, kategorie, anonym, inhalt }) {
+export function meldungAnlegen({ empfaenger, kategorie, anonym, inhalt, art = "meldung" }) {
   if (!EMPFAENGER.includes(empfaenger)) {
     const fehler = new Error("unbekannter_empfaenger");
     fehler.status = 400;
@@ -64,9 +72,15 @@ export function meldungAnlegen({ empfaenger, kategorie, anonym, inhalt }) {
     fehler.status = 400;
     throw fehler;
   }
+  if (!ARTEN.includes(art)) {
+    const fehler = new Error("unbekannte_art");
+    fehler.status = 400;
+    throw fehler;
+  }
 
   const eintrag = {
-    id: `${empfaenger.toUpperCase()}-${crypto.randomInt(1000, 9999)}`,
+    id: `${art === "gespraech" ? "G" : ""}${empfaenger.toUpperCase()}-${crypto.randomInt(1000, 9999)}`,
+    art,
     eingegangen: new Date().toISOString(),
     empfaenger,
     kategorie: String(kategorie).slice(0, 120),
@@ -77,8 +91,8 @@ export function meldungAnlegen({ empfaenger, kategorie, anonym, inhalt }) {
 
   verbindung()
     .prepare(
-      `INSERT INTO meldungen (id, eingegangen, empfaenger, kategorie, anonym, status, inhalt)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO meldungen (id, eingegangen, empfaenger, kategorie, anonym, art, status, inhalt)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     )
     .run(
       eintrag.id,
@@ -86,18 +100,19 @@ export function meldungAnlegen({ empfaenger, kategorie, anonym, inhalt }) {
       eintrag.empfaenger,
       eintrag.kategorie,
       eintrag.anonym,
+      eintrag.art,
       eintrag.status,
       eintrag.inhalt,
     );
 
-  return { id: eintrag.id, eingegangen: eintrag.eingegangen };
+  return { id: eintrag.id, eingegangen: eintrag.eingegangen, art: eintrag.art };
 }
 
 export function meldungenFuer(empfaenger) {
   if (!EMPFAENGER.includes(empfaenger)) return [];
   const zeilen = verbindung()
     .prepare(
-      `SELECT id, eingegangen, empfaenger, kategorie, anonym, status, inhalt
+      `SELECT id, eingegangen, empfaenger, kategorie, anonym, art, status, inhalt
        FROM meldungen WHERE empfaenger = ? ORDER BY eingegangen DESC LIMIT 200`,
     )
     .all(empfaenger);

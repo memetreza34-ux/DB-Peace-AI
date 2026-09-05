@@ -193,6 +193,7 @@ const server = http.createServer(async (req, res) => {
         kategorie: daten.kategorie,
         anonym: daten.anonym,
         inhalt: daten.inhalt,
+        art: daten.art,
       });
       sendJson(res, 201, angelegt);
       return;

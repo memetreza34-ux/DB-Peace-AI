@@ -103,3 +103,30 @@ test("jede Rolle mit Postfach ist als Empfänger bekannt", () => {
 test.after(() => {
   fs.rmSync(verzeichnis, { recursive: true, force: true });
 });
+
+test("ein Gesprächswunsch ist keine Meldung", () => {
+  // Wer nur reden will, löst keinen Vorgang mit Fristen aus. Die Rolle muss
+  // auf den ersten Blick sehen, was von ihr erwartet wird.
+  const gespraech = meldungAnlegen({
+    empfaenger: "betriebsrat",
+    kategorie: "Gespräch",
+    art: "gespraech",
+    inhalt: { anliegen: "Ich würde gern mit jemandem reden." },
+  });
+
+  assert.match(gespraech.id, /^GBETRIEBSRAT-\d{4}$/, "Gesprächswünsche brauchen ein eigenes Kennzeichen");
+  assert.equal(gespraech.art, "gespraech");
+
+  const eintrag = meldungenFuer("betriebsrat").find((m) => m.id === gespraech.id);
+  assert.equal(eintrag.art, "gespraech");
+});
+
+test("ohne Angabe ist es eine Meldung, und erfundene Arten werden abgewiesen", () => {
+  const ohne = meldungAnlegen({ empfaenger: "jav", kategorie: "Mobbing", inhalt: {} });
+  assert.equal(meldungenFuer("jav").find((m) => m.id === ohne.id).art, "meldung");
+
+  assert.throws(
+    () => meldungAnlegen({ empfaenger: "jav", kategorie: "X", art: "beschwerde", inhalt: {} }),
+    /unbekannte_art/,
+  );
+});

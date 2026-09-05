@@ -98,8 +98,10 @@ export async function serverMeldungen(rolleId) {
 function alsFall(meldung) {
   const zeit = new Date(meldung.eingegangen);
   const inhalt = meldung.inhalt ?? {};
+  const istGespraech = meldung.art === "gespraech";
   return {
     id: meldung.id,
+    art: meldung.art ?? "meldung",
     merkmale: [],
     empfaenger: meldung.empfaenger,
     vonMir: false,
@@ -110,20 +112,23 @@ function alsFall(meldung) {
       hour: "2-digit",
       minute: "2-digit",
     }),
-    kategorie: meldung.kategorie,
+    kategorie: istGespraech ? "Gesprächswunsch" : meldung.kategorie,
     anonym: meldung.anonym,
-    zusammenfassung:
-      inhalt.zusammenfassung || inhalt.beschreibung || "Ohne weitere Angaben eingereicht.",
+    zusammenfassung: istGespraech
+      ? inhalt.anliegen || "Möchte ein Gespräch."
+      : inhalt.zusammenfassung || inhalt.beschreibung || "Ohne weitere Angaben eingereicht.",
     verlauf: [
       {
         id: 1,
         von: "system",
-        text: meldung.anonym
-          ? "Anonym eingereicht über DB Peace."
-          : "Eingereicht über DB Peace.",
+        text: istGespraech
+          ? `${meldung.anonym ? "Anonyme Anfrage" : `Anfrage von ${inhalt.absender || "unbekannt"}`} über DB Peace. Hier wird ein Gespräch gesucht, keine Bearbeitung.`
+          : meldung.anonym
+            ? "Anonym eingereicht über DB Peace."
+            : "Eingereicht über DB Peace.",
         zeit: zeit.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }),
       },
-      ...(inhalt.beschreibung && inhalt.beschreibung !== inhalt.zusammenfassung
+      ...(!istGespraech && inhalt.beschreibung && inhalt.beschreibung !== inhalt.zusammenfassung
         ? [
             {
               id: 2,
