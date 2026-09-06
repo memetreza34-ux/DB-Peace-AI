@@ -21,23 +21,31 @@ Definiert in `tailwind.config.js`, nicht ändern ohne Grund:
 | `db-soft` | `#F0F3F5` | DB Cool Gray Light — Seitenhintergrund |
 | `db-warm` | `#ECEEF1` | Zweiter Hintergrund, für Abhebung |
 
-### Die eine Farbregel
+### Farben der sechs Wege auf der Startseite
 
-**Rot heisst „dringend".** Es steht beim Notfall, beim Panik-Knopf und in
-Hover-Zuständen (dort heisst es „hier kannst du klicken"). Sonst nirgends.
+Jeder Weg hat seine eigene Farbe für die Icon-Kachel:
 
-Bis zum 6.9.2026 hatte jeder der fünf Wege auf der Startseite eine eigene Farbe
-— Rot, Blau, Emerald, Lila, Petrol. Das war Zufall, kein System: „Kurse" war
-lila, weil lila noch frei war. Lila und Petrol kommen im DB-Erscheinungsbild
-überhaupt nicht vor.
+| Weg | Farbe |
+|---|---|
+| Was ist gerade los? | `db-red` |
+| Festhalten & Melden | `blue-600` |
+| Ansprechpartner & Meldewege | `emerald-600` |
+| Kurse & Seminare | `purple-600` |
+| Rechte & Gesetze | `teal-600` |
+| Projekte & Aktionen | `amber-600` |
 
-**Wenn du eine neue Farbe einführen willst, brauchst du einen Grund, der sich in
-einem Satz sagen lässt.** „Sieht besser aus" ist keiner.
+Am 6.9.2026 waren diese Farben kurz auf einen neutralen Ton vereinheitlicht,
+mit Rot nur noch für Dringendes. Arman wollte die Farbigkeit zurück — die
+Entscheidung steht, sie ist bewusst getroffen und nicht aus Versehen so.
 
-Erlaubte Ausnahmen, die es heute schon gibt:
+**Wenn du eine neue Kachel anlegst, gib ihr eine eigene Farbe aus dieser
+Reihe**, damit sie sich einreiht statt herauszufallen.
+
+Farben mit fester Bedeutung, unabhängig davon:
+
+- **Rot (`red-500/600`, `db-red`)** — Notfall, Gefahr, „Schnell verlassen"
 - **Emerald** — Erfolg, Bestätigung („Meldung ist angekommen")
 - **Amber** — Warnung, Frist läuft, Unter-18-Hinweise
-- **Rot (red-500/600)** — Gefahr, Notfall
 
 ---
 
