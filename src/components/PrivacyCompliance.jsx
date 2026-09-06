@@ -220,7 +220,7 @@ function Geraeteeinstellung() {
       <h3 className="text-2xl font-black">Dieses Gerät</h3>
       <p className="mt-3 max-w-3xl font-semibold leading-7 text-db-rail">
         {modus === PERSOENLICH
-          ? "Eingestellt als persönliches Gerät: Deine Einträge bleiben gespeichert und die App ist mit einer PIN geschützt."
+          ? "Eingestellt als persönliches Gerät: Deine Einträge bleiben gespeichert — auf diesem Gerät und unverschlüsselt. Wer das Gerät in der Hand hat, kann sie lesen."
           : "Eingestellt als geteiltes Gerät: Die App speichert nichts dauerhaft. Sobald das Fenster geschlossen wird, ist alles weg — auch für die nächste Person."}
       </p>
       <button

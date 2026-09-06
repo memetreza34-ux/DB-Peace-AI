@@ -71,7 +71,10 @@ werden sie geliefert?
   **Für einen Pilot zu klären:** Die Datei ist unverschlüsselt, und wer welche
   Rolle hat, entscheidet allein der Browser — es gibt keine Anmeldung. Beides
   wäre vor echten Meldungen zu lösen.
-- **Er verschlüsselt keine Inhalte.** Die PIN sperrt die Oberfläche auf dem Gerät,
+- **Er verschlüsselt keine Inhalte.** Seit dem 6.9.2026 gibt es auch keine PIN
+  mehr — sie verstellte den Zugang, ohne etwas zu schützen, und sperrte in
+  einem Fall den Entwickler selbst aus. Für eine App, die jemand in einer Krise
+  öffnet, ist das der falsche Handel. Was bleibt:
   sie schützt die gespeicherten Inhalte nicht. Bei vier Ziffern wäre Verschlüsselung
   Sicherheitstheater. Die App behauptet das an keiner Stelle.
 - **Er ersetzt keine Beratung.** Bei Krisenäußerungen tritt der Assistent zurück und
@@ -87,9 +90,9 @@ werden sie geliefert?
       das Gerät überhaupt verlassen dürfen. **Empfehlung: im Pilot ohne KI-Anbindung
       starten.** Die Krisenerkennung läuft bewusst lokal und ist davon unabhängig.
 - [x] **Speicherort.** Beim ersten Start fragt die App, ob das Gerät einer Person
-      gehört oder geteilt wird. Persönliches Gerät: `localStorage` plus PIN.
+      gehört oder geteilt wird. Persönliches Gerät: `localStorage`, unverschlüsselt.
       Geteiltes Gerät: `sessionStorage`, nichts überlebt das Schließen des
-      Fensters, und es gibt keine PIN — sie könnte die Inhalte der vorherigen
+      Fensters — sonst läse die nächste Person die Inhalte der vorherigen
       Person ohnehin nicht schützen. Umstellen geht nur zusammen mit dem Löschen
       aller Inhalte (Datenschutz-Ansicht). **Für den Pilot zu klären:** Reicht
       das für Schulungsräume, oder braucht es dort einen reinen Lesemodus?

@@ -2,13 +2,12 @@
  * Teilt sich jemand dieses Gerät?
  *
  * Der Anlass: Die App soll auf Dienstgeräten laufen — Handy, Tablet, Laptop.
- * Auf einem persönlichen Diensthandy ist eine Gerätesperre genau richtig. Auf
- * einem Werkstatt-Tablet, das sich fünf Auszubildende teilen, wäre sie eine
- * Falle: Die PIN gehört zum Gerät, nicht zur Person. Wer sie kennt, sähe sonst
- * alle Protokolle, die je darauf geschrieben wurden.
+ * Auf einem Werkstatt-Tablet, das sich fünf Auszubildende teilen, wäre
+ * dauerhaftes Speichern eine Falle: Die nächste Person läse, was die vorherige
+ * geschrieben hat.
  *
- * Verschlüsseln löst das nicht. Bei vier Ziffern wäre das Sicherheitstheater —
- * siehe src/lib/lock.js. Also speichert die App auf einem geteilten Gerät
+ * Eine Sperre löst das nicht — sie gehört zum Gerät, nicht zur Person, und
+ * verschlüsselt nichts. Also speichert die App auf einem geteilten Gerät
  * nichts dauerhaft, und sie sagt das auch.
  */
 

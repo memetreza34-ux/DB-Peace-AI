@@ -3,8 +3,7 @@
  *
  * Einordnung, damit hier niemand mehr hineinliest als drinsteht: Die Einträge
  * bleiben auf diesem Gerät und werden nirgendwohin übertragen — aber sie sind
- * nicht verschlüsselt. Wer das Gerät entsperrt hat, kann sie lesen. Die PIN
- * sperrt die Oberfläche, nicht den Speicher.
+ * nicht verschlüsselt. Wer das Gerät in der Hand hat, kann sie lesen.
  *
  * Wohin genau geschrieben wird, entscheidet der Gerätemodus (src/lib/geraet.js):
  * Auf einem geteilten Gerät überlebt nichts das Schließen des Fensters.
@@ -75,7 +74,7 @@ export function protokollLaden() {
 export function speicherHinweis() {
   return istGeteilt()
     ? "Dieses Gerät ist als geteiltes Gerät eingestellt: Deine Einträge verschwinden, sobald du das Fenster schließt. Nichts bleibt für die nächste Person zurück."
-    : "Deine Einträge bleiben auf diesem Gerät und werden nirgendwohin gesendet. Sie sind dort aber nicht verschlüsselt — wer das Gerät entsperrt hat, kann sie lesen.";
+    : "Deine Einträge bleiben auf diesem Gerät und werden nirgendwohin gesendet. Sie sind dort aber nicht verschlüsselt — wer das Gerät in der Hand hat, kann sie lesen.";
 }
 
 /** Speichert das Protokoll. Gibt bei vollem Speicher einen Klartext-Hinweis zurück. */
