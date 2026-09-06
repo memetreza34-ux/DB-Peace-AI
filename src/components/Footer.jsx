@@ -1,5 +1,5 @@
 import React from "react";
-import { HeartHandshake, BarChart3, Info, ShieldCheck, Eye, Presentation, ChevronDown } from "lucide-react";
+import { HeartHandshake, BarChart3, ShieldCheck, Eye, Presentation, ChevronDown } from "lucide-react";
 
 export function Footer({ onNavigate, onRollenAnsehen }) {
   return (
@@ -27,10 +27,15 @@ export function Footer({ onNavigate, onRollenAnsehen }) {
 
           {/*
             Von den vier Einträgen hier war nur einer für die nutzende Person
-            gedacht. Analytics, Projekt-Pitch und der Rollenwechsel sind
-            Vorführ-Funktionen — sie standen trotzdem auf jeder Seite, auch
-            wenn jemand die App gerade in einer Notlage öffnet. Datenschutz
-            bleibt sichtbar, der Rest liegt eine Klick tiefer.
+            gedacht. Analytics und der Rollenwechsel sind Vorführ-Funktionen —
+            sie standen trotzdem auf jeder Seite, auch wenn jemand die App
+            gerade in einer Notlage öffnet. Datenschutz bleibt sichtbar, der
+            Rest liegt einen Klick tiefer.
+
+            „Projekte & Aktionen" lag hier ebenfalls, weil der Eintrag
+            „Projekt-Pitch" hiess und nach Präsentation klang. Dahinter stecken
+            aber Workshops und Treffen zum Mitmachen — das ist eine Funktion
+            für Azubis und steht jetzt auf der Startseite.
           */}
           <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-db-rail dark:text-white/60">
             <button
@@ -56,14 +61,6 @@ export function Footer({ onNavigate, onRollenAnsehen }) {
                 >
                   <BarChart3 className="h-3.5 w-3.5 shrink-0" />
                   <span>Analytics</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onNavigate("project")}
-                  className="flex min-h-11 items-center gap-2 rounded px-2 text-left hover:bg-db-dark/5 dark:hover:bg-white/5 hover:text-db-red transition"
-                >
-                  <Info className="h-3.5 w-3.5 shrink-0" />
-                  <span>Projekt-Pitch</span>
                 </button>
                 {onRollenAnsehen && (
                   <button

@@ -9,7 +9,8 @@ import {
   ArrowRight,
   TrainFront,
   Sparkles,
-  Scale
+  Scale,
+  Users
 } from "lucide-react";
 import { MoodTracker } from "./MoodTracker";
 
@@ -78,6 +79,16 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
       bgColor: "bg-db-dark/5 dark:bg-white/10",
       borderColor: "hover:border-teal-500 hover:shadow-teal-500/10 dark:hover:border-teal-400",
       action: () => onNavigate("rights")
+    },
+    {
+      id: "project",
+      title: "Projekte & Aktionen",
+      description: "Workshops, Treffen und Ideen von Azubis — mitmachen oder eigene starten.",
+      icon: Users,
+      color: "text-db-dark dark:text-white",
+      bgColor: "bg-db-dark/5 dark:bg-white/10",
+      borderColor: "hover:border-db-red hover:shadow-db-red/10",
+      action: () => onNavigate("project")
     },
   ];
 
