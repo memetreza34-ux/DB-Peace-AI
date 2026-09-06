@@ -67,7 +67,7 @@ werden sie geliefert?
   landet in einer SQLite-Datei neben dem Projekt (`daten/meldungen.db`) und ist
   im Postfach der gewählten Stelle sichtbar. Der Server hört nur auf
   `127.0.0.1` — nichts geht ins Internet, nichts erreicht die DB. Alle übrigen
-  Eingaben (Gedächtnisprotokoll, Stimmung) bleiben weiterhin im Browser.
+  Eingaben (Gedächtnisprotokoll) bleiben weiterhin im Browser.
   **Für einen Pilot zu klären:** Die Datei ist unverschlüsselt, und wer welche
   Rolle hat, entscheidet allein der Browser — es gibt keine Anmeldung. Beides
   wäre vor echten Meldungen zu lösen.

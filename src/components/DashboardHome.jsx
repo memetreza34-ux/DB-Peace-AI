@@ -12,7 +12,6 @@ import {
   Scale,
   Users
 } from "lucide-react";
-import { MoodTracker } from "./MoodTracker";
 
 /*
  * Das Einblenden läuft bewusst über CSS (.motion-card in styles.css) und nicht
@@ -217,11 +216,6 @@ export function DashboardHome({ onNavigate, onOpenEmergency }) {
 
 
 
-      {/* Das Stimmungs-Tagebuch ist das Unwichtigste auf dieser Seite und
-          stand trotzdem vor allen Hilfe-Wegen. */}
-      <div className="motion-card max-w-md mx-auto w-full z-20 relative" style={einblendVerzoegerung(1)}>
-        <MoodTracker />
-      </div>
     </div>
   );
 }
