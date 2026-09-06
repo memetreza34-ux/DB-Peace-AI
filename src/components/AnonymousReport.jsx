@@ -260,8 +260,9 @@ function AnonymousReport() {
               <MessageSquareText size={24} className="text-red-200" aria-hidden="true" />
               <h3 className="mt-3 text-lg font-black">Lieber erst reden?</h3>
               <p className="mt-2 text-sm font-semibold leading-6 text-white/80">
-                Der Peace-Assistent unten rechts hört zu und hilft dir beim Sortieren – ohne dass
-                daraus eine Meldung wird.
+                Unter „Ansprechpartner & Meldewege" kannst du bei JAV, Betriebsrat oder einer
+                anderen Stelle ein Gespräch anfragen – zwei Sätze reichen, und daraus wird keine
+                Meldung.
               </p>
             </div>
 

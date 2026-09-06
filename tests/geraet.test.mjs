@@ -27,7 +27,6 @@ test("alles, was persönliche Inhalte speichert, geht über den Wrapper", async 
   const fs = await import("node:fs");
   const pfade = [
     "../src/lib/protokoll.js",
-    "../src/components/FloatingChatWidget.jsx",
     "../src/components/ProjectOverview.jsx",
     "../src/components/PanicButton.jsx",
   ];

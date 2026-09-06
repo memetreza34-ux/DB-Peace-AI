@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import AnonymousReport from "./AnonymousReport.jsx";
-import { AISmartReport } from "./AISmartReport.jsx";
 import { NotebookPen, Megaphone, Plus, Clock, FileText, Camera, X, ArrowLeft, Trash2, Smartphone, AlertTriangle } from "lucide-react";
 import { protokollLaden, protokollSpeichern, dateiEinlesen, speicherHinweis } from "../lib/protokoll.js";
 import { useDialog } from "../lib/useDialog.js";
@@ -134,16 +133,6 @@ export function RecordAndReportView() {
               </div>
               <p className="text-sm font-semibold text-db-rail dark:text-white/60">Einen Vorfall offiziell, sachlich und auf Wunsch anonym melden.</p>
             </button>
-
-            <button
-              onClick={() => setSubTab("ki")}
-              className="group rounded-xl border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 hover:-translate-y-1 hover:border-blue-500 dark:hover:border-blue-500 transition shadow-sm"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <span className="font-black text-db-dark dark:text-white text-lg group-hover:text-blue-600 transition-colors">🤖 KI-Assistent</span>
-              </div>
-              <p className="text-sm font-semibold text-db-rail dark:text-white/60">Schreibe oder diktiere frei, was passiert ist. Die KI füllt das Formular für dich aus.</p>
-            </button>
           </div>
         </div>
       )}
@@ -158,24 +147,6 @@ export function RecordAndReportView() {
         </button>
       )}
 
-      {/* Sub-Tab 3: KI Assistent */}
-      {subTab === "ki" && (
-        <AISmartReport 
-          onReportGenerated={(generatedReport) => {
-            const entry = {
-              id: Date.now(),
-              date: generatedReport.date,
-              time: generatedReport.time,
-              location: generatedReport.location,
-              category: generatedReport.category,
-              description: generatedReport.description,
-              witnesses: "Keine Angaben",
-              files: [],
-            };
-            setRecords([entry, ...records]);
-          }} 
-        />
-      )}
 
       {/* Sub-Tab 1: Vorfall Festhalten (Gedächtnisprotokoll) */}
       {subTab === "protokoll" && (

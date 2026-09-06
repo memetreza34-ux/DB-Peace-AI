@@ -6,7 +6,6 @@ import { RecordAndReportView } from "./components/RecordAndReportView.jsx";
 import { LearningHubView } from "./components/LearningHubView.jsx";
 import { EmergencyModal } from "./components/EmergencyModal.jsx";
 import { Footer } from "./components/Footer.jsx";
-import { FloatingChatWidget } from "./components/FloatingChatWidget.jsx";
 import { ProfileView } from "./components/ProfileView.jsx";
 import { ContactsView } from "./components/ContactsView.jsx";
 import { GlobalSearch } from "./components/GlobalSearch.jsx";
@@ -203,7 +202,6 @@ export default function App() {
       {rollenauswahl}
 
       {/* Global Floating AI Chat Widget */}
-      <FloatingChatWidget />
 
       {/* Quick Exit / Panic Button */}
       <PanicButton />
@@ -218,8 +216,8 @@ export default function App() {
       {isOffline && (
         <div className="bg-db-red text-white text-xs font-bold py-1.5 px-4 flex items-center justify-center gap-2 z-50">
           <WifiOff className="w-3 h-3" />
-          Keine Internetverbindung. Deine Eingaben bleiben ohnehin auf diesem Gerät – nur der
-          KI-Assistent antwortet solange eingeschränkt.
+          Keine Internetverbindung. Kontakte, Rechte und Meldewege funktionieren trotzdem – sie
+          liegen alle auf diesem Gerät.
         </div>
       )}
 

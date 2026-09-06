@@ -1,5 +1,5 @@
 /**
- * Krisenerkennung für den Peace-Assistenten.
+ * Krisenerkennung.
  *
  * Bewusst deterministisch und ohne KI: Wenn jemand Suizidgedanken, Selbstverletzung
  * oder akute Gewalt äußert, darf die Antwort nicht davon abhängen, ob ein API-Key
