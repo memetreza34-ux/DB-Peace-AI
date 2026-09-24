@@ -79,7 +79,6 @@ export function meldungAnlegen({ empfaenger, kategorie, anonym, inhalt, art = "m
   }
 
   const eintrag = {
-    id: `${art === "gespraech" ? "G" : ""}${empfaenger.toUpperCase()}-${crypto.randomInt(1000, 9999)}`,
     art,
     eingegangen: new Date().toISOString(),
     empfaenger,
@@ -89,13 +88,22 @@ export function meldungAnlegen({ empfaenger, kategorie, anonym, inhalt, art = "m
     inhalt: JSON.stringify(inhalt ?? {}).slice(0, 20_000),
   };
 
-  verbindung()
-    .prepare(
-      `INSERT INTO meldungen (id, eingegangen, empfaenger, kategorie, anonym, art, status, inhalt)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    )
-    .run(
-      eintrag.id,
+  /*
+   * Die Nummer ist das, was die meldende Person sich notiert. Bis zum 24.9.2026
+   * war sie vierstellig — nach gut hundert Meldungen an dieselbe Stelle war die
+   * erste doppelt, die Datenbank lehnte ab und die Meldung ging verloren.
+   * Jetzt sechsstellig, und bei einer Doppelung wird neu gezogen.
+   */
+  const einfuegen = verbindung().prepare(
+    `INSERT OR IGNORE INTO meldungen (id, eingegangen, empfaenger, kategorie, anonym, art, status, inhalt)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+  );
+  const praefix = `${art === "gespraech" ? "G" : ""}${empfaenger.toUpperCase()}`;
+
+  for (let versuch = 0; versuch < 20; versuch++) {
+    const id = `${praefix}-${crypto.randomInt(100_000, 1_000_000)}`;
+    const { changes } = einfuegen.run(
+      id,
       eintrag.eingegangen,
       eintrag.empfaenger,
       eintrag.kategorie,
@@ -104,8 +112,12 @@ export function meldungAnlegen({ empfaenger, kategorie, anonym, inhalt, art = "m
       eintrag.status,
       eintrag.inhalt,
     );
+    if (changes > 0) return { id, eingegangen: eintrag.eingegangen, art: eintrag.art };
+  }
 
-  return { id: eintrag.id, eingegangen: eintrag.eingegangen, art: eintrag.art };
+  const fehler = new Error("keine_freie_nummer");
+  fehler.status = 503;
+  throw fehler;
 }
 
 export function meldungenFuer(empfaenger) {

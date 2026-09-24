@@ -24,7 +24,7 @@ test("eine Meldung landet im Postfach der gewählten Stelle", () => {
     inhalt: { text: "Testfall", ort: "Werkstatt" },
   });
 
-  assert.match(angelegt.id, /^JAV-\d{4}$/);
+  assert.match(angelegt.id, /^JAV-\d{6}$/);
   assert.ok(angelegt.eingegangen, "Eingangszeit fehlt");
 
   const posteingang = meldungenFuer("jav");
@@ -114,7 +114,7 @@ test("ein Gesprächswunsch ist keine Meldung", () => {
     inhalt: { anliegen: "Ich würde gern mit jemandem reden." },
   });
 
-  assert.match(gespraech.id, /^GBETRIEBSRAT-\d{4}$/, "Gesprächswünsche brauchen ein eigenes Kennzeichen");
+  assert.match(gespraech.id, /^GBETRIEBSRAT-\d{6}$/, "Gesprächswünsche brauchen ein eigenes Kennzeichen");
   assert.equal(gespraech.art, "gespraech");
 
   const eintrag = meldungenFuer("betriebsrat").find((m) => m.id === gespraech.id);
@@ -129,4 +129,13 @@ test("ohne Angabe ist es eine Meldung, und erfundene Arten werden abgewiesen", (
     () => meldungAnlegen({ empfaenger: "jav", kategorie: "X", art: "beschwerde", inhalt: {} }),
     /unbekannte_art/,
   );
+});
+
+test("auch die tausendste Meldung an dieselbe Stelle kommt an", () => {
+  // Mit vierstelligen Nummern schlug hier etwa die hundertste fehl.
+  const ids = new Set();
+  for (let i = 0; i < 1000; i++) {
+    ids.add(meldungAnlegen({ empfaenger: "sbv", kategorie: "Test", inhalt: {} }).id);
+  }
+  assert.equal(ids.size, 1000);
 });
