@@ -212,7 +212,13 @@ function Geraeteeinstellung() {
     }
     geraetemodusSetzen(ziel);
     setModus(ziel);
-    window.location.reload();
+    // Der Cache des Service Workers gehört dazu: Ältere Versionen haben dort
+    // auch Meldungen aus den Postfächern abgelegt.
+    const cachesLeeren =
+      "caches" in window
+        ? caches.keys().then((namen) => Promise.all(namen.map((name) => caches.delete(name))))
+        : Promise.resolve();
+    cachesLeeren.catch(() => {}).finally(() => window.location.reload());
   };
 
   return (
