@@ -25,7 +25,7 @@ Beim ersten Start wird nur gefragt, ob das Gerät geteilt wird. Eine PIN gibt es
 ## Wichtige Dateien
 - `src/` — React Komponenten
 - `src/config/kontakte.js` — **alle Anlaufstellen zentral**, mit Quelle und Prüfdatum
-- `src/lib/crisis.js` — Krisenerkennung, läuft vor jedem Modellaufruf
+- `src/lib/crisis.js` — Krisenerkennung; `src/components/KrisenHinweis.jsx` zeigt sie unter jedem Freitextfeld
 - `src/lib/useDialog.js` — Escape, Fokus-Falle und Scroll-Sperre für Dialoge
 - `server.js` — Meldungs-Ablage
 - `meldungen-speicher.js` — SQLite-Zugriff, Empfänger aus `rollen.js`
@@ -44,13 +44,17 @@ Beim ersten Start wird nur gefragt, ob das Gerät geteilt wird. Eine PIN gibt es
 - **Keine Zusagen, die die App nicht einlöst.** Nichts „verschlüsselt" nennen,
   solange nicht verschlüsselt wird; keine Zertifikate ausstellen, keine Meldung
   automatisch versenden.
-- **Krisenerkennung läuft lokal.** Sie war schon immer unabhängig vom Modell und
-  ist es jetzt erst recht. Änderungen an `src/lib/crisis.js` brauchen Tests.
+- **Krisenerkennung läuft lokal.** Änderungen an `src/lib/crisis.js` brauchen Tests.
+  Jedes neue Freitextfeld für Betroffene bekommt `<KrisenHinweis text={…} />` und
+  einen Eintrag in `FREITEXTFELDER` in `tests/crisis.test.mjs`. Mit dem Chat fiel
+  die Prüfung schon einmal unbemerkt weg.
 - **Demo-Daten sichtbar kennzeichnen** (HR-Dashboard, Analytics, Profil).
 
 ### Technische Fallstricke in diesem Projekt
 - **`AnimatePresence` nicht für Overlays und Ansichtswechsel verwenden.** Elemente
   blieben unsichtbar im DOM liegen und fingen Klicks ab; mit `mode="wait"` hing der
   Wechsel ganz. Konditional rendern, Einblend-Animation über `initial`/`animate`.
+- **Der Service Worker (`public/sw.js`) legt nie `/api`-Antworten ab.** Sonst
+  bleiben Meldungen im Browser-Cache liegen. Bei Änderungen `CACHE_NAME` hochzählen.
 - **Der Build fängt fehlende Imports nicht** — ein nicht importiertes Icon legt die
   App zur Laufzeit lahm. Dafür gibt es `tests/imports.test.mjs`.

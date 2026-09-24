@@ -1,12 +1,11 @@
 # DB Peace AI — Codex Context
 
 ## Was ist das Projekt?
-React + Vite Frontend mit Node.js Backend-Proxy. KI-Assistent (Azubi-Begleiter) der Deutsche Bahn, nutzt OpenAI API. Lokaler Innovationsprototyp.
+React + Vite Frontend mit kleinem Node-Server für abgeschickte Meldungen (SQLite, nur 127.0.0.1). Anlaufstelle für Azubis der Deutschen Bahn bei Mobbing, Diskriminierung und Konflikten. Lokaler Innovationsprototyp. Seit dem 6.9.2026 ohne KI.
 
 ## Tech Stack
 - **Frontend:** React 19, Vite 7, Tailwind CSS 3, Lucide Icons
-- **Backend:** Node.js Express Server (`server.js`) als API-Proxy
-- **KI:** OpenAI API (GPT), Fallback auf Demo-Antworten wenn kein Key
+- **Backend:** kleiner Node-Server (`server.js`), speichert Meldungen in SQLite
 - **Build:** Vite
 
 ## Starten
@@ -19,17 +18,17 @@ npm test             # Tests (node:test)
 npm run verify       # Tests + Build — vor jedem Commit
 ```
 
-Beim ersten Start legt man eine eigene PIN fest. Es gibt keine Standard-PIN.
+Beim ersten Start wird nur gefragt, ob das Gerät geteilt wird. Eine PIN gibt es seit dem 6.9.2026 nicht mehr.
 
 ## Wichtige Dateien
 - `src/` — React Komponenten
 - `src/config/kontakte.js` — **alle Anlaufstellen zentral**, mit Quelle und Prüfdatum
-- `src/lib/crisis.js` — Krisenerkennung, läuft vor jedem Modellaufruf
-- `src/lib/lock.js` — Gerätesperre (PBKDF2-Hash, keine Inhaltsverschlüsselung)
+- `src/lib/crisis.js` — Krisenerkennung; `src/components/KrisenHinweis.jsx` zeigt sie unter jedem Freitextfeld
 - `src/lib/useDialog.js` — Escape, Fokus-Falle und Scroll-Sperre für Dialoge
-- `server.js` — Express Proxy für OpenAI
+- `server.js` — Meldungs-Ablage
+- `meldungen-speicher.js` — SQLite-Zugriff
 - `docs/Pilot-Checkliste.md` — was vor einem Pilotbetrieb zu klären ist
-- `.env` — OPENAI_API_KEY (nicht committen!)
+- `daten/meldungen.db` — abgeschickte Meldungen (nicht im Git)
 
 ## Regeln
 - `.env` niemals committen
@@ -43,8 +42,9 @@ Beim ersten Start legt man eine eigene PIN fest. Es gibt keine Standard-PIN.
 - **Keine Zusagen, die die App nicht einlöst.** Nichts „verschlüsselt" nennen,
   solange nicht verschlüsselt wird; keine Zertifikate ausstellen, keine Meldung
   automatisch versenden.
-- **Krisenerkennung läuft lokal und vor der KI.** Sie darf nicht davon abhängen,
-  ob ein API-Key gesetzt ist. Änderungen an `src/lib/crisis.js` brauchen Tests.
+- **Krisenerkennung läuft lokal.** Änderungen an `src/lib/crisis.js` brauchen Tests.
+  Jedes neue Freitextfeld für Betroffene bekommt `<KrisenHinweis text={…} />` und
+  einen Eintrag in `FREITEXTFELDER` in `tests/crisis.test.mjs`.
 - **Demo-Daten sichtbar kennzeichnen** (HR-Dashboard, Analytics, Profil).
 
 ### Technische Fallstricke in diesem Projekt

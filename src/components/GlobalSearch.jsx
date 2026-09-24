@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Search, X, ArrowRight, ShieldAlert, GraduationCap, Users, FileText, PhoneCall, LayoutDashboard } from "lucide-react";
+import { Search, X, ArrowRight, GraduationCap, Users, FileText, PhoneCall, LayoutDashboard } from "lucide-react";
 import { useDialog } from "../lib/useDialog";
+import { KrisenHinweis } from "./KrisenHinweis.jsx";
 
 // The Search Index
 const SEARCH_INDEX = [
@@ -13,15 +14,6 @@ const SEARCH_INDEX = [
     icon: <FileText className="w-5 h-5 text-db-red" />,
     keywords: ["melden", "vorfall", "report", "anzeigen", "beschwerde", "mobbing", "diskriminierung"],
     action: (navigate) => navigate("record-report")
-  },
-  {
-    id: "action-chat",
-    title: "KI-Konflikthelfer öffnen",
-    description: "Hol dir schnellen, anonymen Rat in schwierigen Situationen.",
-    category: "Aktion",
-    icon: <ShieldAlert className="w-5 h-5 text-db-red" />,
-    keywords: ["chat", "ki", "hilfe", "rat", "konflikt", "streit", "helfer"],
-    action: (navigate) => navigate("home") // Currently on home page
   },
   {
     id: "nav-learning",
@@ -160,6 +152,8 @@ export function GlobalSearch({ isOpen, onClose, onNavigate }) {
 
           {/* Results Area */}
           <div className="overflow-y-auto p-2 db-scrollbar">
+            {/* Wer in die Suche „Suizid" tippt, sucht keine Seite, sondern Hilfe. */}
+            <KrisenHinweis text={query} />
             {query.trim() === "" && (
               <div className="px-4 py-3 text-xs font-bold text-db-rail dark:text-white/50 uppercase tracking-wider">
                 Häufig gesucht

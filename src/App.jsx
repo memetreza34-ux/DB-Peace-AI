@@ -201,8 +201,6 @@ export default function App() {
 
       {rollenauswahl}
 
-      {/* Global Floating AI Chat Widget */}
-
       {/* Quick Exit / Panic Button */}
       <PanicButton />
 

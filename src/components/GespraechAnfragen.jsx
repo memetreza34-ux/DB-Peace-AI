@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { MessageCircle, X, CheckCircle2 } from "lucide-react";
 import { useDialog } from "../lib/useDialog";
 import { rolleFinden } from "../lib/rolle.js";
+import { KrisenHinweis } from "./KrisenHinweis.jsx";
 
 /*
  * Der kurze Weg: „Ich will mit jemandem reden."
@@ -129,6 +130,7 @@ export function GespraechAnfragen({ rolleId, personName, onClose }) {
                 className="mt-2 w-full rounded-xl border border-db-dark/15 bg-white p-3 text-base font-medium text-db-dark placeholder:text-db-rail/60 focus:border-db-red focus:outline-none focus:ring-2 focus:ring-db-red/20 dark:border-white/15 dark:bg-db-dark/50 dark:text-white"
               />
             </label>
+            <KrisenHinweis text={anliegen} />
 
             <label className="mt-4 flex items-start gap-3 rounded-xl border border-db-dark/10 bg-db-soft p-4 dark:border-white/10 dark:bg-white/5">
               <input

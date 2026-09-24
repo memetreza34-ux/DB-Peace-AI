@@ -1,14 +1,15 @@
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useState } from "react";
 import { jsPDF } from "jspdf";
 import { MeldewegeKarte } from "./MeldewegeKarte.jsx";
+import { KrisenHinweis } from "./KrisenHinweis.jsx";
 import { POSTFACH_ROLLEN } from "../config/rollen.js";
 import { empfehlungsGrund, empfohleneRollen } from "../lib/empfehlung.js";
 import { rolleFinden } from "../lib/rolle.js";
+import { erkenneKrise } from "../lib/crisis.js";
 import {
   AlertTriangle,
   ArrowRight,
   BadgeCheck,
-  Bot,
   CheckCircle2,
   ClipboardList,
   Clock3,
@@ -19,16 +20,13 @@ import {
   Download,
   LockKeyhole,
   MessageSquareText,
-  Mic,
   Send,
-  MicOff,
   RefreshCw,
   Scale,
   ShieldAlert,
   ShieldCheck,
   UserX,
   UsersRound,
-  Upload,
 } from "lucide-react";
 
 const incidentOptions = [
@@ -436,61 +434,30 @@ function ContextStep({ form, update }) {
 }
 
 function DescriptionStep({ form, togglePerspective, update }) {
-  const [isRecording, setIsRecording] = useState(false);
-  const fileInputRef = useRef(null);
-
-  const toggleRecording = () => {
-    if (isRecording) {
-      setIsRecording(false);
-      // Simulate appending transcribed text
-      const currentText = form.description ? form.description + " " : "";
-      update("description", currentText + "[Spracheingabe: 'Der Kollege hat mich gestern wieder vor versammelter Mannschaft angeschrien.']");
-    } else {
-      setIsRecording(true);
-    }
-  };
-
+  // Bis zum 24.9.2026 stand hier ein Mikrofon-Knopf. Er nahm nichts auf, sondern
+  // hängte einen erfundenen Beispielsatz an die Beschreibung — und der wäre mit
+  // der echten Meldung abgeschickt worden.
   return (
     <StepPanel
       title="Beschreibung"
       text="Beschreibe kurz, was passiert ist. Keine Namen nötig, wenn du anonym bleiben möchtest."
     >
-      <div className="relative">
-        <textarea
-          value={form.description}
-          onChange={(event) => update("description", event.target.value)}
-          className="field min-h-44 resize-y py-3 pr-12 dark:bg-db-dark/30 dark:text-white dark:border-white/10"
-          placeholder="Beschreibe kurz, was passiert ist."
-        />
-        <button
-          type="button"
-          onClick={toggleRecording}
-          className={`absolute bottom-4 right-4 p-2 rounded-full transition-all shadow-sm ${
-            isRecording 
-              ? 'bg-red-500 text-white animate-pulse' 
-              : 'bg-db-soft dark:bg-db-dark text-db-dark dark:text-white hover:bg-db-dark/10 dark:hover:bg-white/10'
-          }`}
-          title="Diktierfunktion (Speech-to-Text)"
-        >
-          {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-        </button>
-      </div>
-      
-      {/* Evidence Upload Simulation */}
-      <div className="mt-4">
-        <p className="mb-2 font-black text-db-dark dark:text-white text-sm">Beweise hochladen (Optional)</p>
-        <div 
-          onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-db-dark/20 dark:border-white/20 bg-white dark:bg-db-dark/50 p-6 flex flex-col items-center justify-center text-center hover:border-db-red hover:bg-db-soft dark:hover:bg-white/5 transition-all cursor-pointer group"
-        >
-          <input type="file" ref={fileInputRef} className="hidden" />
-          <div className="w-12 h-12 bg-db-dark/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-3 group-hover:bg-db-red/10 transition-colors">
-            <Upload className="w-5 h-5 text-db-dark/60 dark:text-white/60 group-hover:text-db-red" />
-          </div>
-          <p className="font-bold text-sm text-db-dark dark:text-white">Screenshots, Chat-Verläufe oder Bilder</p>
-          <p className="text-xs text-db-rail dark:text-white/60 font-medium mt-1">Bleibt auf diesem Gerät (max. 50 MB)</p>
-        </div>
-      </div>
+      <textarea
+        value={form.description}
+        onChange={(event) => update("description", event.target.value)}
+        className="field min-h-44 resize-y py-3 dark:bg-db-dark/30 dark:text-white dark:border-white/10"
+        placeholder="Beschreibe kurz, was passiert ist."
+      />
+      <KrisenHinweis text={`${form.context} ${form.description}`} />
+
+      {/* Hier stand ein Feld „Beweise hochladen". Es nahm Dateien an und
+          verwarf sie — wer einen Screenshot auswählte, hielt ihn für angehängt.
+          Die Meldung nimmt keine Dateien mit; das Gedächtnisprotokoll schon. */}
+      <p className="mt-4 flex items-start gap-2 rounded-lg bg-db-soft dark:bg-white/5 p-3 text-sm font-semibold text-db-rail dark:text-white/70">
+        <FileText className="mt-0.5 h-4 w-4 shrink-0 text-db-red" aria-hidden="true" />
+        Screenshots und Fotos nimmt die Meldung nicht mit. Im Gedächtnisprotokoll kannst du
+        sie zu einem Eintrag auf diesem Gerät ablegen.
+      </p>
 
       <div className="mt-6">
         <p className="mb-3 font-black text-db-dark dark:text-white">Optionale Einordnung</p>
@@ -703,7 +670,7 @@ function StepControls({ analysis, onAnalyze, onBack, onNext, step, error }) {
           className="inline-flex items-center justify-center gap-2 rounded bg-db-red px-5 py-3 font-black text-white transition hover:bg-red-700"
         >
           {analysis ? "Meldung erneut prüfen" : "Meldung prüfen"}
-          <Bot size={18} aria-hidden="true" />
+          <ClipboardList size={18} aria-hidden="true" />
         </button>
       )}
       </div>
@@ -778,7 +745,7 @@ function AnalysisCard({ analysis, onImprove, onPreview, onReset, form, onAbsende
     <div className="rounded-lg border border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark/50 p-5 shadow-panel">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-sm font-black uppercase tracking-wide text-db-red">Lokale KI-Demo-Analyse</p>
+          <p className="text-sm font-black uppercase tracking-wide text-db-red">Lokale Auswertung nach festen Regeln</p>
           <h3 className="mt-1 text-2xl font-black dark:text-white">Professionelle Zusammenfassung</h3>
         </div>
         <span className={`w-fit rounded px-3 py-1 text-sm font-black ${risk.className}`}>{risk.label}</span>
@@ -940,7 +907,8 @@ function createLocalAnalysis(form, improved = false) {
   const highRisk =
     form.danger === "Ja, direkte Gefahr" ||
     form.danger === "Ja, es könnte eskalieren" ||
-    containsAny(text, ["droht", "drohung", "gewalt", "schlagen", "angst", "bedroht"]);
+    containsAny(text, ["droht", "drohung", "gewalt", "schlagen", "angst", "bedroht"]) ||
+    erkenneKrise(text) !== null;
   const repeatedHarm =
     form.repetition === "Regelmäßig" ||
     form.repetition === "Schon länger" ||
@@ -995,7 +963,7 @@ function createDraftReport(form, analysis, improved) {
     { label: "Beschreibung", value: form.description || "nicht angegeben", wide: true },
     { label: "Wiederholung", value: form.repetition },
     { label: "Dringlichkeit", value: form.danger },
-    { label: "KI-Zusammenfassung", value: effectiveAnalysis.summary, wide: true },
+    { label: "Zusammenfassung", value: effectiveAnalysis.summary, wide: true },
     { label: "Empfohlene Weiterleitung", value: effectiveAnalysis.route, wide: true },
     {
       label: "Gewählter Empfänger",

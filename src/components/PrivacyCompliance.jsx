@@ -21,17 +21,17 @@ const principles = [
   ["Transparenz", "Nutzende sehen klar, was die Demo macht und was nicht.", FileText],
   ["Freiwilligkeit", "Die Nutzung bleibt freiwillig und ohne versteckte Überwachung.", UserCheck],
   ["Anonymisierung", "Meldungen können ohne Namen vorbereitet werden.", EyeOff],
-  ["Menschliche Prüfung", "Die KI gibt nur Vorschläge. Menschen entscheiden.", UsersRound],
+  ["Menschliche Prüfung", "Die App gibt nur Vorschläge. Menschen entscheiden.", UsersRound],
 ];
 
-const aiAllowed = [
+const appAllowed = [
   "Meldungen strukturieren",
-  "Risiken als Vorschlag einstufen",
-  "Zusammenfassungen erstellen",
+  "Risiken nach festen Regeln als Vorschlag einstufen",
+  "Zusammenfassungen aus deinen Angaben erstellen",
   "Deeskalationshinweise geben",
 ];
 
-const aiForbidden = [
+const appForbidden = [
   "Menschen automatisch bestrafen",
   "heimlich Chats überwachen",
   "Entscheidungen allein treffen",
@@ -44,7 +44,7 @@ const checklistItems = [
   "Zugriffsrechte definieren",
   "Speicherfristen festlegen",
   "Sicherheitskonzept erstellen",
-  "KI-Risiken bewerten",
+  "Regeln der Risiko-Einstufung prüfen lassen",
   "Transparenz für Nutzende sicherstellen",
   "Testphase mit anonymisierten Daten durchführen",
 ];
@@ -67,7 +67,7 @@ function PrivacyCompliance() {
         <EntryHeader />
         <Geraeteeinstellung />
         <Principles />
-        <AiBoundaries />
+        <AppBoundaries />
         <UserControl />
         <ComplianceChecklist checked={checked} toggle={toggle} />
         <FinalDisclaimer />
@@ -114,12 +114,12 @@ function Principles() {
   );
 }
 
-function AiBoundaries() {
+function AppBoundaries() {
   return (
-    <Section title="Was die KI darf / nicht darf" text="KI unterstützt, Menschen entscheiden.">
+    <Section title="Was die App darf / nicht darf" text="Die App unterstützt, Menschen entscheiden.">
       <div className="grid gap-6 lg:grid-cols-2">
-        <BoundaryColumn title="Die KI darf" items={aiAllowed} allowed />
-        <BoundaryColumn title="Die KI darf nicht" items={aiForbidden} />
+        <BoundaryColumn title="Die App darf" items={appAllowed} allowed />
+        <BoundaryColumn title="Die App darf nicht" items={appForbidden} />
       </div>
     </Section>
   );
@@ -200,7 +200,7 @@ function Geraeteeinstellung() {
     const ziel = modus === PERSOENLICH ? GETEILT : PERSOENLICH;
     const bestaetigt = window.confirm(
       "Gerätemodus umstellen? Dabei werden alle auf diesem Gerät gespeicherten Inhalte " +
-        "gelöscht — Protokolleinträge, Chatverlauf und Projekte. Das lässt sich nicht rückgängig machen."
+        "gelöscht — Protokolleinträge und Projekte. Das lässt sich nicht rückgängig machen."
     );
     if (!bestaetigt) return;
 

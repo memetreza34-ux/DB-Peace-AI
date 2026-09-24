@@ -3,7 +3,7 @@ import { HeartHandshake, BarChart3, ShieldCheck, Eye, Presentation, ChevronDown 
 
 export function Footer({ onNavigate, onRollenAnsehen }) {
   return (
-    // pb-28 hält den Fußbereich frei von den schwebenden Schaltflächen (Quick Exit, Chat)
+    // pb-28 hält den Fußbereich frei von den schwebenden Schaltflächen (Quick Exit)
     <footer className="mt-16 border-t border-db-dark/10 dark:border-white/10 bg-white dark:bg-db-dark pt-8 pb-28 sm:pb-8 text-xs font-semibold text-db-rail dark:text-white/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -22,7 +22,7 @@ export function Footer({ onNavigate, onRollenAnsehen }) {
           <div className="rounded-xl bg-db-warm dark:bg-db-dark/50 px-4 py-2 text-center text-xs font-bold text-db-dark dark:text-white border border-db-dark/5 dark:border-white/5">
             {/* redInk statt db-red: kleiner Text auf hellgrauem Grund erreicht mit
                 der reinen Markenfarbe den Mindestkontrast nicht. */}
-            🛡️ <span className="text-db-redInk dark:text-red-400 font-black">„Menschen entscheiden, nicht die KI.“</span> — Keine Rechts- oder Medizinberatung.
+            🛡️ <span className="text-db-redInk dark:text-red-400 font-black">„Menschen entscheiden, nicht die App.“</span> — Keine Rechts- oder Medizinberatung.
           </div>
 
           {/*

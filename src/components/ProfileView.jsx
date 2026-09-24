@@ -26,6 +26,7 @@ import { abonnieren, alleFaelle, verlaufErgaenzen } from "../lib/faelle.js";
 import { eigeneFaelle, rolleFinden } from "../lib/rolle.js";
 import { eingangsDatum, fristenFuer, fristStand } from "../lib/fristen.js";
 import { protokollLaden } from "../lib/protokoll.js";
+import { KrisenHinweis } from "./KrisenHinweis.jsx";
 
 export function ProfileView() {
   const [activeTab, setActiveTab] = useState("postfach");
@@ -75,7 +76,7 @@ export function ProfileView() {
           <div className="space-y-4">
             <h3 className="font-black text-xl text-db-dark dark:text-white mb-2">Meine Meldungen & Postfach</h3>
             <p className="text-sm font-medium text-db-rail dark:text-white/70 mb-6">
-              Hier siehst du deine eingereichten, anonymen Meldungen und kannst sicher mit den Bearbeitern (JAV, HR) schreiben.
+              Hier siehst du deine eingereichten, anonymen Meldungen und kannst mit den Bearbeitern (JAV, HR) schreiben.
             </p>
             
             <div className="flex flex-col lg:flex-row gap-4 h-[500px]">
@@ -146,6 +147,7 @@ export function ProfileView() {
                              <Send className="w-5 h-5" />
                           </button>
                        </form>
+                       <KrisenHinweis text={replyText} />
                     </div>
                   </>
                 ) : (

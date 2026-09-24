@@ -2,12 +2,17 @@
  * Krisenerkennung.
  *
  * Bewusst deterministisch und ohne KI: Wenn jemand Suizidgedanken, Selbstverletzung
- * oder akute Gewalt äußert, darf die Antwort nicht davon abhängen, ob ein API-Key
- * konfiguriert ist oder was ein Sprachmodell gerade generiert. Diese Prüfung läuft
- * deshalb VOR jedem Modellaufruf und liefert immer geprüfte, echte Hilfenummern.
+ * oder akute Gewalt äußert, liefert die App immer geprüfte, echte Hilfenummern.
+ *
+ * Bis zum 6.9.2026 hing die Prüfung am Chat-Assistenten. Mit dem Chat fiel sie
+ * stillschweigend weg — niemand rief sie mehr auf. Seitdem prüft <KrisenHinweis>
+ * jedes Freitextfeld (Meldung, Gedächtnisprotokoll, Gesprächswunsch), und ein
+ * Test in tests/crisis.test.mjs stellt sicher, dass das so bleibt.
  *
  * Alle Nummern sind öffentlich bekannte, bundesweit gültige Anlaufstellen.
  */
+
+import { EXTERNE_HILFE } from "../config/kontakte.js";
 
 export const NOTRUF = {
   polizei: "110",
@@ -118,4 +123,22 @@ export function erkenneKrise(eingabe) {
   }
 
   return null;
+}
+
+const KONTAKTE_JE_ART = {
+  suizid: ["telefonseelsorge", "nummer-gegen-kummer", "rettung"],
+  selbstverletzung: ["telefonseelsorge", "nummer-gegen-kummer", "rettung"],
+  gewalt: ["polizei", "rettung"]
+};
+
+/**
+ * Die Anlaufstellen, die zu einer erkannten Krise direkt anrufbar sein sollen.
+ * Sie kommen aus src/config/kontakte.js, damit es für jede Nummer nur eine
+ * Quelle gibt.
+ * @param {"suizid"|"selbstverletzung"|"gewalt"} art
+ */
+export function krisenKontakte(art) {
+  return (KONTAKTE_JE_ART[art] ?? [])
+    .map((id) => EXTERNE_HILFE.find((kontakt) => kontakt.id === id))
+    .filter(Boolean);
 }

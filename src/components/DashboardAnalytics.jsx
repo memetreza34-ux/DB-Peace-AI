@@ -141,7 +141,7 @@ function EntryHeader() {
           Alle Daten in dieser Demo sind anonymisiert und fiktiv.
         </p>
         <p className="mt-3 text-sm font-semibold leading-6 text-db-rail">
-          Keine automatische Bestrafung, keine Überwachung. KI unterstützt Analyse und Sortierung, Menschen entscheiden.
+          Keine automatische Bestrafung, keine Überwachung. Die App sortiert nach festen Regeln vor, Menschen entscheiden.
         </p>
       </div>
     </div>
@@ -260,7 +260,7 @@ function Calculator(props) {
           <NumberInput label="Anzahl Konfliktfälle pro Monat" value={cases} onChange={setCases} suffix="Fälle" />
           <NumberInput label="Manuelle Bearbeitungszeit pro Fall" value={minutes} onChange={setMinutes} suffix="Min." />
           <NumberInput label="Interne Kosten pro Stunde" value={hourlyCost} onChange={setHourlyCost} suffix="EUR" />
-          <NumberInput label="Zeitersparnis durch KI-Vorbereitung" value={savingPercent} onChange={setSavingPercent} suffix="%" />
+          <NumberInput label="Zeitersparnis durch vorbereitete Meldungen" value={savingPercent} onChange={setSavingPercent} suffix="%" />
         </div>
       </div>
       <div className="rounded-lg bg-db-dark p-6 text-white shadow-panel">

@@ -1,5 +1,5 @@
 import React from "react";
-import { Home, ShieldAlert, User, Search, Brain } from "lucide-react";
+import { Home, ShieldAlert, User, Search, HeartHandshake } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle.jsx";
 
 export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSearch }) {
@@ -20,7 +20,7 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="font-black text-lg sm:text-xl tracking-tight text-db-dark dark:text-white flex items-center gap-1.5 sm:gap-2">
-                Peace <Brain className="h-4 w-4 sm:h-5 sm:w-5 text-db-red dark:text-red-400 shrink-0" />
+                Peace <HeartHandshake className="h-4 w-4 sm:h-5 sm:w-5 text-db-red dark:text-red-400 shrink-0" />
               </span>
               <span className="hidden sm:inline rounded bg-db-red/10 dark:bg-db-red/20 px-2 py-0.5 text-xs font-black text-db-red dark:text-red-400">
                 Prototyp

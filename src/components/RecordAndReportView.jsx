@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import AnonymousReport from "./AnonymousReport.jsx";
+import { KrisenHinweis } from "./KrisenHinweis.jsx";
 import { NotebookPen, Megaphone, Plus, Clock, FileText, Camera, X, ArrowLeft, Trash2, Smartphone, AlertTriangle } from "lucide-react";
 import { protokollLaden, protokollSpeichern, dateiEinlesen, speicherHinweis } from "../lib/protokoll.js";
 import { useDialog } from "../lib/useDialog.js";
 
 export function RecordAndReportView() {
-  const [subTab, setSubTab] = useState(null); // null | 'protokoll' | 'meldung' | 'ki'
+  const [subTab, setSubTab] = useState(null); // null | 'protokoll' | 'meldung'
 
   // Die Einträge liegen im Speicher dieses Geräts — siehe src/lib/protokoll.js.
   const [records, setRecords] = useState(() => protokollLaden().eintraege);
@@ -240,6 +241,7 @@ export function RecordAndReportView() {
                     onChange={(e) => setNewDesc(e.target.value)}
                     className="mt-1 w-full rounded-lg border border-db-dark/15 dark:border-white/15 bg-white dark:bg-db-dark/30 dark:text-white p-2.5 text-xs font-semibold"
                   />
+                  <KrisenHinweis text={`${newLoc} ${newDesc}`} />
                 </div>
                 
                 {/* File Upload Section */}

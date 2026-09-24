@@ -18,7 +18,8 @@ import { GETEILT, PERSOENLICH, geraetemodusSetzen } from "../lib/geraet.js";
  * einfallen.
  *
  * Was den Schutz tatsächlich leistet, bleibt:
- * - „Schnell verlassen" schliesst die App sofort und löscht den Chatverlauf
+ * - „Schnell verlassen" schliesst die App sofort und löscht, was nur für diese
+ *   Sitzung gespeichert ist
  * - der geteilte Gerätemodus speichert von vornherein nichts Dauerhaftes
  */
 export function AppLock({ onUnlock }) {

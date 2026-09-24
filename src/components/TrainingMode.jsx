@@ -395,13 +395,13 @@ function EntryHeader() {
       <div>
         <p className="text-sm font-black uppercase tracking-wider text-db-red">Trainingsmodus</p>
         <h2 className="mt-3 text-4xl font-black leading-tight tracking-normal text-db-dark dark:text-white sm:text-5xl">
-          KI-Trainingsmodus
+          Schwierige Situationen üben
         </h2>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-db-rail dark:text-white/60">
           Übe schwierige Situationen sicher in einer Simulation - bevor sie im Alltag eskalieren.
         </p>
         <p className="mt-4 max-w-3xl text-base font-semibold leading-7 text-db-rail dark:text-white/60">
-          Die KI-Simulation hilft dabei, deeskalierende Antworten, klare Grenzen und sichere
+          Die Übungsszenarien helfen dabei, deeskalierende Antworten, klare Grenzen und sichere
           nächste Schritte zu trainieren.
         </p>
       </div>

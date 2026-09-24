@@ -4,7 +4,7 @@ Diese Liste sagt ehrlich, was der Prototyp heute leistet und was er nicht leiste
 Sie ist als Arbeitsgrundlage für ein Gespräch mit Ausbildung, JAV, Compliance und
 Datenschutz gedacht — nicht als Verkaufsdokument.
 
-Stand: 13.08.2026
+Stand: 24.09.2026
 
 ---
 
@@ -67,7 +67,9 @@ werden sie geliefert?
   landet in einer SQLite-Datei neben dem Projekt (`daten/meldungen.db`) und ist
   im Postfach der gewählten Stelle sichtbar. Der Server hört nur auf
   `127.0.0.1` — nichts geht ins Internet, nichts erreicht die DB. Alle übrigen
-  Eingaben (Gedächtnisprotokoll) bleiben weiterhin im Browser.
+  Eingaben (Gedächtnisprotokoll) bleiben weiterhin im Browser. Der Service
+  Worker legt nur die App selbst für den Offline-Betrieb ab, keine Meldungen
+  (bis 24.9.2026 tat er das — der alte Cache wird beim Update gelöscht).
   **Für einen Pilot zu klären:** Die Datei ist unverschlüsselt, und wer welche
   Rolle hat, entscheidet allein der Browser — es gibt keine Anmeldung. Beides
   wäre vor echten Meldungen zu lösen.
@@ -77,18 +79,18 @@ werden sie geliefert?
   öffnet, ist das der falsche Handel. Was bleibt:
   sie schützt die gespeicherten Inhalte nicht. Bei vier Ziffern wäre Verschlüsselung
   Sicherheitstheater. Die App behauptet das an keiner Stelle.
-- **Er ersetzt keine Beratung.** Bei Krisenäußerungen tritt der Assistent zurück und
-  nennt echte Hilfenummern.
+- **Er ersetzt keine Beratung.** Deutet eine Eingabe auf Suizidgedanken,
+  Selbstverletzung oder akute Gewalt hin, zeigt die App sofort echte Hilfenummern —
+  in der Meldung, im Gedächtnisprotokoll, beim Gesprächswunsch und in der Suche.
+  Die Prüfung folgt festen Regeln in `src/lib/crisis.js` und läuft auf dem Gerät.
 
 ---
 
 ## 4. Zu klären mit Datenschutz und IT
 
-- [ ] **KI-Anbindung.** Ohne API-Key läuft der Assistent im Demo-Modus mit fest
-      hinterlegten Antworten. Mit Key gehen Chatinhalte an einen externen Anbieter.
-      Für einen Pilot ist zu klären: EU-Hosting, Auftragsverarbeitung, welche Inhalte
-      das Gerät überhaupt verlassen dürfen. **Empfehlung: im Pilot ohne KI-Anbindung
-      starten.** Die Krisenerkennung läuft bewusst lokal und ist davon unabhängig.
+- [x] **KI-Anbindung.** Erledigt: Seit dem 6.9.2026 ist der Chat-Assistent entfernt,
+      die App ruft kein Sprachmodell mehr auf. Es gehen keine Inhalte an einen
+      externen Anbieter.
 - [x] **Speicherort.** Beim ersten Start fragt die App, ob das Gerät einer Person
       gehört oder geteilt wird. Persönliches Gerät: `localStorage`, unverschlüsselt.
       Geteiltes Gerät: `sessionStorage`, nichts überlebt das Schließen des
@@ -162,8 +164,8 @@ npm run verify   # Tests und Produktionsbuild
 npm run dev      # App starten
 ```
 
-- [ ] Krisenerkennung: „Ich will nicht mehr leben" in den Chat eingeben — es müssen
-      sofort Telefonseelsorge und 112 erscheinen.
+- [ ] Krisenerkennung: „Ich will nicht mehr leben" in die Beschreibung einer Meldung
+      oder in die Suche eingeben — es müssen sofort Telefonseelsorge und 112 erscheinen.
 - [ ] Notfall-Dialog öffnen, mit Escape schließen, danach weiterklicken können.
 - [ ] Eine Meldung bis „Wohin mit deiner Meldung?" durchspielen.
 - [ ] Auf einem Handy oder in schmalem Fenster öffnen — nichts darf abgeschnitten sein.

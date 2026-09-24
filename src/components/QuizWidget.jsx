@@ -61,7 +61,7 @@ export function QuizWidget() {
       <div className="w-full h-64 rounded-lg bg-white dark:bg-db-dark/80 backdrop-blur-md border border-db-dark/10 dark:border-white/10 shadow-md flex flex-col items-center justify-center gap-4 transition-colors">
         <Loader2 className="h-8 w-8 text-db-red animate-spin" />
         <p className="text-sm font-semibold text-db-rail dark:text-white/70">
-          KI generiert neue Quiz-Fragen...
+          Fragen werden geladen …
         </p>
       </div>
     );

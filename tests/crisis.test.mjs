@@ -1,9 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { erkenneKrise, NOTRUF } from "../src/lib/crisis.js";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { erkenneKrise, krisenKontakte, NOTRUF } from "../src/lib/crisis.js";
 
-// Diese Tests schützen eine sicherheitskritische Zusage: Wer im Chat eine Krise
-// äußert, bekommt immer echte Hilfenummern — unabhängig von API-Key oder Modell.
+// Diese Tests schützen eine sicherheitskritische Zusage: Wer in der App eine
+// Krise äußert, bekommt sofort echte Hilfenummern.
 
 const KRISEN = [
   ["Ich halte das nicht mehr aus und will nicht mehr leben", "suizid"],
@@ -58,4 +61,40 @@ test("verträgt leere und ungültige Eingaben", () => {
   assert.equal(erkenneKrise(null), null);
   assert.equal(erkenneKrise(undefined), null);
   assert.equal(erkenneKrise(42), null);
+});
+
+test("zu jeder Krisenart gibt es anrufbare Stellen aus kontakte.js", () => {
+  for (const art of ["suizid", "selbstverletzung", "gewalt"]) {
+    const kontakte = krisenKontakte(art);
+    assert.ok(kontakte.length > 0, `keine Kontakte für ${art}`);
+    for (const kontakt of kontakte) {
+      assert.match(kontakt.telefon, /^[\d ]+$/, `${kontakt.id} hat keine wählbare Nummer`);
+    }
+  }
+  const nummern = (art) => krisenKontakte(art).map((k) => k.telefon);
+  assert.ok(nummern("suizid").includes(NOTRUF.telefonseelsorge1));
+  assert.ok(nummern("suizid").includes(NOTRUF.rettung));
+  assert.ok(nummern("gewalt").includes(NOTRUF.polizei));
+  assert.deepEqual(krisenKontakte("unbekannt"), []);
+});
+
+/*
+ * Bis zum 6.9.2026 lief die Prüfung im Chat. Als der Chat entfernt wurde, rief
+ * sie niemand mehr auf — und alle Tests blieben grün, weil sie nur die Funktion
+ * prüften. Dieser Test prüft deshalb, dass jedes Freitextfeld sie auch benutzt.
+ */
+const FREITEXTFELDER = [
+  "components/AnonymousReport.jsx",
+  "components/RecordAndReportView.jsx",
+  "components/GespraechAnfragen.jsx",
+  "components/GlobalSearch.jsx",
+  "components/ProfileView.jsx"
+];
+
+test("jedes Freitextfeld für Betroffene zeigt den Krisenhinweis", () => {
+  const src = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "src");
+  for (const datei of FREITEXTFELDER) {
+    const quelltext = fs.readFileSync(path.join(src, datei), "utf8");
+    assert.match(quelltext, /<KrisenHinweis\s+text=/, `${datei} zeigt keinen Krisenhinweis`);
+  }
 });
