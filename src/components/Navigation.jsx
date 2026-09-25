@@ -12,10 +12,10 @@ export function Navigation({ activeTab, setActiveTab, onOpenEmergency, onOpenSea
           onClick={() => setActiveTab("home")}
         >
           <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center transition group-hover:scale-105 shadow-sm rounded-lg overflow-hidden">
-            <svg viewBox="0 0 100 100" className="h-full w-full">
-               <rect width="100" height="100" fill="#e2001a" />
-               <text x="50" y="70" fontSize="55" fontFamily="Arial, sans-serif" fontWeight="bold" fill="white" textAnchor="middle" letterSpacing="-2">DB</text>
-            </svg>
+            {/* Bis zum 25.9.2026 stand hier ein rotes Quadrat mit „DB" — ein
+                Nachbau des Konzernlogos. Die App ist keine offizielle
+                DB-Anwendung; dasselbe Symbol wie auf dem Startbildschirm. */}
+            <img src="/icon.svg" alt="" className="h-full w-full" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
