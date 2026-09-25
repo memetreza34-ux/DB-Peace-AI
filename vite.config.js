@@ -8,7 +8,9 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     proxy: {
-      "/api": "http://127.0.0.1:8787",
+      // Derselbe Port wie in server.js — sonst läuft die App ins Leere, sobald
+      // 8787 belegt ist und der Server auf einen anderen ausweicht.
+      "/api": `http://127.0.0.1:${process.env.API_PORT || 8787}`,
     },
   },
 });

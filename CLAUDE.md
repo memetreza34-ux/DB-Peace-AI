@@ -20,6 +20,8 @@ npm test             # Tests (node:test)
 npm run verify       # Tests + Build — vor jedem Commit
 ```
 
+Ist Port 8787 belegt: `API_PORT=8788 npm run dev` — Server und Vite-Proxy lesen beide `API_PORT`.
+
 Beim ersten Start wird nur gefragt, ob das Gerät geteilt wird. Eine PIN gibt es seit dem 6.9.2026 nicht mehr — sie verstellte den Zugang, ohne etwas zu verschlüsseln.
 
 ## Wichtige Dateien

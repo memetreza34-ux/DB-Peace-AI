@@ -70,6 +70,9 @@ werden sie geliefert?
   Eingaben (Gedächtnisprotokoll) bleiben weiterhin im Browser. Der Service
   Worker legt nur die App selbst für den Offline-Betrieb ab, keine Meldungen
   (bis 24.9.2026 tat er das — der alte Cache wird beim Update gelöscht).
+  Weil jede Webseite im selben Browser Anfragen an `127.0.0.1` schicken kann,
+  nimmt der Server seit dem 25.9.2026 nur Anfragen an, deren Host und Herkunft
+  lokal sind, und schreibende nur als JSON. Das ersetzt keine Anmeldung.
   **Für einen Pilot zu klären:** Die Datei ist unverschlüsselt, und wer welche
   Rolle hat, entscheidet allein der Browser — es gibt keine Anmeldung. Beides
   wäre vor echten Meldungen zu lösen.
